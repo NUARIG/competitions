@@ -43,4 +43,8 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Time zone
+  config.time_zone = 'Central Time (US & Canada)'
+  config.active_record.default_timezone = :local
 end

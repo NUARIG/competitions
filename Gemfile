@@ -29,11 +29,17 @@ gem 'redis', '~> 4.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'draper'
-gem 'foundation-rails'
 gem 'haml'
-gem 'jquery-rails'
 gem 'pundit'
 gem 'rubyzip'
+
+# frontend
+gem 'foundation-rails'
+gem 'jquery-rails'
+gem 'sprockets-es6'
+
+# audits
+gem 'paper_trail'
 
 group :development, :test do
   gem 'awesome_print'
