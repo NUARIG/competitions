@@ -63,6 +63,7 @@ end
 group :test do
   gem 'capybara', '>= 2.15'
   gem 'factory_bot_rails'
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
   gem 'rspec'
   gem 'rspec-rails'
   gem 'selenium-webdriver'

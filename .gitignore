@@ -32,3 +32,6 @@
 
 # Environment variables
 /config/local_env.yml
+
+# Rspec
+/spec/examples.txt
