@@ -45,6 +45,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'puma', '~> 3.11'
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -65,7 +66,6 @@ group :test do
   gem 'factory_bot_rails'
   gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
   gem 'rspec'
-  gem 'rspec-rails'
   gem 'selenium-webdriver'
 end
 
