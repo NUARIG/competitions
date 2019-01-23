@@ -10,14 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_17_144716) do
+ActiveRecord::Schema.define(version: 2019_01_21_175254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "constraint_fields", force: :cascade do |t|
+    t.bigint "constraint_id"
+    t.bigint "field_id"
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["constraint_id", "field_id"], name: "index_constraint_fields_on_constraint_id_and_field_id"
+    t.index ["constraint_id"], name: "index_constraint_fields_on_constraint_id"
+    t.index ["field_id"], name: "index_constraint_fields_on_field_id"
+  end
+
+  create_table "constraints", force: :cascade do |t|
+    t.string "field_type"
+    t.string "name"
+    t.string "value_type"
+    t.string "default"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "fields", force: :cascade do |t|
     t.string "type"
-    t.string "name"
+    t.string "label"
     t.string "help_text"
     t.string "placeholder"
     t.boolean "require"

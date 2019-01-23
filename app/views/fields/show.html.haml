@@ -1,0 +1,23 @@
+%p#notice= notice
+
+%h1 Field
+.row
+  = label_tag 'label'
+  = @field.label
+.row
+  = label_tag 'type'
+  = @field.type
+.row
+  = label_tag 'help_text'
+  = @field.help_text
+.row
+  = label_tag 'placeholder'
+  = @field.placeholder
+.row
+  = label_tag 'require', 'Required'
+  = @field.require
+
+.row
+  = link_to 'Edit', edit_field_path(@field)
+  |
+  = link_to 'Back', fields_path
