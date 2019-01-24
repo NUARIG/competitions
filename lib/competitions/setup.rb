@@ -3,6 +3,7 @@ module Competitions
     def self.all
       Competitions::Setup.load_constraints
       Competitions::Setup.load_fields
+      Competitions::Setup.load_constraint_fields
     end
 
     def self.load_constraints
@@ -25,12 +26,24 @@ module Competitions
         field             = Field
                               .where(label: data[:label])
                               .first_or_initialize
+        field.type        = data[:type]
         field.label       = data[:label]
         field.help_text   = data[:help_text] if data[:help_text].present?
         field.placeholder = data[:placeholder] if data[:placeholder].present?
         field.save!
+      end
+    end
 
-        # add_constraints(field, data)
+    def self.load_constraint_fields
+      constraint_fields = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraint_fields.yml'))
+      constraint_fields.each do |_, data|
+        constraint_field              = ConstraintField
+                                          .where(field_id: data[:field_id], constraint_id: data[:constraint_id])
+                                          .first_or_initialize
+        constraint_field.field_id      = data[:field_id]
+        constraint_field.constraint_id = data[:constraint_id]
+        constraint_field.value         = data[:value] if data[:value].present?
+        constraint_field.save!
       end
     end
   end

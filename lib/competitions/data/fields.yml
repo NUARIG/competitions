@@ -2,32 +2,16 @@ project_title:
   type: 'StringField'
   label: 'Project Title'
   help_text: "Title of tour project or proposal title"
-  contstraints:
-    min_length:
-      name: 'Minimum Length'
-      value: '0'
-    max_length:
-      name: 'Maximum Length'
 irb_number:
   type: 'StringField'
   label: 'IRB Number'
   help_text: 'If IRB approved, please provide a study number'
   placeholder: 'STU00000000'
-  constraints:
-    min_length:
-      name: 'Minimum Length'
-      value: '20'
-    max_length:
-      name: 'Maximum Length'
-      value: '20'
 amount_requested:
   type: 'IntegerField'
   label: 'Amount Requested'
   placeholder: 'Rounded dollar amount'
-  constraints:
-    min_value:
-      name: 'Minimum Value'
-      value: '20'
-    max_value:
-      name: 'Maximum Value'
-      value: '20'
+number_of_people:
+  type: 'IntegerField'
+  label: 'How many people will be working on this project?'
+  placeholder: 'Including you.'

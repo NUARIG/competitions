@@ -1,17 +1,17 @@
 development:
   host: localhost
   adapter: postgresql
-  database: <%= ENV['database'] %>
-  password: <%= ENV['password'] %>
-  username: <%= ENV['username'] %>
+  database: competitions
+  username: competitions
+  password: competitions
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-test:
+test: &TEST
   host: localhost
   adapter: postgresql
-  database: <%= ENV['database'] %>
-  password: <%= ENV['password'] %>
-  username: <%= ENV['username'] %>
+  database: competitions_test
+  username: competitions_test
+  password: competitions_test
 

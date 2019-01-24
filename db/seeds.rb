@@ -7,3 +7,4 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 Competitions::Setup::load_constraints
 Competitions::Setup::load_fields
+Competitions::Setup::load_constraint_fields
