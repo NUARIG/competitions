@@ -4,6 +4,8 @@ module Competitions
       Competitions::Setup.load_constraints
       Competitions::Setup.load_fields
       Competitions::Setup.load_constraint_fields
+      Competitions::Setup.load_organizations
+      Competitions::Setup.load_grants
     end
 
     def self.load_constraints
@@ -44,6 +46,32 @@ module Competitions
         constraint_field.constraint_id = data[:constraint_id]
         constraint_field.value         = data[:value] if data[:value].present?
         constraint_field.save!
+      end
+    end
+
+    def self.load_organizations
+      organizations = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/organizations.yml'))
+      organizations.each do |_, data|
+        organization            = Organization
+                                    .where(name: data[:name])
+                                    .first_or_initialize
+        organization.name       = data[:name]
+        organization.short_name = data[:short_name]
+        organization.url        = data[:url]
+        organization.save!
+      end
+    end
+
+    def self.load_grants
+      grants = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/grants.yml'))
+      grants.each do |_, data|
+        grant                 = Grant
+                                .where(name: data[:name])
+                                .first_or_initialize
+        grant.organization_id = data[:organization_id]
+        grant.name            = data[:name]
+        grant.short_name      = data[:short_name]
+        grant.save!
       end
     end
   end

@@ -1,0 +1,4 @@
+grant1:
+  organization_id: 1
+  name: 'Model NIH Grant'
+  short_name: 'model'
