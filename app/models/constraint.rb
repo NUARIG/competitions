@@ -8,10 +8,10 @@ class Constraint < ApplicationRecord
 
   validates :name, presence: true
   validates_length_of :name, minimum: 4
-  validate :value_is_of_type_value_type
+  validate :default_is_of_type_value_type
 
   private
-    def value_is_of_type_value_type
+    def default_is_of_type_value_type
       return if default.nil? || default == 'nil'
 
       send("default_is_#{value_type.downcase}")
@@ -28,6 +28,8 @@ class Constraint < ApplicationRecord
     end
 
     def default_is_float
-      # to be implemented
+      unless Float(default, exception: false)
+        errors.add(:default, 'value must be an number.')
+      end
     end
 end

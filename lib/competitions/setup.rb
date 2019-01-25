@@ -39,7 +39,6 @@ module Competitions
     def self.load_constraint_fields
       constraint_fields = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraint_fields.yml'))
       constraint_fields.each do |_, data|
-        byebug
         constraint_field              = ConstraintField
                                           .where(field_id: data[:field_id], constraint_id: data[:constraint_id])
                                           .first_or_initialize
