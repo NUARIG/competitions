@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2019_01_21_175254) do
   end
 
   create_table "constraints", force: :cascade do |t|
-    t.string "field_type"
+    t.string "type"
     t.string "name"
     t.string "value_type"
     t.string "default"

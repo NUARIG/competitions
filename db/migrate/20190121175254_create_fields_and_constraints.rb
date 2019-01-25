@@ -11,7 +11,7 @@ class CreateFieldsAndConstraints < ActiveRecord::Migration[5.2]
     end
 
     create_table :constraints do |t|
-      t.string :field_type
+      t.string :type
       t.string :name
       t.string :value_type
       t.string :default

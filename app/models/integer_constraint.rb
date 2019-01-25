@@ -1,0 +1,1 @@
+class IntegerConstraint < Constraint; end

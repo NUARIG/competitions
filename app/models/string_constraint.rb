@@ -1,0 +1,1 @@
+class StringConstraint < Constraint; end
