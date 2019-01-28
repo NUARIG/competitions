@@ -27,12 +27,6 @@ RSpec.describe Constraint, type: :model do
       expect(string_constraint.errors).to include(:name)
     end
 
-    it 'requires a value_type' do
-      integer_constraint.value_type = nil
-      expect(integer_constraint).not_to be_valid
-      expect(integer_constraint.errors).to include(:value_type)
-    end
-
     it 'requires value to be of default value_type' do
       integer_constraint.default = 'a string'
       expect(integer_constraint).not_to be_valid

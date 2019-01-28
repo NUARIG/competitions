@@ -17,11 +17,8 @@ class Constraint < ApplicationRecord
   private
     def default_is_a_value_type
       return if default.nil? || default == 'nil'
-      begin
-        send("default_is_#{value_type}")
-      rescue
-        errors.add(:value_type, 'must be specified.')
-      end
+
+      send("default_is_#{value_type}")
     end
 
     def default_is_integer
