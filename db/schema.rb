@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2019_01_21_175254) do
     t.string "default"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["value_type"], name: "index_constraints_on_value_type"
   end
 
   create_table "fields", force: :cascade do |t|

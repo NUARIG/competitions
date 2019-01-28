@@ -4,32 +4,39 @@ class Constraint < ApplicationRecord
   has_many :constraint_fields
   has_many :fields, through: :constraint_fields
 
-  enum value_type: %w[Integer String]
+  enum value_type: {
+    integer: 'integer',
+    string:  'string',
+    float:   'float'
+  }, _suffix: true
 
   validates :name, presence: true
   validates_length_of :name, minimum: 4
-  validate :default_is_of_type_value_type
+  validate :default_is_a_value_type
 
   private
-    def default_is_of_type_value_type
+    def default_is_a_value_type
       return if default.nil? || default == 'nil'
-
-      send("default_is_#{value_type.downcase}")
+      begin
+        send("default_is_a_#{value_type}")
+      rescue
+        errors.add(:value_type, 'must be specified.')
+      end
     end
 
-    def default_is_integer
+    def default_is_a_integer
       unless Integer(default, exception: false)
         errors.add(:default, 'value must be an integer.')
       end
     end
 
-    def default_is_string
+    def default_is_a_string
       # will this need to be implemented?
     end
 
-    def default_is_float
+    def default_is_a_float
       unless Float(default, exception: false)
-        errors.add(:default, 'value must be an number.')
+        errors.add(:default, 'value must be a number.')
       end
     end
 end
