@@ -18,23 +18,23 @@ class Constraint < ApplicationRecord
     def default_is_a_value_type
       return if default.nil? || default == 'nil'
       begin
-        send("default_is_a_#{value_type}")
+        send("default_is_#{value_type}")
       rescue
         errors.add(:value_type, 'must be specified.')
       end
     end
 
-    def default_is_a_integer
+    def default_is_integer
       unless Integer(default, exception: false)
         errors.add(:default, 'value must be an integer.')
       end
     end
 
-    def default_is_a_string
+    def default_is_string
       # will this need to be implemented?
     end
 
-    def default_is_a_float
+    def default_is_float
       unless Float(default, exception: false)
         errors.add(:default, 'value must be a number.')
       end
