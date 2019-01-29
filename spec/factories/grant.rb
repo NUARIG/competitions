@@ -7,7 +7,7 @@ FactoryBot.define do
     state                       { 'complete' }
     initiation_date             { Date.current.to_datetime }
     submission_open_date        { Date.tomorrow.to_datetime }
-    submission_close_date       { 1.day.from_now }
+    submission_close_date       { 2.days.from_now }
     rfa                         { Faker::Lorem.paragraph }
     min_budget                  { 1 }
     max_budget                  { 100 }
