@@ -23,23 +23,32 @@ RSpec.describe Grant, type: :model do
     it 'validates a valid grant' do
       expect(grant).to be_valid
     end
-  #   it 'validates a grant without a name' do
-  #     grant.name = nil
-  #     expect(grant).not_to be_valid
-  #     expect(grant.errors).to include :name
-  #   end
 
-  #   # it 'validates a grant without a short_name' do
-  #   #   grant.short_name = nil
-  #   #   expect(grant).not_to be_valid
-  #   #   expect(grant.errors).to include :short_name
-  #   # end
+    it 'requires a name' do
+      grant.name = nil
+      expect(grant).not_to be_valid
+      expect(grant.errors).to include :name
+    end
 
-  #   it 'validates unique name and short_name' do
-  #     grant.save
-  #     new_grant = Grant.new(name: grant.name, short_name: grant.short_name)
-  #     expect(new_grant).not_to be_valid
-  #     expect(new_grant.errors).to include :name
-  #     expect(new_grant.errors).to include :short_name
+    it 'requires a short_name if name is > 10 characters' do
+      grant.name = 'Not Too Short'
+      grant.short_name = ''
+      expect(grant).not_to be_valid
+      expect(grant.errors).to include :short_name
+    end
+
+    it 'does not require a short_name if name is < 10 characters' do
+      grant.name = 'Too Short'
+      grant.short_name = ''
+      expect(grant).to be_valid
+    end
+
+    it 'requires unique name and short_name' do
+      grant.save
+      new_grant = Grant.new(name: grant.name, short_name: grant.short_name)
+      expect(new_grant).not_to be_valid
+      expect(new_grant.errors.messages[:name]).to eq ['has already been taken']
+      expect(new_grant.errors.messages[:short_name]).to eq ['has already been taken']
+    end
   end
 end
