@@ -14,13 +14,17 @@ class Grant < ApplicationRecord
   validates_presence_of :panel_location, if: :panel_date?
   validates_presence_of :initiation_date
 
-  validates_date :initiation_date, after_or_equal_to: Date.today
+  validates_date :initiation_date, on_or_after: :today
   validates_date :submission_open_date,
-                    { after_or_equal_to: :intiation_date,
+                    { on_or_after: :initiation_date,
                       message: 'cannot be earlier than the initiation date.' }
   validates_date :submission_close_date,
                     { after: :submission_open_date,
                       message: 'must be after the opening date for submissions.' }
+  validates_date :panel_date,
+                    { after: :submission_close_date,
+                      message: 'must be after the submission_close_date',
+                      if: :panel_date? }
 
   validates :name, uniqueness: true
   validates :short_name,

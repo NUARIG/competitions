@@ -5,8 +5,8 @@ FactoryBot.define do
     sequence(:name)             { |n| "Grant Name #{n}" }
     sequence(:short_name)       { |n| "GN#{n}" }
     state                       { 'complete' }
-    initiation_date             { Date.current.to_datetime }
-    submission_open_date        { Date.tomorrow.to_datetime }
+    initiation_date             { Date.current }
+    submission_open_date        { 1.day.from_now }
     submission_close_date       { 2.days.from_now }
     rfa                         { Faker::Lorem.paragraph }
     min_budget                  { 1 }

@@ -24,31 +24,83 @@ RSpec.describe Grant, type: :model do
       expect(grant).to be_valid
     end
 
-    it 'requires a name' do
-      grant.name = nil
-      expect(grant).not_to be_valid
-      expect(grant.errors).to include :name
+    context 'name and short_name' do
+      it 'requires a name' do
+        grant.name = nil
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :name
+      end
+
+      it 'requires a short_name if name is > 10 characters' do
+        grant.name = 'Not Too Short'
+        grant.short_name = ''
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :short_name
+      end
+
+      it 'does not require a short_name if name is < 10 characters' do
+        grant.name = 'Too Short'
+        grant.short_name = ''
+        expect(grant).to be_valid
+      end
+
+      it 'requires unique name and short_name' do
+        grant.save
+        new_grant = Grant.new(name: grant.name, short_name: grant.short_name)
+        expect(new_grant).not_to be_valid
+        expect(new_grant.errors.messages[:name]).to eq ['has already been taken']
+        expect(new_grant.errors.messages[:short_name]).to eq ['has already been taken']
+      end
     end
 
-    it 'requires a short_name if name is > 10 characters' do
-      grant.name = 'Not Too Short'
-      grant.short_name = ''
-      expect(grant).not_to be_valid
-      expect(grant.errors).to include :short_name
+    context 'dates' do
+      it 'requires current or future initiation_date' do
+        grant.initiation_date = Date.yesterday
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :initiation_date
+      end
+
+      it 'requires submission_open_date to be on or after initiation_date' do
+        grant.submission_open_date = 2.days.ago
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :submission_open_date
+      end
+
+      it 'requires submission_close_date to be after submission_open_date' do
+        grant.submission_open_date = 2.days.ago
+        grant.submission_close_date = 3.days.ago
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :submission_close_date
+      end
     end
 
-    it 'does not require a short_name if name is < 10 characters' do
-      grant.name = 'Too Short'
-      grant.short_name = ''
-      expect(grant).to be_valid
+    context 'budgets' do
+      it 'requires a positive or zero min_budget' do
+        grant.min_budget = -1.00
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :min_budget
+        grant.min_budget = 0
+        expect(grant).to be_valid
+      end
+
+      it 'requires max_budget to be greater than min_budget' do
+        grant.min_budget = 100
+        grant.max_budget = 1
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :max_budget
+        grant.min_budget = 0
+        expect(grant).to be_valid
+      end
     end
 
-    it 'requires unique name and short_name' do
-      grant.save
-      new_grant = Grant.new(name: grant.name, short_name: grant.short_name)
-      expect(new_grant).not_to be_valid
-      expect(new_grant.errors.messages[:name]).to eq ['has already been taken']
-      expect(new_grant.errors.messages[:short_name]).to eq ['has already been taken']
+    context 'panel location' do
+      it 'requires a panel location if panel_date is set' do
+        grant.panel_location = nil
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :panel_location
+        grant.panel_date = nil
+        expect(grant).to be_valid
+      end
     end
   end
 end
