@@ -9,4 +9,5 @@ Competitions::Setup::load_constraints
 Competitions::Setup::load_fields
 Competitions::Setup::load_constraint_fields
 Competitions::Setup::load_organizations
+Competitions::Setup::load_users
 Competitions::Setup::load_grants

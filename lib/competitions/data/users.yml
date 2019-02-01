@@ -1,0 +1,5 @@
+user1:
+  organization_id: 1
+  first_name: 'John'
+  last_name: 'Doe'
+  email: 'j-doe@northwestern.edu'
