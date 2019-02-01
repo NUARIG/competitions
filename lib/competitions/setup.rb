@@ -5,6 +5,7 @@ module Competitions
       Competitions::Setup.load_fields
       Competitions::Setup.load_constraint_fields
       Competitions::Setup.load_organizations
+      Competitions::Setup.load_users
       Competitions::Setup.load_grants
     end
 
@@ -49,6 +50,20 @@ module Competitions
       end
     end
 
+    def self.load_users
+      users = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/users.yml'))
+      users.each do |_, data|
+        user                 = User
+                                 .where(email: data[:email])
+                                 .first_or_initialize
+        user.organization_id = data[:organization_id]
+        user.first_name      = data[:first_name]
+        user.last_name       = data[:last_name]
+        user.email           = data[:email]
+        user.save!
+      end
+    end
+
     def self.load_organizations
       organizations = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/organizations.yml'))
       organizations.each do |_, data|
@@ -65,12 +80,28 @@ module Competitions
     def self.load_grants
       grants = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/grants.yml'))
       grants.each do |_, data|
-        grant                 = Grant
-                                .where(name: data[:name])
-                                .first_or_initialize
-        grant.organization_id = data[:organization_id]
-        grant.name            = data[:name]
-        grant.short_name      = data[:short_name]
+        byebug
+        grant                            = Grant
+                                             .where(name: data[:name])
+                                             .first_or_initialize
+        grant.organization_id            = data[:organization_id]
+        grant.user_id                    = data[:user_id]
+        grant.name                       = data[:name]
+        grant.short_name                 = data[:short_name]
+        grant.state                      = data[:state]
+        grant.initiation_date            = data[:initiation_date]
+        grant.submission_open_date       = data[:submission_open_date]
+        grant.submission_close_date      = data[:submission_close_date]
+        grant.rfa                        = data[:rfa]
+        grant.min_budget                 = data[:min_budget]
+        grant.max_budget                 = data[:max_budget]
+        grant.applications_per_user      = data[:applications_per_user]
+        grant.review_guidance            = data[:review_guidance]
+        grant.max_reviewers_per_proposal = data[:max_reviewers_per_proposal]
+        grant.max_proposals_per_reviewer = data[:max_proposals_per_reviewer]
+        grant.panel_date                 = data[:panel_date]
+        grant.panel_location             = data[:panel_location]
+        byebug
         grant.save!
       end
     end
