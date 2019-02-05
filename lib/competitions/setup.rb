@@ -53,13 +53,15 @@ module Competitions
     def self.load_users
       users = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/users.yml'))
       users.each do |_, data|
-        user                 = User
-                                 .where(email: data[:email])
-                                 .first_or_initialize
-        user.organization_id = data[:organization_id]
-        user.first_name      = data[:first_name]
-        user.last_name       = data[:last_name]
-        user.email           = data[:email]
+        user                    = User
+                                    .where(email: data[:email])
+                                    .first_or_initialize
+        user.organization_id    = data[:organization_id]
+        user.first_name         = data[:first_name]
+        user.last_name          = data[:last_name]
+        user.email              = data[:email]
+        user.organization_role  = data[:organization_role]
+
         user.save!
       end
     end
@@ -80,7 +82,6 @@ module Competitions
     def self.load_grants
       grants = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/grants.yml'))
       grants.each do |_, data|
-        byebug
         grant                            = Grant
                                              .where(name: data[:name])
                                              .first_or_initialize
@@ -101,7 +102,6 @@ module Competitions
         grant.max_proposals_per_reviewer = data[:max_proposals_per_reviewer]
         grant.panel_date                 = data[:panel_date]
         grant.panel_location             = data[:panel_location]
-        byebug
         grant.save!
       end
     end
