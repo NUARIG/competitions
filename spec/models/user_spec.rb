@@ -4,8 +4,15 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:first_name) }
   it { is_expected.to respond_to(:last_name) }
   it { is_expected.to respond_to(:email) }
+  it { is_expected.to respond_to(:organization_role) }
 
   let(:user) { FactoryBot.build(:user) }
+
+  describe '#initiations' do
+    it 'sets default of organization_role' do
+      expect(user.organization_role).to eq('user')
+    end
+  end
 
   describe '#validations' do
     it 'validates presence of first_name' do
@@ -24,6 +31,12 @@ RSpec.describe User, type: :model do
       user.email = nil
       expect(user).not_to be_valid
       expect(user.errors).to include :email
+    end
+
+    it 'validates organization_role' do
+      user.organization_role = nil
+      expect(user).not_to be_valid
+      expect(user.errors).to include :organization_role
     end
 
     # pending

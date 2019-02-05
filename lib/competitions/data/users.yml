@@ -3,3 +3,22 @@ user1:
   first_name: 'John'
   last_name: 'Doe'
   email: 'j-doe@northwestern.edu'
+  organization_role: 'admin'
+user2:
+  organization_id: 1
+  first_name: 'Exene'
+  last_name: 'Cervenka'
+  email: 'e-cervenak@northwestern.edu'
+  organization_role: 'editor'
+user3:
+  organization_id: 1
+  first_name: 'Billy'
+  last_name: 'Zoom'
+  email: 'b-zoom@northwestern.edu'
+  organization_role: 'viewer'
+user4:
+  organization_id: 1
+  first_name: 'D.J.'
+  last_name: 'Bonebrake'
+  email: 'd-bonebrake@northwestern.edu'
+  organization_role: 'user'
