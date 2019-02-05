@@ -10,10 +10,11 @@ class User < ApplicationRecord
   	user: 	'user'
   }
 
+  validates :organization, presence: true
+  validates :organization_role, presence: true
+  validates :email, presence: true, uniqueness: true
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates :email, presence: true, uniqueness: true
-  validates :organization_role, presence: true
 
   private
 	  def set_default_organization_role
