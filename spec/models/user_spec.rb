@@ -16,13 +16,13 @@ RSpec.describe User, type: :model do
   end
 
   describe '#validations' do
-    it 'validates organization' do
+    it 'validates presence of organization' do
       user.organization = nil
       expect(user).not_to be_valid
       expect(user.errors).to include :organization
     end
 
-    it 'validates organization_role' do
+    it 'validates presence of organization_role' do
       user.organization_role = nil
       expect(user).not_to be_valid
       expect(user.errors).to include :organization_role
