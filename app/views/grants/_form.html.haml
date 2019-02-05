@@ -1,0 +1,71 @@
+= form_with model: @grant, local: true do |f|
+  - if @grant.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(f.object.errors.count, "error")
+        prohibited this field from being saved:
+      %ul
+        - f.object.errors.full_messages.each do |message|
+          %li= message
+  %h2
+    Basic Information
+  .cell
+    = f.label :name, 'Name'
+    = f.text_field :name, required: true
+  .cell
+    = f.label :name, 'Short Name'
+    http://example.org/
+    = f.text_field :short_name, required: true
+  .cell
+    = f.label :rfa
+    = f.hidden_field :rfa, id: :grant_rfa
+    %div
+      %trix-editor(input='grant_rfa')
+  %h3
+    Dates
+  .cell
+    = f.label :initiation_date, 'Initiation Date'
+    = f.date_field :initiation_date, required: true, class: 'date datepicker'
+  .cell
+    = f.label :submission_open_date, 'Submission Open Date'
+    = f.date_field :submission_open_date, required: true, class: 'date datepicker'
+  .cell
+    = f.label :submission_close_date, 'Submission Close Date'
+    = f.date_field :submission_close_date, required: true, class: 'date datepicker'
+
+  %h3
+    Budget
+  .cell
+    = f.label :min_budget, 'Minimum Buget Amount'
+    = f.number_field :min_budget, value: number_to_currency(f.object.min_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0
+  .cell
+    = f.label :max_budget, 'Maximum Buget Amount'
+    = f.number_field :max_budget, step: :any, min: 0
+
+  %h3
+    Panel and Reviews
+  %row
+    = f.label :review_guidance, 'Review Guidance'
+    = f.hidden_field :review_guidance, id: 'grant_review_guidance'
+    %div
+      %trix-editor(input='grant_review_guidance')
+  .cell
+    = f.label :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal'
+    = f.number_field :max_reviewers_per_proposal, min: 1
+  .cell
+    = f.label :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer'
+    = f.number_field :max_proposals_per_reviewer, min: 1
+  .cell
+    = f.label :panel_date, 'Day of Panel Review'
+    = f.date_field :panel_date, class: 'date datepicker'
+  .cell
+    = f.label :panel_location, 'Panel Location'
+    = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
+
+  .actions
+    = f.submit 'Save', class: 'button'
+
+:javascript
+  $(function() {
+    $( "#initiation_date, #submission_open_date, #submission_close_date, #panel_date" ).datepicker({format: 'dd/mm/yyyy'});
+  });

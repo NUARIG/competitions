@@ -1,11 +1,11 @@
 = form_with(model: field, url: field, scope: 'field', local: true) do |f|
-  - if field.errors.any?
+  - if f.object.errors.any?
     #error_explanation
       %h2
-        = pluralize(field.errors.count, "error")
+        = pluralize(f.object.errors.count, "error")
         prohibited this field from being saved:
       %ul
-        - field.errors.full_messages.each do |message|
+        - f.object.errors.full_messages.each do |message|
           %li= message
   .row
     = f.label :label, 'Label / Name'

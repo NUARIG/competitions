@@ -33,9 +33,12 @@ gem 'pundit'
 gem 'rubyzip'
 
 # frontend
+gem "font-awesome-rails"
+gem 'foundation-datepicker-rails'
 gem 'foundation-rails'
 gem 'jquery-rails'
 gem 'sprockets-es6'
+gem 'trix'
 
 # audits
 gem 'paper_trail'
