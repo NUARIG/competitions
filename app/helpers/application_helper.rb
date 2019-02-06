@@ -4,4 +4,8 @@ module ApplicationHelper
     base_title = "Competitions"
     page_title.empty? ? base_title : "#{page_title} | #{base_title}"
   end
+
+  def date_mmddYYYY(date)
+    date.nil? ? '' : date.strftime('%m/%d/%Y')
+  end
 end

@@ -6,9 +6,9 @@ class CreateGrants < ActiveRecord::Migration[5.2]
       t.string :name
       t.string :short_name
       t.string :state
-      t.datetime :initiation_date
-      t.datetime :submission_open_date
-      t.datetime :submission_close_date
+      t.date :initiation_date
+      t.date :submission_open_date
+      t.date :submission_close_date
       t.text :rfa
       t.float :min_budget
       t.float :max_budget
@@ -16,7 +16,7 @@ class CreateGrants < ActiveRecord::Migration[5.2]
       t.text :review_guidance
       t.integer :max_reviewers_per_proposal
       t.integer :max_proposals_per_reviewer
-      t.datetime :panel_date
+      t.date :panel_date
       t.text :panel_location
 
       t.timestamps

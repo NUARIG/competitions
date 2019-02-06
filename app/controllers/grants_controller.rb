@@ -40,6 +40,8 @@ class GrantsController < ApplicationController
   # PATCH/PUT /grants/1
   # PATCH/PUT /grants/1.json
   def update
+    @grant.state = (params[:draft].present?) ? 'draft' : 'complete'
+
     respond_to do |format|
       if @grant.update(grant_params)
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
@@ -84,6 +86,7 @@ class GrantsController < ApplicationController
         :max_reviewers_per_proposal,
         :max_proposals_per_reviewer,
         :panel_date,
-        :panel_location)
+        :panel_location,
+        :draft)
     end
 end

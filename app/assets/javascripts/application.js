@@ -10,6 +10,7 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require jquery
 //= require trix
 //= require rails-ujs
 //= require activestorage
@@ -17,5 +18,4 @@
 //= require foundation
 //= require foundation-datepicker
 //= require_tree .
-
 $(function(){ $(document).foundation(); });
