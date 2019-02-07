@@ -1,5 +1,6 @@
 class GrantsController < ApplicationController
   before_action :set_grant, only: %i[show edit update destroy]
+  before_action :set_state, only: %i[edit update]
 
   # GET /grants
   # GET /grants.json
@@ -40,8 +41,6 @@ class GrantsController < ApplicationController
   # PATCH/PUT /grants/1
   # PATCH/PUT /grants/1.json
   def update
-    @grant.state = (params[:draft].present?) ? 'draft' : 'complete'
-
     respond_to do |format|
       if @grant.update(grant_params)
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
@@ -88,5 +87,9 @@ class GrantsController < ApplicationController
         :panel_date,
         :panel_location,
         :draft)
+    end
+
+    def set_state
+      @grant.state = (params[:draft].present?) ? 'draft' : 'complete'
     end
 end
