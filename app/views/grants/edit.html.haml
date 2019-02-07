@@ -1,0 +1,12 @@
+- content_for(:page_title, "#{@grant.name}")
+
+.cell
+  %h1= "Editing #{@grant.name}"
+
+.cell
+  = render 'form'
+
+.cell
+  = link_to 'Show', @grant
+  \|
+  = link_to 'Back', grants_path

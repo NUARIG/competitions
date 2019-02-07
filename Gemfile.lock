@@ -112,6 +112,9 @@ GEM
       factory_bot (~> 4.11.1)
       railties (>= 3.0.0)
     ffi (1.10.0)
+    font-awesome-rails (4.7.0.4)
+      railties (>= 3.2, < 6.0)
+    foundation-datepicker-rails (0.0.3)
     foundation-rails (6.5.1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -307,6 +310,8 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.9)
     timeliness (0.3.8)
+    trix (0.10.1)
+      rails
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -344,6 +349,8 @@ DEPENDENCIES
   draper
   factory_bot_rails
   faker!
+  font-awesome-rails
+  foundation-datepicker-rails
   foundation-rails
   haml-rails (~> 1.0)
   jbuilder (~> 2.5)
@@ -365,6 +372,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets-es6
+  trix
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)

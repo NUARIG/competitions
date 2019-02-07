@@ -1,0 +1,59 @@
+- content_for(:page_title, "#{@grant.name}")
+
+%p#notice= notice
+
+.cell
+  %h1
+    = @grant.name
+    %small
+      = @grant.organization.name
+.cell
+  = label_tag :rfa, "RFA"
+  %div
+    = sanitize(@grant.rfa)
+.cell
+  %h3
+    Dates
+.cell
+  = label_tag :initiation_date, 'Initiation Date'
+  = @grant.initiation_date
+.cell
+  = label_tag :submission_open_date, 'Submission Open Date'
+  = @grant.submission_open_date
+.cell
+  = label_tag :submission_close_date, 'Submission Close Date'
+  = @grant.submission_close_date
+.cell
+  %h3
+    Budget
+  .grid-x
+    .cell
+      = label_tag :min_budget, 'Minimum Buget Amount'
+      $
+      = @grant.min_budget
+    .cell
+      = label_tag :max_budget, 'Maximum Buget Amount'
+      $
+      = @grant.max_budget
+.cell
+  %h3
+    Panel and Reviews
+.cell
+  = label_tag :review_guidance, 'Review Guidance'
+  = sanitize(@grant.review_guidance)
+.cell
+  = label_tag :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal'
+  = @grant.max_reviewers_per_proposal
+.cell
+  = label_tag :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer'
+  = @grant.max_proposals_per_reviewer
+.cell
+  = label_tag :panel_date, 'Day of Panel Review'
+  = @grant.panel_date
+.cell
+  = label_tag :panel_location, 'Panel Location'
+  = @grant.panel_location
+.cell
+  = link_to 'Edit', edit_grant_path(@grant)
+  \|
+  = link_to 'Back', grants_path

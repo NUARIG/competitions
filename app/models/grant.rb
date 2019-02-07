@@ -42,4 +42,7 @@ class Grant < ApplicationRecord
     numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 
   validates :panel_location, presence: true, if: :panel_date?
+
+  scope :by_initiation_date, -> { order(initiation_date: :asc) }
+  scope :with_organization,  -> { joins(:organization) }
 end
