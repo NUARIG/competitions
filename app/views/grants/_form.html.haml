@@ -34,9 +34,9 @@
       .cell.small-12.medium-3
         = f.label :initiation_date, 'Initiation Date', class: 'middle'
       .cell.small-12.medium-9
-        = f.text_field :initiation_date, value: date_mmddYYYY(@grant.initiation_date), required: true, class: 'small-12 medium-6'
-        %small
-          Your grant will publish on this date.
+        = f.text_field :initiation_date, value: date_mmddYYYY(@grant.initiation_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'initiationDateHelp' }
+        %p.help-text#initiationDateHelp
+          Once completed, your grant will publish on this date.
     %h4
       Submission Period
     .grid-x
