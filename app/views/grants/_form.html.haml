@@ -54,14 +54,20 @@
       Budget
     .grid-x
       .cell.small-12.medium-3
-        = f.label :min_budget, 'Minimum Budget $', class: 'middle'
-      .cell.small-12.medium-3
-        = f.number_field :min_budget, value: number_to_currency(f.object.min_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'small-12 medium-6'
+        = f.label :min_budget, 'Minimum Budget', class: 'middle'
+      .cell.small-12.medium-9.input-group
+        .input-group
+          %span.input-group-label
+            $
+          = f.number_field :min_budget, value: number_to_currency(f.object.min_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'small-12 medium-6 input-group-field'
     .grid-x
       .cell.small-12.medium-3
-        = f.label :max_budget, 'Maximum Budget $', class: 'middle'
-      .cell.small-12.medium-3
-        = f.number_field :max_budget, value: number_to_currency(f.object.max_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'small-12 medium-6'
+        = f.label :max_budget, 'Maximum Budget', class: 'middle'
+      .cell.small-12.medium-9
+        .input-group
+          %span.input-group-label
+            $
+          = f.number_field :max_budget, value: number_to_currency(f.object.max_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'input-group-field small-12 medium-6'
 
     %h3
       Panel and Reviews
