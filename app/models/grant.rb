@@ -15,8 +15,7 @@ class Grant < ApplicationRecord
   validates_presence_of :panel_location, if: :panel_date?
   validates_presence_of :initiation_date
 
-  validates_date :initiation_date, on_or_after: :today,
-                    if: ->(obj) { obj.initiation_date.present? && obj.initiation_date_changed? }
+  validates_date :initiation_date, on_or_after: :today
   validates_date :submission_open_date,
                     { on_or_after: :initiation_date,
                       message: 'cannot be earlier than the initiation date.' }
