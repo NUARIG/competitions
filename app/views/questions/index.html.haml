@@ -1,0 +1,31 @@
+%h1 Listing questions
+
+%table
+  %thead
+    %tr
+      %th Field
+      %th Grant
+      %th Name
+      %th Help text
+      %th Placeholder text
+      %th Required
+      %th
+      %th
+      %th
+
+  %tbody
+    - @questions.each do |question|
+      %tr
+        %td= question.field
+        %td= question.grant
+        %td= question.name
+        %td= question.help_text
+        %td= question.placeholder_text
+        %td= question.required
+        %td= link_to 'Show', question
+        %td= link_to 'Edit', edit_question_path(question)
+        %td= link_to 'Destroy', question, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Question', new_question_path

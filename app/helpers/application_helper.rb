@@ -6,6 +6,7 @@ module ApplicationHelper
   end
 
   def date_mmddYYYY(date)
+    byebug
     date.nil? ? '' : date.strftime('%m/%d/%Y')
   end
 end

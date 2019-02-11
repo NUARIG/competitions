@@ -5,9 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Competitions::Setup::load_constraints
-Competitions::Setup::load_fields
-Competitions::Setup::load_constraint_fields
 Competitions::Setup::load_organizations
 Competitions::Setup::load_users
+Competitions::Setup::load_constraints
+Competitions::Setup::load_fields
 Competitions::Setup::load_grants
+Competitions::Setup::load_questions
+Competitions::Setup::load_constraint_questions

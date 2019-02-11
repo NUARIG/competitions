@@ -1,12 +1,13 @@
 module Competitions
   module Setup
     def self.all
-      Competitions::Setup.load_constraints
-      Competitions::Setup.load_fields
-      Competitions::Setup.load_constraint_fields
       Competitions::Setup.load_organizations
       Competitions::Setup.load_users
+      Competitions::Setup.load_constraints
+      Competitions::Setup.load_fields
       Competitions::Setup.load_grants
+      Competitions::Setup.load_questions
+      Competitions::Setup.load_constraint_questions
     end
 
     def self.load_constraints
@@ -34,19 +35,6 @@ module Competitions
         field.help_text   = data[:help_text] if data[:help_text].present?
         field.placeholder = data[:placeholder] if data[:placeholder].present?
         field.save!
-      end
-    end
-
-    def self.load_constraint_fields
-      constraint_fields = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraint_fields.yml'))
-      constraint_fields.each do |_, data|
-        constraint_field              = ConstraintField
-                                          .where(field_id: data[:field_id], constraint_id: data[:constraint_id])
-                                          .first_or_initialize
-        constraint_field.field_id      = data[:field_id]
-        constraint_field.constraint_id = data[:constraint_id]
-        constraint_field.value         = data[:value] if data[:value].present?
-        constraint_field.save!
       end
     end
 
@@ -105,5 +93,35 @@ module Competitions
         grant.save!
       end
     end
+
+    def self.load_questions
+      questions = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/questions.yml'))
+      questions.each do |_, data|
+        question                  = Question
+                                      .where(field_id: data[:field_id], grant_id: data[:grant_id])
+                                      .first_or_initialize
+        question.field_id         =  data[:field_id]
+        question.grant_id         =  data[:grant_id]
+        question.name             = data[:name]
+        question.help_text        = data[:help_text]
+        question.placeholder_text = data[:placeholder_text]
+        question.required         = data[:required]
+        question.save!
+      end
+    end
+
+    def self.load_constraint_questions
+      constraint_questions = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraint_questions.yml'))
+      constraint_questions.each do |_, data|
+        constraint_question               = ConstraintQuestion
+                                              .where(question_id: data[:question_id], constraint_id: data[:constraint_id])
+                                              .first_or_initialize
+        constraint_question.question_id   = data[:question_id]
+        constraint_question.constraint_id = data[:constraint_id]
+        constraint_question.value         = data[:value] if data[:value].present?
+        constraint_question.save!
+      end
+    end
+
   end
 end

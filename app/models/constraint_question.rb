@@ -1,6 +1,6 @@
-class ConstraintField < ApplicationRecord
+class ConstraintQuestion < ApplicationRecord
   belongs_to :constraint
-  belongs_to :field
+  belongs_to :question
 
   validates :value, with: :value_is_a_constraint_type
 
@@ -18,7 +18,9 @@ class ConstraintField < ApplicationRecord
     end
 
     def value_is_string
-      # will this need to be implemented?
+      unless value.respond_to?(:to_str)
+        errors.add(:value, 'must be an string.')
+      end
     end
 
     def value_is_float

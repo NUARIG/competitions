@@ -1,6 +1,6 @@
 namespace :constraint_fields do
-  desc 'Load or update initial ConstraintFields'
+  desc 'Load or update initial ConstraintQuestions'
   task(load: :environment) do
-    Competitions::Setup.load_constraint_fields
+    Competitions::Setup.load_constraint_questions
   end
 end

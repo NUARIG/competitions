@@ -1,8 +1,8 @@
 class Constraint < ApplicationRecord
   include ActiveModel::Validations
 
-  has_many :constraint_fields
-  has_many :fields, through: :constraint_fields
+  has_many :constraint_questions
+  has_many :questions, through: :constraint_questions
 
   enum value_type: {
     integer: 'integer',

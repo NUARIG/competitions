@@ -19,15 +19,6 @@ class CreateFieldsAndConstraints < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    create_table :constraint_fields do |t|
-      t.references :constraint
-      t.references :field
-      t.string     :value
-
-      t.timestamps
-    end
-
     add_index :constraints, [:value_type]
-    add_index :constraint_fields, [:constraint_id, :field_id]
   end
 end
