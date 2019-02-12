@@ -86,6 +86,7 @@ class GrantsController < ApplicationController
         :max_proposals_per_reviewer,
         :panel_date,
         :panel_location,
+        :organization_id,
         :draft)
     end
 

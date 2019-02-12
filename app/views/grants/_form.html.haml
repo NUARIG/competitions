@@ -95,6 +95,7 @@
         = f.label :panel_location, 'Panel Location'
         = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
     .grid-x
+      = f.hidden_field :organization_id, value: current_user.organization.id
       .actions
         = f.submit 'Save and Complete', class: 'button'
         = f.submit 'Save as Draft', class: 'button warning', name: 'draft'

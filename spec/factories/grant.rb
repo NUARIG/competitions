@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :grant do
     association :organization, factory: :organization
-    association :user, factory: :user
     sequence(:name)             { |n| "Grant Name #{n}" }
     sequence(:short_name)       { |n| "GN#{n}" }
     state                       { 'complete' }

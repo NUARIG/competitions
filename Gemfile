@@ -34,7 +34,7 @@ gem 'pundit'
 gem 'rubyzip'
 
 # frontend
-gem "font-awesome-rails"
+gem 'font-awesome-rails'
 gem 'foundation-datepicker-rails'
 gem 'foundation-rails'
 gem 'jquery-rails'
@@ -44,6 +44,7 @@ gem 'trix'
 # audits
 gem 'paper_trail'
 
+gem 'american_date'
 gem 'validates_timeliness'
 
 group :development, :test do
