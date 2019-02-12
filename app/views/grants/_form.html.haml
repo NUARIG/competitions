@@ -94,14 +94,14 @@
       .cell
         = f.label :panel_location, 'Panel Location'
         = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
-
-    .actions
-      = f.submit 'Save and Complete', class: 'button'
-      = f.submit 'Save as Draft', class: 'button warning', name: 'draft'
-      - if @grant.persisted?
-        = link_to 'Cancel', @grant, class: 'button secondary'
-      - else
-        = link_to 'Cancel', grants_path, class: 'button secondary'
+    .grid-x
+      .actions
+        = f.submit 'Save and Complete', class: 'button'
+        = f.submit 'Save as Draft', class: 'button warning', name: 'draft'
+        - if @grant.persisted?
+          = link_to 'Cancel', @grant, class: 'button secondary'
+        - else
+          = link_to 'Cancel', grants_path, class: 'button secondary'
 
 :javascript
   $(function() {

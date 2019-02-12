@@ -1,24 +1,29 @@
-%p#notice= notice
+- content_for(:page_title, "Question - #{@question.name}")
 
-%p
-  %b Field:
-  = @question.field
-%p
-  %b Grant:
-  = @question.grant
-%p
+.cell
+  %h1 Viewing question
+
+%p#notice= notice
+/ %p
+/   %b Field:
+/   = @question.field
+/ %p
+/   %b Grant:
+/   = @question.grant
+
+.cell
   %b Name:
   = @question.name
-%p
+.cell
   %b Help text:
   = @question.help_text
-%p
+.cell
   %b Placeholder text:
   = @question.placeholder_text
-%p
+.cell
   %b Required:
   = @question.required
-
-= link_to 'Edit', edit_question_path(@question)
-\|
-= link_to 'Back', questions_path
+.cell
+  = link_to 'Edit', edit_question_path(@question)
+  \|
+  = link_to 'Back', questions_path
