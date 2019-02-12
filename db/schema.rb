@@ -10,20 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_21_175254) do
+ActiveRecord::Schema.define(version: 2019_02_11_162144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "constraint_fields", force: :cascade do |t|
+  create_table "constraint_questions", force: :cascade do |t|
     t.bigint "constraint_id"
-    t.bigint "field_id"
+    t.bigint "question_id"
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["constraint_id", "field_id"], name: "index_constraint_fields_on_constraint_id_and_field_id"
-    t.index ["constraint_id"], name: "index_constraint_fields_on_constraint_id"
-    t.index ["field_id"], name: "index_constraint_fields_on_field_id"
+    t.index ["constraint_id", "question_id"], name: "index_constraint_questions_on_constraint_id_and_question_id"
+    t.index ["constraint_id"], name: "index_constraint_questions_on_constraint_id"
+    t.index ["question_id"], name: "index_constraint_questions_on_question_id"
   end
 
   create_table "constraints", force: :cascade do |t|
@@ -76,6 +76,20 @@ ActiveRecord::Schema.define(version: 2019_01_21_175254) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.bigint "field_id"
+    t.bigint "grant_id"
+    t.text "name"
+    t.text "help_text"
+    t.text "placeholder_text"
+    t.boolean "required"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["field_id", "grant_id"], name: "index_questions_on_field_id_and_grant_id"
+    t.index ["field_id"], name: "index_questions_on_field_id"
+    t.index ["grant_id"], name: "index_questions_on_grant_id"
   end
 
   create_table "users", force: :cascade do |t|

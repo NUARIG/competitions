@@ -1,0 +1,43 @@
+= form_for @question do |f|
+  - if @question.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@question.errors.count, "error")} prohibited this question from being saved:"
+      %ul
+        - @question.errors.full_messages.each do |message|
+          %li= message
+
+  .grid-x
+    =# f.label :field
+    =# f.text_field :field
+  .grid-x
+    =# f.label :grant
+    =# f.text_field :grant
+  .grid-x
+    .cell.small-12
+      = f.label :name
+    .cell.small-12
+      = f.text_field :name
+  .grid-x
+    .cell.small-12
+      = f.label :help_text
+    .cell.small-12
+      = f.text_field :help_text
+  .grid-x
+    .cell.small-12
+      = f.label :placeholder_text
+    .cell.small-12
+      = f.text_field :placeholder_text
+  .grid-x
+    .small-12.medium-3
+      = f.check_box :required, class: 'middle', aria: { 'described-by': 'requiredHelp' }
+    .small-12.medium-9
+      = f.label :required, class: 'middle'
+    %p.help-text#requiredHelp
+      Check to require a response to this question.
+  .grid-x
+    .actions
+      = f.submit 'Save', class: 'button'
+      - if @question.persisted?
+        = link_to 'Cancel', @question, class: 'button secondary'
+      - else
+        = link_to 'Cancel', questions_path, class: 'button secondary'

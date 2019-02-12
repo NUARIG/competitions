@@ -1,0 +1,11 @@
+- content_for(:page_title, "Editing '#{@question.name}'")
+
+.cell
+  %h1 Editing question
+
+= render 'form'
+
+.cell
+  = link_to 'Show', @question
+  \|
+  = link_to 'View all', questions_path

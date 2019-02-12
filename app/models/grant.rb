@@ -1,6 +1,7 @@
 class Grant < ApplicationRecord
   belongs_to :organization
   belongs_to :user
+  has_many   :questions, dependent: :destroy
 
   enum state: {
     demo: 'demo',
