@@ -19,7 +19,7 @@ class ConstraintQuestion < ApplicationRecord
 
     def value_is_string
       unless value.respond_to?(:to_str)
-        errors.add(:value, 'must be an string.')
+        errors.add(:value, 'must be a string.')
       end
     end
 
