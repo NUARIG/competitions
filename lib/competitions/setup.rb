@@ -50,13 +50,13 @@ module Competitions
         user.email              = data[:email]
         user.organization_role  = data[:organization_role]
         user.password           = data[:password]
-
         user.save!
       end
     end
 
     def self.load_organizations
       organizations = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/organizations.yml'))
+      byebug
       organizations.each do |_, data|
         organization            = Organization
                                     .where(name: data[:name])
