@@ -48,7 +48,6 @@ ActiveRecord::Schema.define(version: 2019_02_11_162144) do
 
   create_table "grants", force: :cascade do |t|
     t.bigint "organization_id"
-    t.bigint "user_id"
     t.string "name"
     t.string "short_name"
     t.string "state"
@@ -62,12 +61,13 @@ ActiveRecord::Schema.define(version: 2019_02_11_162144) do
     t.text "review_guidance"
     t.integer "max_reviewers_per_proposal"
     t.integer "max_proposals_per_reviewer"
+    t.date "review_open_date"
+    t.date "review_close_date"
     t.date "panel_date"
     t.text "panel_location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_grants_on_organization_id"
-    t.index ["user_id"], name: "index_grants_on_user_id"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -110,6 +110,5 @@ ActiveRecord::Schema.define(version: 2019_02_11_162144) do
   end
 
   add_foreign_key "grants", "organizations"
-  add_foreign_key "grants", "users"
   add_foreign_key "users", "organizations"
 end

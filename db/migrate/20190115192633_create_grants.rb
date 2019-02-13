@@ -15,6 +15,8 @@ class CreateGrants < ActiveRecord::Migration[5.2]
       t.text :review_guidance
       t.integer :max_reviewers_per_proposal
       t.integer :max_proposals_per_reviewer
+      t.date :review_open_date
+      t.date :review_close_date
       t.date :panel_date
       t.text :panel_location
 

@@ -14,7 +14,9 @@ FactoryBot.define do
     review_guidance             { Faker::Lorem.paragraph }
     max_reviewers_per_proposal  { 1 }
     max_proposals_per_reviewer  { 1 }
-    panel_date                  { 30.days.from_now }
+    review_open_date            { 30.days.from_now }
+    review_close_date           { 40.days.from_now }
+    panel_date                  { 50.days.from_now }
     panel_location              { Faker::Address.full_address }
   end
 end

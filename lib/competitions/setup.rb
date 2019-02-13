@@ -56,7 +56,6 @@ module Competitions
 
     def self.load_organizations
       organizations = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/organizations.yml'))
-      byebug
       organizations.each do |_, data|
         organization            = Organization
                                     .where(name: data[:name])
@@ -75,7 +74,6 @@ module Competitions
                                              .where(name: data[:name])
                                              .first_or_initialize
         grant.organization_id            = data[:organization_id]
-        grant.user_id                    = data[:user_id]
         grant.name                       = data[:name]
         grant.short_name                 = data[:short_name]
         grant.state                      = data[:state]

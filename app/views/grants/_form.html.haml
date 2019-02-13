@@ -13,7 +13,7 @@
     .grid-x
       .cell
         = f.label :name, 'Name'
-        = f.text_field :name, required: true
+        = f.text_field :name, required: true, tabindex: 1
     .grid-x
       .cell.small-12
         = f.label :name, 'Short Name'
@@ -22,7 +22,7 @@
           %label.middle
             http://example.org/
         .cell.small-12.medium-9
-          = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
+          = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6', tabindex: 2
     .grid-x
       .cell
         = f.label :rfa
@@ -87,6 +87,16 @@
         = f.number_field :max_proposals_per_reviewer, min: 1
     .grid-x
       .cell.small-12.medium-3
+        = f.label :review_open_date, 'Review Open Date', class: 'middle'
+      .cell.small-12.medium-9
+        = f.text_field :review_open_date, value: date_mmddYYYY(@grant.review_open_date), class: 'small-12 medium-6'
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :review_close_date, 'Review Close Date', class: 'middle'
+      .cell.small-12.medium-9
+        = f.text_field :review_close_date, value: date_mmddYYYY(@grant.review_close_date), class: 'small-12 medium-6'
+    .grid-x
+      .cell.small-12.medium-3
         = f.label :panel_date, 'Panel Date', class: 'middle'
       .cell.small-12.medium-9
         = f.text_field :panel_date, value: date_mmddYYYY(@grant.panel_date), class: 'small-12 medium-6'
@@ -106,9 +116,15 @@
 
 :javascript
   $(function() {
-    $( "#grant_initiation_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date" ).fdatepicker({
+    $( "#grant_initiation_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
       format: 'mm/dd/yyyy',
-      closeIcon:'X',
+      closeIcon:' X ',
       closeButton: true
     });
+  });
+  document.addEventListener("trix-initialize", function(event) {
+  var elementButtons = event.target.toolbarElement.querySelectorAll("button")
+    for (i=0; i<elementButtons.length; i++) {
+      elementButtons[i].tabIndex = -1 ;
+    }
   });
