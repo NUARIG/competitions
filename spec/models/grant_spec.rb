@@ -75,9 +75,9 @@ RSpec.describe Grant, type: :model do
         expect(grant.errors).to include :submission_close_date
       end
 
-      it 'requires review_open_date to be after submission_close_date' do
-        grant.submission_close_date = 30.days.from_now
-        grant.review_open_date = 29.days.from_now
+      it 'requires review_open_date to be after submission_open_date' do
+        grant.review_open_date = 28.days.from_now
+        grant.submission_open_date = 29.days.from_now
         expect(grant).not_to be_valid
         expect(grant.errors).to include :review_open_date
       end

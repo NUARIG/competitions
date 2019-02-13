@@ -22,8 +22,8 @@ class Grant < ApplicationRecord
                     { after: :submission_open_date,
                       message: 'must be after the opening date for submissions.' }
   validates_date :review_open_date,
-                    { after: :submission_close_date,
-                      message: 'must be after the submission close.' }
+                    { after: :submission_open_date,
+                      message: 'must be after the submission open.' }
   validates_date :review_close_date,
                     { after: :review_open_date,
                       message: 'must be after the review opening date.' }

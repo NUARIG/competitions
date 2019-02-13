@@ -13,7 +13,7 @@
     .grid-x
       .cell
         = f.label :name, 'Name'
-        = f.text_field :name, required: true, tabindex: 1
+        = f.text_field :name, required: true
     .grid-x
       .cell.small-12
         = f.label :name, 'Short Name'
@@ -22,7 +22,7 @@
           %label.middle
             http://example.org/
         .cell.small-12.medium-9
-          = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6', tabindex: 2
+          = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
     .grid-x
       .cell
         = f.label :rfa
