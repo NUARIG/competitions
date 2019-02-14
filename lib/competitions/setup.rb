@@ -50,7 +50,6 @@ module Competitions
         user.email              = data[:email]
         user.organization_role  = data[:organization_role]
         user.password           = data[:password]
-
         user.save!
       end
     end
@@ -75,7 +74,6 @@ module Competitions
                                              .where(name: data[:name])
                                              .first_or_initialize
         grant.organization_id            = data[:organization_id]
-        grant.user_id                    = data[:user_id]
         grant.name                       = data[:name]
         grant.short_name                 = data[:short_name]
         grant.state                      = data[:state]

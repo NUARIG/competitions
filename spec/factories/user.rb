@@ -4,5 +4,6 @@ FactoryBot.define do
     last_name    { Faker::Name.last_name }
     email        { Faker::Internet.email }
     association :organization, factory: :organization
+    password     { 'secret' }
   end
 end

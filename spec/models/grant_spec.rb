@@ -14,6 +14,8 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:review_guidance) }
   it { is_expected.to respond_to(:max_reviewers_per_proposal) }
   it { is_expected.to respond_to(:max_proposals_per_reviewer) }
+  it { is_expected.to respond_to(:review_open_date) }
+  it { is_expected.to respond_to(:review_close_date) }
   it { is_expected.to respond_to(:panel_date) }
   it { is_expected.to respond_to(:panel_location) }
 
@@ -67,10 +69,24 @@ RSpec.describe Grant, type: :model do
       end
 
       it 'requires submission_close_date to be after submission_open_date' do
-        grant.submission_open_date = 2.days.ago
-        grant.submission_close_date = 3.days.ago
+        grant.submission_open_date = 10.days.from_now
+        grant.submission_close_date = 9.days.from_now
         expect(grant).not_to be_valid
         expect(grant.errors).to include :submission_close_date
+      end
+
+      it 'requires review_open_date to be after submission_open_date' do
+        grant.review_open_date = 28.days.from_now
+        grant.submission_open_date = 29.days.from_now
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :review_open_date
+      end
+
+      it 'requires review_close_date to be after review_open_date' do
+        grant.review_open_date = 30.days.from_now
+        grant.review_close_date = 29.days.from_now
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :review_close_date
       end
     end
 
