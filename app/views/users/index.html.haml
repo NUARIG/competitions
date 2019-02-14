@@ -1,0 +1,16 @@
+%h1 Users
+
+%table
+  %thead
+    %tr
+      %th
+        Email
+      %th
+      %th
+
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.email
+        %td= link_to 'Edit', edit_user_path(user)
+        %td= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' }

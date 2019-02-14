@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 2019_01_21_175254) do
     t.string "email", default: "", null: false
     t.string "first_name"
     t.string "last_name"
+    t.string "era_commons"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false

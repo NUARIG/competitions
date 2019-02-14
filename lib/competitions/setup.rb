@@ -62,6 +62,7 @@ module Competitions
         user.email              = data[:email]
         user.organization_role  = data[:organization_role]
         user.password           = data[:password]
+        user.era_commons        = data[:era_commons]
 
         user.save!
       end

@@ -12,6 +12,7 @@ user2:
   email: 'e-cervenak@northwestern.edu'
   organization_role: 'editor'
   password: 'secret'
+  era_commons: 'ECervenk90069'
 user3:
   organization_id: 1
   first_name: 'Billy'
@@ -26,3 +27,4 @@ user4:
   email: 'd-bonebrake@northwestern.edu'
   organization_role: 'user'
   password: 'secret'
+  era_commons: 'DBonebr90069'
