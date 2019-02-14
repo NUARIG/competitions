@@ -89,6 +89,8 @@ module Competitions
         grant.review_guidance            = data[:review_guidance]
         grant.max_reviewers_per_proposal = data[:max_reviewers_per_proposal]
         grant.max_proposals_per_reviewer = data[:max_proposals_per_reviewer]
+        grant.review_open_date           = data[:review_open_date]
+        grant.review_close_date          = data[:review_close_date]
         grant.panel_date                 = data[:panel_date]
         grant.panel_location             = data[:panel_location]
         grant.save!
