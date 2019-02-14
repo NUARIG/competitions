@@ -20,7 +20,7 @@ class User < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
 
-  scope :with_organization,  -> { joins(:organization) }
+  scope :with_organization, -> { includes :organizations }
 
   def name
     "#{first_name} #{last_name}".strip
