@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   root to: 'grants#index'
 
+  resources :questions
   resources :fields
   resources :grants
   resources :users

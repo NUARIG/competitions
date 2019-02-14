@@ -43,12 +43,12 @@
       .cell.small-12.medium-3
         = f.label :submission_open_date, 'Open Date', class: 'middle'
       .cell.small-12.medium-9
-        = f.text_field :submission_open_date, value: date_mmddYYYY(@grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, data: { provide: 'fdatepicker', 'date-format': 'mm/dd/YYYY' }, class: 'small-12 medium-6'
+        = f.text_field :submission_open_date, value: date_mmddYYYY(@grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
     .grid-x
       .cell.small-12.medium-3
         = f.label :submission_close_date, 'Close Date', class: 'middle'
       .cell.small-12.medium-9
-        = f.text_field :submission_close_date, value: date_mmddYYYY(@grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, data: { provide: 'fdatepicker', 'date-format': 'mm/dd/YYYY' }, class: 'small-12 medium-6'
+        = f.text_field :submission_close_date, value: date_mmddYYYY(@grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
 
     %h3
       Budget
@@ -87,6 +87,16 @@
         = f.number_field :max_proposals_per_reviewer, min: 1
     .grid-x
       .cell.small-12.medium-3
+        = f.label :review_open_date, 'Review Open Date', class: 'middle'
+      .cell.small-12.medium-9
+        = f.text_field :review_open_date, value: date_mmddYYYY(@grant.review_open_date), class: 'small-12 medium-6'
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :review_close_date, 'Review Close Date', class: 'middle'
+      .cell.small-12.medium-9
+        = f.text_field :review_close_date, value: date_mmddYYYY(@grant.review_close_date), class: 'small-12 medium-6'
+    .grid-x
+      .cell.small-12.medium-3
         = f.label :panel_date, 'Panel Date', class: 'middle'
       .cell.small-12.medium-9
         = f.text_field :panel_date, value: date_mmddYYYY(@grant.panel_date), class: 'small-12 medium-6'
@@ -94,20 +104,27 @@
       .cell
         = f.label :panel_location, 'Panel Location'
         = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
-
-    .actions
-      = f.submit 'Save and Complete', class: 'button'
-      = f.submit 'Save as Draft', class: 'button warning', name: 'draft'
-      - if @grant.persisted?
-        = link_to 'Cancel', @grant, class: 'button secondary'
-      - else
-        = link_to 'Cancel', grants_path, class: 'button secondary'
+    .grid-x
+      = f.hidden_field :organization_id, value: current_user.organization.id
+      .actions
+        = f.submit 'Save and Complete', class: 'button'
+        = f.submit 'Save as Draft', class: 'button warning', name: 'draft'
+        - if @grant.persisted?
+          = link_to 'Cancel', @grant, class: 'button secondary'
+        - else
+          = link_to 'Cancel', grants_path, class: 'button secondary'
 
 :javascript
   $(function() {
-    $( "#grant_initiation_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date" ).fdatepicker({
+    $( "#grant_initiation_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
       format: 'mm/dd/yyyy',
-      closeIcon:'X',
+      closeIcon:' X ',
       closeButton: true
     });
+  });
+  document.addEventListener("trix-initialize", function(event) {
+  var elementButtons = event.target.toolbarElement.querySelectorAll("button")
+    for (i=0; i<elementButtons.length; i++) {
+      elementButtons[i].tabIndex = -1 ;
+    }
   });
