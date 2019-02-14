@@ -1,0 +1,6 @@
+- content_for(:page_title, "#{@user.name}")
+
+.cell
+  %h1= "Editing #{@user.name} Profile"
+
+= render 'form'

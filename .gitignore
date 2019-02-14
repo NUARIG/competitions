@@ -35,3 +35,5 @@
 
 # Rspec
 /spec/examples.txt
+/coverage
+/coverage/*

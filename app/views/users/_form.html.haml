@@ -1,0 +1,35 @@
+.grid-x
+  = form_with model: @user, local: true do |f|
+    - if @user.errors.any?
+      #error_explanation
+        %h2
+          = pluralize(f.object.errors.count, "error")
+          prohibited this field from being saved:
+        %ul
+          - f.object.errors.full_messages.each do |message|
+            %li= message
+    .grid-x
+      .cell
+        .grid-x
+          = f.label :first_name, 'First Name'
+          = f.text_field :first_name, disabled: @user
+        .grid-x
+          = f.label :last_name, 'Last Name'
+          = f.text_field :last_name, disabled: @user
+        .grid-x
+          = f.label :email, 'email'
+          = f.text_field :email, disabled: @user
+        .grid-x
+          = f.label :era_commons, 'eRA Commons'
+          = f.text_field :era_commons
+        .grid-x
+          = f.label :organization, 'Organization'
+          = f.text_field :organization, value: "#{@user.organization.name}", disabled: @user
+        .grid-x
+          = f.label :organization_role, 'Organization Role'
+          / = f.text_field :organization_role
+          = f.select :organization_role, User.organization_roles.keys.to_a
+
+    .actions
+      = f.submit 'Update', class: 'button'
+      = link_to 'Cancel', users_path, class: 'button secondary'
