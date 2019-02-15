@@ -3,10 +3,11 @@ Rails.application.routes.draw do
 
   root to: 'grants#index'
 
-  resources :questions
   resources :fields
-  resources :grants
-  resources :users
+  resources :grants do
+    resources :questions
+  end
+
   resources :organizations
   resources :users, only: %i[index edit update]
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
