@@ -39,7 +39,6 @@ class QuestionsController < ApplicationController
   # PATCH/PUT /questions/1
   # PATCH/PUT /questions/1.json
   def update
-    byebug
     respond_to do |format|
       if @question.update(question_params)
         flash[:success] = 'Question updated.'
