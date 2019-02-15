@@ -1,130 +1,140 @@
+%h2
+  Basic Information
 .grid-x
-  = form_with model: @grant, local: true do |f|
-    - if @grant.errors.any?
-      #error_explanation
-        %h2
-          = pluralize(f.object.errors.count, "error")
-          prohibited this field from being saved:
-        %ul
-          - f.object.errors.full_messages.each do |message|
-            %li= message
-    %h2
-      Basic Information
-    .grid-x
-      .cell
-        = f.label :name, 'Name'
-        = f.text_field :name, required: true
-    .grid-x
-      .cell.small-12
-        = f.label :name, 'Short Name'
-      .cell.grid-x.small-12
-        .cell.small-12.medium-3
-          %label.middle
-            http://example.org/
-        .cell.small-12.medium-9
-          = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
-    .grid-x
-      .cell
-        = f.label :rfa
-        = f.hidden_field :rfa, id: :grant_rfa
-        %trix-editor(input='grant_rfa')
-    %h3
-      Dates
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :initiation_date, 'Initiation Date', class: 'middle'
-      .cell.small-12.medium-9
-        = f.text_field :initiation_date, value: date_mmddYYYY(@grant.initiation_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'initiationDateHelp' }
-        %p.help-text#initiationDateHelp
-          Once completed, your grant will publish on this date.
-    %h4
-      Submission Period
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :submission_open_date, 'Open Date', class: 'middle'
-      .cell.small-12.medium-9
-        = f.text_field :submission_open_date, value: date_mmddYYYY(@grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :submission_close_date, 'Close Date', class: 'middle'
-      .cell.small-12.medium-9
-        = f.text_field :submission_close_date, value: date_mmddYYYY(@grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
+  .cell
+    = f.label :name, 'Name'
+    = f.text_field :name, required: true
+.grid-x
+  .cell.small-12
+    = f.label :name, 'Short Name'
+  .cell.grid-x.small-12
+    .cell.small-12.medium-3
+      %label.middle
+        http://example.org/
+    .cell.small-12.medium-9
+      = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
+.grid-x
+  .cell
+    = f.label :rfa
+    = f.hidden_field :rfa, id: :grant_rfa
+    %trix-editor(input='grant_rfa')
+%h3
+  Dates
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :initiation_date, 'Initiation Date', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :initiation_date, value: date_mmddYYYY(grant.initiation_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'initiationDateHelp' }
+    %p.help-text#initiationDateHelp
+      Once completed, your grant will publish on this date.
+%h4
+  Submission Period
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :submission_open_date, 'Open Date', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :submission_open_date, value: date_mmddYYYY(grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :submission_close_date, 'Close Date', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :submission_close_date, value: date_mmddYYYY(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
 
-    %h3
-      Budget
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :min_budget, 'Minimum Budget', class: 'middle'
-      .cell.small-12.medium-9.input-group
-        .input-group
-          %span.input-group-label
-            $
-          = f.number_field :min_budget, value: number_to_currency(f.object.min_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'small-12 medium-6 input-group-field'
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :max_budget, 'Maximum Budget', class: 'middle'
-      .cell.small-12.medium-9
-        .input-group
-          %span.input-group-label
-            $
-          = f.number_field :max_budget, value: number_to_currency(f.object.max_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'input-group-field small-12 medium-6'
+%h3
+  Budget
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :min_budget, 'Minimum Budget', class: 'middle'
+  .cell.small-12.medium-9.input-group
+    .input-group
+      %span.input-group-label
+        $
+      = f.number_field :min_budget, value: number_to_currency(f.object.min_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'small-12 medium-6 input-group-field'
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :max_budget, 'Maximum Budget', class: 'middle'
+  .cell.small-12.medium-9
+    .input-group
+      %span.input-group-label
+        $
+      = f.number_field :max_budget, value: number_to_currency(f.object.max_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'input-group-field small-12 medium-6'
 
+%h3
+  Panel and Reviews
+.grid-x
+  .cell
+    = f.label :review_guidance, 'Review Guidance'
+    = f.hidden_field :review_guidance, id: 'grant_review_guidance'
+    %div
+      %trix-editor(input='grant_review_guidance')
+.grid-x
+  .cell
+    = f.label :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal', class: 'middle'
+    = f.number_field :max_reviewers_per_proposal, min: 1
+.grid-x
+  .cell
+    = f.label :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer', class: 'middle'
+    = f.number_field :max_proposals_per_reviewer, min: 1
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :review_open_date, 'Review Open Date', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :review_open_date, value: date_mmddYYYY(grant.review_open_date), class: 'small-12 medium-6'
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :review_close_date, 'Review Close Date', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :review_close_date, value: date_mmddYYYY(grant.review_close_date), class: 'small-12 medium-6'
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :panel_date, 'Panel Date', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :panel_date, value: date_mmddYYYY(grant.panel_date), class: 'small-12 medium-6'
+.grid-x
+  .cell
+    = f.label :panel_location, 'Panel Location'
+    = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
+.grid-x
+  .cell
     %h3
-      Panel and Reviews
-    .grid-x
-      .cell
-        = f.label :review_guidance, 'Review Guidance'
-        = f.hidden_field :review_guidance, id: 'grant_review_guidance'
-        %div
-          %trix-editor(input='grant_review_guidance')
-    .grid-x
-      .cell
-        = f.label :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal', class: 'middle'
-        = f.number_field :max_reviewers_per_proposal, min: 1
-    .grid-x
-      .cell
-        = f.label :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer', class: 'middle'
-        = f.number_field :max_proposals_per_reviewer, min: 1
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :review_open_date, 'Review Open Date', class: 'middle'
-      .cell.small-12.medium-9
-        = f.text_field :review_open_date, value: date_mmddYYYY(@grant.review_open_date), class: 'small-12 medium-6'
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :review_close_date, 'Review Close Date', class: 'middle'
-      .cell.small-12.medium-9
-        = f.text_field :review_close_date, value: date_mmddYYYY(@grant.review_close_date), class: 'small-12 medium-6'
-    .grid-x
-      .cell.small-12.medium-3
-        = f.label :panel_date, 'Panel Date', class: 'middle'
-      .cell.small-12.medium-9
-        = f.text_field :panel_date, value: date_mmddYYYY(@grant.panel_date), class: 'small-12 medium-6'
-    .grid-x
-      .cell
-        = f.label :panel_location, 'Panel Location'
-        = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
-    .grid-x
-      = f.hidden_field :organization_id, value: current_user.organization.id
-      .actions
-        = f.submit 'Save and Complete', class: 'button'
-        = f.submit 'Save as Draft', class: 'button warning', name: 'draft'
-        - if @grant.persisted?
-          = link_to 'Cancel', @grant, class: 'button secondary'
-        - else
-          = link_to 'Cancel', grants_path, class: 'button secondary'
+      Applicant Questions
+    .cell
+      %table.striped
+        %tr
+          %th
+            Label
+          %th
+            Req'd
+          %th
+        = f.fields_for :questions, questions do |ff|
+          %tr{ class: cycle('odd', 'even') }
+            %td
+              = ff.label :question, ff.object.name
+            %td
+              = ff.check_box :required, value: ff.object.required
+            %td
+              = link_to 'Edit', edit_grant_question_path(grant, ff.object)
+.grid-x
+  = f.hidden_field :organization_id, value: current_user.organization.id
+  .actions
+    = f.submit 'Save and Complete', class: 'button'
+    = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed'
+    - if grant.persisted?
+      = link_to 'Cancel', grant, class: 'button secondary'
+    - else
+      = link_to 'Cancel', grants_path, class: 'button secondary'
 
 :javascript
   $(function() {
-    $( "#grant_initiation_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
-      format: 'mm/dd/yyyy',
-      closeIcon:' X ',
-      closeButton: true
-    });
+  $( "#grant_initiation_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
+    format: 'mm/dd/yyyy',
+    closeIcon:' X ',
+    closeButton: true
+  });
   });
   document.addEventListener("trix-initialize", function(event) {
   var elementButtons = event.target.toolbarElement.querySelectorAll("button")
-    for (i=0; i<elementButtons.length; i++) {
-      elementButtons[i].tabIndex = -1 ;
-    }
+  for (i=0; i<elementButtons.length; i++) {
+    elementButtons[i].tabIndex = -1 ;
+  }
   });

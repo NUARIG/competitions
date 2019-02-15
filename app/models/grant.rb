@@ -2,6 +2,8 @@ class Grant < ApplicationRecord
   belongs_to :organization
   has_many   :questions, dependent: :destroy
 
+  accepts_nested_attributes_for :questions
+
   enum state: {
     demo: 'demo',
     draft: 'draft',
@@ -51,4 +53,5 @@ class Grant < ApplicationRecord
 
   scope :by_initiation_date, -> { order(initiation_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
+  scope :with_questions,     -> { includes :questions }
 end

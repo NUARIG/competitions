@@ -1,5 +1,6 @@
 class GrantsController < ApplicationController
-  before_action :set_grant, only: %i[show edit update destroy]
+  before_action :set_grant, only: %i[show update destroy]
+  before_action :set_grant_and_questions, only: :edit
   before_action :set_state, only: %i[edit update]
 
   # GET /grants
@@ -63,9 +64,13 @@ class GrantsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_grant
       @grant = Grant.with_organization.find(params[:id])
+    end
+
+    def set_grant_and_questions
+      @grant     = Grant.with_organization.with_questions.find(params[:id])
+      @questions = @grant.questions
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -87,7 +92,12 @@ class GrantsController < ApplicationController
         :panel_date,
         :panel_location,
         :organization_id,
-        :draft)
+        :draft,
+        questions_attributes: [
+          :id,
+          :required
+          ]
+        )
     end
 
     def set_state

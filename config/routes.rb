@@ -3,9 +3,10 @@ Rails.application.routes.draw do
 
   root to: 'grants#index'
 
-  resources :questions
   resources :fields
-  resources :grants
+  resources :grants do
+    resources :questions
+  end
   resources :users
   resources :organizations
   resources :users, only: %i[index edit update]

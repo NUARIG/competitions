@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
-  before_action :set_question, only: %i[show edit update destroy]
+  before_action :set_question, only: %i[show destroy]
+  before_action :set_question_and_grant, only: %i[edit update]
 
   def index
     @questions = Question.all
@@ -26,7 +27,7 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
-        format.html { redirect_to question_path(@question), notice: 'Grant was successfully created.' }
+        format.html { redirect_to grant_path(@question.grant), notice: 'Grant was successfully created.' }
         format.json { render :show, status: :created, location: @question }
       else
         format.html { render :new }
@@ -38,9 +39,11 @@ class QuestionsController < ApplicationController
   # PATCH/PUT /questions/1
   # PATCH/PUT /questions/1.json
   def update
+    byebug
     respond_to do |format|
       if @question.update(question_params)
-        format.html { redirect_to question_path(@question), notice: 'Grant was successfully updated.' }
+        flash[:success] = 'Question updated.'
+        format.html { redirect_to edit_grant_path(@grant), notice: 'Grant was successfully updated.' }
         format.json { render :show, status: :ok, location: @question }
       else
         format.html { render :edit }
@@ -63,6 +66,11 @@ class QuestionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_question
       @question = Question.find(params[:id])
+    end
+
+    def set_question_and_grant
+      @question = Question.find(params[:id])
+      @grant    = @question.grant
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
