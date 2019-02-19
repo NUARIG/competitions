@@ -107,13 +107,13 @@
             Req'd
           %th
         = f.fields_for :questions, questions do |ff|
-          %tr{ class: cycle('odd', 'even') }
+          %tr{ id: "question-#{ff.object.id}", class: cycle('odd', 'even') }
             %td
-              = ff.label :question, ff.object.name
+              = ff.label :question, ff.object.name, id: "question-#{ff.object.id}-name"
             %td
-              = ff.check_box :required, value: ff.object.required
+              = ff.check_box :required, value: ff.object.required, id: "question-#{ff.object.id}-required"
             %td
-              = link_to 'Edit', edit_grant_question_path(grant, ff.object)
+              = link_to 'Edit', edit_grant_question_path(grant, ff.object), id: "question-#{ff.object.id}-edit"
 .grid-x
   = f.hidden_field :organization_id, value: current_user.organization.id
   .actions

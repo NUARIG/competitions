@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_11_162144) do
+ActiveRecord::Schema.define(version: 2019_02_18_170828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,17 @@ ActiveRecord::Schema.define(version: 2019_02_11_162144) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "grant_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_type", "item_id"], name: "index_grant_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_grant_versions_on_whodunnit"
+  end
+
   create_table "grants", force: :cascade do |t|
     t.bigint "organization_id"
     t.string "name"
@@ -76,6 +87,17 @@ ActiveRecord::Schema.define(version: 2019_02_11_162144) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "question_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_type", "item_id"], name: "index_question_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_question_versions_on_whodunnit"
   end
 
   create_table "questions", force: :cascade do |t|
