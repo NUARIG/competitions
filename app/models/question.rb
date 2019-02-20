@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  has_paper_trail versions: { class_name: 'PaperTrail::QuestionVersion' }
+
   belongs_to :field
   belongs_to :grant
 

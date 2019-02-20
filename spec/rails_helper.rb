@@ -15,6 +15,7 @@ require 'factory_bot' # test data
 require 'capybara/rails' # integration tests w/ browser
 require 'capybara/rspec'
 require 'devise'
+require 'paper_trail/frameworks/rspec'
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
@@ -81,6 +82,10 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Warden::Test::Helpers
+
+  config.append_after(:each) do
+    Warden.test_reset!
+  end
 end
 
 def scroll_to_bottom_of_the_page

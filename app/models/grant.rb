@@ -1,4 +1,6 @@
 class Grant < ApplicationRecord
+  has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
+
   belongs_to :organization
   has_many   :questions, dependent: :destroy
 
