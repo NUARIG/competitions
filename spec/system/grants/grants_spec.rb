@@ -25,7 +25,7 @@ RSpec.describe 'Grants', type: :system do
       click_button 'Save and Complete'
 
       expect(page).to have_content 'Grant was successfully updated.'
-      expect(@grant.versions.last.whodunnit).to eql(@user.email)
+      expect(@grant.versions.last.whodunnit).to eql(@user.id)
     end
   end
 end

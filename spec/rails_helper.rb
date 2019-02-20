@@ -82,6 +82,10 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Warden::Test::Helpers
+
+  config.append_after(:each) do
+    Warden.test_reset!
+  end
 end
 
 def scroll_to_bottom_of_the_page
