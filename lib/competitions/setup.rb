@@ -70,6 +70,8 @@ module Competitions
     end
 
     def self.load_grants
+      org_admin_user = User.where(organization_role: 'admin').first
+
       grants = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/grants.yml'))
       grants.each do |_, data|
         grant                            = Grant
@@ -93,7 +95,9 @@ module Competitions
         grant.review_close_date          = data[:review_close_date]
         grant.panel_date                 = data[:panel_date]
         grant.panel_location             = data[:panel_location]
+
         grant.save!
+        grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
       end
     end
 
@@ -103,8 +107,8 @@ module Competitions
         question                  = Question
                                       .where(field_id: data[:field_id], grant_id: data[:grant_id])
                                       .first_or_initialize
-        question.field_id         =  data[:field_id]
-        question.grant_id         =  data[:grant_id]
+        question.field_id         = data[:field_id]
+        question.grant_id         = data[:grant_id]
         question.name             = data[:name]
         question.help_text        = data[:help_text]
         question.placeholder_text = data[:placeholder_text]
@@ -125,6 +129,5 @@ module Competitions
         constraint_question.save!
       end
     end
-
   end
 end

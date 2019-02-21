@@ -6,4 +6,7 @@ class ApplicationController < ActionController::Base
 
   after_action :verify_authorized, unless: :devise_controller?
 
+  def user_for_paper_trail
+    user_signed_in? ? current_user.id : 'Unauthenticated user'
+  end
 end

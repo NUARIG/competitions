@@ -58,12 +58,12 @@ describe GrantPolicy do
       it { is_expected.to permit_action(:destroy) }
     end
   end
-  context 'with user and grant of the same organization' do
+  context 'with user and grant of different organizations' do
     context 'grants for organization admin users' do
       let(:organization1) { FactoryBot.create(:organization)}
       let(:organization2) { FactoryBot.create(:organization)}
-      let(:grant1) { FactoryBot.create(:grant, organization: organization1) }
-      let(:user1) { FactoryBot.create(:user, organization_role: 'admin', organization: organization2) }
+      let(:grant) { FactoryBot.create(:grant, organization: organization1) }
+      let(:user) { FactoryBot.create(:user, organization_role: 'admin', organization: organization2) }
 
       it { is_expected.to permit_action(:index) }
       it { is_expected.to permit_action(:show) }

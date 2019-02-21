@@ -1,12 +1,10 @@
 require 'rails_helper'
-require 'rake'
 
 RSpec.describe 'Grants', type: :system do
   describe 'Edit', js: true do
     before(:each) do
-      @organization = FactoryBot.create(:organization)
-      @user         = FactoryBot.create(:user, organization_id: @organization.id )
-      @grant        = FactoryBot.create(:grant, organization_id: @organization.id)
+      @user         = FactoryBot.create(:user)
+      @grant        = FactoryBot.create(:grant)
 
       login_as(@user)
       visit edit_grant_path(@grant.id)
@@ -19,6 +17,15 @@ RSpec.describe 'Grants', type: :system do
       page.execute_script("$('#grant_initiation_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
       click_button 'Save and Complete'
       expect(@grant.reload.initiation_date.to_s).to eql(tomorrow)
+    end
+
+    scenario 'versioning tracks whodunnit', versioning: true do
+      expect(PaperTrail).to be_enabled
+      fill_in 'grant_name', with: 'New_Name'
+      click_button 'Save and Complete'
+
+      expect(page).to have_content 'Grant was successfully updated.'
+      expect(@grant.versions.last.whodunnit).to eql(@user.id)
     end
   end
 end

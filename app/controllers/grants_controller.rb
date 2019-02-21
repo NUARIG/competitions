@@ -1,5 +1,6 @@
 class GrantsController < ApplicationController
   before_action :set_and_authorize_grant, only: %i[show edit update destroy]
+  before_action :set_grant_and_questions, only: :edit
   before_action :set_state, only: %i[edit update]
 
   # GET /grants
@@ -71,6 +72,11 @@ class GrantsController < ApplicationController
       authorize @grant
     end
 
+    def set_grant_and_questions
+      @grant     = Grant.with_organization.with_questions.find(params[:id])
+      @questions = @grant.questions
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def grant_params
       params.require(:grant).permit(
@@ -90,7 +96,12 @@ class GrantsController < ApplicationController
         :panel_date,
         :panel_location,
         :organization_id,
-        :draft)
+        :draft,
+        questions_attributes: [
+          :id,
+          :required
+          ]
+        )
     end
 
     def set_state
