@@ -11,7 +11,7 @@ RSpec.describe User, type: :model do
 
   describe '#initiations' do
     it 'sets default of organization_role' do
-      expect(user.organization_role).to eq('user')
+      expect(user.organization_role).to eq('basic')
     end
   end
 

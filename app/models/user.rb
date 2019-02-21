@@ -7,12 +7,13 @@ class User < ApplicationRecord
 
   after_initialize :set_default_organization_role, :if => :new_record?
 
-  enum organization_role: {
-  	admin: 	'admin',
-  	editor: 'editor',
-  	viewer: 'viewer',
-  	user: 	'user'
-  }
+  ORG_ROLES = { admin:  'admin',
+                editor: 'editor',
+                viewer: 'viewer',
+                basic:  'basic'
+              }.freeze
+
+  enum organization_role: ORG_ROLES
 
   validates :organization, presence: true
   validates :organization_role, presence: true
@@ -20,7 +21,7 @@ class User < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
 
-  scope :with_organization, -> { includes :organizations }
+  scope :with_organization, -> { includes :organization }
 
   def name
     "#{first_name} #{last_name}".strip
@@ -28,6 +29,6 @@ class User < ApplicationRecord
 
   private
 	  def set_default_organization_role
-	    self.organization_role ||= :user
+	    self.organization_role ||= :basic
 	  end
 end
