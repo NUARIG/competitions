@@ -68,8 +68,8 @@ class QuestionsController < ApplicationController
     end
 
     def set_question_and_grant
-      @question = Question.find(params[:id])
-      @grant    = @question.grant
+      @question    = Question.find(params[:id])
+      @grant       = @question.grant
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

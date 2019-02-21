@@ -18,3 +18,8 @@ max_length:
   name: 'Maximum Length'
   value_type: 'integer'
   default: 255
+max_length:
+  type: 'TextConstraint'
+  name: 'Maximum Length'
+  value_type: 'integer'
+  default:

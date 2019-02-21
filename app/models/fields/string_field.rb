@@ -1,2 +1,0 @@
-class StringField < Field
-end
