@@ -8,7 +8,8 @@ class QuestionPolicy < AccessPolicy
   end
 
   def create?
-     editor_access?
+    confirm_organization &&
+    can_create?
   end
 
   def new?
@@ -16,7 +17,8 @@ class QuestionPolicy < AccessPolicy
   end
 
   def update?
-    organization_editor_access? 
+    confirm_organization &&
+    can_create? 
   end
 
   def edit?
@@ -24,11 +26,17 @@ class QuestionPolicy < AccessPolicy
   end
 
   def destroy?
-    organization_admin_access?
+    confirm_organization
+    user.organization_role == 'admin'
   end
 
 	private
 		def question
 			record
 		end
+
+    def confirm_organization
+      user.present? && 
+      clean_record_from_collection.grant.organization == user.organization 
+    end
 end
