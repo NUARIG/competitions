@@ -16,11 +16,11 @@ class GrantPolicy < AccessPolicy
   end
 
   def update?
-  	organization_editor_access? 
+  	create? 
   end
 
   def edit?
-    update?
+    create?
   end
 
   def destroy?

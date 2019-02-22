@@ -17,16 +17,15 @@ class QuestionPolicy < AccessPolicy
   end
 
   def update?
-    confirm_organization &&
-    can_create? 
+    create? 
   end
 
   def edit?
-    update?
+    create?
   end
 
   def destroy?
-    confirm_organization
+    confirm_organization &&
     user.organization_role == 'admin'
   end
 

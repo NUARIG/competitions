@@ -5,6 +5,7 @@ class FieldsController < ApplicationController
   # GET /fields.json
   def index
     @fields = Field.all
+    
   end
 
   # GET /fields/1
