@@ -5,6 +5,6 @@ FactoryBot.define do
     email        			{ Faker::Internet.email }
     association 			:organization, factory: :organization
     password     			{ 'secret' }
-    organization_role	{ 'basic'}
+    organization_role	{ 'none'}
   end
 end

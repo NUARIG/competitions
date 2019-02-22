@@ -1,6 +1,6 @@
 class QuestionPolicy < AccessPolicy
   def index?
-    organization_basic_access?
+    user.present?
   end
 
   def show?

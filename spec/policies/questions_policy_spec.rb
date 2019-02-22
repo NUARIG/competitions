@@ -8,7 +8,7 @@ describe QuestionPolicy do
     let(:grant) { FactoryBot.create(:grant, organization: organization) }
     let(:question) { FactoryBot.create(:string_question, grant: grant) }
 
-    context 'questions for organization basic users' do
+    context 'questions for organization none users' do
       let(:user) { FactoryBot.create(:user, organization: organization) }
 
       it { is_expected.to permit_action(:index) }

@@ -25,10 +25,6 @@ class AccessPolicy < ApplicationPolicy
 			can_view?
 		end
 
-		def organization_basic_access?
-			user.present? 
-		end
-
 
 		def confirm_organization
 			user.present? && 

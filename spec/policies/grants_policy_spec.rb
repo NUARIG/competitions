@@ -7,7 +7,7 @@ describe GrantPolicy do
     let(:organization) { FactoryBot.create(:organization)}
     let(:grant) { FactoryBot.create(:grant, organization: organization) }
 
-    context 'grants for organization basic users' do
+    context 'grants for organization none users' do
       let(:user) { FactoryBot.create(:user) }
 
       it { is_expected.to permit_action(:index) }

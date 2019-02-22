@@ -10,10 +10,10 @@ class User < ApplicationRecord
   ORG_ROLES = { admin:  'admin',
                 editor: 'editor',
                 viewer: 'viewer',
-                basic:  'basic'
+                none:  'none'
               }.freeze
 
-  enum organization_role: ORG_ROLES
+  enum organization_role: ORG_ROLES, _prefix: true
 
   validates :organization, presence: true
   validates :organization_role, presence: true
@@ -29,6 +29,6 @@ class User < ApplicationRecord
 
   private
 	  def set_default_organization_role
-	    self.organization_role ||= :basic
+	    self.organization_role ||= :none
 	  end
 end

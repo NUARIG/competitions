@@ -8,7 +8,7 @@ describe UserPolicy do
   context 'with user and grant of the same organization' do
     let(:organization) { FactoryBot.create(:organization)}
 
-    context 'grants for organization basic users' do
+    context 'grants for organization none users' do
       let(:user) { FactoryBot.create(:user, organization: organization) }
 
       it { is_expected.to permit_action(:show) }
