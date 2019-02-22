@@ -12,10 +12,6 @@ RSpec.describe 'Grants', type: :system do
     end
 
     scenario 'date fields edited with datepicker are properly formatted' do
-
-      puts @user.inspect
-      puts @grant.inspect
-
       tomorrow = (Date.current + 1.day).to_s
 
       expect(page).to have_field('grant_initiation_date', with: @grant.initiation_date)
