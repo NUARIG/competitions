@@ -17,3 +17,22 @@ grant1:
   review_close_date: '2020-03-25 06:00:00'
   panel_date: '2020-04-01 06:00:00'
   panel_location: '123 Main - Room 100'
+grant2:
+  organization_id: 2
+  name: 'Sample NIH Rresearch Grant'
+  short_name: 'sample'
+  state: 'complete'
+  initiation_date: '2020-04-01 06:00:00'
+  submission_open_date: '2020-04-02 06:00:00'
+  submission_close_date: '2020-04-16 06:00:00'
+  rfa: 'Lorem Ipsum dolor sit'
+  min_budget: 1000
+  max_budget: 10000
+  applications_per_user: 1
+  review_guidance: 'Consectetur adipiscing elit, sed do eiusmod tempor'
+  max_reviewers_per_proposal: 1
+  max_proposals_per_reviewer: 2
+  review_open_date: '2020-04-18 06:00:00'
+  review_close_date: '2020-04-25 06:00:00'
+  panel_date: '2020-05-01 06:00:00'
+  panel_location: '123 Main - Room 100'

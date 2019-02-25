@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
+  include Pundit
+
   before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!
+
+  after_action :verify_authorized, unless: :devise_controller?
 
   def user_for_paper_trail
     user_signed_in? ? current_user.id : 'Unauthenticated user'
