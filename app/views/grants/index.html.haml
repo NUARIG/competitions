@@ -12,9 +12,10 @@
     - @grants.each do |grant|
       %tr
         %td= link_to grant.name, grant
-        %td= link_to 'Edit', edit_grant_path(grant)
-        %td= link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= link_to 'Edit', edit_grant_path(grant) if policy(grant).edit?
+        %td=  link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' } if policy(grant).destroy?
 
 %br
 
-= link_to 'New Grant', new_grant_path
+-if policy(Grant).new?
+  = link_to 'New Grant', new_grant_path
