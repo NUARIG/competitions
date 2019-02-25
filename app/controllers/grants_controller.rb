@@ -1,5 +1,5 @@
 class GrantsController < ApplicationController
-  before_action :set_grant, only: %i[show update destroy]
+  before_action :set_and_authorize_grant, only: %i[show update destroy]
   before_action :set_grant_and_questions, only: :edit
   before_action :set_state, only: %i[edit update]
 
@@ -7,6 +7,7 @@ class GrantsController < ApplicationController
   # GET /grants.json
   def index
     @grants = Grant.by_initiation_date.with_organization.all
+    authorize @grants
   end
 
   # GET /grants/1
@@ -17,6 +18,7 @@ class GrantsController < ApplicationController
   # GET /grants/new
   def new
     @grant = Grant.new
+    authorize @grant
   end
 
   # GET /grants/1/edit
@@ -27,7 +29,7 @@ class GrantsController < ApplicationController
   # POST /grants.json
   def create
     @grant = Grant.new(grant_params)
-
+    authorize @grant
     respond_to do |format|
       if @grant.save
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully created.' }
@@ -64,13 +66,16 @@ class GrantsController < ApplicationController
   end
 
   private
-    def set_grant
+    # Use callbacks to share common setup or constraints between actions.
+    def set_and_authorize_grant
       @grant = Grant.with_organization.find(params[:id])
+      authorize @grant
     end
 
     def set_grant_and_questions
       @grant     = Grant.with_organization.with_questions.find(params[:id])
       @questions = @grant.questions
+      authorize @grant
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

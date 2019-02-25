@@ -3,9 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Questions', type: :system do
   describe 'Edit', js: true do
     before(:each) do
-      @user     = FactoryBot.create(:user)
-      @grant    = FactoryBot.create(:grant)
-      @question = FactoryBot.create(:string_question, grant_id: @grant.id, required: false)
+      @organization = FactoryBot.create(:organization)
+      @user         = FactoryBot.create(:user, organization: @organization, organization_role: 'editor')
+      @grant        = FactoryBot.create(:grant, organization: @organization)
+      @question     = FactoryBot.create(:string_question, grant_id: @grant.id, required: false)
 
       login_as(@user)
     end

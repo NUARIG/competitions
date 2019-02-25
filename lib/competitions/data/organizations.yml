@@ -2,3 +2,7 @@ organization1:
   name: 'Northwestern University'
   short_name: 'NU'
   url: 'http://www.northwestern.edu'
+organization2:
+  name: 'Northwestern Medicine'
+  short_name: 'NM'
+  url: 'http://www.nm.org'
