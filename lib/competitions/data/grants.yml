@@ -1,22 +1,41 @@
-grant1:
+research:
   organization_id: 1
-  name: 'Model NIH Grant'
-  short_name: 'model'
-  state: 'complete'
+  name: 'Model NIH Research Grant'
+  short_name: 'model-nih'
+  state: 'demo'
   initiation_date: '2020-03-01 06:00:00'
   submission_open_date: '2020-03-02 06:00:00'
   submission_close_date: '2020-03-16 06:00:00'
-  rfa: 'Lorem Ipsum dolor sit'
+  rfa: 'Research lorem Ipsum dolor sit'
   min_budget: 0
   max_budget: 1000
   applications_per_user: 1
-  review_guidance: 'Consectetur adipiscing elit, sed do eiusmod tempor'
+  review_guidance: 'Research consectetur adipiscing elit, sed do eiusmod tempor'
   max_reviewers_per_proposal: 1
   max_proposals_per_reviewer: 2
   review_open_date: '2020-03-18 06:00:00'
   review_close_date: '2020-03-25 06:00:00'
   panel_date: '2020-04-01 06:00:00'
   panel_location: '123 Main - Room 100'
+kl2:
+  organization_id: 1
+  name: 'Model KL2 Grant'
+  short_name: 'model-kl2'
+  state: 'demo'
+  initiation_date: '2020-03-01 06:00:00'
+  submission_open_date: '2020-03-02 06:00:00'
+  submission_close_date: '2020-03-16 06:00:00'
+  rfa: 'KL2 lorem Ipsum dolor sit'
+  min_budget: 0
+  max_budget: 50000
+  applications_per_user: 1
+  review_guidance: 'KL2 consectetur adipiscing elit, sed do eiusmod tempor'
+  max_reviewers_per_proposal: 1
+  max_proposals_per_reviewer: 2
+  review_open_date: '2020-03-18 06:00:00'
+  review_close_date: '2020-03-25 06:00:00'
+  panel_date: '2020-04-01 06:00:00'
+  panel_location: '123 Main - Room 200'
 grant2:
   organization_id: 2
   name: 'Sample NIH Rresearch Grant'

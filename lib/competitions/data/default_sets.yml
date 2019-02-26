@@ -1,0 +1,55 @@
+nih_research:
+  name: 'NIH Research Grant'
+  questions:
+    abstract:
+      grant_id: 1
+      answer_type: 'text'
+      name: 'Abstract'
+      help_text: ''
+      placeholder_text: 'Up to 1000 characters'
+      required: true
+      constraints:
+        max_length:
+          type: 'TextConstraint'
+          name: 'Maximum Length'
+          value_type: 'integer'
+          value: 1000
+    budget:
+      grant_id: 1
+      answer_type: 'integer'
+      name: 'Budget'
+      help_text: ''
+      placeholder_text: ''
+      required: true
+      constraints:
+        min_value:
+          type: 'IntegerConstraint'
+          name: 'Minimum Value'
+          value_type: 'integer'
+          value: 0
+        max_value:
+          type: 'IntegerConstraint'
+          name: 'Maximum Value'
+          value_type: 'integer'
+          value: 1000
+kl2_mentored_career_development:
+  name: 'KL2 Mentored Career Development'
+  questions:
+    direct_project_cost:
+      grant_id: 2
+      answer_type: 'float'
+      name: 'Direct Project Cost'
+      help_text: 'Between $5000 and $50,000'
+      placeholder_text: ''
+      required: true
+      constraints:
+        min_value:
+          type: 'IntegerConstraint'
+          name: 'Minimum Value'
+          value_type: 'integer'
+          value: 5000
+        max_value:
+          type: 'IntegerConstraint'
+          name: 'Maximum Value'
+          value_type: 'integer'
+          value: 50000

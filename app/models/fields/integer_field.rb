@@ -1,2 +1,0 @@
-class IntegerField < Field
-end
