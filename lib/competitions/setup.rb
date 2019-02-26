@@ -117,21 +117,23 @@ module Competitions
         question.save!
 
         if q[:constraints].any?
-          q[:constraints].each do |_, c|
-            load_constraint_questions(question_id: question.id, c: c)
+          q[:constraints].each do |_, constraint|
+            load_constraint_questions(question.id, constraint)
           end
         end
 
         question
       end
 
-      def self.load_constraint_questions(question_id:, c:)
+      def self.load_constraint_questions(question_id, constraint)
         constraint_id             = Constraint
-                                      .where(type: c[:type], name: c[:name])
+                                      .where(type: constraint[:type], name: constraint[:name])
                                       .pluck(:id)
                                       .first
-        constraint_question       = ConstraintQuestion.first_or_initialize(constraint_id: constraint_id, question_id: question_id)
-        constraint_question.value = c[:value]
+        constraint_question       = ConstraintQuestion
+                                      .where(constraint_id: constraint_id, question_id: question_id)
+                                      .first_or_initialize
+        constraint_question.value = constraint[:value]
         constraint_question.save!
       end
   end

@@ -8,6 +8,6 @@ FactoryBot.define do
   factory :float_constraint_question, class: 'ConstraintQuestion' do |cq|
     cq.association :constraint, factory: :float_constraint
     cq.association :question, factory: :float_question
-    value { '10' }
+    value { '10.5' }
   end
 end

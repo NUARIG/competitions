@@ -23,11 +23,13 @@ nih_research:
       required: true
       constraints:
         min_value:
-          name: "Minimum Value"
+          type: 'IntegerConstraint'
+          name: 'Minimum Value'
           value_type: 'integer'
           value: 0
         max_value:
-          name: "Maximum Value"
+          type: 'IntegerConstraint'
+          name: 'Maximum Value'
           value_type: 'integer'
           value: 1000
 kl2_mentored_career_development:
@@ -42,10 +44,12 @@ kl2_mentored_career_development:
       required: true
       constraints:
         min_value:
+          type: 'IntegerConstraint'
           name: 'Minimum Value'
           value_type: 'integer'
           value: 5000
         max_value:
+          type: 'IntegerConstraint'
           name: 'Maximum Value'
           value_type: 'integer'
           value: 50000

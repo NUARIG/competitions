@@ -6,7 +6,6 @@ class Constraint < ApplicationRecord
 
   enum value_type: {
     integer: 'integer',
-    string:  'string',
     float:   'float'
   }, _suffix: true
 
@@ -25,10 +24,6 @@ class Constraint < ApplicationRecord
       unless Integer(default, exception: false)
         errors.add(:default, 'value must be an integer.')
       end
-    end
-
-    def default_is_string
-      # will this need to be implemented?
     end
 
     def default_is_float
