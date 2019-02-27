@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: %i[show destroy]
-  before_action :set_question_and_grant, only: %i[edit update]
+  before_action :set_question_and_grant, only: :update
+  before_action :set_question_and_grant_and_constraints, only: :edit
 
   def index
     @questions = Question.all
@@ -76,12 +77,23 @@ class QuestionsController < ApplicationController
       authorize @question
     end
 
+    def set_question_and_grant_and_constraints
+      @question             = Question.with_constraints_and_constraint_questions.find(params[:id])
+      @grant                = @question.grant
+      @constraint_questions = @question.constraint_questions
+      authorize @question
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
       params.require(:question).permit(
         :name,
         :help_text,
         :placeholder_text,
-        :required)
+        :required,
+        constraint_questions_attributes: [
+          :id,
+          :value]
+        )
     end
 end

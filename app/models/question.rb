@@ -5,6 +5,7 @@ class Question < ApplicationRecord
 
   has_many :constraint_questions
   has_many :constraints, through: :constraint_questions
+  accepts_nested_attributes_for :constraint_questions
 
   has_many :default_sets_questions
   has_many :default_sets, through: :default_sets_questions
@@ -20,7 +21,11 @@ class Question < ApplicationRecord
     string:   'string',
     text:     'text',
     document: 'document'
-  } #, list?, date?, primary_key?
+  }, _prefix: true
 
   scope :with_grant, -> { includes :grant }
+  scope :with_constraints, -> { includes :constraints }
+  scope :with_constraints_and_constraint_questions,
+          -> { includes :constraint_questions, constraint_questions: [:constraint] }
+
 end
