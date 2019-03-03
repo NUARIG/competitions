@@ -4,9 +4,8 @@ class ConstraintQuestion < ApplicationRecord
 
   validates :value, with: :value_is_a_constraint_type
 
-  validates_uniqueness_of :constraint_id,
-    scope: :question_id,
-    message: 'can only be constrained once'
+  validates_uniqueness_of :constraint_id, scope: :question_id,
+    message: 'can only be constrained once.'
 
   private
     def value_is_a_constraint_type

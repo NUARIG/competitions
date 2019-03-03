@@ -10,7 +10,7 @@ class Constraint < ApplicationRecord
   }, _suffix: true
 
   validates :name, presence: true
-  validates_length_of :name, minimum: 4
+  validates :name, length: { minimum: 4 }
   validate :default_is_a_value_type
 
   private

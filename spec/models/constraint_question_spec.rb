@@ -14,7 +14,7 @@ RSpec.describe ConstraintQuestion, type: :model do
       integer_constraint_question.save
       new_integer_constraint_question = ConstraintQuestion.new(constraint_id: integer_constraint_question.constraint_id, question_id: integer_constraint_question.question_id, value: 10)
       expect(new_integer_constraint_question).not_to be_valid
-      expect(new_integer_constraint_question.errors.messages[:constraint_id]).to eql ['can only be constrained once']
+      expect(new_integer_constraint_question.errors.messages[:constraint_id]).to eql ['can only be constrained once.']
     end
 
     context 'integer_constraint_question' do
