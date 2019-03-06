@@ -1,9 +1,3 @@
-- if question.errors.any?
-  #error_explanation
-    %h2= "#{pluralize(question.errors.count, "error")} prohibited this question from being saved:"
-    %ul
-      - question.errors.full_messages.each do |message|
-        %li= message
 .grid-x
   .cell.small-12
     = f.label :name
@@ -35,7 +29,7 @@
         = ff.text_field :value, value: ff.object.value, id: "constraint-question-#{ff.object.id}-value"
 
 .grid-x
-  .actions
+  .cell.actions
     = f.submit 'Save', class: 'button'
     = link_to 'Cancel', question.grant, class: 'button secondary'
 

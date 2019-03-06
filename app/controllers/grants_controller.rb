@@ -1,5 +1,5 @@
 class GrantsController < ApplicationController
-  before_action :set_and_authorize_grant, only: %i[show update destroy]
+  before_action :set_grant, only: %i[show update destroy]
   before_action :set_grant_and_questions, only: :edit
   before_action :set_state, only: %i[edit update]
 
@@ -13,6 +13,7 @@ class GrantsController < ApplicationController
   # GET /grants/1
   # GET /grants/1.json
   def show
+    authorize @grant
   end
 
   # GET /grants/new
@@ -23,6 +24,7 @@ class GrantsController < ApplicationController
 
   # GET /grants/1/edit
   def edit
+    authorize @grant
   end
 
   # POST /grants
@@ -44,6 +46,7 @@ class GrantsController < ApplicationController
   # PATCH/PUT /grants/1
   # PATCH/PUT /grants/1.json
   def update
+    authorize @grant
     respond_to do |format|
       if @grant.update(grant_params)
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
@@ -58,6 +61,7 @@ class GrantsController < ApplicationController
   # DELETE /grants/1
   # DELETE /grants/1.json
   def destroy
+    authorize @grant
     @grant.destroy
     respond_to do |format|
       format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }
@@ -67,15 +71,13 @@ class GrantsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_and_authorize_grant
+    def set_grant
       @grant = Grant.with_organization.find(params[:id])
-      authorize @grant
     end
 
     def set_grant_and_questions
       @grant     = Grant.with_organization.with_questions.find(params[:id])
       @questions = @grant.questions
-      authorize @grant
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -91,6 +93,8 @@ class GrantsController < ApplicationController
         :min_budget,
         :max_budget,
         :applications_per_user,
+        :review_open_date,
+        :review_close_date,
         :review_guidance,
         :max_reviewers_per_proposal,
         :max_proposals_per_reviewer,

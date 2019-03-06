@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_18_170828) do
+ActiveRecord::Schema.define(version: 2019_03_05_222413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "constraint_question_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_type", "item_id"], name: "index_constraint_question_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_constraint_question_versions_on_whodunnit"
+  end
 
   create_table "constraint_questions", force: :cascade do |t|
     t.bigint "constraint_id"

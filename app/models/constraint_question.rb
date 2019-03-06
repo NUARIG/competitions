@@ -2,6 +2,8 @@ class ConstraintQuestion < ApplicationRecord
   belongs_to :constraint
   belongs_to :question
 
+  has_paper_trail versions: { class_name: 'PaperTrail::ConstraintQuestionVersion' }
+
   validates :value, with: :value_is_a_constraint_type
 
   validates_uniqueness_of :constraint_id, scope: :question_id,

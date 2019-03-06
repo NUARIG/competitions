@@ -15,17 +15,8 @@ class Question < ApplicationRecord
   validates_presence_of :name
   validates_length_of :name, minimum: 3, maximum: 255
 
-  # enum answer_type: {
-  #   boolean:  'BooleanQuestion',
-  #   integer:  'IntegerQuestion',
-  #   float:    'FloatQuestion',
-  #   string:   'StringQuestion',
-  #   text:     'TextQuestion',
-  #   document: 'DocumentQuestion'
-  # }, _prefix: true
-
   scope :with_grant, -> { includes :grant }
   scope :with_constraints, -> { includes :constraints }
-  scope :with_constraints_and_constraint_questions,
-          -> { includes :constraints, :constraint_questions }
+  scope :with_constraint_questions, -> { includes :constraint_questions }
+  scope :with_constraints_and_constraint_questions, -> { with_constraints.with_constraint_questions }
 end
