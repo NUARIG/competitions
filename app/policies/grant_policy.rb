@@ -8,7 +8,7 @@ class GrantPolicy < AccessPolicy
   end
 
   def create?
-  	 organization_editor_access?
+    organization_editor_access?
   end
 
   def new?

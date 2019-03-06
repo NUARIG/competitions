@@ -13,9 +13,10 @@ module Competitions
     def self.load_constraints
       constraints = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraints.yml'))
       constraints.each do |_, data|
-        constraint            = Constraint
-                                  .where(type: data[:type], name: data[:name])
-                                  .first_or_initialize
+        constraint = Constraint
+                       .where(type: data[:type], name: data[:name])
+                       .first_or_initialize
+                       
         constraint.name       = data[:name]
         constraint.type       = data[:type]
         constraint.value_type = data[:value_type]
@@ -27,9 +28,10 @@ module Competitions
     def self.load_fields
       fields = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/fields.yml'))
       fields.each do |_, data|
-        field             = Field
-                              .where(label: data[:label])
-                              .first_or_initialize
+        field = Field
+                  .where(label: data[:label])
+                  .first_or_initialize
+
         field.type        = data[:type]
         field.label       = data[:label]
         field.help_text   = data[:help_text] if data[:help_text].present?
@@ -41,9 +43,10 @@ module Competitions
     def self.load_users
       users = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/users.yml'))
       users.each do |_, data|
-        user                    = User
-                                    .where(email: data[:email])
-                                    .first_or_initialize
+        user = User
+                 .where(email: data[:email])
+                 .first_or_initialize
+
         user.organization_id    = data[:organization_id]
         user.first_name         = data[:first_name]
         user.last_name          = data[:last_name]
@@ -59,9 +62,10 @@ module Competitions
     def self.load_organizations
       organizations = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/organizations.yml'))
       organizations.each do |_, data|
-        organization            = Organization
-                                    .where(name: data[:name])
-                                    .first_or_initialize
+        organization = Organization
+                         .where(name: data[:name])
+                         .first_or_initialize
+
         organization.name       = data[:name]
         organization.short_name = data[:short_name]
         organization.url        = data[:url]
@@ -74,9 +78,10 @@ module Competitions
 
       grants = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/grants.yml'))
       grants.each do |_, data|
-        grant                            = Grant
-                                             .where(name: data[:name])
-                                             .first_or_initialize
+        grant = Grant
+                  .where(name: data[:name])
+                  .first_or_initialize
+
         grant.organization_id            = data[:organization_id]
         grant.name                       = data[:name]
         grant.short_name                 = data[:short_name]
@@ -98,15 +103,20 @@ module Competitions
 
         grant.save!
         grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
+        
+        unless data[:grant_users].nil?
+          load_grant_users(data[:grant_users], grant.id)
+        end
       end
     end
 
     def self.load_questions
       questions = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/questions.yml'))
       questions.each do |_, data|
-        question                  = Question
-                                      .where(field_id: data[:field_id], grant_id: data[:grant_id])
-                                      .first_or_initialize
+        question = Question
+                    .where(field_id: data[:field_id], grant_id: data[:grant_id])
+                    .first_or_initialize
+
         question.field_id         = data[:field_id]
         question.grant_id         = data[:grant_id]
         question.name             = data[:name]
@@ -120,13 +130,25 @@ module Competitions
     def self.load_constraint_questions
       constraint_questions = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraint_questions.yml'))
       constraint_questions.each do |_, data|
-        constraint_question               = ConstraintQuestion
-                                              .where(question_id: data[:question_id], constraint_id: data[:constraint_id])
-                                              .first_or_initialize
+        constraint_question = ConstraintQuestion
+                                .where(question_id: data[:question_id], constraint_id: data[:constraint_id])
+                                .first_or_initialize
+
         constraint_question.question_id   = data[:question_id]
         constraint_question.constraint_id = data[:constraint_id]
         constraint_question.value         = data[:value] if data[:value].present?
         constraint_question.save!
+      end
+    end
+
+    def self.load_grant_users(grant_users, grant_id)
+      grant_users.each do |_, gu|
+        grant_user = GrantUser
+                       .where(grant_id: grant_id, user_id: gu[:user_id])
+                       .first_or_initialize
+
+        grant_user.grant_role = gu[:grant_role]
+        grant_user.save!
       end
     end
   end

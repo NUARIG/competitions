@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :fields
   resources :grants do
     resources :questions
+    resources :grant_users, except: :show
   end
 
   resources :organizations
