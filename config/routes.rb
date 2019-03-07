@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: 'grants#index'
 
   resources :grants do
-    resources :questions
+    resources :questions, except: %i[show create]
   end
 
   resources :organizations

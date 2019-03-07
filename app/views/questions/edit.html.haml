@@ -1,20 +1,22 @@
-- content_for(:page_title, "Editing '#{@question.name}'")
+- content_for(:page_title, "Editing: #{@question.name}")
 
 .grid-x
   .cell
-    %h1 Editing question
+    %h1
+      = "Editing #{@question.name}"
 
-    %p
-      Answer type:
-      = @question.answer_type
+    .div
+      = link_to "Return to #{@grant.name}", grant_path(@grant)
 
-.grid-x
-  .cell
-    = form_with model: [@grant, @question], local: true do |f|
-      = render 'form', f: f, question: @question
+    #remote_form_messages
 
-.grid-x
+    .grid-x
+
+      = form_with model: [@grant, @question], id: "edit-question-#{@question.id}" do |f|
+        = render 'form', f: f, question: @question, constraint_questions: @constraint_questions
+
+
   .cell
     = link_to 'Back to Grant', grant_path(@grant)
-    \|
+    |
     = link_to 'Edit Grant', edit_grant_path(@grant)

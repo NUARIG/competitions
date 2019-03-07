@@ -1,16 +1,3 @@
-- if question.errors.any?
-  #error_explanation
-    %h2= "#{pluralize(question.errors.count, "error")} prohibited this question from being saved:"
-    %ul
-      - question.errors.full_messages.each do |message|
-        %li= message
-
-.grid-x
-  =# f.label :field
-  =# f.text_field :field
-.grid-x
-  =# f.label :grant
-  =# f.text_field :grant
 .grid-x
   .cell.small-12
     = f.label :name
@@ -33,8 +20,16 @@
     = f.label :required, class: 'middle'
   %p.help-text#requiredHelp
     Check to require a response to this question.
+%h3
+  Settings
+  = f.fields_for :constraint_questions, constraint_questions do |ff|
+    .grid-x
+      .small-12
+        = ff.label :value, ff.object.constraint.name.titleize, id: "constraint-question-#{ff.object.id}-name"
+        = ff.text_field :value, value: ff.object.value, id: "constraint-question-#{ff.object.id}-value"
+
 .grid-x
-  .actions
+  .cell.actions
     = f.submit 'Save', class: 'button'
     = link_to 'Cancel', question.grant, class: 'button secondary'
 
