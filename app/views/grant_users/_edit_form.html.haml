@@ -8,7 +8,7 @@
       = @user.name
     .grid-x
       = f.label :grant_role, 'Grant Role'
-      = f.select :grant_role, GrantUser.grant_roles.keys.to_a
+      = f.select :grant_role, grant_user_grant_role_select_options
 
 .grid-x
   .actions

@@ -1,5 +1,5 @@
 class GrantUsersController < ApplicationController
-	before_action :set_grant, only: %i[index new edit create update destroy]
+	before_action :set_grant
 	before_action :set_grant_user, only: %i[edit update destroy]
 
 	# GET /grants/:study_id/grant_users
@@ -10,7 +10,7 @@ class GrantUsersController < ApplicationController
 
 	# GET /grants/:study_id/grant_user/new
   def new
-		@emails = unassigned_grant_users_by_organization.pluck(:email)
+		@users = unassigned_grant_users_by_organization
     @grant_user = GrantUser.new(grant: @grant)
     authorize @grant_user
   end
@@ -24,15 +24,15 @@ class GrantUsersController < ApplicationController
   # POST /questions
   # POST /questions.json
   def create
-  	@user = User.where(email: params[:grant_user][:email]).first
-    @grant_user = GrantUser.new(grant_id: @grant.id, user_id: @user.id, grant_role: params[:grant_user][:grant_role])
+    @grant_user = GrantUser.new(grant_id: @grant.id, user_id: params[:grant_user][:user], grant_role: params[:grant_user][:grant_role])
     authorize @grant_user
     respond_to do |format|
       if @grant_user.save
-        format.html { redirect_to grant_grant_users_path(@grant), notice: 'Grant user was successfully added.' }
+        flash[:success] = 'Grant user was successfully added.'
+        format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :created, location: @grant_user }
       else
-      	@emails = unassigned_grant_users_by_organization.pluck(:email)
+      	@users = unassigned_grant_users_by_organization
       	flash[:alert] = @grant_user.errors
         format.html { render :new }
         format.json { render json: @grant_user.errors, status: :unprocessable_entity }
@@ -47,7 +47,7 @@ class GrantUsersController < ApplicationController
     respond_to do |format|
       if @grant_user.update(grant_user_params)
         flash[:success] = 'Grant user updated.'
-        format.html { redirect_to grant_grant_users_path(@grant), notice: 'Grant user was successfully updated.' }
+        format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :ok, location: @grant_user }
       else
       	@emails = unassigned_grant_users_by_organization.pluck(:email)
@@ -64,7 +64,8 @@ class GrantUsersController < ApplicationController
   	authorize @grant_user
     @grant_user.destroy
     respond_to do |format|
-      format.html { redirect_to grant_grant_users_path, notice: 'Grant user was successfully destroyed.' }
+      flash[:success] = 'Grant user was successfully destroyed.'
+      format.html { redirect_to grant_grant_users_path }
       format.json { head :no_content }
     end
   end
@@ -80,14 +81,16 @@ class GrantUsersController < ApplicationController
     end
 
     def unassigned_grant_users_by_organization
-    	User.left_outer_joins(:grant_users).where("grant_users.grant_role is null").where(organization: @grant.organization)
+    	User.left_outer_joins(:grant_users)
+          .where("grant_users.grant_role is null")
+          .where(organization: @grant.organization)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def grant_user_params
       params.require(:grant_user).permit(
         :grant,
-        :email,
+        :user,
         :grant_role)
     end
 end
