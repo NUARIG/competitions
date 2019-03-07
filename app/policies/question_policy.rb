@@ -1,6 +1,6 @@
-class QuestionPolicy < AccessPolicy
+class QuestionPolicy < GrantPolicy
   def index?
-    user.present?
+    organization_viewer_access? || grant_viewer_access?
   end
 
   def show?
@@ -8,31 +8,22 @@ class QuestionPolicy < AccessPolicy
   end
 
   def create?
-    confirm_organization &&
-    can_create?
+    organization_editor_access? || grant_editor_access?
   end
 
   def new?
-    can_create?
-  end
-
-  def update?
-    create? 
-  end
-
-  def edit?
     create?
   end
 
-  def destroy?
-    confirm_organization &&
-    user.organization_role == 'admin'
-  end
 
 	private
 		def question
 			record
 		end
+
+    def grant
+      clean_record_from_collection.grant
+    end
 
     def confirm_organization
       user.present? && 

@@ -15,6 +15,7 @@ class UserPolicy < AccessPolicy
     update?
   end
 
+
 	private
 		def user
 			record

@@ -1,52 +1,28 @@
-class GrantUserPolicy < AccessPolicy
+class GrantUserPolicy < GrantPolicy
 	def index?
-    user.id.in?(grant_read_users.pluck(:user_id))
-  end
-
-  def show?
-  	index?
+    organization_viewer_access? || grant_viewer_access?
   end
 
   def create?
-  	user.id.in?(grant_write_users.pluck(:user_id))
+  	organization_editor_access? || grant_editor_access?
   end
 
   def new?
     create?
   end
 
-  def update?
-  	create? 
-  end
 
-  def edit?
-    create?
-  end
-
-  def destroy?
-  	user.id.in?(grant_destroy_users.pluck(:user_id))
-  end
-
-	private
-		# def grant
-  #     clean_record = record.try(:first) ? record.first : record
-		# 	clean_record.grant
-		# end
-
-    def grant_users
+  private
+    def grant_user
       record
     end
 
-    def grant_read_users
-      GrantUser.where(grant_role: (%w[admin editor viewer]))
+    def grant
+      clean_record_from_collection.grant
     end
 
-    def grant_write_users
-      GrantUser.where(grant_role: (%w[admin editor]))
+    def confirm_organization
+      user.present? && 
+      clean_record_from_collection.grant.organization == user.organization 
     end
-
-    def grant_destroy_users
-      GrantUser.where(grant_role: (%w[admin]))
-    end
-
 end
