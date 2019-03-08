@@ -29,24 +29,20 @@ class GrantPolicy < AccessPolicy
 
   # Grant Access
   def grant_admin_access?
-    user.id.in?(
-      GrantUser.where(grant_role: (%w[admin]))
-      .where(grant: grant)
-      .pluck(:user_id)
-      )
+    check_grant_access(%w[admin])
   end
 
   def grant_editor_access?
-    user.id.in?(
-      GrantUser.where(grant_role: (%w[admin editor]))
-      .where(grant: grant)
-      .pluck(:user_id)
-      )
+    check_grant_access(%w[admin editor])
   end
 
   def grant_viewer_access?
+    check_grant_access(%w[admin editor viewer])
+  end
+
+  def check_grant_access(role_list)
     user.id.in?(
-      GrantUser.where(grant_role: (%w[admin editor viewer]))
+      GrantUser.where(grant_role: role_list)
       .where(grant: grant)
       .pluck(:user_id)
       )
