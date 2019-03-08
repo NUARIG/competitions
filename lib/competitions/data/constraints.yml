@@ -1,20 +1,30 @@
 min_value:
   type: 'IntegerConstraint'
-  name: 'Minimum Value'
-  value_type: 'integer'
-  default: '0'
-max_value:
-  type: 'IntegerConstraint'
-  name: 'Maximum Value'
-  value_type: 'integer'
-  default: nil
-min_length:
-  type: 'StringConstraint'
-  name: 'Minimum Length'
+  name: 'minimum_value'
   value_type: 'integer'
   default: 0
-max_length:
+max_value:
+  type: 'IntegerConstraint'
+  name: 'maximum_value'
+  value_type: 'integer'
+  default: nil
+string_min_length:
   type: 'StringConstraint'
-  name: 'Maximum Length'
+  name: 'minimum_length'
+  value_type: 'integer'
+  default: 0
+string_max_length:
+  type: 'StringConstraint'
+  name: 'maximum_length'
   value_type: 'integer'
   default: 255
+text_min_length:
+  type: 'TextConstraint'
+  name: 'minimum_length'
+  value_type: 'integer'
+  default: 0
+text_max_length:
+  type: 'TextConstraint'
+  name: 'maximum_length'
+  value_type: 'integer'
+  default:

@@ -54,6 +54,6 @@
   = label_tag :panel_location, 'Panel Location'
   = @grant.panel_location
 .cell
-  = link_to 'Edit', edit_grant_path(@grant) if policy(@grant).edit?
-  = '|' if policy(@grant).edit?
+  = link_to 'Edit', edit_grant_path(@grant), id: "grant-#{@grant.id}-edit" if policy(@grant).edit?
+  = ' | ' if policy(@grant).edit?
   = link_to 'Back', grants_path if policy(@grant).destroy?

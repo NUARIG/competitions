@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_161519) do
+
+ActiveRecord::Schema.define(version: 2019_03_05_222413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "constraint_question_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_type", "item_id"], name: "index_constraint_question_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_constraint_question_versions_on_whodunnit"
+  end
 
   create_table "constraint_questions", force: :cascade do |t|
     t.bigint "constraint_id"
@@ -36,12 +48,18 @@ ActiveRecord::Schema.define(version: 2019_02_25_161519) do
     t.index ["value_type"], name: "index_constraints_on_value_type"
   end
 
-  create_table "fields", force: :cascade do |t|
-    t.string "type"
-    t.string "label"
-    t.string "help_text"
-    t.string "placeholder"
-    t.boolean "require"
+  create_table "default_set_questions", force: :cascade do |t|
+    t.bigint "default_set_id"
+    t.bigint "question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["default_set_id", "question_id"], name: "index_default_set_questions_on_default_set_id_and_question_id"
+    t.index ["default_set_id"], name: "index_default_set_questions_on_default_set_id"
+    t.index ["question_id"], name: "index_default_set_questions_on_question_id"
+  end
+
+  create_table "default_sets", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -111,16 +129,14 @@ ActiveRecord::Schema.define(version: 2019_02_25_161519) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.bigint "field_id"
     t.bigint "grant_id"
+    t.text "answer_type"
     t.text "name"
     t.text "help_text"
     t.text "placeholder_text"
     t.boolean "required"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["field_id", "grant_id"], name: "index_questions_on_field_id_and_grant_id"
-    t.index ["field_id"], name: "index_questions_on_field_id"
     t.index ["grant_id"], name: "index_questions_on_grant_id"
   end
 

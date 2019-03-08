@@ -4,14 +4,12 @@ module Competitions
       Competitions::Setup.load_organizations
       Competitions::Setup.load_users
       Competitions::Setup.load_constraints
-      Competitions::Setup.load_fields
       Competitions::Setup.load_grants
-      Competitions::Setup.load_questions
-      Competitions::Setup.load_constraint_questions
+      Competitions::Setup.load_default_sets
     end
 
     def self.load_constraints
-      constraints = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraints.yml'))
+      constraints = parse_yml_file('constraints')
       constraints.each do |_, data|
         constraint = Constraint
                        .where(type: data[:type], name: data[:name])
@@ -25,23 +23,8 @@ module Competitions
       end
     end
 
-    def self.load_fields
-      fields = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/fields.yml'))
-      fields.each do |_, data|
-        field = Field
-                  .where(label: data[:label])
-                  .first_or_initialize
-
-        field.type        = data[:type]
-        field.label       = data[:label]
-        field.help_text   = data[:help_text] if data[:help_text].present?
-        field.placeholder = data[:placeholder] if data[:placeholder].present?
-        field.save!
-      end
-    end
-
     def self.load_users
-      users = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/users.yml'))
+      users = parse_yml_file('users')
       users.each do |_, data|
         user = User
                  .where(email: data[:email])
@@ -60,7 +43,7 @@ module Competitions
     end
 
     def self.load_organizations
-      organizations = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/organizations.yml'))
+      organizations = parse_yml_file('organizations')
       organizations.each do |_, data|
         organization = Organization
                          .where(name: data[:name])
@@ -76,7 +59,7 @@ module Competitions
     def self.load_grants
       org_admin_user = User.where(organization_role: 'admin').first
 
-      grants = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/grants.yml'))
+      grants = parse_yml_file('grants')
       grants.each do |_, data|
         grant = Grant
                   .where(name: data[:name])
@@ -110,46 +93,67 @@ module Competitions
       end
     end
 
-    def self.load_questions
-      questions = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/questions.yml'))
-      questions.each do |_, data|
-        question = Question
-                    .where(field_id: data[:field_id], grant_id: data[:grant_id])
-                    .first_or_initialize
+    def self.load_default_sets
+      default_sets = parse_yml_file('default_sets')
+      default_sets.each do |_, data|
+        set = DefaultSet.where(name: data[:name]).first_or_initialize
+        set.name = data[:name]
+        set.save!
 
-        question.field_id         = data[:field_id]
-        question.grant_id         = data[:grant_id]
-        question.name             = data[:name]
-        question.help_text        = data[:help_text]
-        question.placeholder_text = data[:placeholder_text]
-        question.required         = data[:required]
-        question.save!
+        if data[:questions].any?
+          data[:questions].each do |_, q|
+            DefaultSetQuestion.find_or_create_by(default_set_id: set.id, question_id: load_question(q).id)
+          end
+        end
       end
     end
 
-    def self.load_constraint_questions
-      constraint_questions = HashWithIndifferentAccess.new(YAML.load_file('./lib/competitions/data/constraint_questions.yml'))
-      constraint_questions.each do |_, data|
-        constraint_question = ConstraintQuestion
-                                .where(question_id: data[:question_id], constraint_id: data[:constraint_id])
-                                .first_or_initialize
+    private
+      def self.parse_yml_file(filename)
+        HashWithIndifferentAccess.new(YAML.load_file("./lib/competitions/data/#{filename}.yml"))
+      end
 
-        constraint_question.question_id   = data[:question_id]
-        constraint_question.constraint_id = data[:constraint_id]
-        constraint_question.value         = data[:value] if data[:value].present?
+      def self.load_question(q)
+        question = Question
+                     .where(grant_id: q[:grant_id], name: q[:name])
+                     .first_or_initialize
+        question.name             = q[:name]
+        question.answer_type      = q[:answer_type]
+        question.help_text        = q[:help_text]
+        question.placeholder_text = q[:placeholder_text]
+        question.required         = q[:required]
+        question.save!
+
+        if q[:constraints].any?
+          q[:constraints].each do |_, constraint|
+            load_constraint_questions(question.id, constraint)
+          end
+        end
+
+        question
+      end
+
+      def self.load_constraint_questions(question_id, constraint)
+        constraint_id             = Constraint
+                                      .where(type: constraint[:type], name: constraint[:name])
+                                      .pluck(:id)
+                                      .first
+        constraint_question       = ConstraintQuestion
+                                      .where(constraint_id: constraint_id, question_id: question_id)
+                                      .first_or_initialize
+        constraint_question.value = constraint[:value]
         constraint_question.save!
       end
-    end
+    
+      def self.load_grant_users(grant_users, grant_id)
+        grant_users.each do |_, gu|
+          grant_user = GrantUser
+                         .where(grant_id: grant_id, user_id: gu[:user_id])
+                         .first_or_initialize
 
-    def self.load_grant_users(grant_users, grant_id)
-      grant_users.each do |_, gu|
-        grant_user = GrantUser
-                       .where(grant_id: grant_id, user_id: gu[:user_id])
-                       .first_or_initialize
-
-        grant_user.grant_role = gu[:grant_role]
-        grant_user.save!
+          grant_user.grant_role = gu[:grant_role]
+          grant_user.save!
+        end
       end
-    end
   end
 end

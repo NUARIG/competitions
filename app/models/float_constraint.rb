@@ -1,4 +1,4 @@
-class IntegerConstraint < Constraint
+class FloatConstraint < Constraint
   ALLOWED_NAMES = { maximum_value: 'maximum_value',
                     minimum_value: 'minimum_value'
                   }.freeze
