@@ -26,6 +26,7 @@ class AccessPolicy < ApplicationPolicy
 		end
 
 
+    # Cleaning methods
 		def confirm_organization
 			user.present? && 
 			clean_record_from_collection.organization == user.organization 

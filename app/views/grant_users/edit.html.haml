@@ -1,0 +1,10 @@
+- content_for(:page_title, "Editing '#{@grant_user.user.name}'")
+
+.grid-x
+  .cell
+    %h1 Editing grant user
+
+.grid-x
+  .cell
+    = form_with model: [@grant, @grant_user], local: true do |f|
+      = render 'edit_form', f: f, grant: @grant

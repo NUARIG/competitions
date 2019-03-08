@@ -1,0 +1,31 @@
+%p#notice= notice
+%h2
+  = @grant.name
+  Grant Roles
+%table
+  %thead
+    %tr
+      %th
+        ID
+      %th
+        User
+      %th
+        Grant_role
+  %tbody
+    - @grant_users.each do |gu|
+      %tr
+        %td
+          = gu.user.name
+        %td
+          = gu.grant_role
+        %td
+          %ul
+            %li= link_to 'Edit', edit_grant_grant_user_path(@grant, gu)
+            %li= link_to 'Delete', grant_grant_user_path(@grant, gu), method: :delete, data: { confirm: 'Are you sure?' } 
+
+%br/
+= link_to 'New Grant User', new_grant_grant_user_path if policy(@grant.grant_users.first).new?
+= '|' if policy(@grant.grant_users.first).new?
+= link_to 'Back', grants_path
+
+
