@@ -16,6 +16,7 @@
         = render 'layouts/header'
 
       %div.grid-x.grid-margin-x.grid-margin-y
-        = render 'layouts/flash'
+        %main.cell
+          = render 'layouts/flash'
 
-        = yield
+          = yield
