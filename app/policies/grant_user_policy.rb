@@ -1,14 +1,10 @@
-class QuestionPolicy < GrantPolicy
-  def index?
+class GrantUserPolicy < GrantPolicy
+	def index?
     organization_viewer_access? || grant_viewer_access?
   end
 
-  def show?
-    index?
-  end
-
   def create?
-    organization_editor_access? || grant_editor_access?
+  	organization_editor_access? || grant_editor_access?
   end
 
   def new?
@@ -16,10 +12,10 @@ class QuestionPolicy < GrantPolicy
   end
 
 
-	private
-		def question
-			record
-		end
+  private
+    def grant_user
+      record
+    end
 
     def grant
       clean_record_from_collection.grant

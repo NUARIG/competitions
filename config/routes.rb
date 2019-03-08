@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :grants do
     resources :questions, except: %i[show create]
+    resources :grant_users, except: :show
   end
 
   resources :organizations

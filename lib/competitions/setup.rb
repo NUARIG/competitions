@@ -11,9 +11,10 @@ module Competitions
     def self.load_constraints
       constraints = parse_yml_file('constraints')
       constraints.each do |_, data|
-        constraint            = Constraint
-                                  .where(type: data[:type], name: data[:name])
-                                  .first_or_initialize
+        constraint = Constraint
+                       .where(type: data[:type], name: data[:name])
+                       .first_or_initialize
+                       
         constraint.name       = data[:name]
         constraint.type       = data[:type]
         constraint.value_type = data[:value_type]
@@ -25,9 +26,10 @@ module Competitions
     def self.load_users
       users = parse_yml_file('users')
       users.each do |_, data|
-        user                    = User
-                                    .where(email: data[:email])
-                                    .first_or_initialize
+        user = User
+                 .where(email: data[:email])
+                 .first_or_initialize
+
         user.organization_id    = data[:organization_id]
         user.first_name         = data[:first_name]
         user.last_name          = data[:last_name]
@@ -43,9 +45,10 @@ module Competitions
     def self.load_organizations
       organizations = parse_yml_file('organizations')
       organizations.each do |_, data|
-        organization            = Organization
-                                    .where(name: data[:name])
-                                    .first_or_initialize
+        organization = Organization
+                         .where(name: data[:name])
+                         .first_or_initialize
+
         organization.name       = data[:name]
         organization.short_name = data[:short_name]
         organization.url        = data[:url]
@@ -58,9 +61,10 @@ module Competitions
 
       grants = parse_yml_file('grants')
       grants.each do |_, data|
-        grant                            = Grant
-                                             .where(name: data[:name])
-                                             .first_or_initialize
+        grant = Grant
+                  .where(name: data[:name])
+                  .first_or_initialize
+
         grant.organization_id            = data[:organization_id]
         grant.name                       = data[:name]
         grant.short_name                 = data[:short_name]
@@ -82,6 +86,10 @@ module Competitions
 
         grant.save!
         grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
+        
+        unless data[:grant_users].nil?
+          load_grant_users(data[:grant_users], grant.id)
+        end
       end
     end
 
@@ -135,6 +143,17 @@ module Competitions
                                       .first_or_initialize
         constraint_question.value = constraint[:value]
         constraint_question.save!
+      end
+    
+      def self.load_grant_users(grant_users, grant_id)
+        grant_users.each do |_, gu|
+          grant_user = GrantUser
+                         .where(grant_id: grant_id, user_id: gu[:user_id])
+                         .first_or_initialize
+
+          grant_user.grant_role = gu[:grant_role]
+          grant_user.save!
+        end
       end
   end
 end

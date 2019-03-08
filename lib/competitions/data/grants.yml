@@ -17,6 +17,13 @@ research:
   review_close_date: '2020-03-25 06:00:00'
   panel_date: '2020-04-01 06:00:00'
   panel_location: '123 Main - Room 100'
+  grant_users:
+    role1:
+      user_id: 4
+      grant_role: 'admin'
+    role2:
+      user_id: 3
+      grant_role: 'viewer'
 kl2:
   organization_id: 1
   name: 'Model KL2 Grant'
@@ -36,7 +43,14 @@ kl2:
   review_close_date: '2020-03-25 06:00:00'
   panel_date: '2020-04-01 06:00:00'
   panel_location: '123 Main - Room 200'
-grant2:
+  grant_users:
+    role1:
+      user_id: 1
+      grant_role: 'admin'
+    role2:
+      user_id: 2
+      grant_role: 'viewer'
+research2:
   organization_id: 2
   name: 'Sample NIH Rresearch Grant'
   short_name: 'sample'
@@ -55,3 +69,10 @@ grant2:
   review_close_date: '2020-04-25 06:00:00'
   panel_date: '2020-05-01 06:00:00'
   panel_location: '123 Main - Room 100'
+  grant_users:
+    role1:
+      user_id: 6
+      grant_role: 'admin'
+    role2:
+      user_id: 8
+      grant_role: 'editor'
