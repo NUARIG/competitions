@@ -1,15 +1,10 @@
 - content_for(:page_title, "#{@grant.name}")
 
-.grid-x
-  .cell
-    %h1= "Editing #{@grant.name}"
+%h1= "Editing #{@grant.name}"
 
-.grid-x
-  .cell
-  = form_with model: @grant, local: true do |f|
-    = render 'form', f: f, grant: @grant, questions: @questions
+= form_with model: @grant, local: true do |f|
+  = render 'form', f: f, grant: @grant, questions: @questions
 
-  .cell
-    = link_to 'Show', @grant, id: "grant-#{@grant.id}"
-    |
-    = link_to 'Back', grants_path
+  = link_to 'Show', @grant, id: "grant-#{@grant.id}"
+  |
+  = link_to 'Back', grants_path

@@ -1,6 +1,8 @@
-%header
+%header.cell
   .top-bar
-    .top-bar-right.no-bullet
+    .to-bar-left
+      = link_to 'CD2H - Competitions', root_path
+    .top-bar-right
       %ul.dropdown.menu{"data-dropdown-menu" => ""}
         %li
           = render 'devise/menu/login_items'
