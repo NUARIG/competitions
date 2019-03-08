@@ -11,9 +11,8 @@ describe QuestionPolicy do
     context 'questions for organization none users' do
       let(:user) { FactoryBot.create(:user, organization: organization) }
 
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      
+      it { is_expected.to forbid_action(:index) }
+      it { is_expected.to forbid_action(:show) }
       it { is_expected.to forbid_action(:new) }
       it { is_expected.to forbid_action(:create) }
       it { is_expected.to forbid_action(:edit) }
@@ -22,7 +21,7 @@ describe QuestionPolicy do
     end
 
     context 'questions for organization viewer users' do
-      let(:user) { FactoryBot.create(:user, organization_role: 'viewer') }
+      let(:user) { FactoryBot.create(:user, organization: organization, organization_role: 'viewer') }
 
       it { is_expected.to permit_action(:index) }
       it { is_expected.to permit_action(:show) }
@@ -67,10 +66,9 @@ describe QuestionPolicy do
       let(:question) { FactoryBot.create(:integer_question, grant: grant) }
       let(:user) { FactoryBot.create(:user, organization_role: 'admin', organization: organization2) }
 
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:new) } # This passes because the check for org is done on the save.
-      
+      it { is_expected.to forbid_action(:index) }
+      it { is_expected.to forbid_action(:show) }
+      it { is_expected.to forbid_action(:new) }
       it { is_expected.to forbid_action(:create) }
       it { is_expected.to forbid_action(:edit) }
       it { is_expected.to forbid_action(:update) }
