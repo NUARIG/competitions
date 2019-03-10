@@ -62,7 +62,7 @@ class GrantUsersController < ApplicationController
         format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :ok, location: @grant_user }
       else
-        @emails = unassigned_users_by_organization_and_grant.pluck(:email)
+        @users = unassigned_users_by_organization_and_grant
         format.html { render :edit, alert: @grant_user.errors.full_messages }
         format.json { render json: @grant_user.errors, status: :unprocessable_entity }
       end
