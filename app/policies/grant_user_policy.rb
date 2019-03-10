@@ -22,7 +22,7 @@ class GrantUserPolicy < GrantPolicy
     end
 
     def confirm_organization
-      user.present? && 
-      clean_record_from_collection.grant.organization == user.organization 
+      user.present? &&
+      clean_record_from_collection.grant.organization == user.organization
     end
 end

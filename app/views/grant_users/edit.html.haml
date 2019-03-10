@@ -1,8 +1,9 @@
-- content_for(:page_title, "Editing '#{@grant_user.user.name}'")
+- content_for(:page_title, "Edit User Permissions")
 
 .grid-x
   .cell
-    %h1 Editing grant user
+    %h1
+      = "Edit #{@grant_user.user.name}'s Permission"
 
 .grid-x
   .cell

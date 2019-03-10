@@ -7,7 +7,11 @@ class GrantUsersController < ApplicationController
   # GET /grants/:study_id/grant_users
   def index
     @grant_users = @grant.grant_users.all
-    authorize @grant_users
+    if @grant_users.present?
+      authorize @grant_users
+    else
+      authorize @grant
+    end
   end
 
   # GET /grants/:study_id/grant_user/new
@@ -52,7 +56,7 @@ class GrantUsersController < ApplicationController
     respond_to do |format|
       if @grant_user.update(grant_user_params)
         flash[:success] = <<~SUCCESS
-          #{@grant_user.user.name} was changed to
+          #{@grant_user.user.name}'s permission was changed to
           '#{@grant_user.grant_role}' for this grant.
         SUCCESS
         format.html { redirect_to grant_grant_users_path(@grant) }
@@ -96,8 +100,6 @@ class GrantUsersController < ApplicationController
   end
 
   def grant_user_params
-    params.require(:grant_user).permit(%i[grant_id,
-                                          user_id,
-                                          grant_role])
+    params.require(:grant_user).permit(:grant_id, :user_id, :grant_role)
   end
 end
