@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :float_constraint, class: 'FloatConstraint' do
     name       { 'maximum_value' }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :string_constraint, class: 'StringConstraint' do
     name       { 'maximum_length' }

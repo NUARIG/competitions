@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'String Questions', type: :system do
@@ -14,13 +16,13 @@ RSpec.describe 'String Questions', type: :system do
       login_as(@user)
     end
 
-    context "#constraints" do
+    context '#constraints' do
       scenario 'constraints can be edited', versioning: true do
         visit edit_grant_question_path(@grant.id, @question.id)
         expect(page).to have_field("constraint-question-#{@min_length_constraint.id}-value", with: @min_length_constraint.value)
         fill_in("constraint-question-#{@min_length_constraint.id}-value", with: '2')
         click_button 'Save'
-        click_link("Edit", href: "#{edit_grant_question_path(@grant.id, @question.id)}")
+        click_link('Edit', href: edit_grant_question_path(@grant.id, @question.id).to_s)
         expect(page).to have_field("constraint-question-#{@min_length_constraint.id}-value", with: '2')
       end
 

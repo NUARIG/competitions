@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class CreateUsers < ActiveRecord::Migration[5.2]
   def change
     create_table :users do |t|
       t.references :organization, foreign_key: true
       t.string :organization_role
-      t.string :email, null: false, default: ""
+      t.string :email, null: false, default: ''
       t.string :first_name
       t.string :last_name
       t.string :era_commons
@@ -12,7 +14,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
 
       ## DEVISE
       ## Database authenticatable
-      t.string :encrypted_password, null: false, default: ""
+      t.string :encrypted_password, null: false, default: ''
 
       ## Recoverable
       t.string   :reset_password_token
@@ -38,7 +40,6 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       # t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
       # t.string   :unlock_token # Only if unlock strategy is :email or :both
       # t.datetime :locked_at
-
 
       # Uncomment below if timestamps were not included in your original model.
       # t.timestamps null: false

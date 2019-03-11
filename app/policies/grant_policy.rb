@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class GrantPolicy < AccessPolicy
-	def index?
-		user.present?
+  def index?
+    user.present?
   end
 
   def show?
-  	index?
+    index?
   end
 
   def create?
@@ -16,7 +18,7 @@ class GrantPolicy < AccessPolicy
   end
 
   def update?
-  	organization_editor_access? || grant_editor_access?
+    organization_editor_access? || grant_editor_access?
   end
 
   def edit?
@@ -24,7 +26,7 @@ class GrantPolicy < AccessPolicy
   end
 
   def destroy?
-  	organization_admin_access? || grant_admin_access?
+    organization_admin_access? || grant_admin_access?
   end
 
   # Grant Access
@@ -45,12 +47,12 @@ class GrantPolicy < AccessPolicy
       GrantUser.where(grant_role: role_list)
       .where(grant: grant)
       .pluck(:user_id)
-      )
+    )
   end
 
+  private
 
-	private
-		def grant
-			record
-		end
+  def grant
+    record
+  end
 end

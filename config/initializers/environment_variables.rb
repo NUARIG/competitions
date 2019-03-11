@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # if %w[development test].include?(Rails.env)
 #   env_file = File.join(Rails.root, 'config', 'local_env.yml')
 #   YAML.load(File.open(env_file)).each do |k, v|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe GrantUser, type: :model do
@@ -20,7 +22,7 @@ RSpec.describe GrantUser, type: :model do
     it 'validates a valid grant_user' do
       expect(admin_grant_user).to be_valid
       expect(editor_grant_user).to be_valid
-			expect(viewer_grant_user).to be_valid
+      expect(viewer_grant_user).to be_valid
     end
 
     it 'requires a grant' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateConstraintQuestions < ActiveRecord::Migration[5.2]
   def change
     create_table :constraint_questions do |t|
@@ -8,6 +10,6 @@ class CreateConstraintQuestions < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :constraint_questions, [:constraint_id, :question_id]
+    add_index :constraint_questions, %i[constraint_id question_id]
   end
 end

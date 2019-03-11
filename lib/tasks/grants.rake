@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :grants do
   desc 'Load or update initial Grants'
   task(load: :environment) do

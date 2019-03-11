@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Question < ApplicationRecord
   self.inheritance_column = 'answer_type'
 
@@ -9,8 +11,8 @@ class Question < ApplicationRecord
   has_many :constraints, through: :constraint_questions
   accepts_nested_attributes_for :constraint_questions
 
-  has_many :default_sets_questions
-  has_many :default_sets, through: :default_sets_questions
+  has_many :default_set_questions
+  has_many :default_sets, through: :default_set_questions
 
   validates_presence_of :name
   validates_length_of :name, minimum: 3, maximum: 255

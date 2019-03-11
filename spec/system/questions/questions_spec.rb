@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Questions', type: :system do
@@ -12,7 +14,7 @@ RSpec.describe 'Questions', type: :system do
       login_as(@user)
     end
 
-    context "#constraints" do
+    context '#constraints' do
       scenario 'constraint requirement can be edited using grant edit' do
         visit edit_grant_path(@grant.id)
         page.uncheck "question-#{@question.id}-required"

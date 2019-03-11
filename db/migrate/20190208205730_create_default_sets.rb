@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDefaultSets < ActiveRecord::Migration[5.2]
   def change
     create_table :default_sets do |t|

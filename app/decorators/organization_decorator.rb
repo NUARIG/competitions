@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrganizationDecorator < Draper::Decorator
   delegate_all
 
@@ -9,5 +11,4 @@ class OrganizationDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :integer_constraint, class: 'IntegerConstraint' do
     name       { 'minimum_value' }

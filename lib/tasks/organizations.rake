@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :organizations do
   desc 'Load or update initial Oraganizations'
   task(load: :environment) do
