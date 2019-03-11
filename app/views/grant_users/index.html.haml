@@ -2,7 +2,10 @@
 %h2
   = @grant.name
   Permissions
-- if @grant_users.present?
+- unless @grant_users.present?
+  %p
+    No roles have been assigned on this grant.
+- else
   %table
     %thead
       %tr
@@ -13,21 +16,16 @@
         %th
 
     %tbody
-      - @grant_users.each do |gu|
+      - @grant_users.each do |grant_user|
         %tr
           %td
-            = gu.user.name
+            = grant_user.user.name
           %td
-            = gu.grant_role
+            = grant_user.grant_role
           %td
-            %ul
-              %li= link_to 'Edit', edit_grant_grant_user_path(@grant, gu)
-              %li= link_to 'Delete', grant_grant_user_path(@grant, gu), method: :delete, data: { confirm: 'Are you sure?' }
-- else
-  %p
-    No roles have been assigned on this grant.
+            = render partial: "#{@current_user_role}_links", locals: { grant_user: grant_user, grant: @grant }
 
--if policy(@grant).edit?
+- unless @current_user_role == 'viewer'
   = link_to 'New Grant User', new_grant_grant_user_path
   = ' | '
 = link_to 'Back', grants_path

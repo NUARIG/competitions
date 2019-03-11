@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GrantUsersController < ApplicationController
+  include WithGrantRoles
+
   before_action :set_grant
   before_action :set_grant_user, only: %i[edit update destroy]
 
@@ -12,6 +14,7 @@ class GrantUsersController < ApplicationController
     else
       authorize @grant
     end
+    @current_user_role = current_user_grant_permission
   end
 
   # GET /grants/:study_id/grant_user/new

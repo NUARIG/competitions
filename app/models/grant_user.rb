@@ -1,4 +1,6 @@
 class GrantUser < ApplicationRecord
+  # include WithGrantRoles
+
   belongs_to :grant
   belongs_to :user
 
@@ -17,10 +19,12 @@ class GrantUser < ApplicationRecord
 
   validate :validate_user_and_grant_organizations, if: -> { grant.present? && user.present? }
 
-  scope :with_users,     -> { includes :users }
+  scope :with_users, -> { includes :users }
 
   private
-  	def validate_user_and_grant_organizations
-  		errors.add(:base, 'User must be associated with the same organization as the grant.') unless self.grant.organization.id == self.user.organization.id
-  	end
+
+  def validate_user_and_grant_organizations
+		errors.add(:base, 'User must be associated with the same organization as the grant.') unless self.grant.organization.id == self.user.organization.id
+	end
+
 end
