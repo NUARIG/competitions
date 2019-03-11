@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WithGrantRoles
   extend ActiveSupport::Concern
 
@@ -7,7 +9,7 @@ module WithGrantRoles
 
     return 'admin' if permission == 'admin' || organization_role == 'admin'
 
-    (permission.present?) ? permission.grant_role : organization_role
+    permission.present? ? permission.grant_role : organization_role
   end
 
   def grant_role_by_user(grant, user)

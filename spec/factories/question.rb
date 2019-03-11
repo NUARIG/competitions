@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :string_question, class: 'Question' do
     association      :grant, factory: :grant

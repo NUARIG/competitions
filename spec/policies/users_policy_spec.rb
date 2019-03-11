@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 # The below specs are only testing update and edit for thieir own records.
@@ -6,7 +8,7 @@ describe UserPolicy do
   subject { described_class.new(user, user) }
 
   context 'with user and grant of the same organization' do
-    let(:organization) { FactoryBot.create(:organization)}
+    let(:organization) { FactoryBot.create(:organization) }
 
     context 'grants for organization none users' do
       let(:user) { FactoryBot.create(:user, organization: organization) }
@@ -14,8 +16,8 @@ describe UserPolicy do
       it { is_expected.to permit_action(:show) }
       it { is_expected.to permit_action(:edit) }
       it { is_expected.to permit_action(:update) }
-   
-   		it { is_expected.to forbid_action(:index) }
+
+      it { is_expected.to forbid_action(:index) }
     end
 
     context 'grants for organization viewer users' do

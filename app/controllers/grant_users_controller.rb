@@ -34,10 +34,7 @@ class GrantUsersController < ApplicationController
     @grant_user = GrantUser.new(grant_user_params)
     respond_to do |format|
       if @grant_user.save
-        flash[:success] = <<~SUCCESS
-          #{@grant_user.user.name} was granted
-          '#{@grant_user.grant_role}' permissions for this grant.
-        SUCCESS
+        flash[:success] = @grant_user.user.name + ' was granted \'' + @grant_user.grant_role + '\' permissions for this grant.'
         format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :created, location: @grant_user }
       else
@@ -55,10 +52,7 @@ class GrantUsersController < ApplicationController
     authorize @grant, :edit?
     respond_to do |format|
       if @grant_user.update(grant_user_params)
-        flash[:success] = <<~SUCCESS
-          #{@grant_user.user.name}'s permission was changed to
-          '#{@grant_user.grant_role}' for this grant.
-        SUCCESS
+        flash[:success] = @grant_user.user.name + '\'s permission was changed to \'' + @grant_user.grant_role + '\' for this grant.'
         format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :ok, location: @grant_user }
       else
@@ -75,9 +69,7 @@ class GrantUsersController < ApplicationController
     authorize @grant, :destroy?
     @grant_user.destroy
     respond_to do |format|
-      flash[:success] = <<~SUCCESS
-        #{@grant_user.user.name}'s role was removed for this grant.
-      SUCCESS
+      flash[:success] = @grant_user.user.name + '\'s role was removed for this grant.'
       format.html { redirect_to grant_grant_users_path }
       format.json { head :no_content }
     end

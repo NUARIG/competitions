@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Grant, type: :model do
@@ -19,7 +21,7 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:panel_date) }
   it { is_expected.to respond_to(:panel_location) }
 
-  let(:grant)   { FactoryBot.build(:grant) }
+  let(:grant) { FactoryBot.build(:grant) }
 
   describe '#validations' do
     it 'validates a valid grant' do

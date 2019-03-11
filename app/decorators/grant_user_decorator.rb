@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GrantUserDecorator < Draper::Decorator
   delegate_all
 
@@ -9,5 +11,4 @@ class GrantUserDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
-
 end

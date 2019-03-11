@@ -11,6 +11,7 @@ module Competitions
     end
 
     module_function
+
     def parse_yml_file(filename)
       HashWithIndifferentAccess
         .new(YAML.load_file("./lib/competitions/data/#{filename}.yml"))

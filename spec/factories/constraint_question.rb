@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :integer_constraint_question, class: 'ConstraintQuestion' do |cq|
     cq.association :constraint, factory: :integer_constraint

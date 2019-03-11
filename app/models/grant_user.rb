@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 class GrantUser < ApplicationRecord
   # include WithGrantRoles
 
   belongs_to :grant
   belongs_to :user
 
-  GRANT_ROLES = { admin:  'admin',
-                	editor: 'editor',
-                	viewer: 'viewer'
-              	}.freeze
+  GRANT_ROLES = { admin: 'admin',
+                  editor: 'editor',
+                  viewer: 'viewer' }.freeze
 
   enum grant_role: GRANT_ROLES, _prefix: true
 
@@ -24,7 +25,6 @@ class GrantUser < ApplicationRecord
   private
 
   def validate_user_and_grant_organizations
-		errors.add(:base, 'User must be associated with the same organization as the grant.') unless self.grant.organization.id == self.user.organization.id
-	end
-
+    errors.add(:base, 'User must be associated with the same organization as the grant.') unless grant.organization.id == user.organization.id
+  end
 end

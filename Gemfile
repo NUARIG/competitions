@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -49,7 +51,7 @@ gem 'validates_timeliness'
 
 group :development, :test do
   gem 'awesome_print'
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'haml-rails', '~> 1.0'
   gem 'puma', '~> 3.11'
   gem 'rspec-rails'
@@ -71,12 +73,12 @@ end
 group :test do
   gem 'capybara', '>= 2.15'
   gem 'factory_bot_rails'
-  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
+  gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
+  gem 'pundit-matchers', '~> 1.6.0'
   gem 'rspec'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
-  gem 'pundit-matchers', '~> 1.6.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

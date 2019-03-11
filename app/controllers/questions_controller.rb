@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   before_action :set_question, only: %i[show destroy]
   before_action :set_question_and_grant, only: :update
@@ -47,32 +49,34 @@ class QuestionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_question
-      @question = Question.find(params[:id])
-    end
 
-    def set_question_and_grant
-      @question = Question.find(params[:id])
-      @grant    = @question.grant
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_question
+    @question = Question.find(params[:id])
+  end
 
-    def set_question_and_grant_and_constraints
-      @question             = Question.with_constraints_and_constraint_questions.find(params[:id])
-      @grant                = @question.grant
-      @constraint_questions = @question.constraint_questions
-    end
+  def set_question_and_grant
+    @question = Question.find(params[:id])
+    @grant    = @question.grant
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def question_params
-      params.require(:question).permit(
-        :name,
-        :help_text,
-        :placeholder_text,
-        :required,
-        constraint_questions_attributes: [
-          :id,
-          :value]
-        )
-    end
+  def set_question_and_grant_and_constraints
+    @question             = Question.with_constraints_and_constraint_questions.find(params[:id])
+    @grant                = @question.grant
+    @constraint_questions = @question.constraint_questions
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def question_params
+    params.require(:question).permit(
+      :name,
+      :help_text,
+      :placeholder_text,
+      :required,
+      constraint_questions_attributes: %i[
+        id
+        value
+      ]
+    )
+  end
 end
