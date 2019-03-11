@@ -8,33 +8,30 @@ class GrantUsersController < ApplicationController
 
   # GET /grants/:study_id/grant_users
   def index
-    @grant_users = @grant.grant_users.all
-    if @grant_users.present?
-      authorize @grant_users
-    else
-      authorize @grant
-    end
+    authorize @grant, :edit?
+    @grant_users       = @grant.grant_users.all
     @current_user_role = current_user_grant_permission
   end
 
   # GET /grants/:study_id/grant_user/new
   def new
+    authorize @grant, :edit?
     @users      = unassigned_users_by_organization_and_grant
     @grant_user = GrantUser.new(grant: @grant)
-    authorize @grant_user
+    # authorize @grant_user
   end
 
   def edit
+    authorize @grant, :edit?
     @user = @grant_user.user
     @role = @grant_user.grant_role
-    authorize @grant_user
   end
 
   # POST /questions
   # POST /questions.json
   def create
+    authorize @grant, :edit?
     @grant_user = GrantUser.new(grant_user_params)
-    authorize @grant_user
     respond_to do |format|
       if @grant_user.save
         flash[:success] = <<~SUCCESS
@@ -55,7 +52,7 @@ class GrantUsersController < ApplicationController
   # PATCH/PUT /questions/1
   # PATCH/PUT /questions/1.json
   def update
-    authorize @grant_user
+    authorize @grant, :edit?
     respond_to do |format|
       if @grant_user.update(grant_user_params)
         flash[:success] = <<~SUCCESS
@@ -75,7 +72,7 @@ class GrantUsersController < ApplicationController
   # DELETE /questions/1
   # DELETE /questions/1.json
   def destroy
-    authorize @grant_user
+    authorize @grant, :destroy?
     @grant_user.destroy
     respond_to do |format|
       flash[:success] = <<~SUCCESS
