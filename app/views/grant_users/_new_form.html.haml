@@ -1,15 +1,13 @@
-
 .grid-x
-  .cell
-    .grid-x
-      = f.label :grant, 'Grant: '
-      = @grant.name
-    .grid-x
-      = f.label :email, 'Grant User\'s Email'
-      = f.collection_select :user, @users, :id, :email, prompt: true
-    .grid-x
-      = f.label :grant_role, 'Grant Role'
-      = f.select :grant_role, grant_user_grant_role_select_options, include_blank: 'Please select'
+  = f.label :grant_id, 'Grant: '
+  = f.hidden_field :grant_id, value: grant.id
+  = @grant.name
+.grid-x
+  = f.label :user_id, 'Grant User\'s Email'
+  = f.collection_select :user_id, users, :id, :email, prompt: true
+.grid-x
+  = f.label :grant_role, 'Grant Role'
+  = f.select :grant_role, grant_user_grant_role_select_options, include_blank: 'Please select'
 .grid-x
   .actions
     = f.submit 'Save', class: 'button'

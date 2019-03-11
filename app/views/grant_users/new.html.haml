@@ -1,10 +1,11 @@
-- content_for(:page_title, 'New Grant User')
+- content_for(:page_title, "Add User Permissions for #{@grant.name}")
 
 .grid-x
   .cell
-    %h1 New grant user
+    %h1
+      = yield(:page_title)
 
 .grid-x
   .cell
     = form_with model: [@grant, @grant_user], local: true do |f|
-      = render 'new_form', f: f, grant: @grant
+      = render 'new_form', f: f, grant: @grant, users: @users

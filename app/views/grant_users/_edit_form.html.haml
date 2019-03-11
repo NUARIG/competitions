@@ -2,10 +2,10 @@
   .cell
     .grid-x
       = f.label :grant, 'Grant: '
-      = @grant.name
+      = link_to grant.name, grant_path(grant)
     .grid-x
-      = f.label :user, 'Grant User: '
-      = @user.name
+      = f.label :user, 'User\'s Email: '
+      = @user.email
     .grid-x
       = f.label :grant_role, 'Grant Role'
       = f.select :grant_role, grant_user_grant_role_select_options
