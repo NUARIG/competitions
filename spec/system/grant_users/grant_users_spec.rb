@@ -41,6 +41,10 @@ RSpec.describe 'GrantUsers', type: :system do
           scenario 'user from another organization can be given a role' do
             visit new_grant_grant_user_path(@grant.id)
             expect(page.all('select#grant_user_user_id option').map(&:value)).to include(@unaffiliated_user.id.to_s)
+            select("#{@unaffiliated_user.email}", from: 'grant_user[user_id]')
+            select('admin', from:'grant_user[grant_role]')
+            click_button 'Save'
+            expect(page).to have_content "#{@unaffiliated_user.name} was granted 'admin'"
           end
 
           scenario 'assigned grant_user does not appear in select' do
