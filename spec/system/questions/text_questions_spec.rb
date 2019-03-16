@@ -8,8 +8,10 @@ RSpec.describe 'Text Questions', type: :system do
       # move to a shared context - grant_setup
       # use let rather than instance variables
       @organization          = FactoryBot.create(:organization)
-      @user                  = FactoryBot.create(:user, organization: @organization, organization_role: 'editor')
+      @user                  = FactoryBot.create(:user, organization: @organization)
       @grant                 = FactoryBot.create(:grant, organization: @organization)
+      @grant_user            = FactoryBot.create(:editor_grant_user, grant_id: @grant.id,
+                                                                     user_id: @user.id)
       @question              = FactoryBot.create(:text_question, grant_id: @grant.id, required: false)
       @min_length_constraint = FactoryBot.create(:text_minimum_length_constraint_question, question_id: @question.id)
       @max_length_constraint = FactoryBot.create(:text_maximum_length_constraint_question, question_id: @question.id)

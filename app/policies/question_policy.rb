@@ -2,7 +2,7 @@
 
 class QuestionPolicy < GrantPolicy
   def index?
-    organization_viewer_access? || grant_viewer_access?
+    grant_viewer_access?
   end
 
   def show?
@@ -10,7 +10,7 @@ class QuestionPolicy < GrantPolicy
   end
 
   def create?
-    organization_editor_access? || grant_editor_access?
+    grant_editor_access?
   end
 
   def new?

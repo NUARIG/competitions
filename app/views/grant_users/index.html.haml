@@ -25,7 +25,7 @@
           %td
             = render partial: "#{@current_user_role}_links", locals: { grant_user: grant_user, grant: @grant }
 
-- unless @current_user_role == 'viewer'
+- if policy(@grant).edit?
   = link_to 'New Grant User', new_grant_grant_user_path
   = ' | '
 = link_to 'Back', grants_path

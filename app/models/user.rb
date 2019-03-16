@@ -13,8 +13,6 @@ class User < ApplicationRecord
   after_initialize :set_default_organization_role, if: :new_record?
 
   ORG_ROLES = { admin: 'admin',
-                editor: 'editor',
-                viewer: 'viewer',
                 none: 'none' }.freeze
 
   enum organization_role: ORG_ROLES, _prefix: true

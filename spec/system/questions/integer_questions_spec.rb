@@ -8,8 +8,10 @@ RSpec.describe 'Integer Questions', type: :system do
       # move to a shared context - grant_setup
       # use let rather than instance variables
       @organization         = FactoryBot.create(:organization)
-      @user                 = FactoryBot.create(:user, organization: @organization, organization_role: 'editor')
+      @user                 = FactoryBot.create(:user, organization: @organization)
       @grant                = FactoryBot.create(:grant, organization: @organization)
+      @grant_user           = FactoryBot.create(:editor_grant_user, grant_id: @grant.id,
+                                                                    user_id: @user.id)
       @question             = FactoryBot.create(:integer_question, grant_id: @grant.id, required: false)
       @min_value_constraint = FactoryBot.create(:integer_minimum_value_constraint_question, question_id: @question.id)
       @max_value_constraint = FactoryBot.create(:integer_maximum_value_constraint_question, question_id: @question.id)

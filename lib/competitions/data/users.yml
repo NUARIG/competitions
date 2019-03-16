@@ -10,7 +10,7 @@ user2:
   first_name: 'Exene'
   last_name: 'Cervenka'
   email: 'e-cervenaka@northwestern.edu'
-  organization_role: 'editor'
+  organization_role: 'none'
   password: 'secret'
   era_commons: 'ECervenk90069'
 user3:
@@ -18,7 +18,7 @@ user3:
   first_name: 'Billy'
   last_name: 'Zoom'
   email: 'b-zoom@northwestern.edu'
-  organization_role: 'viewer'
+  organization_role: 'none'
   password: 'secret'
 user4:
   organization_id: 1
@@ -41,7 +41,7 @@ user6:
   first_name: 'John'
   last_name: 'Cale'
   email: 'j-cale@nm.org'
-  organization_role: 'editor'
+  organization_role: 'admin'
   password: 'secret'
   era_commons: 'JohnCa10017'
 user7:
@@ -49,7 +49,7 @@ user7:
   first_name: 'Doug'
   last_name: 'Yule'
   email: 'd-yule@nm.org'
-  organization_role: 'viewer'
+  organization_role: 'none'
   password: 'secret'
 user8:
   organization_id: 2

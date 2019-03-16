@@ -20,24 +20,6 @@ describe UserPolicy do
       it { is_expected.to forbid_action(:index) }
     end
 
-    context 'grants for organization viewer users' do
-      let(:user) { FactoryBot.create(:user, organization_role: 'viewer', organization: organization) }
-
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:edit) }
-      it { is_expected.to permit_action(:update) }
-    end
-
-    context 'grants for organization editor users' do
-      let(:user) { FactoryBot.create(:user, organization_role: 'editor', organization: organization) }
-
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:edit) }
-      it { is_expected.to permit_action(:update) }
-    end
-
     context 'grants for organization admin users' do
       let(:user) { FactoryBot.create(:user, organization_role: 'admin', organization: organization) }
 

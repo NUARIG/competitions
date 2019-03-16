@@ -22,42 +22,17 @@ describe QuestionPolicy do
       it { is_expected.to forbid_action(:destroy) }
     end
 
-    context 'questions for organization viewer users' do
-      let(:user) { FactoryBot.create(:user, organization: organization, organization_role: 'viewer') }
+    context 'questions for organization admin users' do
+      let(:user) { FactoryBot.create(:user, organization_role: 'admin', organization: organization) }
 
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-
+      # These actions are only allowed with grant access.
+      it { is_expected.to forbid_action(:index) }
+      it { is_expected.to forbid_action(:show) }
       it { is_expected.to forbid_action(:new) }
       it { is_expected.to forbid_action(:create) }
       it { is_expected.to forbid_action(:edit) }
       it { is_expected.to forbid_action(:update) }
       it { is_expected.to forbid_action(:destroy) }
-    end
-
-    context 'questions for organization editor users' do
-      let(:user) { FactoryBot.create(:user, organization_role: 'editor', organization: organization) }
-
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:new) }
-      it { is_expected.to permit_action(:create) }
-      it { is_expected.to permit_action(:edit) }
-      it { is_expected.to permit_action(:update) }
-
-      it { is_expected.to forbid_action(:destroy) }
-    end
-
-    context 'questions for organization admin users' do
-      let(:user) { FactoryBot.create(:user, organization_role: 'admin', organization: organization) }
-
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:new) }
-      it { is_expected.to permit_action(:create) }
-      it { is_expected.to permit_action(:edit) }
-      it { is_expected.to permit_action(:update) }
-      it { is_expected.to permit_action(:destroy) }
     end
   end
   context 'with user and question of different organizations' do
@@ -68,6 +43,7 @@ describe QuestionPolicy do
       let(:question) { FactoryBot.create(:integer_question, grant: grant) }
       let(:user) { FactoryBot.create(:user, organization_role: 'admin', organization: organization2) }
 
+      # These actions are only allowed with grant access.
       it { is_expected.to forbid_action(:index) }
       it { is_expected.to forbid_action(:show) }
       it { is_expected.to forbid_action(:new) }
