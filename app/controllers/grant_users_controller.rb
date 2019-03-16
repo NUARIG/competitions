@@ -35,7 +35,8 @@ class GrantUsersController < ApplicationController
     respond_to do |format|
       if @grant_user.save
         flash[:success] = @grant_user.user.name + ' was granted \'' + @grant_user.grant_role + '\' permissions for this grant.'
-        format.html { redirect_to grant_grant_users_path(@grant) }
+        format.html { redirect_to edit_grant_path(@grant, anchor: 'permissions') }
+        # format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :created, location: @grant_user }
       else
         @users = unassigned_users_by_organization_and_grant
@@ -53,7 +54,8 @@ class GrantUsersController < ApplicationController
     respond_to do |format|
       if @grant_user.update(grant_user_params)
         flash[:success] = @grant_user.user.name + '\'s permission was changed to \'' + @grant_user.grant_role + '\' for this grant.'
-        format.html { redirect_to grant_grant_users_path(@grant) }
+        #format.html { redirect_to grant_grant_users_path(@grant) }
+        format.html { redirect_to edit_grant_path(@grant, anchor: 'permissions') }
         format.json { render :show, status: :ok, location: @grant_user }
       else
         @users = unassigned_users_by_organization_and_grant
@@ -70,7 +72,7 @@ class GrantUsersController < ApplicationController
     @grant_user.destroy
     respond_to do |format|
       flash[:success] = @grant_user.user.name + '\'s role was removed for this grant.'
-      format.html { redirect_to grant_grant_users_path }
+      format.html { redirect_to edit_grant_path(@grant, anchor: 'permissions') }
       format.json { head :no_content }
     end
   end

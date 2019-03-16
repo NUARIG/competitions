@@ -37,6 +37,14 @@ RSpec.describe Organization, type: :model do
     it 'validates format of url' do
       organization.url = 'http://collegeu.edu'
       expect(organization).to be_valid
+      organization.url = 'http://organization.org'
+      expect(organization).to be_valid
+      organization.url = 'http://www.acronym.gov'
+      expect(organization).to be_valid
+      organization.url = 'http://abc.acronym.gov'
+      expect(organization).to be_valid
+      organization.url = 'http://abc..xyz.acronym.gov'
+      expect(organization).to be_valid
       organization.url = 'college.com'
       expect(organization).not_to be_valid
       expect(organization.errors).to include :url

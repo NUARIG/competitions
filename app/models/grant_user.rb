@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GrantUser < ApplicationRecord
-  # include WithGrantRoles
-
   belongs_to :grant
   belongs_to :user
 

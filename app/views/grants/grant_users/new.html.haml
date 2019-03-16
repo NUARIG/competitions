@@ -1,9 +1,11 @@
 - content_for(:page_title, "Add User Permissions for #{@grant.name}")
 
-.grid-x
-  .cell
-    %h1
-      = yield(:page_title)
+= render 'shared/grant_edit_tabbed_menu'
+
+%h2
+  = yield(:page_title)
+
+.tabs-panel.is-active
 
 .grid-x
   .cell

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class GrantsController < ApplicationController
-  before_action :set_grant, only: %i[show update destroy]
-  before_action :set_grant_and_questions, only: :edit
-  before_action :set_state, only: %i[edit update]
+  include WithGrantRoles
+
+  before_action :set_grant, except: %i[index]
+  before_action :set_state, only: %i[create edit update]
 
   # GET /grants
   # GET /grants.json
@@ -26,6 +27,7 @@ class GrantsController < ApplicationController
 
   # GET /grants/1/edit
   def edit
+    @current_user_role = current_user_grant_permission
     authorize @grant
   end
 
@@ -73,7 +75,6 @@ class GrantsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_grant
     @grant = Grant.with_organization.find(params[:id])
   end
@@ -93,8 +94,6 @@ class GrantsController < ApplicationController
       :submission_open_date,
       :submission_close_date,
       :rfa,
-      :min_budget,
-      :max_budget,
       :applications_per_user,
       :review_open_date,
       :review_close_date,
@@ -104,11 +103,7 @@ class GrantsController < ApplicationController
       :panel_date,
       :panel_location,
       :organization_id,
-      :draft,
-      questions_attributes: %i[
-        id
-        required
-      ]
+      :draft
     )
   end
 
