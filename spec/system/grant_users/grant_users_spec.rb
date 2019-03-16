@@ -38,14 +38,14 @@ RSpec.describe 'GrantUsers', type: :system do
         end
 
         context '#new' do
-          scenario 'user from another organization cannot given a role' do
+          scenario 'user from another organization can be given a role' do
             visit new_grant_grant_user_path(@grant.id)
-            expect(page.all('select#grant_user_user_id option').map(&:value)).not_to include(@unaffiliated_user.id)
+            expect(page.all('select#grant_user_user_id option').map(&:value)).to include(@unaffiliated_user.id.to_s)
           end
 
           scenario 'assigned grant_user does not appear in select' do
             visit new_grant_grant_user_path(@grant.id)
-            expect(page.all('select#grant_user_user_id option').map(&:value)).not_to include(@grant_user.id)
+            expect(page.all('select#grant_user_user_id option').map(&:value)).not_to include(@grant_user.id.to_s)
           end
 
           scenario 'requires a selected user' do
