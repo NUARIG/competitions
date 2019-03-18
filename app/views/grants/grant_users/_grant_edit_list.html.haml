@@ -1,5 +1,11 @@
 %h2
   Permissions
+
+- if policy(@grant).edit?
+  = link_to 'Add new permission', new_grant_grant_user_path
+  = ' | '
+= link_to 'View all Grants', grants_path
+
 - unless @current_user_role == 'viewer'
   %div
     = link_to 'Add New User Permissions', new_grant_grant_user_path(@grant)
@@ -25,6 +31,3 @@
             = grant_user.grant_role
           %td
             = render partial: "grant_users/#{@current_user_role}_links", locals: { grant_user: grant_user, grant: @grant }
-
-
-

@@ -2,11 +2,15 @@
 
 class GrantUserPolicy < GrantPolicy
   def index?
-    organization_viewer_access? || grant_viewer_access?
+    grant_viewer_access?
+  end
+
+  def show?
+    index?
   end
 
   def create?
-    organization_editor_access? || grant_editor_access?
+    grant_editor_access?
   end
 
   def new?

@@ -16,7 +16,7 @@ class GrantUsersController < ApplicationController
   # GET /grants/:study_id/grant_user/new
   def new
     authorize @grant, :edit?
-    @users      = unassigned_users_by_organization_and_grant
+    @users      = unassigned_users_by_grant
     @grant_user = GrantUser.new(grant: @grant)
     # authorize @grant_user
   end
@@ -39,7 +39,7 @@ class GrantUsersController < ApplicationController
         # format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { render :show, status: :created, location: @grant_user }
       else
-        @users = unassigned_users_by_organization_and_grant
+        @users = unassigned_users_by_grant
         flash[:alert] = @grant_user.errors.full_messages
         format.html { render :new }
         format.json { render json: @grant_user.errors, status: :unprocessable_entity }
@@ -87,9 +87,14 @@ class GrantUsersController < ApplicationController
     @grant_user = GrantUser.find(params[:id])
   end
 
-  def unassigned_users_by_organization_and_grant
-    User.where(organization: @grant.organization)
-        .left_outer_joins(:grant_users)
+  # def unassigned_users_by_organization_and_grant
+  #   User.where(organization: @grant.organization)
+  #       .left_outer_joins(:grant_users)
+  #       .where.not(id: @grant.grant_users.map(&:user_id))
+  # end
+
+  def unassigned_users_by_grant
+    User.left_outer_joins(:grant_users)
         .where.not(id: @grant.grant_users.map(&:user_id))
   end
 

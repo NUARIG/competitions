@@ -13,7 +13,7 @@ module Grants
 
     # GET /grants/:id/grant_user/new
     def new
-      @users      = unassigned_users_by_organization_and_grant
+      @users      = unassigned_users_by_grant
       @grant_user = GrantUser.new(grant: @grant)
     end
 
@@ -29,11 +29,10 @@ module Grants
       respond_to do |format|
         if @grant_user.save
           flash[:notice] = @grant_user.user.name + ' was granted \'' + @grant_user.grant_role + '\' permissions for this grant.'
-          format.html { redirect_to grant_grant_users_path(@grant, anchor: 'permissions') }
-          # format.html { redirect_to grant_grant_users_path(@grant) }
+          format.html { redirect_to grant_grant_users_path(@grant) }
           format.json { render :show, status: :created, location: @grant_user }
         else
-          @users = unassigned_users_by_organization_and_grant
+          @users        = unassigned_users_by_grant
           flash[:alert] = @grant_user.errors.full_messages
           format.html { render :new }
           format.json { render json: @grant_user.errors, status: :unprocessable_entity }
@@ -48,11 +47,10 @@ module Grants
       respond_to do |format|
         if @grant_user.update(grant_user_params)
           flash[:notice] = @grant_user.user.name + '\'s permission was changed to \'' + @grant_user.grant_role + '\' for this grant.'
-          #format.html { redirect_to grant_grant_users_path(@grant) }
           format.html { redirect_to grant_grant_users_path(@grant) }
           format.json { render :show, status: :ok, location: @grant_user }
         else
-          @users = unassigned_users_by_organization_and_grant
+          @users = unassigned_users_by_grant
           format.html { render :edit, alert: @grant_user.errors.full_messages }
           format.json { render json: @grant_user.errors, status: :unprocessable_entity }
         end
@@ -86,10 +84,14 @@ module Grants
       authorize @grant, :edit?
     end
 
+    # def unassigned_users_by_organization_and_grant
+    #   User.where(organization: @grant.organization)
+    #       .left_outer_joins(:grant_users)
+    #       .where.not(id: @grant.grant_users.map(&:user_id))
+    # end
 
-    def unassigned_users_by_organization_and_grant
-      User.where(organization: @grant.organization)
-          .left_outer_joins(:grant_users)
+    def unassigned_users_by_grant
+      User.left_outer_joins(:grant_users)
           .where.not(id: @grant.grant_users.map(&:user_id))
     end
 

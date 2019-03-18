@@ -16,13 +16,5 @@ class GrantUser < ApplicationRecord
 
   validates_uniqueness_of :user_id, scope: :grant_id, message: 'can only be assigned once.'
 
-  validate :validate_user_and_grant_organizations, if: -> { grant.present? && user.present? }
-
   scope :with_users, -> { includes :users }
-
-  private
-
-  def validate_user_and_grant_organizations
-    errors.add(:base, 'User must be associated with the same organization as the grant.') unless grant.organization.id == user.organization.id
-  end
 end
