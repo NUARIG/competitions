@@ -25,9 +25,9 @@ class Submission < ApplicationRecord
   #                  after: :review_open_date,
   #                  message: 'must be after the review opening date.'
 
-
-  scope :with_grant,                            -> { includes :grants }
-  scope :with_grant_and_questions,              -> { includes(:grant).merge(Grant.with_questions) }
+  scope :by_creation_time,          -> { order(created_at: :asc) }
+  scope :with_grant,                -> { includes :grants }
+  scope :with_grant_and_questions,  -> { includes(:grant).merge(Grant.with_questions) }
   # scope :with_grant_questions_and_constraints,  -> { includes(:grant).merge(Grant.with_questions).merge(Question.with_constraints_and_constraint_questions) }
 
   private

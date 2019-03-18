@@ -96,7 +96,11 @@ module Grants
     end
 
     def grant_user_params
-      params.require(:grant_user).permit(:grant_id, :user_id, :grant_role)
+      params.require(:grant_user).permit(
+        :grant_id,
+        :user_id,
+        :grant_role
+      )
     end
 
   end
