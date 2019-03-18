@@ -1,0 +1,35 @@
+.grid-x
+  .cell.small-12
+    = f.label :name
+  .cell.small-12
+    = f.text_field :name
+.grid-x
+  .cell.small-12
+    = f.label :help_text
+  .cell.small-12
+    = f.text_field :help_text
+.grid-x
+  .cell.small-12
+    = f.label :placeholder_text
+  .cell.small-12
+    = f.text_field :placeholder_text
+.grid-x
+  .small-12.medium-3
+    = f.check_box :required, class: 'middle', aria: { 'described-by': 'requiredHelp' }
+  .small-12.medium-9
+    = f.label :required, class: 'middle'
+  %p.help-text#requiredHelp
+    Check to require a response to this question.
+%h3
+  Settings
+  = f.fields_for :constraint_questions, constraint_questions do |ff|
+    .grid-x
+      .small-12
+        = ff.label :value, ff.object.constraint.name.titleize, id: "constraint-question-#{ff.object.id}-name"
+        = ff.text_field :value, value: ff.object.value, id: "constraint-question-#{ff.object.id}-value"
+
+.grid-x
+  .cell.actions
+    = f.submit 'Save', class: 'button'
+    = link_to 'Cancel', grant_questions_path(grant), class: 'button secondary'
+

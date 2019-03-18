@@ -28,7 +28,7 @@ module ApplicationHelper
   end
 
   # Dates
-  def date_mmddYYYY(date)
+  def date_mmddyyyy(date)
     date.nil? ? '' : date.strftime('%m/%d/%Y')
   end
 end

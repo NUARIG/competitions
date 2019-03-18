@@ -6,8 +6,10 @@ RSpec.describe 'Grants', type: :system do
   describe 'Edit', js: true do
     before(:each) do
       @organization = FactoryBot.create(:organization)
-      @user         = FactoryBot.create(:user, organization: @organization, organization_role: 'editor')
+      @user         = FactoryBot.create(:user, organization: @organization)
       @grant        = FactoryBot.create(:grant, organization: @organization)
+      @grant_user   = FactoryBot.create(:admin_grant_user, grant_id: @grant.id,
+                                                           user_id: @user.id)
 
       login_as(@user)
       visit edit_grant_path(@grant.id)

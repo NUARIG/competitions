@@ -13,6 +13,7 @@
  *= require_tree .
  *= require_self
  */
+@import "app";
 @import "foundation_and_overrides";
 @import "foundation-datepicker";
 @import "trix";

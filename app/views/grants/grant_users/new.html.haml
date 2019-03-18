@@ -1,0 +1,18 @@
+- content_for(:page_title, "Add User Permissions for #{@grant.name}")
+
+= render 'shared/grant_edit_tabbed_menu'
+
+.tabs-panel.is-active
+  %h2
+    = yield(:page_title)
+
+  %p
+    - unless @current_user_role == 'viewer'
+      = link_to 'Back to Permissions', grant_grant_users_path
+      = ' | '
+    = link_to 'View all Grants', grants_path
+
+.grid-x
+  .cell
+    = form_with model: [@grant, @grant_user], local: true do |f|
+      = render 'new_form', f: f, grant: @grant, users: @users

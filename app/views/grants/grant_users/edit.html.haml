@@ -1,0 +1,12 @@
+- content_for(:page_title, "Edit User Permissions")
+
+= render 'shared/grant_edit_tabbed_menu'
+
+.tabs-panel.is-active
+  %h2
+    = "Edit #{@grant_user.user.name}'s Permission"
+
+  .grid-x
+    .cell
+      = form_with model: [@grant, @grant_user], local: true do |f|
+        = render 'edit_form', f: f, grant: @grant

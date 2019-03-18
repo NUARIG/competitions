@@ -1,5 +1,5 @@
 %h2
-  Basic Information
+  Overview
 .grid-x
   .cell
     = f.label :name, 'Name'
@@ -24,7 +24,7 @@
   .cell.small-12.medium-3
     = f.label :initiation_date, 'Initiation Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :initiation_date, value: date_mmddYYYY(grant.initiation_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'initiationDateHelp' }
+    = f.text_field :initiation_date, value: date_mmddyyyy(grant.initiation_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'initiationDateHelp' }
     %p.help-text#initiationDateHelp
       Once completed, your grant will publish on this date.
 %h4
@@ -33,32 +33,12 @@
   .cell.small-12.medium-3
     = f.label :submission_open_date, 'Open Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :submission_open_date, value: date_mmddYYYY(grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
+    = f.text_field :submission_open_date, value: date_mmddyyyy(grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
 .grid-x
   .cell.small-12.medium-3
     = f.label :submission_close_date, 'Close Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :submission_close_date, value: date_mmddYYYY(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
-
-%h3
-  Budget
-.grid-x
-  .cell.small-12.medium-3
-    = f.label :min_budget, 'Minimum Budget', class: 'middle'
-  .cell.small-12.medium-9.input-group
-    .input-group
-      %span.input-group-label
-        $
-      = f.number_field :min_budget, value: number_to_currency(f.object.min_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'small-12 medium-6 input-group-field'
-.grid-x
-  .cell.small-12.medium-3
-    = f.label :max_budget, 'Maximum Budget', class: 'middle'
-  .cell.small-12.medium-9
-    .input-group
-      %span.input-group-label
-        $
-      = f.number_field :max_budget, value: number_to_currency(f.object.max_budget.to_f, delimiter: '', unit: ''), step: :any, min: 0, class: 'input-group-field small-12 medium-6'
-
+    = f.text_field :submission_close_date, value: date_mmddyyyy(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
 %h3
   Panel and Reviews
 .grid-x
@@ -79,41 +59,22 @@
   .cell.small-12.medium-3
     = f.label :review_open_date, 'Review Open Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :review_open_date, value: date_mmddYYYY(grant.review_open_date), class: 'small-12 medium-6'
+    = f.text_field :review_open_date, value: date_mmddyyyy(grant.review_open_date), class: 'small-12 medium-6'
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_close_date, 'Review Close Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :review_close_date, value: date_mmddYYYY(grant.review_close_date), class: 'small-12 medium-6'
+    = f.text_field :review_close_date, value: date_mmddyyyy(grant.review_close_date), class: 'small-12 medium-6'
 .grid-x
   .cell.small-12.medium-3
     = f.label :panel_date, 'Panel Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :panel_date, value: date_mmddYYYY(grant.panel_date), class: 'small-12 medium-6'
+    = f.text_field :panel_date, value: date_mmddyyyy(grant.panel_date), class: 'small-12 medium-6'
 .grid-x
   .cell
     = f.label :panel_location, 'Panel Location'
     = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
-.grid-x
-  .cell
-    %h3
-      Applicant Questions
-    .cell
-      %table.striped
-        %tr
-          %th
-            Label
-          %th
-            Req'd
-          %th
-        = f.fields_for :questions, questions do |ff|
-          %tr{ id: "question-#{ff.object.id}", class: cycle('odd', 'even') }
-            %td
-              = ff.label :question, ff.object.name, id: "question-#{ff.object.id}-name"
-            %td
-              = ff.check_box :required, value: ff.object.required, id: "question-#{ff.object.id}-required"
-            %td
-              = link_to 'Edit', edit_grant_question_path(grant, ff.object), id: "question-#{ff.object.id}-edit"
+
 .grid-x
   = f.hidden_field :organization_id, value: current_user.organization.id
   .actions
