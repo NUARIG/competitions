@@ -14,7 +14,6 @@
 //= require trix
 //= require rails-ujs
 //= require activestorage
-//= require turbolinks
 //= require foundation
 //= require foundation-datepicker
 //= require_tree .

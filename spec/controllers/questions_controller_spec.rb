@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe QuestionsController, type: :controller do
+RSpec.describe Grants::QuestionsController, type: :controller do
   let(:valid_attributes) do
     skip('Add a hash of attributes valid for your model')
   end

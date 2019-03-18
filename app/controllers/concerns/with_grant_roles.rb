@@ -4,12 +4,12 @@ module WithGrantRoles
   extend ActiveSupport::Concern
 
   def current_user_grant_permission
-    permission        = grant_role_by_user(@grant, current_user)
+    grant_permission  = grant_role_by_user(@grant, current_user)
     organization_role = current_user.organization_role
 
-    return 'admin' if permission == 'admin' || organization_role == 'admin'
+    return 'admin' if grant_permission == 'admin' || organization_role == 'admin'
 
-    permission.present? ? permission.grant_role : organization_role
+    grant_permission.present? ? grant_permission.grant_role : organization_role
   end
 
   def grant_role_by_user(grant, user)

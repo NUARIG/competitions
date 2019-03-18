@@ -8,5 +8,5 @@ class Organization < ApplicationRecord
   validates :short_name, presence: true, uniqueness: true
   validates :url, presence: true, uniqueness: true
 
-  validates_format_of :url, with: %r{\A(http|https)://[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.(edu|org)?(/.*)?\z}ix
+  validates_format_of :url, with: %r{\A(http|https)://[a-z0-9]+([\-\.]{1,3}[a-z0-9]+)*\.(edu|org|gov)?(/.*)?\z}ix
 end
