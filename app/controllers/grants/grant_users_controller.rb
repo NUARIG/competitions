@@ -64,7 +64,7 @@ module Grants
       @grant_user.destroy
       respond_to do |format|
         flash[:notice] = @grant_user.user.name + '\'s role was removed for this grant.'
-        format.html { redirect_to grant_grant_users_path(@grant, anchor: 'permissions') }
+        format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { head :no_content }
       end
     end

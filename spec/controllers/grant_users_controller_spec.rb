@@ -2,5 +2,5 @@
 
 require 'rails_helper'
 
-RSpec.describe GrantUsersController, type: :controller do
+RSpec.describe Grants::GrantUsersController, type: :controller do
 end
