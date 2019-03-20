@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TextQuestion < Question
-  validate :validate_maximum_and_minimum_lengths
+  validate :validate_maximum_and_minimum_lengths, on: :update
 
   def self.model_name
     Question.model_name

@@ -11,8 +11,6 @@ class CreateGrants < ActiveRecord::Migration[5.2]
       t.date :submission_open_date
       t.date :submission_close_date
       t.text :rfa
-      t.float :min_budget
-      t.float :max_budget
       t.integer :applications_per_user
       t.text :review_guidance
       t.integer :max_reviewers_per_proposal

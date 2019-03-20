@@ -18,6 +18,7 @@
     = f.label :rfa
     = f.hidden_field :rfa, id: :grant_rfa
     %trix-editor(input='grant_rfa')
+
 %h3
   Dates
 .grid-x
@@ -27,6 +28,7 @@
     = f.text_field :initiation_date, value: date_mmddyyyy(grant.initiation_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'initiationDateHelp' }
     %p.help-text#initiationDateHelp
       Once completed, your grant will publish on this date.
+
 %h4
   Submission Period
 .grid-x
@@ -39,6 +41,7 @@
     = f.label :submission_close_date, 'Close Date', class: 'middle'
   .cell.small-12.medium-9
     = f.text_field :submission_close_date, value: date_mmddyyyy(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
+
 %h3
   Panel and Reviews
 .grid-x
@@ -78,9 +81,9 @@
 .grid-x
   = f.hidden_field :organization_id, value: current_user.organization.id
   .actions
-    = f.submit 'Save and Complete', class: 'button'
     = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed'
     - if grant.persisted?
+      = f.submit 'Save and Complete', class: 'button'
       = link_to 'Cancel', grant, class: 'button secondary'
     - else
       = link_to 'Cancel', grants_path, class: 'button secondary'

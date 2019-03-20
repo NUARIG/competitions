@@ -1,0 +1,6 @@
+%h3
+  Type
+.grid-x
+  .cell
+    = f.label :default_set, 'Choose a Default Question Set'
+    = f.select :default_set, default_set_select_options, { include_blank: 'Select' }, { required: true }

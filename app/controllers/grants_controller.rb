@@ -3,8 +3,8 @@
 class GrantsController < ApplicationController
   include WithGrantRoles
 
-  before_action :set_grant, except: %i[index]
-  before_action :set_state, only: %i[create edit update]
+  before_action :set_grant, except: %i[index new create]
+  before_action :set_state, only: %i[edit update]
 
   # GET /grants
   # GET /grants.json
@@ -36,14 +36,14 @@ class GrantsController < ApplicationController
   def create
     @grant = Grant.new(grant_params)
     authorize @grant
-    respond_to do |format|
-      if @grant.save
-        format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully created.' }
-        format.json { render :show, status: :created, location: @grant }
-      else
-        format.html { render :new }
-        format.json { render json: @grant.errors, status: :unprocessable_entity }
-      end
+    set_state
+    if (@grant.save && save_questions_and_role)
+      flash[:notice]  = 'Draft grant was successfully created.'
+      flash[:warning] = 'Review Questions below then click "Save and Complete" to finalize.'
+      redirect_to grant_questions_url(@grant)
+    else
+      flash[:alert] = @grant.errors.full_messages
+      format.html { render :new }
     end
   end
 
@@ -90,6 +90,7 @@ class GrantsController < ApplicationController
       :name,
       :short_name,
       :state,
+      :default_set,
       :initiation_date,
       :submission_open_date,
       :submission_close_date,
@@ -109,5 +110,16 @@ class GrantsController < ApplicationController
 
   def set_state
     @grant.state = params[:draft].present? ? 'draft' : 'complete'
+  end
+
+  def save_questions_and_role
+    DefaultSet.find(@grant.default_set).questions.ids.each do |q_id|
+      new_question = Question.find(q_id).dup
+      new_question.update_attribute(:grant_id, @grant.id)
+      ConstraintQuestion.where(question_id: q_id).each do |constraint_question|
+        constraint_question.dup.update_attribute(:question_id, new_question.id)
+      end
+    end
+    GrantUser.create(grant: @grant, user: current_user, grant_role: 'admin')
   end
 end
