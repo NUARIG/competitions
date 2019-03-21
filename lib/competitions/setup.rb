@@ -98,7 +98,6 @@ module Competitions
           grant.panel_date                 = data[:panel_date]
           grant.panel_location             = data[:panel_location]
 
-          byebug
           grant.save!
           grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
 

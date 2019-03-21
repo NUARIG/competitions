@@ -5,6 +5,7 @@ class GrantsController < ApplicationController
 
   before_action :set_grant, except: %i[index new create]
   before_action :set_state, only: %i[edit update]
+  before_action :draft_banner, only: %[edit, show], if: -> { :draft? }
 
   # GET /grants
   # GET /grants.json
@@ -37,7 +38,6 @@ class GrantsController < ApplicationController
     @grant = Grant.new(grant_params)
     authorize Grant, :create?
     set_state
-
     result = GrantServices::New.call(grant: @grant, user: current_user)
 
     if result.success?
@@ -47,7 +47,6 @@ class GrantsController < ApplicationController
       redirect_to grant_questions_url(@grant)
     else
       respond_to do |format|
-        byebug
         flash[:alert] = result.messages
         format.html { render :new }
       end
@@ -118,6 +117,10 @@ class GrantsController < ApplicationController
 
   def set_state
     @grant.state = params[:draft].present? ? 'draft' : 'complete'
+  end
+
+  def draft_banner
+    flash[:warning] = 'draft warning'
   end
 
   def save_questions_and_role
