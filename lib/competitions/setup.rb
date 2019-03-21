@@ -84,7 +84,6 @@ module Competitions
           grant.organization_id            = data[:organization_id]
           grant.name                       = data[:name]
           grant.short_name                 = data[:short_name]
-          grant.default_set                = data[:default_set]
           grant.state                      = data[:state]
           grant.initiation_date            = data[:initiation_date]
           grant.submission_open_date       = data[:submission_open_date]
