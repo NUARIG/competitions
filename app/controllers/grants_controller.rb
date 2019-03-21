@@ -35,15 +35,22 @@ class GrantsController < ApplicationController
   # POST /grants.json
   def create
     @grant = Grant.new(grant_params)
-    authorize @grant
+    authorize Grant, :create?
     set_state
-    if (@grant.save && save_questions_and_role)
-      flash[:notice]  = 'Draft grant was successfully created.'
+
+    result = GrantServices::New.call(grant: @grant, user: current_user)
+
+    if result.success?
+      # TODO: Confirm messages the user should see
+      flash[:notice]  = 'Grant saved.'
       flash[:warning] = 'Review Questions below then click "Save and Complete" to finalize.'
       redirect_to grant_questions_url(@grant)
     else
-      flash[:alert] = @grant.errors.full_messages
-      format.html { render :new }
+      respond_to do |format|
+        byebug
+        flash[:alert] = result.messages
+        format.html { render :new }
+      end
     end
   end
 
@@ -56,6 +63,7 @@ class GrantsController < ApplicationController
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
         format.json { render :show, status: :ok, location: @grant }
       else
+        flash[:alert] = @grant.errors.full_messages
         format.html { render :edit }
         format.json { render json: @grant.errors, status: :unprocessable_entity }
       end

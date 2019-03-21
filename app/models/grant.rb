@@ -28,8 +28,9 @@ class Grant < ApplicationRecord
                  on_or_after: :today,
                  on_or_after_message: 'cannot be earlier than today.'
   validates_date :submission_open_date,
+                 on: %i[create update],
                  on_or_after: :initiation_date,
-                 message: 'cannot be earlier than the initiation date.'
+                 on_or_after_message: 'cannot be earlier than the initiation date.'
   validates_date :submission_close_date,
                  after: :submission_open_date,
                  after_message: 'must be after the opening date for submissions.'

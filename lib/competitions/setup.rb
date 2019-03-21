@@ -6,8 +6,8 @@ module Competitions
       Competitions::Setup::Organizations.load_organizations
       Competitions::Setup::Users.load_users
       Competitions::Setup::Constraints.load_constraints
-      Competitions::Setup::Grants.load_grants
       Competitions::Setup::DefaultSets.load_default_sets
+      Competitions::Setup::Grants.load_grants
     end
 
     module_function
@@ -84,12 +84,13 @@ module Competitions
           grant.organization_id            = data[:organization_id]
           grant.name                       = data[:name]
           grant.short_name                 = data[:short_name]
+          grant.default_set                = data[:default_set]
           grant.state                      = data[:state]
           grant.initiation_date            = data[:initiation_date]
           grant.submission_open_date       = data[:submission_open_date]
           grant.submission_close_date      = data[:submission_close_date]
           grant.rfa                        = data[:rfa]
-l         grant.applications_per_user      = data[:applications_per_user]
+          grant.applications_per_user      = data[:applications_per_user]
           grant.review_guidance            = data[:review_guidance]
           grant.max_reviewers_per_proposal = data[:max_reviewers_per_proposal]
           grant.max_proposals_per_reviewer = data[:max_proposals_per_reviewer]
@@ -98,6 +99,7 @@ l         grant.applications_per_user      = data[:applications_per_user]
           grant.panel_date                 = data[:panel_date]
           grant.panel_location             = data[:panel_location]
 
+          byebug
           grant.save!
           grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
 
