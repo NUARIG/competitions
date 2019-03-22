@@ -1,4 +1,5 @@
 research:
+  default_set: 1
   organization_id: 1
   name: 'Model NIH Research Grant'
   short_name: 'model-nih'
@@ -22,7 +23,45 @@ research:
     role2:
       user_id: 3
       grant_role: 'viewer'
+  questions:
+    abstract:
+      grant_id: 1
+      answer_type: 'TextQuestion'
+      name: 'Abstract'
+      help_text: ''
+      placeholder_text: 'Up to 1000 characters'
+      required: true
+      constraints:
+        min_length:
+          type: 'TextConstraint'
+          name: 'minimum_length'
+          value_type: 'integer'
+          value: 0
+        max_length:
+          type: 'TextConstraint'
+          name: 'maximum_length'
+          value_type: 'integer'
+          value: 1000
+    budget:
+      grant_id: 1
+      answer_type: 'IntegerQuestion'
+      name: 'Budget'
+      help_text: ''
+      placeholder_text: ''
+      required: true
+      constraints:
+        min_value:
+          type: 'IntegerConstraint'
+          name: 'minimum_value'
+          value_type: 'integer'
+          value: 0
+        max_value:
+          type: 'IntegerConstraint'
+          name: 'maximum_value'
+          value_type: 'integer'
+          value: 1000
 kl2:
+  default_set: 2
   organization_id: 1
   name: 'Model KL2 Grant'
   short_name: 'model-kl2'
@@ -46,7 +85,45 @@ kl2:
     role2:
       user_id: 2
       grant_role: 'viewer'
+  questions:
+    direct_project_cost:
+      grant_id: 2
+      answer_type: 'FloatQuestion'
+      name: 'Direct Project Cost'
+      help_text: 'Between $5000 and $50,000'
+      placeholder_text: ''
+      required: true
+      constraints:
+        min_value:
+          type: 'IntegerConstraint'
+          name: 'minimum_value'
+          value_type: 'integer'
+          value: 5000
+        max_value:
+          type: 'IntegerConstraint'
+          name: 'maximum_value'
+          value_type: 'integer'
+          value: 50000
+    era_commons:
+      grant_id: 2
+      answer_type: 'StringQuestion'
+      name: 'Your eRA Commons Name'
+      help_text: ''
+      placeholder_text: ''
+      required: true
+      constraints:
+        min_length:
+          type: 'StringConstraint'
+          name: 'minimum_length'
+          value_type: 'integer'
+          value: 10
+        max_length:
+          type: 'StringConstraint'
+          name: 'maximum_length'
+          value_type: 'integer'
+          value: 100
 research2:
+  default_set: 1
   organization_id: 2
   name: 'Sample NIH Rresearch Grant'
   short_name: 'sample'

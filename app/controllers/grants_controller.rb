@@ -5,7 +5,7 @@ class GrantsController < ApplicationController
 
   before_action :set_grant, except: %i[index new create]
   before_action :set_state, only: %i[edit update]
-  before_action :draft_banner, only: %[edit, show], if: -> { :draft? }
+  before_action :draft_banner, only: %i[edit, show]
 
   # GET /grants
   # GET /grants.json
@@ -28,6 +28,7 @@ class GrantsController < ApplicationController
 
   # GET /grants/1/edit
   def edit
+
     @current_user_role = current_user_grant_permission
     authorize @grant
   end
@@ -120,17 +121,6 @@ class GrantsController < ApplicationController
   end
 
   def draft_banner
-    flash[:warning] = 'draft warning'
-  end
-
-  def save_questions_and_role
-    DefaultSet.find(@grant.default_set).questions.ids.each do |q_id|
-      new_question = Question.find(q_id).dup
-      new_question.update_attribute(:grant_id, @grant.id)
-      ConstraintQuestion.where(question_id: q_id).each do |constraint_question|
-        constraint_question.dup.update_attribute(:question_id, new_question.id)
-      end
-    end
-    GrantUser.create(grant: @grant, user: current_user, grant_role: 'admin')
+    flash[:warning] = '<strong>Draft warning</strong>'.html_safe if @grant.draft?
   end
 end
