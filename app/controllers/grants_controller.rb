@@ -3,13 +3,14 @@
 class GrantsController < ApplicationController
   include WithGrantRoles
 
-  before_action :set_grant, except: %i[index]
-  before_action :set_state, only: %i[create edit update]
+  before_action :set_grant, except: %i[index new create]
+  before_action :set_state, only: %i[edit update]
+  before_action :draft_banner, only: %i[edit, show]
 
   # GET /grants
   # GET /grants.json
   def index
-    @grants = Grant.by_initiation_date.with_organization.all
+    @grants = Grant.by_publish_date.with_organization.all
     authorize @grants
   end
 
@@ -27,6 +28,7 @@ class GrantsController < ApplicationController
 
   # GET /grants/1/edit
   def edit
+
     @current_user_role = current_user_grant_permission
     authorize @grant
   end
@@ -35,14 +37,19 @@ class GrantsController < ApplicationController
   # POST /grants.json
   def create
     @grant = Grant.new(grant_params)
-    authorize @grant
-    respond_to do |format|
-      if @grant.save
-        format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully created.' }
-        format.json { render :show, status: :created, location: @grant }
-      else
+    authorize Grant, :create?
+    set_state
+    result = GrantServices::New.call(grant: @grant, user: current_user)
+
+    if result.success?
+      # TODO: Confirm messages the user should see
+      flash[:notice]  = 'Grant saved.'
+      flash[:warning] = 'Review Questions below then click "Save and Complete" to finalize.'
+      redirect_to grant_questions_url(@grant)
+    else
+      respond_to do |format|
+        flash[:alert] = result.messages
         format.html { render :new }
-        format.json { render json: @grant.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -56,6 +63,7 @@ class GrantsController < ApplicationController
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
         format.json { render :show, status: :ok, location: @grant }
       else
+        flash[:alert] = @grant.errors.full_messages
         format.html { render :edit }
         format.json { render json: @grant.errors, status: :unprocessable_entity }
       end
@@ -90,7 +98,8 @@ class GrantsController < ApplicationController
       :name,
       :short_name,
       :state,
-      :initiation_date,
+      :default_set,
+      :publish_date,
       :submission_open_date,
       :submission_close_date,
       :rfa,
@@ -109,5 +118,9 @@ class GrantsController < ApplicationController
 
   def set_state
     @grant.state = params[:draft].present? ? 'draft' : 'complete'
+  end
+
+  def draft_banner
+    flash[:warning] = '<strong>Draft warning</strong>'.html_safe if @grant.draft?
   end
 end

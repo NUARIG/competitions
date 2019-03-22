@@ -1,25 +1,16 @@
-- content_for(:page_title, "Question - #{@question.name}")
+- content_for(:page_title, "Question - #{@question.text}")
 
 .cell
   %h1 Viewing question
 
 %p#notice= notice
-/ %p
-/   %b Field:
-/   = @question.field
-/ %p
-/   %b Grant:
-/   = @question.grant
 
 .cell
-  %b Name:
-  = @question.name
+  %b Question Text:
+  = @question.text
 .cell
   %b Help text:
   = @question.help_text
-.cell
-  %b Placeholder text:
-  = @question.placeholder_text
 .cell
   %b Required:
   = @question.required

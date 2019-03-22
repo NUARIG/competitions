@@ -43,9 +43,8 @@ module Grants
 
     def question_params
       params.require(:question).permit(
-        :name,
+        :text,
         :help_text,
-        :placeholder_text,
         :required,
         constraint_questions_attributes: %i[
           id

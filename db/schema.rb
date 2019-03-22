@@ -89,12 +89,10 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
     t.string "name"
     t.string "short_name"
     t.string "state"
-    t.date "initiation_date"
+    t.date "publish_date"
     t.date "submission_open_date"
     t.date "submission_close_date"
     t.text "rfa"
-    t.float "min_budget"
-    t.float "max_budget"
     t.integer "applications_per_user"
     t.text "review_guidance"
     t.integer "max_reviewers_per_proposal"
@@ -130,9 +128,8 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
   create_table "questions", force: :cascade do |t|
     t.bigint "grant_id"
     t.text "answer_type"
-    t.text "name"
+    t.text "text"
     t.text "help_text"
-    t.text "placeholder_text"
     t.boolean "required"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TextConstraint < Constraint
-  ALLOWED_NAMES = { maximum_length: 'maximum_length',
-                    minimum_length: 'minimum_length' }.freeze
+  ALLOWED_NAMES = { maximum_number_of_characters: 'maximum_number_of_characters',
+                    minimum_number_of_characters: 'minimum_number_of_characters' }.freeze
 
   enum name: ALLOWED_NAMES, _prefix: true
 end
