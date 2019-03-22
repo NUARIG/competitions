@@ -4,7 +4,7 @@ research:
   name: 'Model NIH Research Grant'
   short_name: 'model-nih'
   state: 'demo'
-  initiation_date: '2020-03-01 06:00:00'
+  publish_date: '2020-03-01 06:00:00'
   submission_open_date: '2020-03-02 06:00:00'
   submission_close_date: '2020-03-16 06:00:00'
   rfa: 'Research lorem Ipsum dolor sit'
@@ -27,9 +27,8 @@ research:
     abstract:
       grant_id: 1
       answer_type: 'TextQuestion'
-      name: 'Abstract'
+      text: 'Abstract'
       help_text: ''
-      placeholder_text: 'Up to 1000 characters'
       required: true
       constraints:
         min_length:
@@ -45,9 +44,8 @@ research:
     budget:
       grant_id: 1
       answer_type: 'IntegerQuestion'
-      name: 'Budget'
+      text: 'Budget'
       help_text: ''
-      placeholder_text: ''
       required: true
       constraints:
         min_value:
@@ -66,7 +64,7 @@ kl2:
   name: 'Model KL2 Grant'
   short_name: 'model-kl2'
   state: 'demo'
-  initiation_date: '2020-03-01 06:00:00'
+  publish_date: '2020-03-01 06:00:00'
   submission_open_date: '2020-03-02 06:00:00'
   submission_close_date: '2020-03-16 06:00:00'
   rfa: 'KL2 lorem Ipsum dolor sit'
@@ -89,9 +87,8 @@ kl2:
     direct_project_cost:
       grant_id: 2
       answer_type: 'FloatQuestion'
-      name: 'Direct Project Cost'
+      text: 'Direct Project Cost'
       help_text: 'Between $5000 and $50,000'
-      placeholder_text: ''
       required: true
       constraints:
         min_value:
@@ -107,9 +104,8 @@ kl2:
     era_commons:
       grant_id: 2
       answer_type: 'StringQuestion'
-      name: 'Your eRA Commons Name'
+      text: 'Your eRA Commons Name'
       help_text: ''
-      placeholder_text: ''
       required: true
       constraints:
         min_length:
@@ -128,7 +124,7 @@ research2:
   name: 'Sample NIH Rresearch Grant'
   short_name: 'sample'
   state: 'complete'
-  initiation_date: '2020-04-01 06:00:00'
+  publish_date: '2020-04-01 06:00:00'
   submission_open_date: '2020-04-02 06:00:00'
   submission_close_date: '2020-04-16 06:00:00'
   rfa: 'Lorem Ipsum dolor sit'

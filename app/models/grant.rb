@@ -21,16 +21,16 @@ class Grant < ApplicationRecord
   validates_presence_of :name
   validates_presence_of :submission_open_date
   validates_presence_of :submission_close_date
-  validates_presence_of :initiation_date
+  validates_presence_of :publish_date
 
-  validates_date :initiation_date,
+  validates_date :publish_date,
                  on: :create,
                  on_or_after: :today,
                  on_or_after_message: 'cannot be earlier than today.'
   validates_date :submission_open_date,
                  on: %i[create update],
-                 on_or_after: :initiation_date,
-                 on_or_after_message: 'cannot be earlier than the initiation date.'
+                 on_or_after: :publish_date,
+                 on_or_after_message: 'cannot be earlier than the publish date.'
   validates_date :submission_close_date,
                  after: :submission_open_date,
                  after_message: 'must be after the opening date for submissions.'
@@ -60,7 +60,7 @@ class Grant < ApplicationRecord
 
   validate :valid_default_set, on: :create
 
-  scope :by_initiation_date, -> { order(initiation_date: :asc) }
+  scope :by_publish_date, -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
   scope :with_questions,     -> { includes :questions }
 

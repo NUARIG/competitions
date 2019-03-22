@@ -7,7 +7,7 @@ class CreateGrants < ActiveRecord::Migration[5.2]
       t.string :name
       t.string :short_name
       t.string :state
-      t.date :initiation_date
+      t.date :publish_date
       t.date :submission_open_date
       t.date :submission_close_date
       t.text :rfa

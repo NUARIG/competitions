@@ -7,7 +7,7 @@ FactoryBot.define do
     sequence(:short_name)       { |n| "GN#{n}" }
     default_set                 { FactoryBot.create(:default_set_with_questions).id }
     state                       { 'complete' }
-    initiation_date             { Date.current }
+    publish_date                { Date.current }
     submission_open_date        { 10.day.from_now }
     submission_close_date       { 20.days.from_now }
     rfa                         { Faker::Lorem.paragraph }

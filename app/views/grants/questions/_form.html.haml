@@ -1,18 +1,13 @@
 .grid-x
   .cell.small-12
-    = f.label :name
+    = f.label :text, 'Question Text'
   .cell.small-12
-    = f.text_field :name
+    = f.text_field :text
 .grid-x
   .cell.small-12
     = f.label :help_text
   .cell.small-12
     = f.text_field :help_text
-.grid-x
-  .cell.small-12
-    = f.label :placeholder_text
-  .cell.small-12
-    = f.text_field :placeholder_text
 .grid-x
   .small-12.medium-3
     = f.check_box :required, class: 'middle', aria: { 'described-by': 'requiredHelp' }

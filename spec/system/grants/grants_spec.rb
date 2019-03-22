@@ -18,11 +18,11 @@ RSpec.describe 'Grants', type: :system do
     scenario 'date fields edited with datepicker are properly formatted' do
       tomorrow = (Date.current + 1.day).to_s
 
-      expect(page).to have_field('grant_initiation_date', with: @grant.initiation_date)
-      page.execute_script("$('#grant_initiation_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
+      expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
+      page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
       click_button 'Save and Complete'
 
-      expect(@grant.reload.initiation_date.to_s).to eql(tomorrow)
+      expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
     end
 
     scenario 'versioning tracks whodunnit', versioning: true do

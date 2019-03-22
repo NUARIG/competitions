@@ -14,8 +14,8 @@ class Question < ApplicationRecord
   has_many :default_set_questions
   has_many :default_sets, through: :default_set_questions
 
-  validates_presence_of :name
-  validates_length_of :name, minimum: 3, maximum: 255
+  validates_presence_of :text
+  validates_length_of :text, minimum: 3, maximum: 255
 
   scope :with_grant, -> { includes :grant }
   scope :with_constraints, -> { includes :constraints }

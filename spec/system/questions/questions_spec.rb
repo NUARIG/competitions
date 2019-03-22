@@ -11,8 +11,8 @@ RSpec.describe 'Questions', type: :system do
       @grant_user            = FactoryBot.create(:editor_grant_user, grant_id: @grant.id,
                                                                      user_id: @user.id)
       @question              = FactoryBot.create(:string_question, grant_id: @grant.id, required: false)
-      @max_length_constraint = FactoryBot.create(:string_maximum_length_constraint_question, question_id: @question.id)
-      @max_length_constraint = FactoryBot.create(:string_minimum_length_constraint_question, question_id: @question.id)
+      @max_number_of_characters_constraint = FactoryBot.create(:string_maximum_number_of_characters_constraint_question, question_id: @question.id)
+      @max_number_of_characters_constraint = FactoryBot.create(:string_minimum_number_of_characters_constraint_question, question_id: @question.id)
       login_as(@user)
     end
   end

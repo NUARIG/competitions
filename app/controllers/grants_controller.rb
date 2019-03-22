@@ -10,7 +10,7 @@ class GrantsController < ApplicationController
   # GET /grants
   # GET /grants.json
   def index
-    @grants = Grant.by_initiation_date.with_organization.all
+    @grants = Grant.by_publish_date.with_organization.all
     authorize @grants
   end
 
@@ -99,7 +99,7 @@ class GrantsController < ApplicationController
       :short_name,
       :state,
       :default_set,
-      :initiation_date,
+      :publish_date,
       :submission_open_date,
       :submission_close_date,
       :rfa,

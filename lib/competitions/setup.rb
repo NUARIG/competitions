@@ -85,7 +85,7 @@ module Competitions
           grant.name                       = data[:name]
           grant.short_name                 = data[:short_name]
           grant.state                      = data[:state]
-          grant.initiation_date            = data[:initiation_date]
+          grant.publish_date               = data[:publish_date]
           grant.submission_open_date       = data[:submission_open_date]
           grant.submission_close_date      = data[:submission_close_date]
           grant.rfa                        = data[:rfa]
@@ -98,7 +98,7 @@ module Competitions
           grant.panel_date                 = data[:panel_date]
           grant.panel_location             = data[:panel_location]
           grant.default_set                = data[:default_set]
-          byebug
+
           grant.save!
           grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
 
@@ -129,12 +129,11 @@ module Competitions
 
       def self.load_question(q, grant_id)
         question = Question
-                   .where(grant_id: grant_id, name: q[:name])
+                   .where(grant_id: grant_id, text: q[:text])
                    .first_or_initialize
-        question.name             = q[:name]
+        question.text    = q[:text]
         question.answer_type      = q[:answer_type]
         question.help_text        = q[:help_text]
-        question.placeholder_text = q[:placeholder_text]
         question.required         = q[:required]
         question.save!
 
@@ -165,7 +164,6 @@ module Competitions
 
     module DefaultSets
       def self.load_default_sets
-        byebug
         default_sets = Competitions::Setup.parse_yml_file('default_sets')
         default_sets.each do |_, data|
           set = DefaultSet.where(name: data[:name]).first_or_initialize
@@ -186,7 +184,7 @@ module Competitions
       #   question = Question
       #              .where(grant_id: grant_id, name: q[:name])
       #              .first_or_initialize
-      #   question.name             = q[:name]
+      #   question.text             = q[:name]
       #   question.answer_type      = q[:answer_type]
       #   question.help_text        = q[:help_text]
       #   question.placeholder_text = q[:placeholder_text]

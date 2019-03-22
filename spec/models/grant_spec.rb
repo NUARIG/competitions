@@ -6,7 +6,7 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:name) }
   it { is_expected.to respond_to(:short_name) }
   it { is_expected.to respond_to(:state) }
-  it { is_expected.to respond_to(:initiation_date) }
+  it { is_expected.to respond_to(:publish_date) }
   it { is_expected.to respond_to(:submission_open_date) }
   it { is_expected.to respond_to(:submission_close_date) }
   it { is_expected.to respond_to(:rfa) }
@@ -65,13 +65,13 @@ RSpec.describe Grant, type: :model do
     end
 
     context 'dates' do
-      it 'requires current or future initiation_date' do
-        grant.initiation_date = Date.yesterday
+      it 'requires current or future publish_date' do
+        grant.publish_date = Date.yesterday
         expect(grant).not_to be_valid
-        expect(grant.errors).to include :initiation_date
+        expect(grant.errors).to include :publish_date
       end
 
-      it 'requires submission_open_date to be on or after initiation_date' do
+      it 'requires submission_open_date to be on or after publish_date' do
         grant.submission_open_date = 2.days.ago
         expect(grant).not_to be_valid
         expect(grant.errors).to include :submission_open_date
