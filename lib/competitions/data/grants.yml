@@ -33,12 +33,12 @@ research:
       constraints:
         min_length:
           type: 'TextConstraint'
-          name: 'minimum_length'
+          name: 'minimum_number_of_characters'
           value_type: 'integer'
           value: 0
         max_length:
           type: 'TextConstraint'
-          name: 'maximum_length'
+          name: 'maximum_number_of_characters'
           value_type: 'integer'
           value: 1000
     budget:
@@ -110,12 +110,12 @@ kl2:
       constraints:
         min_length:
           type: 'StringConstraint'
-          name: 'minimum_length'
+          name: 'minimum_number_of_characters'
           value_type: 'integer'
           value: 10
         max_length:
           type: 'StringConstraint'
-          name: 'maximum_length'
+          name: 'maximum_number_of_characters'
           value_type: 'integer'
           value: 100
 research2:

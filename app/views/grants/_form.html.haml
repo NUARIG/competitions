@@ -6,7 +6,7 @@
     = f.text_field :name, required: true
 .grid-x
   .cell.small-12
-    = f.label :name, 'Short Name'
+    = f.label :short_name, 'Short Name'
   .cell.grid-x.small-12
     .cell.small-12.medium-3
       %label.middle
@@ -15,15 +15,15 @@
       = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
 .grid-x
   .cell
-    = f.label :rfa
+    = f.label :rfa, 'RFA'
     = f.hidden_field :rfa, id: :grant_rfa
-    %trix-editor(input='grant_rfa')
+    %trix-editor(input='grant_rfa'), id: 'test'
 
 %h3
   Dates
 .grid-x
   .cell.small-12.medium-3
-    = f.label :publish_date, 'Initiation Date', class: 'middle'
+    = f.label :publish_date, 'Publish Date', class: 'middle'
   .cell.small-12.medium-9
     = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'publishDateHelp' }
     %p.help-text#publishDateHelp

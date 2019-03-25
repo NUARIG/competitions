@@ -83,15 +83,6 @@ class GrantsController < ApplicationController
 
   private
 
-  def set_grant
-    @grant = Grant.with_organization.find(params[:id])
-  end
-
-  def set_grant_and_questions
-    @grant     = Grant.with_organization.with_questions.find(params[:id])
-    @questions = @grant.questions
-  end
-
   # Never trust parameters from the scary internet, only allow the white list through.
   def grant_params
     params.require(:grant).permit(
@@ -114,6 +105,10 @@ class GrantsController < ApplicationController
       :organization_id,
       :draft
     )
+  end
+
+  def set_grant
+    @grant = Grant.with_organization.find(params[:id])
   end
 
   def set_state
