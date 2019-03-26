@@ -1,14 +1,14 @@
 module Grants
-  class SubmissionsController < ApplicationControlle
+  class SubmissionsController < ApplicationController
     before_action :set_grant
     before_action :set_submission, only: %i[show edit update destroy]
-    before_action :set_state, only: %i[create edit update]
+    before_action :set_state, only: %i[edit update]
 
     # GET /grants/submissions
     # GET /grants/submissions.json
     def index
       authorize @grant, :edit?
-      @submissions = Submission.by_creation_time.where(grant: @grant).all
+      @submissions = Submission.all
     end
 
     # GET /grants/submissions/1
@@ -19,7 +19,8 @@ module Grants
 
     # GET /grants/submissions/new
     def new
-      @submission = Submission.new
+      @user = current_user
+      @submission = Submission.new(grant: @grant, user: @user)
       authorize @submission
     end
 
@@ -32,16 +33,17 @@ module Grants
     # POST /grants/submissions.json
     def create
       @submission = Submission.new(submission_params)
+      set_state
+      @submission.user = current_user
+      @submission.grant = @grant
       authorize @submission
       respond_to do |format|
-        if @grant_user.save
+        if @submission.save
           flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.short_name} was created."
-          format.html { redirect_to grant_submission_path(@grant) }
-          format.json { render :show, status: :created, location: @submission }
+          format.html { redirect_to grant_submission_path(@grant, @submission) }
         else
           flash[:alert] = @submission.errors.full_messages
           format.html { render :new }
-          format.json { render json: @submission.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -51,12 +53,10 @@ module Grants
     def update
       authorize @submission
       respond_to do |format|
-        if @submission.update(grant_params)
-          format.html { redirect_to grant_submission_path(@grant), notice: 'Submission was successfully updated.' }
-          format.json { render :show, status: :ok, location: @submission }
+        if @submission.update(submission_params)
+          format.html { redirect_to grant_submissions_path(@grant), notice: 'Submission was successfully updated.' }
         else
           format.html { render :edit }
-          format.json { render json: @submission.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -68,8 +68,7 @@ module Grants
       @submission.destroy
       respond_to do |format|
         flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.short_name} was successfully destroyed."
-        format.html { redirect_to grant_path }
-        format.json { head :no_content }
+        format.html { redirect_to grant_submissions_path }
       end
     end
 
@@ -88,8 +87,8 @@ module Grants
       params.require(:submission).permit(
         :grant_id,
         :user_id,
-        :project_title
-        :state
+        :project_title,
+        :state,
         :award_amount
       )
     end

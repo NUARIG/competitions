@@ -8,6 +8,7 @@ module Competitions
       Competitions::Setup::Constraints.load_constraints
       Competitions::Setup::Grants.load_grants
       Competitions::Setup::DefaultSets.load_default_sets
+      Competitions::Setup::Submissions.load_submissions
     end
 
     module_function
@@ -172,6 +173,23 @@ module Competitions
 
         constraint_question.value = constraint[:value]
         constraint_question.save!
+      end
+    end
+
+    module Submissions
+      def self.load_submissions
+        submissions = Competitions::Setup.parse_yml_file('submissions')
+        submissions.each do |_, data|
+          submission = Submission
+                  .where(project_title: data[:project_title])
+                  .first_or_initialize
+
+          submission.grant_id       = data[:grant_id]
+          submission.user_id        = data[:user_id]
+          submission.project_title  = data[:project_title]
+          submission.state          = data[:state]
+          submission.save!
+        end
       end
     end
   end

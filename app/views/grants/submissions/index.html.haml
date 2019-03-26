@@ -1,0 +1,21 @@
+%h1 Submissions
+
+%table
+  %thead
+    %tr
+      %th
+        Submitter's Name
+      %th
+        Project Title
+      %th
+      %th
+
+  %tbody
+    - @submissions.each do |submission|
+      %tr
+        %td= submission.user.name
+        %td= link_to submission.project_title, grant_submission_path(@grant, submission)
+        %td= link_to 'Edit', edit_grant_submission_path(@grant, submission) if policy(submission).edit?
+        %td= link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?' } if policy(submission).destroy?
+
+= link_to 'Add new submission', new_grant_submission_path

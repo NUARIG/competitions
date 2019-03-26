@@ -1,0 +1,19 @@
+%h2
+  Overview
+.grid-x
+  .cell
+    = f.label :project_title, 'Project Title'
+    = f.text_field :project_title, required: true
+.grid-x
+  - grant.questions.each do |question|
+    .cell
+      %h3
+        = question.name
+      = f.text_field :award_amount, placeholder: question.placeholder_text
+      = question.help_text
+
+.grid-x
+  .actions
+    = f.submit 'Save and Complete', class: 'button'
+    = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not be considered for funding'
+    = link_to 'Cancel', grant_submissions_path, class: 'button secondary'
