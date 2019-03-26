@@ -5,9 +5,8 @@ class CreateQuestions < ActiveRecord::Migration[5.2]
     create_table :questions do |t|
       t.references :grant
       t.text :answer_type
-      t.text :name
+      t.text :text
       t.text :help_text
-      t.text :placeholder_text
       t.boolean :required
 
       t.timestamps

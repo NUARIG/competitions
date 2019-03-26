@@ -7,14 +7,12 @@ set:
         question_type: 'text'
         name: 'Abstract'
         help_text: ''
-        placeholder_text: '200 words or less'
         required: true
       question:
         grant_id: 1
         question_type: 'string'
         name: 'Institutional Review Board (IRB) Number'
         help_text: Provide a Study Number
-        placeholder_text: 'STU00000000'
         required: true
   # nih_education:
   #   name: 'NIH Education Grant'

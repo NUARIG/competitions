@@ -6,12 +6,10 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:name) }
   it { is_expected.to respond_to(:short_name) }
   it { is_expected.to respond_to(:state) }
-  it { is_expected.to respond_to(:initiation_date) }
+  it { is_expected.to respond_to(:publish_date) }
   it { is_expected.to respond_to(:submission_open_date) }
   it { is_expected.to respond_to(:submission_close_date) }
   it { is_expected.to respond_to(:rfa) }
-  it { is_expected.to respond_to(:min_budget) }
-  it { is_expected.to respond_to(:max_budget) }
   it { is_expected.to respond_to(:applications_per_user) }
   it { is_expected.to respond_to(:review_guidance) }
   it { is_expected.to respond_to(:max_reviewers_per_proposal) }
@@ -22,10 +20,25 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:panel_location) }
 
   let(:grant) { FactoryBot.build(:grant) }
+  let(:draft_grant) { FactoryBot.build(:draft_grant) }
 
   describe '#validations' do
     it 'validates a valid grant' do
       expect(grant).to be_valid
+    end
+
+    context 'default set' do
+      it 'requires a valid default_set' do
+        grant.default_set = DefaultSet.last.id + 1
+        expect(grant).not_to be_valid
+        expect(grant.errors.messages[:base]).to eq ['Please choose a default question set']
+      end
+
+      it 'does not require a default_set on update' do
+        grant.save
+        grant.default_set = nil
+        expect(grant).to be_valid
+      end
     end
 
     context 'name and short_name' do
@@ -58,13 +71,13 @@ RSpec.describe Grant, type: :model do
     end
 
     context 'dates' do
-      it 'requires current or future initiation_date' do
-        grant.initiation_date = Date.yesterday
+      it 'requires current or future publish_date' do
+        grant.publish_date = Date.yesterday
         expect(grant).not_to be_valid
-        expect(grant.errors).to include :initiation_date
+        expect(grant.errors).to include :publish_date
       end
 
-      it 'requires submission_open_date to be on or after initiation_date' do
+      it 'requires submission_open_date to be on or after publish_date' do
         grant.submission_open_date = 2.days.ago
         expect(grant).not_to be_valid
         expect(grant.errors).to include :submission_open_date
@@ -89,35 +102,6 @@ RSpec.describe Grant, type: :model do
         grant.review_close_date = 29.days.from_now
         expect(grant).not_to be_valid
         expect(grant.errors).to include :review_close_date
-      end
-    end
-
-    context 'budgets' do
-      it 'requires a positive or zero min_budget' do
-        grant.min_budget = -1.00
-        expect(grant).not_to be_valid
-        expect(grant.errors).to include :min_budget
-        grant.min_budget = 0
-        expect(grant).to be_valid
-      end
-
-      it 'requires max_budget to be greater than min_budget' do
-        grant.min_budget = 100
-        grant.max_budget = 1
-        expect(grant).not_to be_valid
-        expect(grant.errors).to include :max_budget
-        grant.min_budget = 0
-        expect(grant).to be_valid
-      end
-    end
-
-    context 'panel location' do
-      it 'requires a panel location if panel_date is set' do
-        grant.panel_location = nil
-        expect(grant).not_to be_valid
-        expect(grant.errors).to include :panel_location
-        grant.panel_date = nil
-        expect(grant).to be_valid
       end
     end
   end

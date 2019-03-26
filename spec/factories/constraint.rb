@@ -17,7 +17,7 @@ FactoryBot.define do
 
   # factory :string_constraint, class: 'Constraint' do
   #   type       { 'StringConstraint' }
-  #   name       { 'maximum_length' }
+  #   name       { 'maximum_number_of_characters' }
   #   value_type { 'integer' }
   #   default    { '255' }
   # end
@@ -38,14 +38,14 @@ FactoryBot.define do
 
   # factory :string_minimum_length_constraint, class: 'Constraint' do
   #   type       { 'StringConstraint' }
-  #   name       { 'minimum_length' }
+  #   name       { 'minimum_number_of_characters' }
   #   value_type { 'integer' }
   #   default    { '0' }
   # end
 
   # factory :string_maximum_length_constraint, class: 'Constraint' do
   #   type       { 'StringConstraint' }
-  #   name       { 'maximum_length' }
+  #   name       { 'maximum_number_of_characters' }
   #   value_type { 'integer' }
   #   default    { '255' }
   # end
