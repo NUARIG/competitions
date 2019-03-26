@@ -9,7 +9,6 @@ RSpec.describe ConstraintQuestion, type: :model do
 
   let(:integer_constraint_question) { FactoryBot.build(:integer_constraint_question) }
   let(:float_constraint_question)   { FactoryBot.build(:float_constraint_question) }
-  let(:string_constraint_question)  { FactoryBot.build(:sting_constraint_question) }
 
   describe '#validations' do
     it 'validates unique combination of constraint and question' do

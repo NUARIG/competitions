@@ -5,7 +5,7 @@ FactoryBot.define do
     association :organization, factory: :organization
     sequence(:name)             { |n| "Grant Name #{n}" }
     sequence(:short_name)       { |n| "GN#{n}" }
-    default_set                 { FactoryBot.create(:default_set_with_questions).id }
+    default_set                 { FactoryBot.create(:default_set).id }
     state                       { 'complete' }
     publish_date                { Date.current }
     submission_open_date        { 10.day.from_now }
