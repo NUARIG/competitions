@@ -37,6 +37,7 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'New', js: true do
     before(:each) do
+      #TODO: Streamline DefaultSet factory creation to include Questions and ConstraintQuestions
       @default_set  = FactoryBot.create(:default_set)
       @contsraint_question1 = FactoryBot.create(:string_minimum_number_of_characters_constraint_question)
       @contsraint_question2 = FactoryBot.create(:string_maximum_number_of_characters_constraint_question, question: @contsraint_question1.question)
