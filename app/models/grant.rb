@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Grant < ApplicationRecord
-  attr_accessor :default_set
+  attr_accessor :default_set, :duplicate
 
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
@@ -58,23 +58,11 @@ class Grant < ApplicationRecord
             numericality: { only_integer: true, greater_than_or_equal_to: 1 },
             if: :max_proposals_per_reviewer?
 
-  validate :valid_default_set, on: :create
+  validate :valid_default_set, on: :create, unless: -> { duplicate.present? }
 
   scope :by_publish_date, -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
   scope :with_questions,     -> { includes :questions }
-
-  # def save_questions_and_role(user:)
-  #   return
-  #   DefaultSet.find(default_set).questions.ids.each do |q_id|
-  #     new_question = Question.find(q_id).dup
-  #     new_question.update_attributes(grant_id: id)
-  #     ConstraintQuestion.where(question_id: q_id).each do |constraint_question|
-  #       constraint_question.dup.update_attributes(question_id: new_question.id)
-  #     end
-  #   end
-  #   GrantUser.create!(grant: self, user: user, grant_role: 'admin')
-  # end
 
   def valid_default_set
     errors.add(:base, 'Please choose a default question set') unless DefaultSet.where(id: default_set).exists?

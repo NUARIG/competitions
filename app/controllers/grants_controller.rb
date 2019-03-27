@@ -40,7 +40,6 @@ class GrantsController < ApplicationController
     authorize Grant, :create?
     set_state
     result = GrantServices::New.call(grant: @grant, user: current_user)
-
     if result.success?
       # TODO: Confirm messages the user should see
       flash[:notice]  = 'Grant saved.'
@@ -103,7 +102,8 @@ class GrantsController < ApplicationController
       :panel_date,
       :panel_location,
       :organization_id,
-      :draft
+      :draft,
+      :duplicate
     )
   end
 

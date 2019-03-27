@@ -12,14 +12,7 @@ module GrantServices
 
           DefaultSet.includes(questions: :constraint_questions).find(grant.default_set).questions.each do |question|
             ActiveRecord::Base.transaction(requires_new: true) do
-              new_question =  question.dup
-              new_question.update_attributes!(grant_id: grant.id)
-              question.constraint_questions.each do |constraint_question|
-                ActiveRecord::Base.transaction(requires_new: true) do
-                  new_constraint_question = constraint_question.dup
-                  new_constraint_question.update_attributes!(question_id: new_question.id)
-                end
-              end
+              QuestionServices::Duplicate.call(question: question, new_grant: grant)
             end
           end
         end
