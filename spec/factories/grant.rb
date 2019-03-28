@@ -27,5 +27,19 @@ FactoryBot.define do
     factory :draft_grant do
       state { 'draft' }
     end
+
+    trait :with_questions do
+      after(:create) do |grant|
+        create(:string_question, :with_constraints, grant: grant)
+        create(:integer_question, :with_constraints, grant: grant)
+      end
+    end
+
+    trait :with_users do
+      after(:create) do |grant|
+        create(:admin_grant_user, grant: grant)
+        create(:editor_grant_user, grant: grant)
+      end
+    end
   end
 end

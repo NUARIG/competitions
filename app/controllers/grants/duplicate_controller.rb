@@ -1,20 +1,46 @@
 # frozen_string_literal: true
 
 module Grants
-  class DuplicateController < ApplicationController
+  class DuplicateController < GrantsController
     before_action :set_original_grant
+    skip_before_action :set_grant
 
     def new
+      @original_grant = Grant.find(params[:grant_id])
       authorize @original_grant, :edit?
-      @grant = GrantServices::Duplicate.call(@original_grant.id)
+      @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
-      respond_to do |format|
-        flash[:warning] = 'Please review and update the following information before saving.'
-        format.html
-      end
+      flash[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
+      flash[:alert]   = 'Please review and update the following information'
     end
 
     def create
+      @original_grant = Grant.includes([questions: :constraint_questions], :grant_users).find(params[:grant_id])
+      authorize @original_grant, :edit?
+
+      @grant = Grant.new(grant_params)
+      @grant.duplicate = true
+
+      result = GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @grant)
+
+      if result.success?
+        # TODO: Confirm messages the user should see
+        flash[:notice]  = 'New grant based on ' + @original_grant.name + ' has been saved.'
+        flash[:warning] = 'Review Questions below then click "Save and Complete" to finalize.'
+        redirect_to grant_questions_url(@grant)
+      else
+        respond_to do |format|
+          flash[:alert] = result.messages
+          format.html { render :new }
+        end
+      end
+
+# if result.success?
+#   # forward to question edit
+# else
+#   flash[:warning] = @grant.errors.full_messages
+#   render :new
+# end
     end
 
     private

@@ -89,4 +89,72 @@ RSpec.describe 'Grants', type: :system do
       expect(ConstraintQuestion.all.count).to eql(constraint_question_count)
     end
   end
+
+  describe 'Duplicate', js: true do
+    before(:each) do
+      @grant              = FactoryBot.create(:grant, :with_questions)
+      @user               = FactoryBot.create(:user, organization: @grant.organization,
+                                                     organization_role: 'admin')
+      @grant_user         = FactoryBot.create(:admin_grant_user, grant: @grant,
+                                                                 user: @user)
+      @unauthrorized_user = FactoryBot.create(:user, organization: @grant.organization,
+                                                     organization_role: 'none')
+      # TODO: Add a viewer user
+      # TODO: Add an unauthorized user
+      login_as(@user)
+    end
+
+    scenario 'new_grant_duplicate does not create a new grant' do
+      visit edit_grant_path(@grant)
+      expect do
+        click_link('Duplicate', href: new_grant_duplicate_path(@grant))
+        expect(page).to have_content "Information from #{@grant.name} has been copied below."
+      end.not_to change{Grant.count}
+    end
+
+    scenario 'clears dates' do
+      visit edit_grant_path(@grant)
+      click_link('Duplicate', href: new_grant_duplicate_path(@grant))
+      expect(page.find_field('grant_publish_date').value).to eql ''
+      expect(page.find_field('grant_submission_open_date').value).to eql ''
+      expect(page.find_field('grant_submission_close_date').value).to eql ''
+      expect(page.find_field('grant_review_open_date').value).to eql ''
+      expect(page.find_field('grant_review_close_date').value).to eql ''
+    end
+
+    scenario 'duplicated grant requires a new title and short name' do
+      visit edit_grant_path(@grant)
+      click_link('Duplicate', href: new_grant_duplicate_path(@grant))
+
+      page.fill_in 'Publish Date', with: @grant.publish_date + 1.day
+      page.fill_in 'Open Date', with: @grant.submission_open_date + 1.day
+      page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
+      page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
+      page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
+
+      expect do
+        click_button('Save as Draft')
+      end.not_to change{ Grant.count }
+
+      expect(page).to have_content('Name has already been taken')
+      expect(page).to have_content('Short name has already been taken')
+    end
+
+    scenario 'valid duplicate submission creates new grant' do
+      visit edit_grant_path(@grant)
+      click_link('Duplicate', href: new_grant_duplicate_path(@grant))
+
+      page.fill_in 'Name', with: "Updated #{@grant.name}"
+      page.fill_in 'Short Name', with: "#{@grant.name}1"
+      page.fill_in 'Publish Date', with: @grant.publish_date + 1.day
+      page.fill_in 'Open Date', with: @grant.submission_open_date + 1.day
+      page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
+      page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
+      page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
+
+      expect do
+        click_button('Save as Draft')
+      end.to change{ Grant.count }.by(1).and change{ GrantUser.count}.by(@grant.grant_users.count).and change{ Question.count}.by(@grant.questions.count)
+    end
+  end
 end
