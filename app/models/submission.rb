@@ -20,10 +20,7 @@ class Submission < ApplicationRecord
   validates_presence_of :project_title
   validates_presence_of :state
 
-
-  # validates_date :review_close_date,
-  #                  after: :review_open_date,
-  #                  message: 'must be after the review opening date.'
+  validate :within_submission_dates, if: -> { grant.present? }
 
   scope :by_creation_time,          -> { order(created_at: :asc) }
   scope :with_grant,                -> { includes :grants }
@@ -31,6 +28,9 @@ class Submission < ApplicationRecord
   # scope :with_grant_questions_and_constraints,  -> { includes(:grant).merge(Grant.with_questions).merge(Question.with_constraints_and_constraint_questions) }
 
   private
+  def within_submission_dates
+    errors.add(:base, 'The competition is not open.') unless DateTime.now.between?(self.grant.submission_open_date, self.grant.submission_close_date)
+  end
 
   def set_default_state
     self.state ||= :draft

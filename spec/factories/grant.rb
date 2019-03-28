@@ -20,12 +20,24 @@ FactoryBot.define do
     panel_date                  { 50.days.from_now }
     panel_location              { Faker::Address.full_address }
 
-    factory :complete_grant do
+    trait :complete do
       state { 'complete' }
     end
 
-    factory :draft_grant do
+    trait :draft do
       state { 'draft' }
+    end
+
+    trait :open do
+      publish_date                { DateTime.now }
+      submission_open_date        { DateTime.now }
+      submission_close_date       { 20.days.from_now }
+    end
+
+    trait :closed do
+      publish_date                { 10.days.from_now }
+      submission_open_date        { 10.days.from_now }
+      submission_close_date       { 20.days.from_now }
     end
 
     trait :with_questions do
@@ -41,5 +53,18 @@ FactoryBot.define do
         create(:editor_grant_user, grant: grant)
       end
     end
+
+    trait :bypass_validations do
+      to_create { |grant| grant.save(validate: false) }
+    end
+
+    factory :complete_grant,        traits: %i[complete]
+    factory :draft_grant,           traits: %i[draft]
+    factory :complete_open_grant,   traits: %i[complete open]
+    factory :complete_closed_grant, traits: %i[complete closed]
+    factory :draft_open_grant,      traits: %i[draft open]
+    factory :draft_closed_grant,    traits: %i[draft closed]
+
+
   end
 end

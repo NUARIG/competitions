@@ -16,7 +16,7 @@
     %tbody
       - @submission.grant.questions.each do |question|
         %tr
-          %td= question.name
+          %td= question.text
           %td= 'Replace with Responses'
 
 = link_to 'Back', grant_submissions_path(@grant)

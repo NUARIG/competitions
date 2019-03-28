@@ -105,6 +105,7 @@ RSpec.describe 'Grants', type: :system do
     end
 
     scenario 'new_grant_duplicate does not create a new grant' do
+      byebug
       visit edit_grant_path(@grant)
       expect do
         click_link('Duplicate', href: new_grant_duplicate_path(@grant))

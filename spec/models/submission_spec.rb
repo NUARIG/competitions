@@ -9,42 +9,52 @@ RSpec.describe Submission, type: :model do
   it { is_expected.to respond_to(:final_impact_score_average) }
   it { is_expected.to respond_to(:award_amount) }
 
-  let(:draft_submission) { FactoryBot.build(:draft_submission) }
+  let(:submission) { FactoryBot.build(:submission) }
+  let(:submission_for_open_grant) { FactoryBot.create(:draft_submission_with_complete_open_grant) }
+  let(:submission_for_closed_grant) { FactoryBot.create(:draft_submission_with_complete_closed_grant) }
 
   describe '#validations' do
     it 'validates a valid submission' do
-      expect(draft_submission).to be_valid
+      expect(submission).to be_valid
     end
 
     context 'grant' do
       it 'requires a grant' do
-        draft_submission.grant = nil
-        expect(draft_submission).not_to be_valid
-        expect(draft_submission.errors).to include :grant
+        submission.grant = nil
+        expect(submission).not_to be_valid
+        expect(submission.errors).to include :grant
       end
     end
 
     context 'user' do
       it 'requires a user' do
-        draft_submission.user = nil
-        expect(draft_submission).not_to be_valid
-        expect(draft_submission.errors).to include :user
+        submission.user = nil
+        expect(submission).not_to be_valid
+        expect(submission.errors).to include :user
       end
     end
 
     context 'project_title' do
       it 'requires a project_title' do
-        draft_submission.project_title = nil
-        expect(draft_submission).not_to be_valid
-        expect(draft_submission.errors).to include :project_title
+        submission.project_title = nil
+        expect(submission).not_to be_valid
+        expect(submission.errors).to include :project_title
       end
     end
 
     context 'state' do
       it 'requires a state' do
-        draft_submission.state = nil
-        expect(draft_submission).not_to be_valid
-        expect(draft_submission.errors).to include :state
+        submission.state = nil
+        expect(submission).not_to be_valid
+        expect(submission.errors).to include :state
+      end
+    end
+
+    context 'dates' do
+      let(:submission_for_closed_grant) { FactoryBot.build(:submission_with_complete_closed_grant) }
+
+      it 'rejects a submission for a closed grant' do
+        expect(submission_for_closed_grant).not_to be_valid
       end
     end
 

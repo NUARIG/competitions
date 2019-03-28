@@ -4,13 +4,13 @@
   .cell
     = f.label :project_title, 'Project Title'
     = f.text_field :project_title, required: true
-.grid-x
-  - grant.questions.each do |question|
-    .cell
-      %h3
-        = question.name
-      = f.text_field :award_amount, placeholder: question.placeholder_text
-      = question.help_text
+/ .grid-x
+/   - grant.questions.each do |question|
+/     .cell
+/       %h3
+/         = question.text
+/       = f.text_field :award_amount
+/       = question.help_text
 
 .grid-x
   .actions
