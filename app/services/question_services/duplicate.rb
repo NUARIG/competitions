@@ -16,7 +16,7 @@ module QuestionServices
           end
         end
       rescue ActiveRecord::RecordInvalid => e
-        # how to handle this?
+        # TODO: Error handling
       end
     end
   end

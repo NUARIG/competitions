@@ -60,7 +60,7 @@ class Grant < ApplicationRecord
 
   validate :valid_default_set, on: :create, unless: -> { duplicate.present? }
 
-  scope :by_publish_date, -> { order(publish_date: :asc) }
+  scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
   scope :with_questions,     -> { includes :questions }
 
