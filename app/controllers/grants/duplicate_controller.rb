@@ -8,7 +8,7 @@ module Grants
     def new
       @original_grant = Grant.find(params[:grant_id])
       authorize @original_grant, :edit?
-      @grant = GrantServices::git .call(@original_grant.id)
+      @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
       flash[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
       flash[:alert]   = 'Please review and update the following information'
