@@ -28,13 +28,28 @@ RSpec.describe 'GrantUsers', type: :system do
       end
 
       context '#edit' do
-        scenario 'existing grant_user can be assigned a different role' do
+        scenario 'properly redirects a user who changes their permission to viewer' do
+          pending 'Review authorization for grant_role viewer'
+          fail
+        end
+
+        scenario 'existing grant_user_editor can be assigned admin role' do
+          visit edit_grant_grant_user_path(@grant.id, @grant_editor_user_role.id)
+          expect(page).to have_content @grant_editor_user.name
+          expect(page).to have_select('grant_user[grant_role]', text: 'editor')
+          select('admin', from: 'grant_user[grant_role]')
+          click_button 'Update'
+          expect(page).to have_content "#{@grant_editor_user.name}'s permission was changed to 'admin' for this grant."
+        end
+
+        scenario 'last grant_user_admin cannot be assigned a different role' do
           visit edit_grant_grant_user_path(@grant.id, @grant_user.id)
           expect(page).to have_content @user.name
           expect(page).to have_select('grant_user[grant_role]', text: 'admin')
           select('viewer', from: 'grant_user[grant_role]')
           click_button 'Update'
-          expect(page).to have_content "#{@user.name}'s permission was changed to 'viewer' for this grant."
+          expect(page).to have_content 'There must be at least one admin on the grant'
+          expect(@grant_user.grant_role).to eql('admin')
         end
       end
 
