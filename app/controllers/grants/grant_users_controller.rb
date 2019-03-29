@@ -46,11 +46,12 @@ module Grants
       authorize @grant, :edit?
       respond_to do |format|
         if @grant_user.update(grant_user_params)
+          # TODO: user may have changed their own permissions. authorize @grant, @grant_user, :index?
           flash[:notice] = @grant_user.user.name + '\'s permission was changed to \'' + @grant_user.grant_role + '\' for this grant.'
           format.html { redirect_to grant_grant_users_path(@grant) }
           format.json { render :show, status: :ok, location: @grant_user }
         else
-          format.html { render :edit, alert: @grant_user.errors.full_messages }
+          format.html { redirect_to edit_grant_grant_user_path(@grant, @grant_user), alert: @grant_user.errors.full_messages }
           format.json { render json: @grant_user.errors, status: :unprocessable_entity }
         end
       end
