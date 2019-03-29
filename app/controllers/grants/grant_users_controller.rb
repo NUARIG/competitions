@@ -2,12 +2,12 @@ module Grants
   class GrantUsersController < ApplicationController
     include WithGrantRoles
 
-    before_action :set_grant
+    before_action :set_grant, except: :index
+    before_action :set_grant_and_grant_users, only: :index
     before_action :set_grant_user, only: %i[edit update destroy]
     before_action :authorize_grant
 
     def index
-      @grant_users       = @grant.grant_users.all
       @current_user_role = current_user_grant_permission
     end
 
@@ -50,7 +50,6 @@ module Grants
           format.html { redirect_to grant_grant_users_path(@grant) }
           format.json { render :show, status: :ok, location: @grant_user }
         else
-          @users = unassigned_users_by_grant
           format.html { render :edit, alert: @grant_user.errors.full_messages }
           format.json { render json: @grant_user.errors, status: :unprocessable_entity }
         end
@@ -62,8 +61,12 @@ module Grants
     def destroy
       authorize @grant, :destroy?
       @grant_user.destroy
-      respond_to do |format|
+      if @grant_user.errors.any?
+        flash[:alert] = @grant_user.errors.full_messages
+      else
         flash[:notice] = @grant_user.user.name + '\'s role was removed for this grant.'
+      end
+      respond_to do |format|
         format.html { redirect_to grant_grant_users_path(@grant) }
         format.json { head :no_content }
       end
@@ -74,6 +77,11 @@ module Grants
 
     def set_grant
       @grant = Grant.find(params[:grant_id])
+    end
+
+    def set_grant_and_grant_users
+      @grant       = Grant.includes(:grant_users).find(params[:grant_id])
+      @grant_users = @grant.grant_users
     end
 
     def set_grant_user
