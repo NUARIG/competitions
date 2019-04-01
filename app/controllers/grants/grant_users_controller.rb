@@ -90,7 +90,7 @@ module Grants
     end
 
     def authorize_grant
-      authorize @grant, :edit?
+      authorize @grant, :grant_viewer_access?
     end
 
     # def unassigned_users_by_organization_and_grant

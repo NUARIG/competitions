@@ -5,11 +5,12 @@ require 'rails_helper'
 RSpec.describe 'Grants', type: :system do
   describe 'Edit', js: true do
     before(:each) do
-      @organization = FactoryBot.create(:organization)
-      @user         = FactoryBot.create(:user, organization: @organization)
-      @grant        = FactoryBot.create(:grant, organization: @organization)
-      @grant_user   = FactoryBot.create(:admin_grant_user, grant_id: @grant.id,
-                                                           user_id: @user.id)
+      @organization   = create(:organization)
+      @user           = create(:user, organization: @organization)
+      @grant          = create(:grant, organization: @organization)
+      @grant_user     = create(:admin_grant_user, grant_id: @grant.id,
+                                                user_id: @user.id)
+      @invalid_access = create(:user)
 
       login_as(@user)
       visit edit_grant_path(@grant.id)
@@ -32,6 +33,12 @@ RSpec.describe 'Grants', type: :system do
 
       expect(page).to have_content 'Grant was successfully updated.'
       expect(@grant.versions.last.whodunnit).to eql(@user.id)
+    end
+
+    scenario 'invalid submission', versioning: true do
+      page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
+      click_button 'Save as Draft'
+      expect(page).to have_content 'Submission close date must be after the opening date for submissions.'
     end
   end
 
@@ -155,6 +162,32 @@ RSpec.describe 'Grants', type: :system do
       expect do
         click_button('Save as Draft')
       end.to change{ Grant.count }.by(1).and change{ GrantUser.count}.by(@grant.grant_users.count).and change{ Question.count}.by(@grant.questions.count)
+    end
+
+    scenario 'invalid grant.id redirects to home' do
+      visit new_grant_duplicate_path(Grant.last.id + 1)
+      expect(page).to have_content('Grant not found')
+      assert_equal grants_path, current_path
+    end
+  end
+
+  describe 'Policy', js: true do
+    before(:each) do
+      @grant        = create(:grant)
+      @invalid_user = create(:user)
+      @grant_user   = create(:admin_grant_user, grant_id: @grant.id)
+      login_as(@invalid_user)
+    end
+
+    scenario 'user without access cannot access edit pages' do
+      visit edit_grant_path(@grant)
+      expect(page).to have_content 'You are not authorized to perform this action.'
+      visit grant_grant_users_path(@grant)
+      expect(page).to have_content 'You are not authorized to perform this action.'
+      visit edit_grant_grant_user_path(@grant, @grant_user)
+      expect(page).to have_content 'You are not authorized to perform this action.'
+      visit new_grant_duplicate_path(@grant)
+      expect(page).to have_content 'You are not authorized to perform this action.'
     end
   end
 end

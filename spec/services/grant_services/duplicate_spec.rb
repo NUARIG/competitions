@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe GrantServices do
   describe 'DuplicateDependencies' do
     before(:each) do
-      @original_grant = FactoryBot.create(:grant, :with_questions, :with_users)
-      @new_grant      = FactoryBot.create(:grant, duplicate: true,
+      @original_grant = create(:grant, :with_questions, :with_users)
+      @new_grant      = create(:grant, duplicate: true,
                                              name: 'New Name',
                                              short_name: 'NewShort')
-      @invalid_grant  = FactoryBot.build(:grant, name: '')
+      @invalid_grant  = build(:grant, name: '')
     end
 
     it 'returns :success? true on successful duplication' do
