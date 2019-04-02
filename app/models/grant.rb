@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Grant < ApplicationRecord
+  include SoftDeletable
+
   attr_accessor :default_set, :duplicate
 
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
@@ -12,11 +14,14 @@ class Grant < ApplicationRecord
 
   accepts_nested_attributes_for :questions
 
-  enum state: {
-    demo:     'demo',
-    draft:    'draft',
-    complete: 'complete'
-  }
+  GRANT_STATES = { demo:      'demo',      # TODO: define specifics of each
+                   draft:     'draft',
+                   published: 'published', # e.g. can be opened and may be in process
+                   completed: 'completed', # e.g. awarded and closed
+                   archived:  'archived'   # e.g. 180 days after panel review date or awarded
+                 }.freeze
+
+  enum state: GRANT_STATES
 
   validates_presence_of :name
   validates_presence_of :submission_open_date
@@ -60,11 +65,52 @@ class Grant < ApplicationRecord
 
   validate :valid_default_set, on: :create, unless: -> { duplicate.present? }
 
+  before_destroy :deletable?
+
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
   scope :with_questions,     -> { includes :questions }
 
+  def is_soft_deletable?
+    send("#{state}_soft_deletable?")
+  end
+
+  private
+
   def valid_default_set
     errors.add(:base, 'Please choose a default question set') unless DefaultSet.where(id: default_set).exists?
+  end
+
+  def demo_soft_deletable?
+    true
+  end
+
+  def draft_soft_deletable?
+    true
+  end
+
+  def published_soft_deletable?
+    # TODO: submissions.count.zero?
+    raise SoftDeleteException.new('Published grant cannot be deleted')
+  end
+
+  def completed_soft_deletable?
+    raise SoftDeleteException.new('A completed grant may not be deleted')
+  end
+
+  def archived_soft_deletable?
+    raise SoftDeleteException.new('An archived grant may not be deleted')
+  end
+
+  def process_association_soft_delete
+    ActiveRecord::Base.transaction do
+      grant_users.update_all(deleted_at: Time.now)
+      questions.update_all(deleted_at: Time.now)
+      # TODO: constraint_questions
+      #       submissions
+      #       reviews
+      #       reviewers
+      #       panel
+    end
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/shared_examples/soft_deletable'
 
 RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:name) }
@@ -18,9 +19,9 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:review_close_date) }
   it { is_expected.to respond_to(:panel_date) }
   it { is_expected.to respond_to(:panel_location) }
+  it { is_expected.to respond_to(:deleted_at) }
 
-  let(:grant) { FactoryBot.build(:grant) }
-  let(:draft_grant) { FactoryBot.build(:draft_grant) }
+  let(:grant) { build(:grant) }
 
   describe '#validations' do
     it 'validates a valid grant' do
@@ -105,4 +106,60 @@ RSpec.describe Grant, type: :model do
       end
     end
   end
+
+  describe 'SoftDeletable' do
+    context 'published grant' do
+      it 'cannot soft deleted' do
+        expect(grant.deleted?).to be false
+        expect{grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant cannot be deleted')
+        expect{grant.soft_delete!}.to raise_error('Published grant cannot be deleted')
+        expect(grant.deleted?).to be false
+      end
+    end
+
+    context 'demo grant' do
+      let (:demo_grant) { create(:grant, :demo) }
+
+      it 'can be soft deleted' do
+        expect(demo_grant.deleted?).to be false
+        expect{demo_grant.is_soft_deletable?}.not_to raise_error
+        expect{demo_grant.soft_delete!}.not_to raise_error
+        expect(demo_grant.deleted?).to be true
+      end
+    end
+
+    context 'draft grant' do
+      let (:draft_grant) { create(:grant, :draft) }
+
+      it 'can be soft deleted' do
+        expect(draft_grant.deleted?).to be false
+        expect{draft_grant.is_soft_deletable?}.not_to raise_error
+        expect{draft_grant.soft_delete!}.not_to raise_error
+        expect(draft_grant.deleted?).to be true
+      end
+    end
+
+    context 'completed grant' do
+      let (:completed_grant) { create(:grant, :completed) }
+
+      it 'cannot be soft deleted' do
+        expect(completed_grant.deleted?).to be false
+        expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'A completed grant may not be deleted')
+        expect{completed_grant.soft_delete!}.to raise_error('A completed grant may not be deleted')
+        expect(completed_grant.deleted?).to be false
+      end
+    end
+
+    context 'archived grant' do
+      let (:archived_grant) { create(:grant, :archived) }
+
+      it 'cannot be soft deleted' do
+        expect(archived_grant.deleted?).to be false
+        expect{archived_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'An archived grant may not be deleted')
+        expect{archived_grant.soft_delete!}.to raise_error('An archived grant may not be deleted')
+        expect(archived_grant.deleted?).to be false
+      end
+    end
+  end
 end
+

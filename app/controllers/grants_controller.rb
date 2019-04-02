@@ -3,14 +3,14 @@
 class GrantsController < ApplicationController
   include WithGrantRoles
 
-  before_action :set_grant, except: %i[index new create]
-  before_action :set_state, only: %i[edit update]
+  before_action :set_grant,    except: %i[index new create]
+  before_action :set_state,    only: %i[edit update]
   before_action :draft_banner, only: %i[edit, show]
 
   # GET /grants
   # GET /grants.json
   def index
-    @grants = Grant.by_publish_date.with_organization.all
+    @grants = Grant.not_deleted.by_publish_date.with_organization.all
     authorize @grants
   end
 
@@ -73,10 +73,15 @@ class GrantsController < ApplicationController
   # DELETE /grants/1.json
   def destroy
     authorize @grant
-    @grant.destroy
+    #@grant.soft_delete! # calling concern method
+    result = GrantServices::SoftDelete.call(grant: @grant)
     respond_to do |format|
-      format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }
-      format.json { head :no_content }
+      if result.success?
+        format.html { redirect_to grants_url, notice: 'Grant was successfully deleted.' }
+      else
+        flash[:alert] = result.message
+        format.html { redirect_back(fallback_location: edit_grant_url(@grant)) }
+      end
     end
   end
 
@@ -112,7 +117,7 @@ class GrantsController < ApplicationController
   end
 
   def set_state
-    @grant.state = params[:draft].present? ? 'draft' : 'complete'
+    @grant.state = params[:draft].present? ? 'draft' : 'published'
   end
 
   def draft_banner

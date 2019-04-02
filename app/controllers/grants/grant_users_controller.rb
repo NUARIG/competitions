@@ -5,7 +5,8 @@ module Grants
     before_action :set_grant, except: :index
     before_action :set_grant_and_grant_users, only: :index
     before_action :set_grant_user, only: %i[edit update destroy]
-    before_action :authorize_grant
+    before_action :authorize_grant_viewer_access, only: :index
+    before_action :authorize_grant_editor_access, except: %i[index destroy]
 
     def index
       @current_user_role = current_user_grant_permission
@@ -89,9 +90,14 @@ module Grants
       @grant_user = GrantUser.find(params[:id])
     end
 
-    def authorize_grant
+    def authorize_grant_viewer_access
       authorize @grant, :grant_viewer_access?
     end
+
+    def authorize_grant_editor_access
+      authorize @grant, :grant_editor_access?
+    end
+
 
     # def unassigned_users_by_organization_and_grant
     #   User.where(organization: @grant.organization)

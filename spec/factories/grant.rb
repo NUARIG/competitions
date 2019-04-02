@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:name)             { |n| "Grant Name #{n}" }
     sequence(:short_name)       { |n| "GN#{n}" }
     default_set                 { FactoryBot.create(:default_set).id }
-    state                       { 'complete' }
+    state                       { 'published' }
     publish_date                { Date.current }
     submission_open_date        { 10.day.from_now }
     submission_close_date       { 20.days.from_now }
@@ -20,12 +20,34 @@ FactoryBot.define do
     panel_date                  { 50.days.from_now }
     panel_location              { Faker::Address.full_address }
 
-    factory :complete_grant do
-      state { 'complete' }
+    trait :demo do
+      state { 'demo' }
     end
 
-    factory :draft_grant do
+    trait :draft do
       state { 'draft' }
+    end
+
+    trait :completed do
+      state { 'completed' }
+    end
+
+    trait :archived do
+      state { 'archived' }
+    end
+
+    trait :open do
+      publish_date           { 2.days.ago }
+      submission_close_date  { 1.day.ago }
+      submission_open_date   { 1.day.from_now }
+      to_create { |instance| instance.save(validate: false) }
+    end
+
+    trait :closed do
+      publish_date           { 3.days.ago }
+      submission_close_date  { 2.days.ago }
+      submission_open_date   { 1.day.ago }
+      to_create { |instance| instance.save(validate: false) }
     end
 
     trait :with_questions do
@@ -39,7 +61,17 @@ FactoryBot.define do
       after(:create) do |grant|
         create(:admin_grant_user, grant: grant)
         create(:editor_grant_user, grant: grant)
+        create(:viewer_grant_user, grant: grant)
       end
     end
+
+    factory :open_grant,                               traits: %i[open with_questions with_users]
+    factory :closed_grant,                             traits: %i[closed with_questions with_users]
+
+    factory :grant_with_users_and_questions,           traits: %i[with_questions with_users]
+    factory :demo_grant_with_users_and_questions,      traits: %i[demo with_questions with_users]
+    factory :draft_grant_with_users_and_questions,     traits: %i[draft with_questions with_users]
+    factory :completed_grant_with_users_and_questions, traits: %i[completed with_questions with_users]
+    factory :archived_grant_with_users_and_questions,  traits: %i[archived with_questions with_users]
   end
 end
