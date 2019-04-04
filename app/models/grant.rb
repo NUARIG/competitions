@@ -8,7 +8,7 @@ class Grant < ApplicationRecord
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
   belongs_to  :organization
-  has_many    :questions, dependent: :destroy
+  has_many    :questions
   has_many    :grant_users
   has_many    :users, through: :grant_users
 
@@ -17,9 +17,10 @@ class Grant < ApplicationRecord
   GRANT_STATES = { demo:      'demo',      # TODO: define specifics of each
                    draft:     'draft',
                    published: 'published', # e.g. can be opened and may be in process
-                   completed: 'completed', # e.g. awarded and closed
-                   archived:  'archived'   # e.g. 180 days after panel review date or awarded
+                   completed: 'completed'  # e.g. awarded and closed
                  }.freeze
+
+  SOFT_DELETABLE_STATES = %w[demo draft]
 
   enum state: GRANT_STATES
 
@@ -72,41 +73,35 @@ class Grant < ApplicationRecord
   scope :with_questions,     -> { includes :questions }
 
   def is_soft_deletable?
-    send("#{state}_soft_deletable?")
+    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
   end
 
   private
+
+  def deletable?
+    # TODO: Review destroy / soft delete logic as other models are added
+    raise SoftDeleteException.new('Grants must be soft deleted.')
+  end
 
   def valid_default_set
     errors.add(:base, 'Please choose a default question set') unless DefaultSet.where(id: default_set).exists?
   end
 
-  def demo_soft_deletable?
-    true
-  end
-
-  def draft_soft_deletable?
-    true
-  end
-
   def published_soft_deletable?
-    # TODO: submissions.count.zero?
-    raise SoftDeleteException.new('Published grant cannot be deleted')
+    # TODO: e.g. submissions.count.zero?
+    raise SoftDeleteException.new('Published grant may not be deleted')
   end
 
   def completed_soft_deletable?
-    raise SoftDeleteException.new('A completed grant may not be deleted')
-  end
-
-  def archived_soft_deletable?
-    raise SoftDeleteException.new('An archived grant may not be deleted')
+    raise SoftDeleteException.new('Completed grant may not be deleted')
   end
 
   def process_association_soft_delete
     ActiveRecord::Base.transaction do
-      grant_users.update_all(deleted_at: Time.now)
-      questions.update_all(deleted_at: Time.now)
-      # TODO: constraint_questions
+      # TODO: determine whether any/all of these should these be called
+      # grant_users.update_all(deleted_at: Time.now)
+      # questions.update_all(deleted_at: Time.now)
+      # constraint_questions
       #       submissions
       #       reviews
       #       reviewers

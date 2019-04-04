@@ -10,7 +10,7 @@ class GrantsController < ApplicationController
   # GET /grants
   # GET /grants.json
   def index
-    @grants = Grant.not_deleted.by_publish_date.with_organization.all
+    @grants = Grant.not_deleted.by_publish_date.with_organization
     authorize @grants
   end
 

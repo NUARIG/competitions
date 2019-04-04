@@ -32,10 +32,6 @@ FactoryBot.define do
       state { 'completed' }
     end
 
-    trait :archived do
-      state { 'archived' }
-    end
-
     trait :open do
       publish_date           { 2.days.ago }
       submission_close_date  { 1.day.ago }
@@ -72,6 +68,5 @@ FactoryBot.define do
     factory :demo_grant_with_users_and_questions,      traits: %i[demo with_questions with_users]
     factory :draft_grant_with_users_and_questions,     traits: %i[draft with_questions with_users]
     factory :completed_grant_with_users_and_questions, traits: %i[completed with_questions with_users]
-    factory :archived_grant_with_users_and_questions,  traits: %i[archived with_questions with_users]
   end
 end

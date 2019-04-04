@@ -17,7 +17,7 @@ module SoftDeletable
       self.transaction do
         if is_soft_deletable?
           process_soft_delete
-          # process_association_soft_delete if self.respond_to?(:process_association_soft_delete)
+          process_association_soft_delete if self.respond_to?(:process_association_soft_delete)
         end
       end
     rescue Exception => e

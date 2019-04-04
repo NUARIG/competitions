@@ -108,12 +108,26 @@ RSpec.describe Grant, type: :model do
   end
 
   describe 'SoftDeletable' do
+    it 'cannot be destroyed' do
+      expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be soft deleted.')
+    end
+
+    context 'associations' do
+      pending 'associations are correctly handled' do
+        fail '#TODO: determine whether any associations should also be soft_deleted'
+      end
+    end
+
     context 'published grant' do
       it 'cannot soft deleted' do
         expect(grant.deleted?).to be false
-        expect{grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant cannot be deleted')
-        expect{grant.soft_delete!}.to raise_error('Published grant cannot be deleted')
+        expect{grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
+        expect{grant.soft_delete!}.to raise_error('Published grant may not be deleted')
         expect(grant.deleted?).to be false
+      end
+
+      pending 'published grant with submissions cannot be deleted' do
+        fail '#TODO: grant.submissions.count.zero?'
       end
     end
 
@@ -144,20 +158,9 @@ RSpec.describe Grant, type: :model do
 
       it 'cannot be soft deleted' do
         expect(completed_grant.deleted?).to be false
-        expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'A completed grant may not be deleted')
-        expect{completed_grant.soft_delete!}.to raise_error('A completed grant may not be deleted')
+        expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Completed grant may not be deleted')
+        expect{completed_grant.soft_delete!}.to raise_error('Completed grant may not be deleted')
         expect(completed_grant.deleted?).to be false
-      end
-    end
-
-    context 'archived grant' do
-      let (:archived_grant) { create(:grant, :archived) }
-
-      it 'cannot be soft deleted' do
-        expect(archived_grant.deleted?).to be false
-        expect{archived_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'An archived grant may not be deleted')
-        expect{archived_grant.soft_delete!}.to raise_error('An archived grant may not be deleted')
-        expect(archived_grant.deleted?).to be false
       end
     end
   end

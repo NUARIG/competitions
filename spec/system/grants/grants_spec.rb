@@ -199,8 +199,8 @@ RSpec.describe 'Grants', type: :system do
       fail '#TODO: grant.submissions.count.zero?'
     end
 
-    pending 'delete button does not appear' do
-      fail '#TODO: logic for display the delete button'
+    pending 'delete button hidden when not soft_deletable' do
+      fail '#TODO: logic to display the delete button'
     end
 
     scenario 'draft grant can be soft deleted' do
@@ -224,15 +224,7 @@ RSpec.describe 'Grants', type: :system do
       visit edit_grant_path(@grant.id)
       click_link 'Delete'
       page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content 'A completed grant may not be deleted'
-    end
-
-    scenario 'archived grant cannot be soft deleted' do
-      @grant.update_attributes!(state: 'archived')
-      visit edit_grant_path(@grant.id)
-      click_link 'Delete'
-      page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content 'An archived grant may not be deleted'
+      expect(page).to have_content 'Completed grant may not be deleted'
     end
   end
 
@@ -251,7 +243,10 @@ RSpec.describe 'Grants', type: :system do
       before(:each) do
         login_as @invalid_user
       end
+
       scenario 'user without access cannot access edit pages' do
+        visit new_grant_path
+        expect(page).to have_content 'You are not authorized to perform this action.'
         visit edit_grant_path(@grant)
         expect(page).to have_content 'You are not authorized to perform this action.'
         visit grant_grant_users_path(@grant)
