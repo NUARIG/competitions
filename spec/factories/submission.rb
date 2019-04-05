@@ -5,8 +5,8 @@ FactoryBot.define do
     project_title               { Faker::Lorem.sentence }
     state                       { 'draft' }
 
-    trait :complete do
-      state { 'complete' }
+    trait :submitted do
+      state { 'submitted' }
     end
 
     trait :with_complete_closed_grant do
@@ -22,9 +22,10 @@ FactoryBot.define do
       award_amount { 99.99 }
     end
 
-    factory :complete_submission,                       traits: %i[complete]
-    factory :complete_scored_submission,                traits: %i[complete scored]
-    factory :complete_awarded_submission,               traits: %i[complete scored awarded]
-    factory :submission_with_complete_closed_grant,     traits: %i[with_complete_closed_grant]
+    factory :wubmitted_submission,                              traits: %i[submitted]
+    factory :submitted_scored_submission,                       traits: %i[submitted scored]
+    factory :submitted_awarded_submission,                      traits: %i[submitted scored awarded]
+    factory :submission_with_complete_closed_grant,             traits: %i[with_complete_closed_grant]
+    factory :submitted_submission_with_complete_closed_grant,  traits: %i[submitted with_complete_closed_grant]
   end
 end

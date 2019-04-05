@@ -10,9 +10,8 @@ class Submission < ApplicationRecord
   after_initialize :set_default_state, if: :new_record?
 
   enum state: {
-    demo: 'demo',
     draft: 'draft',
-    complete: 'complete'
+    submitted: 'submitted'
   }.freeze
 
   validates_presence_of :user
