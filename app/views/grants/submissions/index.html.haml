@@ -18,4 +18,4 @@
         %td= link_to 'Edit', edit_grant_submission_path(@grant, submission) if policy(submission).edit?
         %td= link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?' } if policy(submission).destroy?
 
-= link_to 'Add new submission', new_grant_submission_path
+= link_to 'Back', grant_path(@grant) if policy(@grant).show?

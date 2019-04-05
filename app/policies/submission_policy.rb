@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-class SubmissionPolicy < AccessPolicy
-  def index?
-    organization_admin_access?
-  end
-
+class SubmissionPolicy < GrantPolicy
   def show?
-    organization_admin_access? || submission.user == user
+    grant_viewer_access? || submission.user == user
   end
 
   def create?
@@ -18,19 +14,24 @@ class SubmissionPolicy < AccessPolicy
   end
 
   def update?
-    show?
+    grant_editor_access? || submission.user == user
   end
 
   def edit?
-    show?
+    update?
   end
 
   def destroy?
-    show?
+    grant_admin_access? || submission.user == user
   end
 
   private
   def submission
     record
   end
+
+  def grant
+    submission.grant
+  end
+
 end

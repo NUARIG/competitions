@@ -9,9 +9,9 @@ RSpec.describe Submission, type: :model do
   it { is_expected.to respond_to(:final_impact_score_average) }
   it { is_expected.to respond_to(:award_amount) }
 
-  let(:submission) { FactoryBot.build(:submission) }
-  let(:submission_for_open_grant) { FactoryBot.create(:draft_submission_with_complete_open_grant) }
-  let(:submission_for_closed_grant) { FactoryBot.create(:draft_submission_with_complete_closed_grant) }
+  let(:submission) { build(:submission) }
+  let(:submission_for_open_grant) { create(:draft_submission_with_complete_open_grant) }
+  let(:submission_for_closed_grant) { create(:draft_submission_with_complete_closed_grant) }
 
   describe '#validations' do
     it 'validates a valid submission' do

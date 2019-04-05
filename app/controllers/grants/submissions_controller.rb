@@ -4,33 +4,33 @@ module Grants
     before_action :set_submission, only: %i[show edit update destroy]
     before_action :set_state, only: %i[edit update]
 
-    # GET /grants/submissions
-    # GET /grants/submissions.json
+    # GET /grants/[grant_id]/submissions
+    # GET /grants/[grant_id]/submissions.json
     def index
-      authorize @grant, :edit?
-      @submissions = Submission.all
+      authorize @grant, :grant_viewer_access?
+      @submissions = Submission.where(grant: @grant)
     end
 
-    # GET /grants/submissions/1
-    # GET /grants/submissions/1.json
+    # GET /grants/[grant_id]/submissions/1
+    # GET /grants/[grant_id]/submissions/1.json
     def show
       authorize @submission
     end
 
-    # GET /grants/submissions/new
+    # GET /grants/[grant_id]/submissions/new
     def new
       @user = current_user
       @submission = Submission.new(grant: @grant, user: @user)
       authorize @submission
     end
 
-    # GET /grants/submissions/1/edit
+    # GET /grants/[grant_id]/submissions/1/edit
     def edit
       authorize @submission
     end
 
-    # POST /grants/submissions
-    # POST /grants/submissions.json
+    # POST /grants/[grant_id]/submissions
+    # POST /grants/[grant_id]/submissions.json
     def create
       @submission = Submission.new(submission_params)
       set_state
@@ -48,21 +48,22 @@ module Grants
       end
     end
 
-    # PATCH/PUT /grants/submissions/1
-    # PATCH/PUT /grants/submissions/1.json
+    # PATCH/PUT /grants/[grant_id]/submissions/1
+    # PATCH/PUT /grants/[grant_id]/submissions/1.json
     def update
       authorize @submission
       respond_to do |format|
         if @submission.update(submission_params)
           format.html { redirect_to grant_submissions_path(@grant), notice: 'Submission was successfully updated.' }
         else
+          flash[:alert] = @submission.errors.full_messages
           format.html { render :edit }
         end
       end
     end
 
-    # DELETE /grants/submissions/1
-    # DELETE /grants/submissions/1.json
+    # DELETE /grants/[grant_id]/submissions/1
+    # DELETE /grants/[grant_id]/submissions/1.json
     def destroy
       authorize @submission
       @submission.destroy
@@ -88,13 +89,12 @@ module Grants
         :grant_id,
         :user_id,
         :project_title,
-        :state,
         :award_amount
       )
     end
 
     def set_state
-      @submission.state = params[:draft].present? ? 'draft' : 'complete'
+      @submission.state = params[:draft].present? ? 'draft' : 'submitted'
     end
 
   end

@@ -175,7 +175,7 @@ module Competitions
           submission.user_id        = data[:user_id]
           submission.project_title  = data[:project_title]
           submission.state          = data[:state]
-          submission.save!
+          submission.save(validate: false)
         end
       end
     end
