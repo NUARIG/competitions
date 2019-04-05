@@ -83,8 +83,9 @@
   .actions
     = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed'
     - if grant.persisted?
-      = f.submit 'Save and Complete', class: 'button'
+      = f.submit 'Save and Publish', class: 'button'
       = link_to 'Cancel', grant, class: 'button secondary'
+      = link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?'}, class: 'button alert'
     - else
       = link_to 'Cancel', grants_path, class: 'button secondary'
 

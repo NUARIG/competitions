@@ -6,6 +6,7 @@ RSpec.describe GrantUser, type: :model do
   it { is_expected.to respond_to(:grant) }
   it { is_expected.to respond_to(:user) }
   it { is_expected.to respond_to(:grant_role) }
+  it { is_expected.to respond_to(:deleted_at) }
 
   let(:organization)      { create(:organization) }
   let(:grant)             { create(:grant, organization_id: organization.id) }

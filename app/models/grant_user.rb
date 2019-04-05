@@ -20,7 +20,7 @@ class GrantUser < ApplicationRecord
 
   validate :prevent_last_admin_edit, on: :update, if: -> { grant_role_changed? && role_changed_from_admin? && is_last_grant_admin? }
 
-  scope :with_users, -> { includes :users }
+  scope :with_users, -> { (includes :users) }
 
   def prevent_last_admin_edit
     errors.add(:base, 'There must be at least one admin on the grant')

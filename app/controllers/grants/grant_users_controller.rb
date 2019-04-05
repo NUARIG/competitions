@@ -5,9 +5,10 @@ module Grants
     before_action :set_grant, except: :index
     before_action :set_grant_and_grant_users, only: :index
     before_action :set_grant_user, only: %i[edit update destroy]
-    before_action :authorize_grant
+    before_action :authorize_grant_editor_access, except: %i[index destroy]
 
     def index
+      authorize @grant, :grant_viewer_access?
       @current_user_role = current_user_grant_permission
     end
 
@@ -43,7 +44,6 @@ module Grants
     # PATCH/PUT /grants/:id/grant_user/1
     # PATCH/PUT /grants/:id/grant_user/1.json
     def update
-      authorize @grant, :edit?
       respond_to do |format|
         if @grant_user.update(grant_user_params)
           # TODO: user may have changed their own permissions. authorize @grant, @grant_user, :index?
@@ -89,9 +89,10 @@ module Grants
       @grant_user = GrantUser.find(params[:id])
     end
 
-    def authorize_grant
-      authorize @grant, :grant_viewer_access?
+    def authorize_grant_editor_access
+      authorize @grant, :grant_editor_access?
     end
+
 
     # def unassigned_users_by_organization_and_grant
     #   User.where(organization: @grant.organization)
