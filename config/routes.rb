@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :questions,   only: %i[index edit update], controller: 'grants/questions'
     resources :grant_users, except: :show,               controller: 'grants/grant_users'
     resource  :duplicate,   only: %i[new create],        controller: 'grants/duplicate'
+    resources :submissions,                              controller: 'grants/submissions'
   end
 
   resources :users, only: %i[show index edit update]

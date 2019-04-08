@@ -1,0 +1,10 @@
+submission1:
+  grant_id: 1
+  user_id: 2
+  project_title: 'Submitted Model Submission to KL2'
+  state: 'submitted'
+submission2:
+  grant_id: 2
+  user_id: 3
+  project_title: 'Draft Model Submission to KL2'
+  state: 'draft'

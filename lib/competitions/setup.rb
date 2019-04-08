@@ -8,6 +8,7 @@ module Competitions
       Competitions::Setup::Constraints.load_constraints
       Competitions::Setup::DefaultSets.load_default_sets
       Competitions::Setup::Grants.load_grants
+      Competitions::Setup::Submissions.load_submissions
     end
 
     module_function
@@ -162,6 +163,23 @@ module Competitions
       end
     end
 
+    module Submissions
+      def self.load_submissions
+        submissions = Competitions::Setup.parse_yml_file('submissions')
+        submissions.each do |_, data|
+          submission = Submission
+                  .where(project_title: data[:project_title])
+                  .first_or_initialize
+
+          submission.grant_id       = data[:grant_id]
+          submission.user_id        = data[:user_id]
+          submission.project_title  = data[:project_title]
+          submission.state          = data[:state]
+          submission.save(validate: false)
+        end
+      end
+    end
+
     module DefaultSets
       def self.load_default_sets
         default_sets = Competitions::Setup.parse_yml_file('default_sets')
@@ -169,51 +187,8 @@ module Competitions
           set = DefaultSet.where(name: data[:name]).first_or_initialize
           set.name = data[:name]
           set.save!
-
-          # next unless data[:questions].any?
-
-          # data[:questions].each do |_, q|
-          #   DefaultSetQuestion
-          #     .find_or_create_by(default_set_id: set.id,
-          #                        question_id: load_question(q).id)
-          # end
         end
       end
-
-      # def self.load_question(q, grant_id)
-      #   question = Question
-      #              .where(grant_id: grant_id, name: q[:name])
-      #              .first_or_initialize
-      #   question.text             = q[:name]
-      #   question.answer_type      = q[:answer_type]
-      #   question.help_text        = q[:help_text]
-      #   question.placeholder_text = q[:placeholder_text]
-      #   question.required         = q[:required]
-      #   question.save!
-
-      #   if q[:constraints].any?
-      #     q[:constraints].each do |_, constraint|
-      #       load_constraint_questions(question.id, constraint)
-      #     end
-      #   end
-
-      #   question
-      # end
-
-      # def self.load_constraint_questions(question_id, constraint)
-      #   constraint_id       = Constraint
-      #                         .where(type: constraint[:type],
-      #                                name: constraint[:name])
-      #                         .pluck(:id)
-      #                         .first
-      #   constraint_question = ConstraintQuestion
-      #                         .where(constraint_id: constraint_id,
-      #                                question_id: question_id)
-      #                         .first_or_initialize
-
-      #   constraint_question.value = constraint[:value]
-      #   constraint_question.save!
-      # end
     end
   end
 end

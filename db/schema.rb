@@ -139,6 +139,33 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
     t.index ["grant_id"], name: "index_questions_on_grant_id"
   end
 
+  create_table "responses", force: :cascade do |t|
+    t.bigint "grant_id"
+    t.bigint "question_id"
+    t.text "type"
+    t.integer "integer_response"
+    t.float "float_response"
+    t.string "string_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_responses_on_grant_id"
+    t.index ["question_id"], name: "index_responses_on_question_id"
+  end
+
+  create_table "submissions", force: :cascade do |t|
+    t.bigint "grant_id"
+    t.bigint "user_id"
+    t.string "project_title"
+    t.string "state"
+    t.float "composite_score_average"
+    t.float "final_impact_score_average"
+    t.float "award_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_submissions_on_grant_id"
+    t.index ["user_id"], name: "index_submissions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.bigint "organization_id"
     t.string "organization_role"
@@ -160,5 +187,7 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
   add_foreign_key "grant_users", "grants"
   add_foreign_key "grant_users", "users"
   add_foreign_key "grants", "organizations"
+  add_foreign_key "submissions", "grants"
+  add_foreign_key "submissions", "users"
   add_foreign_key "users", "organizations"
 end
