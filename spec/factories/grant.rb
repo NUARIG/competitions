@@ -75,7 +75,7 @@ FactoryBot.define do
     factory :closed_grant_with_users_and_questions,    traits: %i[closed with_questions with_users]
     factory :published_open_grant,                     traits: %i[published open]
     factory :published_closed_grant,                   traits: %i[published closed]
-    factory :completed_closed_grant,                   traits: %i[completed closed]
+    factory :completed_grant,                          traits: %i[completed closed]
     factory :draft_open_grant,                         traits: %i[draft open]
     factory :draft_closed_grant,                       traits: %i[draft closed]
     factory :grant_with_users_and_questions,           traits: %i[with_questions with_users]

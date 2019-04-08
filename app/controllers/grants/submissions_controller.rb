@@ -2,7 +2,6 @@ module Grants
   class SubmissionsController < ApplicationController
     before_action :set_grant
     before_action :set_submission, only: %i[show edit update destroy]
-    before_action :set_state, only: %i[edit update]
 
     # GET /grants/[grant_id]/submissions
     # GET /grants/[grant_id]/submissions.json
@@ -52,6 +51,7 @@ module Grants
     # PATCH/PUT /grants/[grant_id]/submissions/1.json
     def update
       authorize @submission
+      set_state
       respond_to do |format|
         if @submission.update(submission_params)
           format.html { redirect_to grant_submission_path(@grant, @submission), notice: 'Submission was successfully updated.' }
