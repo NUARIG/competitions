@@ -8,7 +8,7 @@ RSpec.describe 'Submissions', type: :system do
       @organization = create(:organization)
       @user         = create(:user, organization: @organization)
       @admin_user   = create(:user, organization: @organization)
-      @grant        = create(:complete_open_grant, organization: @organization)
+      @grant        = create(:published_open_grant, organization: @organization)
       @grant_user   = create(:admin_grant_user, grant_id: @grant.id,
                                                            user_id: @admin_user.id)
     end
@@ -37,7 +37,7 @@ RSpec.describe 'Submissions', type: :system do
     end
 
     scenario 'Index displays submissions' do
-      @submission = create(:submitted_submission_with_complete_closed_grant, grant: @grant, user: @user)
+      @submission = create(:submitted_submission_with_published_closed_grant, grant: @grant, user: @user)
 
       login_as(@admin_user)
       visit grant_submissions_path(@grant.id)
@@ -45,7 +45,6 @@ RSpec.describe 'Submissions', type: :system do
     end
 
     scenario 'User can only see their own submissions on index' do
-
 
     end
 

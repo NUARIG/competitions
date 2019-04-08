@@ -10,12 +10,11 @@ RSpec.describe Submission, type: :model do
   it { is_expected.to respond_to(:award_amount) }
 
   let(:submission) { build(:submission) }
-  let(:submission_for_open_grant) { create(:draft_submission_with_complete_open_grant) }
-  let(:submission_for_closed_grant) { create(:draft_submission_with_complete_closed_grant) }
+  let(:submission_for_open_grant) { create(:submission_with_published_open_grant) }
 
   describe '#validations' do
     it 'validates a valid submission' do
-      expect(submission).to be_valid
+      expect(submission_for_open_grant).to be_valid
     end
 
     context 'grant' do
@@ -51,7 +50,7 @@ RSpec.describe Submission, type: :model do
     end
 
     context 'dates' do
-      let(:submission_for_closed_grant) { FactoryBot.build(:submission_with_complete_closed_grant) }
+      let(:submission_for_closed_grant) { FactoryBot.build(:submission_with_published_closed_grant) }
 
       it 'rejects a submission for a closed grant' do
         expect(submission_for_closed_grant).not_to be_valid

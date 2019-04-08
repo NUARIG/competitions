@@ -6,17 +6,18 @@ RSpec.describe GrantUser, type: :model do
   it { is_expected.to respond_to(:grant) }
   it { is_expected.to respond_to(:user) }
   it { is_expected.to respond_to(:grant_role) }
+  it { is_expected.to respond_to(:deleted_at) }
 
-  let(:organization) { FactoryBot.create(:organization) }
-  let(:grant) { FactoryBot.create(:grant, organization_id: organization.id) }
+  let(:organization)      { create(:organization) }
+  let(:grant)             { create(:grant, organization_id: organization.id) }
 
-  let(:admin_user) { FactoryBot.create(:user, organization_id: organization.id) }
-  let(:editor_user) { FactoryBot.create(:user, organization_id: organization.id) }
-  let(:viewer_user) { FactoryBot.create(:user, organization_id: organization.id) }
+  let(:admin_user)        { create(:user, organization_id: organization.id) }
+  let(:editor_user)       { create(:user, organization_id: organization.id) }
+  let(:viewer_user)       { create(:user, organization_id: organization.id) }
 
-  let(:admin_grant_user) { FactoryBot.create(:admin_grant_user, grant_id: grant.id, user_id: admin_user.id) }
-  let(:editor_grant_user) { FactoryBot.create(:editor_grant_user, grant_id: grant.id, user_id: editor_user.id) }
-  let(:viewer_grant_user) { FactoryBot.create(:viewer_grant_user, grant_id: grant.id, user_id: viewer_user.id) }
+  let(:admin_grant_user)  { build(:admin_grant_user, grant_id: grant.id, user_id: admin_user.id) }
+  let(:editor_grant_user) { build(:editor_grant_user, grant_id: grant.id, user_id: editor_user.id) }
+  let(:viewer_grant_user) { build(:viewer_grant_user, grant_id: grant.id, user_id: viewer_user.id) }
 
   describe '#validations' do
     it 'validates a valid grant_user' do
@@ -49,10 +50,13 @@ RSpec.describe GrantUser, type: :model do
       expect(viewer_grant_user).to be_valid
     end
 
-    it 'allows only one role' do
+    it 'prevents deletion of last admin' do
+      admin_grant_user.save
+      viewer_grant_user.save
+      viewer_grant_user.update_attributes(grant_role: 'admin')
+      expect{viewer_grant_user.destroy}.to change{grant.grant_users.count}.by -1
+      expect{admin_grant_user.destroy}.not_to change{grant.grant_users.count}
     end
 
-    it 'grant and user organizations match' do
-    end
   end
 end
