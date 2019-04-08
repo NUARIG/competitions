@@ -54,7 +54,7 @@ module Grants
       authorize @submission
       respond_to do |format|
         if @submission.update(submission_params)
-          format.html { redirect_to grant_submissions_path(@grant), notice: 'Submission was successfully updated.' }
+          format.html { redirect_to grant_submission_path(@grant, @submission), notice: 'Submission was successfully updated.' }
         else
           flash[:alert] = @submission.errors.full_messages
           format.html { render :edit }
@@ -69,7 +69,7 @@ module Grants
       @submission.destroy
       respond_to do |format|
         flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.short_name} was successfully destroyed."
-        format.html { redirect_to grant_submissions_path }
+        format.html { redirect_to grant_path(@grant) }
       end
     end
 

@@ -18,5 +18,9 @@
         %tr
           %td= question.text
           %td= 'Replace with Responses'
-
+.cell
+= link_to 'Edit', edit_grant_submission_path(@grant, @submission), id: "submission-#{@submission.id}-edit" if policy(@submission).edit?
+= ' | ' if policy(@submission).edit?
+= link_to 'Delete', grant_submission_path(@grant, @submission), method: :delete, data: { confirm: 'Are you sure?' } if policy(@submission).destroy?
+= ' | ' if policy(@submission).edit?
 = link_to 'Back', grant_submissions_path(@grant)

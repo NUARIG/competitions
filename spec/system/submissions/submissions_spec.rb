@@ -37,15 +37,38 @@ RSpec.describe 'Submissions', type: :system do
     end
 
     scenario 'Index displays submissions' do
-      @submission = create(:submitted_submission_with_published_closed_grant, grant: @grant, user: @user)
+      submission = create(:submitted_submission_with_published_closed_grant, grant: @grant, user: @user)
 
       login_as(@admin_user)
       visit grant_submissions_path(@grant.id)
-      expect(page).to have_content @submission.project_title
+      expect(page).to have_content submission.project_title
     end
 
-    scenario 'User can only see their own submissions on index' do
+    scenario 'allows user to edit their submission' do
+      submission = create(:submission_with_published_open_grant, grant: @grant, user: @user)
 
+      login_as(@user)
+      visit grant_submission_path(@grant.id, submission)
+      expect(page).to have_content submission.project_title
+      click_link 'Edit'
+      page.fill_in 'Project Title', with: 'Title has been edited'
+      click_button 'Save and Submit'
+      expect(page.current_path).to eq(grant_submission_path(@grant, submission.id))
+      expect(page).to have_content('Title has been edited')
+    end
+
+    scenario 'allows user to edit their submission' do
+      submission = create(:submission_with_published_open_grant, grant: @grant, user: @user)
+      submissions = Submission.count
+
+      login_as(@user)
+      visit grant_submission_path(@grant.id, submission)
+      expect(page).to have_content submission.project_title
+      page.accept_confirm do
+        click_link 'Delete'
+      end
+      expect(page.current_path).to eq(grant_path(@grant))
+      expect(Submission.count).to eql(submissions-1)
     end
 
   end
