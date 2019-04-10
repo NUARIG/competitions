@@ -10,14 +10,14 @@ RSpec.describe 'Grants', type: :system do
       @soft_deleted_grant   = create(:grant_with_users_and_questions, deleted_at: 1.hour.ago)
       @admin_user           = @grant.grant_users.grant_role_admin.first.user
       login_as(@admin_user)
-      visit root_path
+      visit grants_path
     end
 
-    scenario 'home does not display soft_deleted grant' do
+    scenario 'does not display soft_deleted grant' do
       expect(page).not_to have_content(@soft_deleted_grant.name)
     end
 
-    scenario 'home displays proper grant admin links' do
+    scenario 'displays proper grant admin links' do
       expect(page).not_to have_link('Edit', href: edit_grant_path(@inaccessible_grant))
       expect(page).not_to have_link('Delete', href: grant_path(@inaccessible_grant))
       expect(page).to have_link('Edit', href: edit_grant_path(@grant))
@@ -174,6 +174,7 @@ RSpec.describe 'Grants', type: :system do
       expect do
         click_button('Save as Draft')
       end.to change{ Grant.count }.by(1).and change{ GrantUser.count}.by(@grant.grant_users.count).and change{ Question.count}.by(@grant.questions.count)
+      expect(page).to have_content('Current Publish Status: Draft')
     end
 
     scenario 'invalid grant.id redirects to home' do
