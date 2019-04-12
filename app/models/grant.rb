@@ -68,6 +68,14 @@ class Grant < ApplicationRecord
 
   before_destroy :deletable?
 
+  scope :public_grants,      -> { not_deleted.
+                                    published.
+                                    where(':date BETWEEN
+                                                   publish_date
+                                                 AND
+                                                   submission_close_date',
+                                          date: Date.current).
+                                    by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
   scope :with_questions,     -> { includes :questions }

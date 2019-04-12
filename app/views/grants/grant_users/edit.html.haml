@@ -1,7 +1,6 @@
 - content_for(:page_title, "Edit User Permissions")
 
-= render 'shared/grant_edit_tabbed_menu'
-
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 .tabs-panel.is-active
   %h2
     = "Edit #{@grant_user.user.name}'s Permission"

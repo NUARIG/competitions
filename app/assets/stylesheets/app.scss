@@ -1,3 +1,78 @@
 .tabs-title.is-active {
   background-color: #e6e6e6;
 }
+
+main {
+  .menu.simple {
+    margin: 1em 0;
+  }
+
+  &.home {
+    #section-intro {
+      padding: 2em;
+    }
+    #public-grants {
+      .card {
+        height: 20em;
+        .card-section {
+          &.grant-name {
+            height: 20%;
+          }
+          &.grant-dates {
+            display: table;
+            height: 20%;
+            .dates {
+              display: table-cell;
+              vertical-align: bottom;
+              .date {
+                margin-top: .5em;
+                strong {
+                  display: inline-block;
+                  line-height: 1em;
+                  width: 37.5%;
+                }
+              }
+            }
+          }
+          &.grant-links {
+            display: table-cell;
+            vertical-align: bottom;
+          }
+        }
+      }
+    }
+  }
+
+  &.grants {
+    // Show
+    #grant-dates {
+      dl {
+        dt {
+          font-size: .85em;
+          font-weight: bold;
+          margin-bottom: 0;
+        }
+        dd {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  &.grants,
+  &.questions,
+  &.grant_users {
+    // Edit
+    #grant-state {
+      padding-bottom: 1em;
+      form.grant-state {
+        display: inline-block;
+        .button {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+

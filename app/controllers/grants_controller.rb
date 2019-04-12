@@ -4,7 +4,7 @@ class GrantsController < ApplicationController
   include WithGrantRoles
 
   before_action :set_grant,    except: %i[index new create]
-  before_action :set_state,    only: %i[edit update]
+  before_action :set_state,    only: %i[update]
   before_action :draft_banner, only: %i[edit, show]
 
   # GET /grants
@@ -28,7 +28,6 @@ class GrantsController < ApplicationController
 
   # GET /grants/1/edit
   def edit
-
     @current_user_role = current_user_grant_permission
     authorize @grant
   end
@@ -43,7 +42,7 @@ class GrantsController < ApplicationController
     if result.success?
       # TODO: Confirm messages the user should see
       flash[:notice]  = 'Grant saved.'
-      flash[:warning] = 'Review Questions below then click "Save and Complete" to finalize.'
+      flash[:warning] = 'Review Questions below then click "Save and Publish" to finalize.'
       redirect_to grant_questions_url(@grant)
     else
       respond_to do |format|

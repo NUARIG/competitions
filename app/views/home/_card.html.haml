@@ -1,0 +1,24 @@
+.card
+  .card-section.grant-name
+    %h4
+      = link_to grant.name, grant_path(grant)
+  .card-section.grant-dates
+    .dates
+      .date
+        %strong
+          %small
+            Announced:
+        = grant.publish_date
+      .date
+        %strong
+          %small
+            Submission Period:
+        = grant.submission_open_date
+        \-
+        = grant.submission_close_date
+  .card-divider.grant-links
+    %ul.menu
+      %li
+        = link_to 'Learn More', grant_path(grant)
+      %li
+        = link_to 'Apply Now', new_grant_submission_path(grant)

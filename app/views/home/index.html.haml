@@ -1,0 +1,13 @@
+.grid-x.align-center-middle
+  .small-10.cell#section-intro
+    %h4.text-center
+      Competitions is a platform to run NIH-style grant competitions including pilot projects and research awards.
+%hr.small-11
+.grid-x.align-center-middle
+  .section-intro
+    %h3.subheader.text-align-center
+      Current Grants
+.grid-x.grid-padding-x.small-up-1.medium-up-2.large-up-3#public-grants
+  - @grants.each do |grant|
+    .cell
+      = render 'card', grant: grant
