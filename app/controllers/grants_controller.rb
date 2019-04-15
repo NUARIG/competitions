@@ -5,7 +5,6 @@ class GrantsController < ApplicationController
 
   before_action :set_grant,    except: %i[index new create]
   before_action :set_state,    only: %i[update]
-  before_action :draft_banner, only: %i[edit, show]
 
   # GET /grants
   # GET /grants.json
@@ -17,7 +16,10 @@ class GrantsController < ApplicationController
   # GET /grants/1
   # GET /grants/1.json
   def show
-    authorize @grant
+    if authorize @grant
+      draft_banner
+    end
+    @grant = GrantDecorator.new(@grant)
   end
 
   # GET /grants/new
@@ -29,7 +31,9 @@ class GrantsController < ApplicationController
   # GET /grants/1/edit
   def edit
     @current_user_role = current_user_grant_permission
-    authorize @grant
+    if authorize @grant
+      draft_banner
+    end
   end
 
   # POST /grants

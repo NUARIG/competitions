@@ -6,7 +6,12 @@ class GrantPolicy < AccessPolicy
   end
 
   def show?
-    index?
+    case record.published?
+    when true
+      index?
+    else
+      grant_viewer_access?
+    end
   end
 
   def create?
