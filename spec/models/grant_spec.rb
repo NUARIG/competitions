@@ -107,7 +107,7 @@ RSpec.describe Grant, type: :model do
     end
   end
 
-  describe 'SoftDeletable' do
+    describe 'SoftDeletable' do
     it 'cannot be destroyed' do
       expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be soft deleted.')
     end
@@ -117,51 +117,95 @@ RSpec.describe Grant, type: :model do
         fail '#TODO: determine whether any associations should also be soft_deleted'
       end
     end
+  end
 
-    context 'published grant' do
-      it 'cannot soft deleted' do
-        expect(grant.deleted?).to be false
-        expect{grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
-        expect{grant.soft_delete!}.to raise_error('Published grant may not be deleted')
-        expect(grant.deleted?).to be false
-      end
+  context 'published open grant' do
+    let(:published_open_grant) { create(:published_open_grant) }
 
-      pending 'published grant with submissions cannot be deleted' do
-        fail '#TODO: grant.submissions.count.zero?'
-      end
+    it 'cannot soft deleted' do
+      expect(published_open_grant.deleted?).to be false
+      expect{published_open_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
+      expect{published_open_grant.soft_delete!}.to raise_error('Published grant may not be deleted')
+      expect(published_open_grant.deleted?).to be false
     end
 
-    context 'demo grant' do
-      let (:demo_grant) { create(:grant, :demo) }
+    it 'is accepting_submissions?' do
+      expect(published_open_grant.accepting_submissions?).to be true
+    end
+  end
 
-      it 'can be soft deleted' do
-        expect(demo_grant.deleted?).to be false
-        expect{demo_grant.is_soft_deletable?}.not_to raise_error
-        expect{demo_grant.soft_delete!}.not_to raise_error
-        expect(demo_grant.deleted?).to be true
-      end
+  context 'published closed grant' do
+    let(:published_closed_grant) { create(:published_closed_grant) }
+
+    it 'cannot soft deleted' do
+      expect(published_closed_grant.deleted?).to be false
+      expect{published_closed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
+      expect{published_closed_grant.soft_delete!}.to raise_error('Published grant may not be deleted')
+      expect(published_closed_grant.deleted?).to be false
     end
 
-    context 'draft grant' do
-      let (:draft_grant) { create(:grant, :draft) }
+    it 'is accepting_submissions?' do
+      expect(published_closed_grant.accepting_submissions?).to be false
+    end
+  end
 
-      it 'can be soft deleted' do
-        expect(draft_grant.deleted?).to be false
-        expect{draft_grant.is_soft_deletable?}.not_to raise_error
-        expect{draft_grant.soft_delete!}.not_to raise_error
-        expect(draft_grant.deleted?).to be true
-      end
+  context 'published not yet  open' do
+    let(:published_not_yet_open) { create(:published_not_yet_open_grant) }
+
+    it 'cannot soft deleted' do
+      expect(published_not_yet_open.deleted?).to be false
+      expect{published_not_yet_open.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
+      expect{published_not_yet_open.soft_delete!}.to raise_error('Published grant may not be deleted')
+      expect(published_not_yet_open.deleted?).to be false
     end
 
-    context 'completed grant' do
-      let (:completed_grant) { create(:grant, :completed) }
+    it 'is accepting_submissions?' do
+      expect(published_not_yet_open.accepting_submissions?).to be false
+    end
+  end
 
-      it 'cannot be soft deleted' do
-        expect(completed_grant.deleted?).to be false
-        expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Completed grant may not be deleted')
-        expect{completed_grant.soft_delete!}.to raise_error('Completed grant may not be deleted')
-        expect(completed_grant.deleted?).to be false
-      end
+  context 'draft grant' do
+    let (:draft_grant) { create(:grant, :draft) }
+
+    it 'can be soft deleted' do
+      expect(draft_grant.deleted?).to be false
+      expect{draft_grant.is_soft_deletable?}.not_to raise_error
+      expect{draft_grant.soft_delete!}.not_to raise_error
+      expect(draft_grant.deleted?).to be true
+    end
+
+    it 'is not accepting_submissions?' do
+      expect(draft_grant.accepting_submissions?).to be false
+    end
+  end
+
+  context 'completed grant' do
+    let (:completed_grant) { create(:grant, :completed) }
+
+    it 'cannot be soft deleted' do
+      expect(completed_grant.deleted?).to be false
+      expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Completed grant may not be deleted')
+      expect{completed_grant.soft_delete!}.to raise_error('Completed grant may not be deleted')
+      expect(completed_grant.deleted?).to be false
+    end
+
+    it 'is not accepting_submissions?' do
+      expect(completed_grant.accepting_submissions?).to be false
+    end
+  end
+
+  context 'demo grant' do
+    let (:demo_grant) { create(:grant, :demo) }
+
+    it 'can be soft deleted' do
+      expect(demo_grant.deleted?).to be false
+      expect{demo_grant.is_soft_deletable?}.not_to raise_error
+      expect{demo_grant.soft_delete!}.not_to raise_error
+      expect(demo_grant.deleted?).to be true
+    end
+
+    it 'is not accepting_submissions?' do
+      expect(demo_grant.accepting_submissions?).to be false
     end
   end
 end

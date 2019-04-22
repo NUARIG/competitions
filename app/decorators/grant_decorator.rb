@@ -3,6 +3,8 @@
 class GrantDecorator < Draper::Decorator
   delegate_all
 
+  # TODO: add context for user roles: https://github.com/drapergem/draper#adding-context
+
   def name_length_class
     case
     when object.name.length > 50
@@ -17,15 +19,15 @@ class GrantDecorator < Draper::Decorator
   end
 
   def apply_menu_link
-    h.content_tag(:li, apply_link, class: 'apply-link', id: "apply-#{h.dom_id(object)}") if can_apply?
+    h.content_tag(:li, apply_link, class: 'apply-link', id: "apply-#{h.dom_id(object)}") if object.accepting_submissions?
   end
 
   def edit_menu_link
-    h.content_tag(:li, edit_link, class: 'edit-link', id: "edit-#{h.dom_id(object)}") if h.user_signed_in? && h.policy(object).edit?
+    h.content_tag(:li, edit_link, class: 'edit-link', id: "edit-#{h.dom_id(object)}") if h.policy(object).edit?
   end
 
   def view_submissions_menu_link
-    h.content_tag(:li, view_submissions_link, class: "submissions-link", id: "submissions-#{h.dom_id(object)}") if h.user_signed_in? && h.policy(object).grant_viewer_access?
+    h.content_tag(:li, view_submissions_link, class: "submissions-link", id: "submissions-#{h.dom_id(object)}") if h.policy(object).grant_viewer_access?
   end
 
   private
@@ -46,12 +48,4 @@ class GrantDecorator < Draper::Decorator
     h.link_to 'View Submissions', h.grant_submissions_path(object), id: "submissions-#{h.dom_id(object)}-link"
   end
 
-  def can_apply?
-    # TODO: Rules for admins, draft, etc
-    object.published? && accepting_submissions?
-  end
-
-  def accepting_submissions?
-    Time.now.between?(object.submission_open_date, object.submission_close_date)
-  end
 end
