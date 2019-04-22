@@ -45,8 +45,15 @@ FactoryBot.define do
 
     trait :closed do
       publish_date           { 3.days.ago }
-      submission_open_date   { 1.day.ago }
-      submission_close_date  { 2.days.ago }
+      submission_open_date   { 2.day.ago }
+      submission_close_date  { 1.days.ago }
+      to_create { |instance| instance.save(validate: false) }
+    end
+
+    trait :not_yet_open do
+      publish_date           { 3.days.ago }
+      submission_open_date   { 1.day.from_now }
+      submission_close_date  { 2.days.from_now }
       to_create { |instance| instance.save(validate: false) }
     end
 
@@ -75,6 +82,7 @@ FactoryBot.define do
     factory :closed_grant_with_users_and_questions,    traits: %i[closed with_questions with_users]
     factory :published_open_grant,                     traits: %i[published open]
     factory :published_closed_grant,                   traits: %i[published closed]
+    factory :published_not_yet_open_grant,             traits: %i[published not_yet_open]
     factory :completed_grant,                          traits: %i[completed closed]
     factory :draft_open_grant,                         traits: %i[draft open]
     factory :draft_closed_grant,                       traits: %i[draft closed]

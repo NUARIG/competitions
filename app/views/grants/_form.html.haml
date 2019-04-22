@@ -13,7 +13,7 @@
         http://example.org/
     .cell.small-12.medium-9
       = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
-.grid-x
+.grid-x.grid-padding-y
   .cell
     = f.label :rfa, 'RFA'
     = f.hidden_field :rfa, id: :grant_rfa
@@ -25,7 +25,7 @@
   .cell.small-12.medium-3
     = f.label :publish_date, 'Publish Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date), required: true, class: 'small-12 medium-6', aria: { 'described-by': 'publishDateHelp' }
+    = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date), required: true, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
     %p.help-text#publishDateHelp
       Once completed, your grant will publish on this date.
 
@@ -35,44 +35,45 @@
   .cell.small-12.medium-3
     = f.label :submission_open_date, 'Open Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :submission_open_date, value: date_mmddyyyy(grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
+    = f.text_field :submission_open_date, value: date_mmddyyyy(grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :submission_close_date, 'Close Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :submission_close_date, value: date_mmddyyyy(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-6'
+    = f.text_field :submission_close_date, value: date_mmddyyyy(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, class: 'small-12 medium-4'
 
 %h3
   Panel and Reviews
-.grid-x
+.grid-x.grid-padding-y
   .cell
     = f.label :review_guidance, 'Review Guidance'
     = f.hidden_field :review_guidance, id: 'grant_review_guidance'
-    %div
-      %trix-editor(input='grant_review_guidance')
+    %trix-editor(input='grant_review_guidance')
 .grid-x
-  .cell
+  .cell.small-12.medium-3
     = f.label :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal', class: 'middle'
-    = f.number_field :max_reviewers_per_proposal, min: 1
+  .cell.small-12.medium-9
+    = f.number_field :max_reviewers_per_proposal, min: 1, class: 'middle small-12 medium-4'
 .grid-x
-  .cell
+  .cell.small-12.medium-3
     = f.label :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer', class: 'middle'
-    = f.number_field :max_proposals_per_reviewer, min: 1
+  .cell.small-12.medium-9
+    = f.number_field :max_proposals_per_reviewer, min: 1, class: 'middle small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_open_date, 'Review Open Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :review_open_date, value: date_mmddyyyy(grant.review_open_date), class: 'small-12 medium-6'
+    = f.text_field :review_open_date, value: date_mmddyyyy(grant.review_open_date), class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_close_date, 'Review Close Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :review_close_date, value: date_mmddyyyy(grant.review_close_date), class: 'small-12 medium-6'
+    = f.text_field :review_close_date, value: date_mmddyyyy(grant.review_close_date), class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :panel_date, 'Panel Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :panel_date, value: date_mmddyyyy(grant.panel_date), class: 'small-12 medium-6'
+    = f.text_field :panel_date, value: date_mmddyyyy(grant.panel_date), class: 'small-12 medium-4'
 .grid-x
   .cell
     = f.label :panel_location, 'Panel Location'
@@ -84,16 +85,16 @@
     = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed'
     - if grant.persisted?
       = f.submit 'Save and Publish', class: 'button'
-      = link_to 'Cancel', grant, class: 'button secondary'
-      = link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?'}, class: 'button alert'
+      = link_to 'Cancel', grant, class: 'button secondary clear'
+      = link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?'}, class: 'button alert clear'
     - else
-      = link_to 'Cancel', grants_path, class: 'button secondary'
+      = link_to 'Cancel', grants_path, class: 'button secondary clear'
 
 :javascript
   $(function() {
   $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
     format: 'mm/dd/yyyy',
-    closeIcon:' X ',
+    closeIcon: ' X ',
     closeButton: true
   });
   });
