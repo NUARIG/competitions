@@ -20,13 +20,14 @@ module Grants
 
       @grant = Grant.new(grant_params)
       @grant.duplicate = true
+      @grant.state     = 'draft'
 
       result = GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @grant)
 
       if result.success?
         # TODO: Confirm messages the user should see
         flash[:notice]  = 'New grant based on ' + @original_grant.name + ' has been saved.'
-        flash[:warning] = 'Review Questions below then click "Save and Complete" to finalize.'
+        flash[:warning] = 'Review Questions below then click "Save and Publish" to finalize.'
         redirect_to grant_questions_url(@grant)
       else
         respond_to do |format|
@@ -34,13 +35,6 @@ module Grants
           format.html { render :new }
         end
       end
-
-# if result.success?
-#   # forward to question edit
-# else
-#   flash[:warning] = @grant.errors.full_messages
-#   render :new
-# end
     end
 
     private

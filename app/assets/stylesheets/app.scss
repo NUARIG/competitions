@@ -1,3 +1,26 @@
 .tabs-title.is-active {
   background-color: #e6e6e6;
 }
+
+main {
+  .menu.simple {
+    margin: 1rem 0;
+  }
+
+  &.grants,
+  &.questions,
+  &.grant_users {
+    // Edit
+    #grant-state {
+      margin: 2rem 0;
+      form.grant-state {
+        display: inline-block;
+        .button {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+

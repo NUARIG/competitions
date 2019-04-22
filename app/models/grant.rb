@@ -68,12 +68,25 @@ class Grant < ApplicationRecord
 
   before_destroy :deletable?
 
+  scope :public_grants,      -> { not_deleted.
+                                    published.
+                                    where(':date BETWEEN
+                                                   publish_date
+                                                 AND
+                                                   submission_close_date',
+                                          date: Date.current).
+                                    by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
   scope :with_questions,     -> { includes :questions }
 
   def is_soft_deletable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
+  end
+
+  def accepting_submissions?
+    published? && DateTime.now.between?(submission_open_date.beginning_of_day,
+                                        submission_close_date.end_of_day)
   end
 
   private
