@@ -30,6 +30,10 @@ class GrantDecorator < Draper::Decorator
     h.content_tag(:li, view_submissions_link, class: "submissions-link", id: "submissions-#{h.dom_id(object)}") if h.policy(object).grant_viewer_access?
   end
 
+  def submission_period
+    "#{submission_open_date} - #{submission_close_date}"
+  end
+
   private
 
   def show_link

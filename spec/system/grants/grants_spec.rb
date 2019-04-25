@@ -39,7 +39,7 @@ RSpec.describe 'Grants', type: :system do
 
       expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
       page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
-      click_button 'Save and Publish'
+      click_button 'Update'
 
       expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
     end
@@ -47,7 +47,7 @@ RSpec.describe 'Grants', type: :system do
     scenario 'versioning tracks whodunnit', versioning: true do
       expect(PaperTrail).to be_enabled
       fill_in 'grant_name', with: 'New_Name'
-      click_button 'Save and Publish'
+      click_button 'Update'
 
       expect(page).to have_content 'Grant was successfully updated.'
       expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
@@ -55,7 +55,7 @@ RSpec.describe 'Grants', type: :system do
 
     scenario 'invalid submission', versioning: true do
       page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
-      click_button 'Save as Draft'
+      click_button 'Update'
       expect(page).to have_content 'Submission close date must be after the opening date for submissions.'
     end
   end
@@ -88,7 +88,6 @@ RSpec.describe 'Grants', type: :system do
 
     scenario 'valid form submission creates constraints and permissions' do
       click_button 'Save as Draft'
-
       grant = Grant.last
       expect(grant.name).to eql(@grant.name)
       expect(page.current_path).to eq(grant_questions_path(grant))
@@ -171,6 +170,7 @@ RSpec.describe 'Grants', type: :system do
       page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
       page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
 
+      byebug
       expect do
         click_button('Save as Draft')
       end.to change{ Grant.count }.by(1).and change{ GrantUser.count}.by(@grant.grant_users.count).and change{ Question.count}.by(@grant.questions.count)
