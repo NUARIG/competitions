@@ -11,7 +11,7 @@ module Grants
       @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
       flash[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
-      flash[:alert]   = 'Please review and update the following information'
+      flash[:alert]   = 'Please review and update the following information.'
     end
 
     def create
@@ -19,8 +19,9 @@ module Grants
       authorize @original_grant, :edit?
 
       @grant = Grant.new(grant_params)
-      @grant.duplicate = true
-      @grant.state     = 'draft'
+      @grant.duplicate       = true
+      @grant.state           = 'draft'
+      @grant.organization_id = current_user.organization_id
 
       result = GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @grant)
 

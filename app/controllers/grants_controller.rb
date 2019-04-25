@@ -39,8 +39,9 @@ class GrantsController < ApplicationController
   # POST /grants
   # POST /grants.json
   def create
-    @grant = Grant.new(grant_params)
     authorize Grant, :create?
+    @grant = Grant.new(grant_params)
+    @grant.organization_id = current_user.organization_id
     set_state
     result = GrantServices::New.call(grant: @grant, user: current_user)
     if result.success?
@@ -109,7 +110,6 @@ class GrantsController < ApplicationController
       :max_proposals_per_reviewer,
       :panel_date,
       :panel_location,
-      :organization_id,
       :draft,
       :duplicate
     )

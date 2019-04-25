@@ -80,15 +80,14 @@
     = f.text_area :panel_location, cols: 15, rows: 5, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
 
 .grid-x
-  = f.hidden_field :organization_id, value: current_user.organization.id
   .actions
-    = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed'
-    - if grant.persisted?
-      = f.submit 'Save and Publish', class: 'button'
-      = link_to 'Cancel', grant, class: 'button secondary clear'
-      = link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?'}, class: 'button alert clear'
-    - else
+    - if grant.new_record? || grant.draft?
+      = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed'
       = link_to 'Cancel', grants_path, class: 'button secondary clear'
+    - else
+      = f.submit 'Update', class: 'button'
+      = link_to 'Cancel', grant, class: 'button secondary clear'
+    = link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?'}, class: 'button alert clear'
 
 :javascript
   $(function() {
