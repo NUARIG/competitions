@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Grant < ApplicationRecord
+  include ActiveModel::Validations::Callbacks
   include SoftDeletable
+  extend FriendlyId
+  friendly_id :slug
 
   attr_accessor :default_set, :duplicate
 
@@ -24,10 +27,31 @@ class Grant < ApplicationRecord
 
   enum state: GRANT_STATES
 
-  validates_presence_of :name
-  validates_presence_of :submission_open_date
-  validates_presence_of :submission_close_date
-  validates_presence_of :publish_date
+  before_destroy :deletable?
+  before_validation :prepare_slug, if: -> { slug.present? }
+
+  validates_presence_of :name,
+                        :slug,
+                        :submission_open_date,
+                        :submission_close_date,
+                        :publish_date
+
+
+  validates_uniqueness_of :slug, case_sensitive: false
+
+  validates      :name, uniqueness: true
+  validates      :slug,
+                 length: { minimum: 3,
+                           maximum: 15 },
+                 format: { with: /\A[a-z0-9]+(?:[-|_][a-z0-9]+)*\z/i,
+                           message: 'may only include letters numbers, dashes and underscores.' }
+
+  validates      :max_reviewers_per_proposal,
+                 numericality: { only_integer: true, greater_than_or_equal_to: 1 },
+                 if: :max_reviewers_per_proposal?
+  validates      :max_proposals_per_reviewer,
+                 numericality: { only_integer: true, greater_than_or_equal_to: 1 },
+                 if: :max_proposals_per_reviewer?
 
   validates_date :publish_date,
                  on: :create,
@@ -51,22 +75,7 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
-  validates :name, uniqueness: true
-  validates :short_name,
-            presence: true, if: -> { name.present? && name.length > 10 },
-            length: { minimum: 3, maximum: 10 },
-            uniqueness: true
-
-  validates :max_reviewers_per_proposal,
-            numericality: { only_integer: true, greater_than_or_equal_to: 1 },
-            if: :max_reviewers_per_proposal?
-  validates :max_proposals_per_reviewer,
-            numericality: { only_integer: true, greater_than_or_equal_to: 1 },
-            if: :max_proposals_per_reviewer?
-
   validate :valid_default_set, on: :create, unless: -> { duplicate.present? }
-
-  before_destroy :deletable?
 
   scope :public_grants,      -> { not_deleted.
                                     published.
@@ -94,6 +103,10 @@ class Grant < ApplicationRecord
   def deletable?
     # TODO: Review destroy / soft delete logic as other models are added
     raise SoftDeleteException.new('Grants must be soft deleted.')
+  end
+
+  def prepare_slug
+    slug.strip!
   end
 
   def valid_default_set

@@ -20,16 +20,16 @@ RSpec.describe 'String Questions', type: :system do
 
     context '#constraints' do
       scenario 'constraints can be edited', versioning: true do
-        visit edit_grant_question_path(@grant.id, @question.id)
+        visit edit_grant_question_path(@grant, @question)
         expect(page).to have_field("constraint-question-#{@min_number_of_characters_constraint.id}-value", with: @min_number_of_characters_constraint.value)
         fill_in("constraint-question-#{@min_number_of_characters_constraint.id}-value", with: '2')
         click_button 'Save'
-        click_link('Edit', href: edit_grant_question_path(@grant.id, @question.id).to_s)
+        click_link('Edit', href: edit_grant_question_path(@grant, @question).to_s)
         expect(page).to have_field("constraint-question-#{@min_number_of_characters_constraint.id}-value", with: '2')
       end
 
       scenario 'minimum and maximum logic is enforced', versioning: true do
-        visit edit_grant_question_path(@grant.id, @question.id)
+        visit edit_grant_question_path(@grant, @question)
         fill_in("constraint-question-#{@min_number_of_characters_constraint.id}-value", with: '200')
         fill_in("constraint-question-#{@max_number_of_characters_constraint.id}-value", with: '100')
         click_button 'Save'
@@ -37,7 +37,7 @@ RSpec.describe 'String Questions', type: :system do
       end
 
       scenario 'values cannot exceed 255', versioning: true do
-        visit edit_grant_question_path(@grant.id, @question.id)
+        visit edit_grant_question_path(@grant, @question)
         fill_in("constraint-question-#{@min_number_of_characters_constraint.id}-value", with: '256')
         click_button 'Save'
         expect(page).to have_content 'Number of characters must be less than 255 characters.'

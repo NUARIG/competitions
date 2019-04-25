@@ -77,11 +77,11 @@ module Grants
     private
 
     def set_grant
-      @grant = Grant.find(params[:grant_id])
+      @grant = Grant.friendly.find(params[:grant_id])
     end
 
     def set_grant_and_grant_users
-      @grant       = Grant.includes(:grant_users).find(params[:grant_id])
+      @grant       = Grant.includes(:grant_users).friendly.find(params[:grant_id])
       @grant_users = @grant.grant_users
     end
 

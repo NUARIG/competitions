@@ -10,7 +10,7 @@ RSpec.describe Submission, type: :model do
   it { is_expected.to respond_to(:award_amount) }
 
   let(:submission) { build(:submission) }
-  let(:submission_for_open_grant) { create(:submission_with_published_open_grant) }
+  let(:submission_for_open_grant) { build(:submission_with_published_open_grant) }
 
   describe '#validations' do
     it 'validates a valid submission' do

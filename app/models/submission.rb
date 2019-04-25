@@ -1,5 +1,5 @@
 class Submission < ApplicationRecord
- #  has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
+ #  has_paper_trail versions: { class_name: 'PaperTrail::SubmissionVersion' }
 
   belongs_to  :user
   belongs_to  :grant
@@ -9,10 +9,8 @@ class Submission < ApplicationRecord
 
   after_initialize :set_default_state, if: :new_record?
 
-  enum state: {
-    draft: 'draft',
-    submitted: 'submitted'
-  }.freeze
+  enum state: { draft: 'draft',
+                submitted: 'submitted' }.freeze
 
   validates_presence_of :user
   validates_presence_of :grant
@@ -27,11 +25,15 @@ class Submission < ApplicationRecord
   # scope :with_grant_questions_and_constraints,  -> { includes(:grant).merge(Grant.with_questions).merge(Question.with_constraints_and_constraint_questions) }
 
   private
+
   def within_submission_dates
-    errors.add(:base, 'The competition is not open.') unless DateTime.now.between?(self.grant.submission_open_date, self.grant.submission_close_date)
+    errors.add(:base, 'The competition is not open.') unless DateTime
+                                                             .now
+                                                             .between?(grant.submission_open_date.beginning_of_day,
+                                                                       grant.submission_close_date.end_of_day)
   end
 
   def set_default_state
-    self.state ||= :draft
+    state ||= :draft
   end
 end

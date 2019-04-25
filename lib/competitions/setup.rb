@@ -65,7 +65,7 @@ module Competitions
                          .first_or_initialize
 
           organization.name       = data[:name]
-          organization.short_name = data[:short_name]
+          organization.slug       = data[:slug]
           organization.url        = data[:url]
           organization.save!
         end
@@ -84,7 +84,7 @@ module Competitions
 
           grant.organization_id            = data[:organization_id]
           grant.name                       = data[:name]
-          grant.short_name                 = data[:short_name]
+          grant.slug                       = data[:slug]
           grant.state                      = data[:state]
           grant.publish_date               = data[:publish_date]
           grant.submission_open_date       = data[:submission_open_date]

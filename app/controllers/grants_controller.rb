@@ -95,7 +95,7 @@ class GrantsController < ApplicationController
   def grant_params
     params.require(:grant).permit(
       :name,
-      :short_name,
+      :slug,
       :state,
       :default_set,
       :publish_date,
@@ -116,7 +116,7 @@ class GrantsController < ApplicationController
   end
 
   def set_grant
-    @grant = Grant.with_organization.find(params[:id])
+    @grant = Grant.with_organization.friendly.find(params[:id])
   end
 
   def set_state

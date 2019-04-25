@@ -71,14 +71,14 @@ RSpec.describe 'GrantUsers', type: :system do
           visit new_grant_grant_user_path(@grant.id)
           select('editor', from:'grant_user[grant_role]')
           click_button 'Save'
-          expect(page).to have_content('User can\'t be blank')
+          expect(page).to have_content('User must be selected.')
         end
 
         scenario 'requires a selected user' do
           visit new_grant_grant_user_path(@grant.id)
           select("#{@unassigned_user.email}", from: 'grant_user[user_id]')
           click_button 'Save'
-          expect(page).to have_content('Grant role can\'t be blank')
+          expect(page).to have_content('Grant role must be selected.')
         end
 
         scenario 'unassigned user can be granted a role' do

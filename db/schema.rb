@@ -88,7 +88,7 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
   create_table "grants", force: :cascade do |t|
     t.bigint "organization_id"
     t.string "name"
-    t.string "short_name"
+    t.string "slug"
     t.string "state"
     t.date "publish_date"
     t.date "submission_open_date"
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
 
   create_table "organizations", force: :cascade do |t|
     t.string "name"
-    t.string "short_name"
+    t.string "slug"
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -5,7 +5,7 @@ require 'support/shared_examples/soft_deletable'
 
 RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:name) }
-  it { is_expected.to respond_to(:short_name) }
+  it { is_expected.to respond_to(:slug) }
   it { is_expected.to respond_to(:state) }
   it { is_expected.to respond_to(:publish_date) }
   it { is_expected.to respond_to(:submission_open_date) }
@@ -42,32 +42,75 @@ RSpec.describe Grant, type: :model do
       end
     end
 
-    context 'name and short_name' do
+    context 'name' do
       it 'requires a name' do
         grant.name = nil
         expect(grant).not_to be_valid
         expect(grant.errors).to include :name
       end
 
-      it 'requires a short_name if name is > 10 characters' do
-        grant.name = 'Not Too Short'
-        grant.short_name = ''
+      it 'requires unique name' do
+        grant.save
+        new_grant = Grant.new(name: grant.name)
+        expect(new_grant).not_to be_valid
+        expect(new_grant.errors.messages[:name]).to eq ['has already been taken']
+      end
+    end
+
+    context 'slug' do
+      it 'requires a slug' do
+        grant.slug = nil
         expect(grant).not_to be_valid
-        expect(grant.errors).to include :short_name
+        expect(grant.errors).to include :slug
       end
 
-      it 'does not require a short_name if name is < 10 characters' do
-        grant.name = 'Too Short'
-        grant.short_name = ''
+      it 'requires unique slug' do
+        grant.save
+        new_grant = Grant.new(name: "New #{grant.name}", slug: grant.slug)
+        expect(new_grant).not_to be_valid
+        expect(new_grant.errors.messages[:slug]).to eq ['has already been taken']
+      end
+
+      it 'requires a slug to be at least 3 characters long' do
+        grant.slug = "ab"
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :slug
+        grant.slug = "abc"
         expect(grant).to be_valid
       end
 
-      it 'requires unique name and short_name' do
+      it 'requires a slug to be at no more than 15 characters long' do
+        grant.slug = "abcdefghijklmnop"
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :slug
+        grant.slug = "abcdefghijklmn0"
+        expect(grant).to be_valid
+      end
+
+      it 'requires case-sensitive slug' do
         grant.save
-        new_grant = Grant.new(name: grant.name, short_name: grant.short_name)
+        new_grant = Grant.new(name: "New #{grant.name}", slug: grant.slug.capitalize)
         expect(new_grant).not_to be_valid
-        expect(new_grant.errors.messages[:name]).to eq ['has already been taken']
-        expect(new_grant.errors.messages[:short_name]).to eq ['has already been taken']
+        expect(new_grant.errors.messages[:slug]).to eq ['has already been taken']
+      end
+
+      it 'trims slug of whitespace before validation' do
+        grant.slug = "  new-slug  "
+        expect(grant).to be_valid
+        grant.save
+        expect(grant.slug).to eql 'new-slug'
+      end
+
+      it 'disallows spaces in slug' do
+        grant.slug = "new grant"
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :slug
+      end
+
+      it 'disallows non-alphanumeric slugs' do
+        grant.slug = "new&grant"
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :slug
       end
     end
 

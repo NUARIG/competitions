@@ -30,7 +30,7 @@ module Grants
     private
 
     def set_grant
-      @grant = Grant.find(params[:grant_id])
+      @grant = Grant.friendly.find(params[:grant_id])
     end
 
     def set_question
@@ -52,6 +52,5 @@ module Grants
         ]
       )
     end
-
   end
 end
