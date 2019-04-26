@@ -2,11 +2,10 @@
 
 module Grants
   class DuplicateController < GrantsController
-    before_action :set_original_grant
+    before_action :set_original_grant, only: :new
     skip_before_action :set_grant
 
     def new
-      @original_grant = Grant.find(params[:grant_id])
       authorize @original_grant, :edit?
       @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
@@ -15,7 +14,7 @@ module Grants
     end
 
     def create
-      @original_grant = Grant.includes([questions: :constraint_questions], :grant_users).find(params[:grant_id])
+      @original_grant = Grant.includes([questions: :constraint_questions], :grant_users).friendly.find(params[:grant_id])
       authorize @original_grant, :edit?
 
       @grant = Grant.new(grant_params)
@@ -42,7 +41,7 @@ module Grants
 
     def set_original_grant
       begin
-        @original_grant = Grant.find(params[:grant_id])
+        @original_grant = Grant.friendly.find(params[:grant_id])
       rescue
         flash[:alert] = 'Grant not found.'
         redirect_to grants_path

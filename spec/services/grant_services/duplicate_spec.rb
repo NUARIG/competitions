@@ -8,7 +8,7 @@ RSpec.describe GrantServices do
       @original_grant = create(:grant, :with_questions, :with_users)
       @new_grant      = create(:grant, duplicate: true,
                                              name: 'New Name',
-                                             short_name: 'NewShort')
+                                             slug: 'NewShort')
       @invalid_grant  = build(:grant, name: '')
     end
 

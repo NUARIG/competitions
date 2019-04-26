@@ -6,13 +6,13 @@
     = f.text_field :name, required: true
 .grid-x
   .cell.small-12
-    = f.label :short_name, 'Short Name'
+    = f.label :slug, 'Short Name'
   .cell.grid-x.small-12
     .cell.small-12.medium-3
       %label.middle
         http://example.org/
     .cell.small-12.medium-9
-      = f.text_field :short_name, required: true, maxlength: 10, class: 'small-12 medium-6'
+      = f.text_field :slug, required: true, maxlength: 10, class: 'small-12 medium-6'
 .grid-x.grid-padding-y
   .cell
     = f.label :rfa, 'RFA'

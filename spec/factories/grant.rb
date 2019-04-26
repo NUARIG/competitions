@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :grant do
     association :organization, factory: :organization
     sequence(:name)             { |n| "Grant Name #{n}" }
-    sequence(:short_name)       { |n| "GN#{n}" }
+    sequence(:slug)             { |n| "GN#{n}" }
     default_set                 { FactoryBot.create(:default_set).id }
     state                       { 'published' }
     publish_date                { Date.current }

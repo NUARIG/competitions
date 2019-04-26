@@ -72,7 +72,7 @@ RSpec.describe 'Grants', type: :system do
       select(@default_set.name, from: 'grant[default_set]')
 
       page.fill_in 'Name', with: @grant.name
-      page.fill_in 'Short Name', with: @grant.short_name
+      page.fill_in 'Short Name', with: @grant.slug
       # TODO: Figure out rspec / trix
       #   page.find('grant_rfa').click.set(@grant.grant_rfa)
       #   page.find('review_guidance').click.set(@grant.review_guidance)
@@ -144,6 +144,7 @@ RSpec.describe 'Grants', type: :system do
       visit edit_grant_path(@grant)
       click_link('Duplicate', href: new_grant_duplicate_path(@grant))
 
+      page.fill_in 'Short Name', with: @grant.slug
       page.fill_in 'Publish Date', with: @grant.publish_date + 1.day
       page.fill_in 'Open Date', with: @grant.submission_open_date + 1.day
       page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
@@ -163,14 +164,13 @@ RSpec.describe 'Grants', type: :system do
       click_link('Duplicate', href: new_grant_duplicate_path(@grant))
 
       page.fill_in 'Name', with: "Updated #{@grant.name}"
-      page.fill_in 'Short Name', with: "#{@grant.name}1"
+      page.fill_in 'Short Name', with: "#{@grant.slug}1"
       page.fill_in 'Publish Date', with: @grant.publish_date + 1.day
       page.fill_in 'Open Date', with: @grant.submission_open_date + 1.day
       page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
       page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
       page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
 
-      byebug
       expect do
         click_button('Save as Draft')
       end.to change{ Grant.count }.by(1).and change{ GrantUser.count}.by(@grant.grant_users.count).and change{ Question.count}.by(@grant.questions.count)

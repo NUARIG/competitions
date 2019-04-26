@@ -26,7 +26,7 @@ module Grants
     end
 
     def set_grant
-      @grant = Grant.not_deleted.find(params[:grant_id])
+      @grant = Grant.not_deleted.friendly.find(params[:grant_id])
     end
   end
 end

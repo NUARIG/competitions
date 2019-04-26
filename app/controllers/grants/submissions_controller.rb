@@ -38,7 +38,7 @@ module Grants
       authorize @submission
       respond_to do |format|
         if @submission.save
-          flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.short_name} was created."
+          flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.name} was created."
           format.html { redirect_to grant_submission_path(@grant, @submission) }
         else
           flash[:alert] = @submission.errors.full_messages
@@ -68,7 +68,7 @@ module Grants
       authorize @submission
       @submission.destroy
       respond_to do |format|
-        flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.short_name} was successfully destroyed."
+        flash[:notice] = "#{@submission.user.name}'s submission for #{@grant.name} was successfully destroyed."
         format.html { redirect_to grant_path(@grant) }
       end
     end
@@ -76,7 +76,7 @@ module Grants
     private
 
     def set_grant
-      @grant = Grant.find(params[:grant_id])
+      @grant = Grant.friendly.find(params[:grant_id])
     end
 
     def set_submission
@@ -96,6 +96,5 @@ module Grants
     def set_state
       @submission.state = params[:draft].present? ? 'draft' : 'submitted'
     end
-
   end
 end

@@ -5,7 +5,7 @@ class CreateGrants < ActiveRecord::Migration[5.2]
     create_table :grants do |t|
       t.references :organization, foreign_key: true
       t.string :name
-      t.string :short_name
+      t.string :slug
       t.string :state
       t.date :publish_date
       t.date :submission_open_date
@@ -22,5 +22,7 @@ class CreateGrants < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    add_index :grants, %i[slug]
   end
 end
