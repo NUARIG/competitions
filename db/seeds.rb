@@ -6,5 +6,8 @@
 Competitions::Setup::Organizations.load_organizations
 Competitions::Setup::Users.load_users
 Competitions::Setup::Constraints.load_constraints
-Competitions::Setup::Grants.load_grants
 Competitions::Setup::DefaultSets.load_default_sets
+Competitions::Setup::Grants.load_grants
+Competitions::Setup::Submissions.load_submissions
+
+

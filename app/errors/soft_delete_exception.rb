@@ -1,0 +1,1 @@
+class SoftDeleteException < Exception; end

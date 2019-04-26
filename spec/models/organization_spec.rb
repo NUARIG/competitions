@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
   it { is_expected.to respond_to(:name) }
-  it { is_expected.to respond_to(:short_name) }
+  it { is_expected.to respond_to(:slug) }
   it { is_expected.to respond_to(:url) }
 
   let(:organization) { FactoryBot.build(:organization) }
@@ -16,10 +16,10 @@ RSpec.describe Organization, type: :model do
       expect(organization.errors).to include :name
     end
 
-    it 'validates presence of short_name' do
-      organization.short_name = nil
+    it 'validates presence of slug' do
+      organization.slug = nil
       expect(organization).not_to be_valid
-      expect(organization.errors).to include :short_name
+      expect(organization.errors).to include :slug
     end
 
     it 'validates presence of url' do
@@ -58,12 +58,12 @@ RSpec.describe Organization, type: :model do
       expect(organization).to be_valid
     end
 
-    it 'validates unique name and short_name' do
+    it 'validates unique name and slug' do
       organization.save
-      new_organization = Organization.new(name: organization.name, short_name: organization.short_name, url: organization.url)
+      new_organization = Organization.new(name: organization.name, slug: organization.slug, url: organization.url)
       expect(new_organization).not_to be_valid
       expect(new_organization.errors).to include :name
-      expect(new_organization.errors).to include :short_name
+      expect(new_organization.errors).to include :slug
     end
   end
 end

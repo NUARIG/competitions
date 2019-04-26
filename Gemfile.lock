@@ -125,6 +125,8 @@ GEM
       railties (>= 3.2, < 6.0)
     foundation-datepicker-rails (0.0.3)
     foundation-rails (6.5.1.0)
+    friendly_id (5.2.5)
+      activerecord (>= 4.0.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     haml (5.0.4)
@@ -376,6 +378,7 @@ DEPENDENCIES
   font-awesome-rails
   foundation-datepicker-rails
   foundation-rails
+  friendly_id (~> 5.2.4)
   haml-rails (~> 1.0)
   jbuilder (~> 2.5)
   jquery-rails

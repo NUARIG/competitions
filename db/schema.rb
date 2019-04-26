@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_05_222413) do
+ActiveRecord::Schema.define(version: 2019_04_01_190322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
     t.string "grant_role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
     t.index ["grant_id"], name: "index_grant_users_on_grant_id"
     t.index ["user_id"], name: "index_grant_users_on_user_id"
   end
@@ -87,14 +88,12 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
   create_table "grants", force: :cascade do |t|
     t.bigint "organization_id"
     t.string "name"
-    t.string "short_name"
+    t.string "slug"
     t.string "state"
-    t.date "initiation_date"
+    t.date "publish_date"
     t.date "submission_open_date"
     t.date "submission_close_date"
     t.text "rfa"
-    t.float "min_budget"
-    t.float "max_budget"
     t.integer "applications_per_user"
     t.text "review_guidance"
     t.integer "max_reviewers_per_proposal"
@@ -105,12 +104,13 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
     t.text "panel_location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
     t.index ["organization_id"], name: "index_grants_on_organization_id"
   end
 
   create_table "organizations", force: :cascade do |t|
     t.string "name"
-    t.string "short_name"
+    t.string "slug"
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -130,13 +130,40 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
   create_table "questions", force: :cascade do |t|
     t.bigint "grant_id"
     t.text "answer_type"
-    t.text "name"
+    t.text "text"
     t.text "help_text"
-    t.text "placeholder_text"
     t.boolean "required"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
     t.index ["grant_id"], name: "index_questions_on_grant_id"
+  end
+
+  create_table "responses", force: :cascade do |t|
+    t.bigint "grant_id"
+    t.bigint "question_id"
+    t.text "type"
+    t.integer "integer_response"
+    t.float "float_response"
+    t.string "string_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_responses_on_grant_id"
+    t.index ["question_id"], name: "index_responses_on_question_id"
+  end
+
+  create_table "submissions", force: :cascade do |t|
+    t.bigint "grant_id"
+    t.bigint "user_id"
+    t.string "project_title"
+    t.string "state"
+    t.float "composite_score_average"
+    t.float "final_impact_score_average"
+    t.float "award_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_submissions_on_grant_id"
+    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -160,5 +187,7 @@ ActiveRecord::Schema.define(version: 2019_03_05_222413) do
   add_foreign_key "grant_users", "grants"
   add_foreign_key "grant_users", "users"
   add_foreign_key "grants", "organizations"
+  add_foreign_key "submissions", "grants"
+  add_foreign_key "submissions", "users"
   add_foreign_key "users", "organizations"
 end

@@ -1,57 +1,44 @@
 - content_for(:page_title, "#{@grant.name}")
 
-.cell
-  %h1
-    = @grant.name
-    %small
-      = @grant.organization.name
-.cell
-  = label_tag :rfa, "RFA"
-  %div
-    = sanitize(@grant.rfa)
-.cell
-  %h3
-    Dates
-.cell
-  = label_tag :initiation_date, 'Initiation Date'
-  = @grant.initiation_date
-.cell
-  = label_tag :submission_open_date, 'Submission Open Date'
-  = @grant.submission_open_date
-.cell
-  = label_tag :submission_close_date, 'Submission Close Date'
-  = @grant.submission_close_date
-.cell
-  %h3
-    Budget
-  .grid-x
-    .cell
-      = label_tag :min_budget, 'Minimum Buget Amount'
-      $
-      = @grant.min_budget
-    .cell
-      = label_tag :max_budget, 'Maximum Buget Amount'
-      $
-      = @grant.max_budget
-.cell
-  %h3
-    Panel and Reviews
-.cell
-  = label_tag :review_guidance, 'Review Guidance'
-  = sanitize(@grant.review_guidance)
-.cell
-  = label_tag :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal'
-  = @grant.max_reviewers_per_proposal
-.cell
-  = label_tag :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer'
-  = @grant.max_proposals_per_reviewer
-.cell
-  = label_tag :panel_date, 'Day of Panel Review'
-  = @grant.panel_date
-.cell
-  = label_tag :panel_location, 'Panel Location'
-  = @grant.panel_location
-.cell
-  = link_to 'Edit', edit_grant_path(@grant), id: "grant-#{@grant.id}-edit" if policy(@grant).edit?
-  = ' | ' if policy(@grant).edit?
-  = link_to 'Back', grants_path if policy(@grant).destroy?
+.grid-x.grid-margin-x
+  .small-12.cell#title
+    %h1.name{class: @grant.name_length_class}
+      = @grant.name
+      %small
+        = @grant.organization.name
+
+.grid-x.grid-margin-x
+  %aside.small-12.medium-3.cell
+    .card#grant-dates
+      %h4.card-divider
+        Dates
+      .card-section
+        %dl
+          %dt
+            Publish Date:
+          %dd
+            = @grant.publish_date
+          %dt
+            Submission Open Date:
+          %dd
+            = @grant.submission_open_date
+          %dt.secondary
+            Submission Close Date:
+          %dd
+            = @grant.submission_close_date
+  .small-12.medium-9.cell#rfa
+    %h4
+      RFA
+    = @grant.rfa.html_safe
+
+    %hr
+
+    %ul.menu.simple#user-links
+      = @grant.apply_menu_link
+      %li
+        = link_to 'View All Grants', root_path
+
+    %ul.menu.simple#admin-links
+      = @grant.edit_menu_link
+      = @grant.view_submissions_menu_link
+

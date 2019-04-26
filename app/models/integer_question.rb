@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class IntegerQuestion < Question
-  validate :valid_maximum_and_minimum_values
+  validate :valid_maximum_and_minimum_values, on: :update
 
   def self.model_name
     Question.model_name

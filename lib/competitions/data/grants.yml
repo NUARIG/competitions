@@ -1,14 +1,13 @@
 research:
+  default_set: 1
   organization_id: 1
   name: 'Model NIH Research Grant'
-  short_name: 'model-nih'
+  slug: 'model-nih'
   state: 'demo'
-  initiation_date: '2020-03-01 06:00:00'
+  publish_date: '2020-03-01 06:00:00'
   submission_open_date: '2020-03-02 06:00:00'
   submission_close_date: '2020-03-16 06:00:00'
   rfa: 'Research lorem Ipsum dolor sit'
-  min_budget: 0
-  max_budget: 1000
   applications_per_user: 1
   review_guidance: 'Research consectetur adipiscing elit, sed do eiusmod tempor'
   max_reviewers_per_proposal: 1
@@ -24,17 +23,51 @@ research:
     role2:
       user_id: 3
       grant_role: 'viewer'
+  questions:
+    abstract:
+      grant_id: 1
+      answer_type: 'TextQuestion'
+      text: 'Abstract'
+      help_text: ''
+      required: true
+      constraints:
+        min_length:
+          type: 'TextConstraint'
+          name: 'minimum_number_of_characters'
+          value_type: 'integer'
+          value: 0
+        max_length:
+          type: 'TextConstraint'
+          name: 'maximum_number_of_characters'
+          value_type: 'integer'
+          value: 1000
+    budget:
+      grant_id: 1
+      answer_type: 'IntegerQuestion'
+      text: 'Budget'
+      help_text: ''
+      required: true
+      constraints:
+        min_value:
+          type: 'IntegerConstraint'
+          name: 'minimum_value'
+          value_type: 'integer'
+          value: 0
+        max_value:
+          type: 'IntegerConstraint'
+          name: 'maximum_value'
+          value_type: 'integer'
+          value: 1000
 kl2:
+  default_set: 2
   organization_id: 1
   name: 'Model KL2 Grant'
-  short_name: 'model-kl2'
+  slug: 'model-kl2'
   state: 'demo'
-  initiation_date: '2020-03-01 06:00:00'
+  publish_date: '2020-03-01 06:00:00'
   submission_open_date: '2020-03-02 06:00:00'
   submission_close_date: '2020-03-16 06:00:00'
   rfa: 'KL2 lorem Ipsum dolor sit'
-  min_budget: 0
-  max_budget: 50000
   applications_per_user: 1
   review_guidance: 'KL2 consectetur adipiscing elit, sed do eiusmod tempor'
   max_reviewers_per_proposal: 1
@@ -50,17 +83,51 @@ kl2:
     role2:
       user_id: 2
       grant_role: 'viewer'
+  questions:
+    direct_project_cost:
+      grant_id: 2
+      answer_type: 'FloatQuestion'
+      text: 'Direct Project Cost'
+      help_text: 'Between $5000 and $50,000'
+      required: true
+      constraints:
+        min_value:
+          type: 'IntegerConstraint'
+          name: 'minimum_value'
+          value_type: 'integer'
+          value: 5000
+        max_value:
+          type: 'IntegerConstraint'
+          name: 'maximum_value'
+          value_type: 'integer'
+          value: 50000
+    era_commons:
+      grant_id: 2
+      answer_type: 'StringQuestion'
+      text: 'Your eRA Commons Name'
+      help_text: ''
+      required: true
+      constraints:
+        min_length:
+          type: 'StringConstraint'
+          name: 'minimum_number_of_characters'
+          value_type: 'integer'
+          value: 10
+        max_length:
+          type: 'StringConstraint'
+          name: 'maximum_number_of_characters'
+          value_type: 'integer'
+          value: 100
 research2:
+  default_set: 1
   organization_id: 2
   name: 'Sample NIH Rresearch Grant'
-  short_name: 'sample'
-  state: 'complete'
-  initiation_date: '2020-04-01 06:00:00'
+  slug: 'sample'
+  state: 'completed'
+  publish_date: '2020-04-01 06:00:00'
   submission_open_date: '2020-04-02 06:00:00'
   submission_close_date: '2020-04-16 06:00:00'
   rfa: 'Lorem Ipsum dolor sit'
-  min_budget: 1000
-  max_budget: 10000
   applications_per_user: 1
   review_guidance: 'Consectetur adipiscing elit, sed do eiusmod tempor'
   max_reviewers_per_proposal: 1

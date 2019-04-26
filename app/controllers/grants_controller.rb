@@ -3,20 +3,23 @@
 class GrantsController < ApplicationController
   include WithGrantRoles
 
-  before_action :set_grant, except: %i[index]
-  before_action :set_state, only: %i[create edit update]
+  before_action :set_grant,    except: %i[index new create]
+  before_action :set_state,    only: %i[update]
 
   # GET /grants
   # GET /grants.json
   def index
-    @grants = Grant.by_initiation_date.with_organization.all
+    @grants = Grant.not_deleted.by_publish_date.with_organization
     authorize @grants
   end
 
   # GET /grants/1
   # GET /grants/1.json
   def show
-    authorize @grant
+    if authorize @grant
+      draft_banner
+    end
+    @grant = GrantDecorator.new(@grant)
   end
 
   # GET /grants/new
@@ -28,21 +31,28 @@ class GrantsController < ApplicationController
   # GET /grants/1/edit
   def edit
     @current_user_role = current_user_grant_permission
-    authorize @grant
+    if authorize @grant
+      draft_banner
+    end
   end
 
   # POST /grants
   # POST /grants.json
   def create
+    authorize Grant, :create?
     @grant = Grant.new(grant_params)
-    authorize @grant
-    respond_to do |format|
-      if @grant.save
-        format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully created.' }
-        format.json { render :show, status: :created, location: @grant }
-      else
+    @grant.organization_id = current_user.organization_id
+    set_state
+    result = GrantServices::New.call(grant: @grant, user: current_user)
+    if result.success?
+      # TODO: Confirm messages the user should see
+      flash[:notice]  = 'Grant saved.'
+      flash[:warning] = 'Review Questions below then click "Save and Publish" to finalize.'
+      redirect_to grant_questions_url(@grant)
+    else
+      respond_to do |format|
+        flash[:alert] = result.messages
         format.html { render :new }
-        format.json { render json: @grant.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -56,6 +66,7 @@ class GrantsController < ApplicationController
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
         format.json { render :show, status: :ok, location: @grant }
       else
+        flash[:alert] = @grant.errors.full_messages
         format.html { render :edit }
         format.json { render json: @grant.errors, status: :unprocessable_entity }
       end
@@ -66,31 +77,28 @@ class GrantsController < ApplicationController
   # DELETE /grants/1.json
   def destroy
     authorize @grant
-    @grant.destroy
+    #@grant.soft_delete! # calling concern method
+    result = GrantServices::SoftDelete.call(grant: @grant)
     respond_to do |format|
-      format.html { redirect_to grants_url, notice: 'Grant was successfully destroyed.' }
-      format.json { head :no_content }
+      if result.success?
+        format.html { redirect_to grants_url, notice: 'Grant was successfully deleted.' }
+      else
+        flash[:alert] = result.message
+        format.html { redirect_back(fallback_location: edit_grant_url(@grant)) }
+      end
     end
   end
 
   private
 
-  def set_grant
-    @grant = Grant.with_organization.find(params[:id])
-  end
-
-  def set_grant_and_questions
-    @grant     = Grant.with_organization.with_questions.find(params[:id])
-    @questions = @grant.questions
-  end
-
   # Never trust parameters from the scary internet, only allow the white list through.
   def grant_params
     params.require(:grant).permit(
       :name,
-      :short_name,
+      :slug,
       :state,
-      :initiation_date,
+      :default_set,
+      :publish_date,
       :submission_open_date,
       :submission_close_date,
       :rfa,
@@ -102,12 +110,20 @@ class GrantsController < ApplicationController
       :max_proposals_per_reviewer,
       :panel_date,
       :panel_location,
-      :organization_id,
-      :draft
+      :draft,
+      :duplicate
     )
   end
 
+  def set_grant
+    @grant = Grant.with_organization.friendly.find(params[:id])
+  end
+
   def set_state
-    @grant.state = params[:draft].present? ? 'draft' : 'complete'
+    @grant.state = params[:draft].present? ? 'draft' : 'published'
+  end
+
+  def draft_banner
+    flash[:warning] = '<strong>Draft warning</strong>'.html_safe if @grant.draft?
   end
 end

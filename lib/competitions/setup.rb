@@ -6,8 +6,9 @@ module Competitions
       Competitions::Setup::Organizations.load_organizations
       Competitions::Setup::Users.load_users
       Competitions::Setup::Constraints.load_constraints
-      Competitions::Setup::Grants.load_grants
       Competitions::Setup::DefaultSets.load_default_sets
+      Competitions::Setup::Grants.load_grants
+      Competitions::Setup::Submissions.load_submissions
     end
 
     module_function
@@ -64,7 +65,7 @@ module Competitions
                          .first_or_initialize
 
           organization.name       = data[:name]
-          organization.short_name = data[:short_name]
+          organization.slug       = data[:slug]
           organization.url        = data[:url]
           organization.save!
         end
@@ -83,14 +84,12 @@ module Competitions
 
           grant.organization_id            = data[:organization_id]
           grant.name                       = data[:name]
-          grant.short_name                 = data[:short_name]
+          grant.slug                       = data[:slug]
           grant.state                      = data[:state]
-          grant.initiation_date            = data[:initiation_date]
+          grant.publish_date               = data[:publish_date]
           grant.submission_open_date       = data[:submission_open_date]
           grant.submission_close_date      = data[:submission_close_date]
           grant.rfa                        = data[:rfa]
-          grant.min_budget                 = data[:min_budget]
-          grant.max_budget                 = data[:max_budget]
           grant.applications_per_user      = data[:applications_per_user]
           grant.review_guidance            = data[:review_guidance]
           grant.max_reviewers_per_proposal = data[:max_reviewers_per_proposal]
@@ -99,12 +98,21 @@ module Competitions
           grant.review_close_date          = data[:review_close_date]
           grant.panel_date                 = data[:panel_date]
           grant.panel_location             = data[:panel_location]
+          grant.default_set                = data[:default_set]
 
           grant.save!
           grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
 
           unless data[:grant_users].nil?
             load_grant_users(data[:grant_users], grant.id)
+          end
+
+          next unless data[:questions].present? && data[:default_set].present?
+
+          data[:questions].each do |_, question|
+            DefaultSetQuestion
+              .find_or_create_by(default_set_id: data[:default_set],
+                                 question_id: load_question(question, grant.id).id)
           end
         end
       end
@@ -119,34 +127,14 @@ module Competitions
           grant_user.save!
         end
       end
-    end
 
-    module DefaultSets
-      def self.load_default_sets
-        default_sets = Competitions::Setup.parse_yml_file('default_sets')
-        default_sets.each do |_, data|
-          set = DefaultSet.where(name: data[:name]).first_or_initialize
-          set.name = data[:name]
-          set.save!
-
-          next unless data[:questions].any?
-
-          data[:questions].each do |_, q|
-            DefaultSetQuestion
-              .find_or_create_by(default_set_id: set.id,
-                                 question_id: load_question(q).id)
-          end
-        end
-      end
-
-      def self.load_question(q)
+      def self.load_question(q, grant_id)
         question = Question
-                   .where(grant_id: q[:grant_id], name: q[:name])
+                   .where(grant_id: grant_id, text: q[:text])
                    .first_or_initialize
-        question.name             = q[:name]
+        question.text    = q[:text]
         question.answer_type      = q[:answer_type]
         question.help_text        = q[:help_text]
-        question.placeholder_text = q[:placeholder_text]
         question.required         = q[:required]
         question.save!
 
@@ -172,6 +160,34 @@ module Competitions
 
         constraint_question.value = constraint[:value]
         constraint_question.save!
+      end
+    end
+
+    module Submissions
+      def self.load_submissions
+        submissions = Competitions::Setup.parse_yml_file('submissions')
+        submissions.each do |_, data|
+          submission = Submission
+                  .where(project_title: data[:project_title])
+                  .first_or_initialize
+
+          submission.grant_id       = data[:grant_id]
+          submission.user_id        = data[:user_id]
+          submission.project_title  = data[:project_title]
+          submission.state          = data[:state]
+          submission.save(validate: false)
+        end
+      end
+    end
+
+    module DefaultSets
+      def self.load_default_sets
+        default_sets = Competitions::Setup.parse_yml_file('default_sets')
+        default_sets.each do |_, data|
+          set = DefaultSet.where(name: data[:name]).first_or_initialize
+          set.name = data[:name]
+          set.save!
+        end
       end
     end
   end

@@ -33,5 +33,5 @@ class User < ApplicationRecord
 
   def set_default_organization_role
     self.organization_role ||= :none
-   end
+  end
 end

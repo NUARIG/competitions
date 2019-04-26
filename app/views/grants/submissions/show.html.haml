@@ -1,0 +1,26 @@
+- content_for(:page_title, "#{@submission.user.name}")
+
+.cell
+  %h1
+    = @submission.project_title
+    %small
+      = @submission.user.name
+.cell
+  %table
+    %thead
+      %tr
+        %th
+          Questions
+        %th
+          Answers
+    %tbody
+      - @submission.grant.questions.each do |question|
+        %tr
+          %td= question.text
+          %td= 'Replace with Responses'
+.cell
+= link_to 'Edit', edit_grant_submission_path(@grant, @submission), id: "submission-#{@submission.id}-edit" if policy(@submission).edit?
+= ' | ' if policy(@submission).edit?
+= link_to 'Delete', grant_submission_path(@grant, @submission), method: :delete, data: { confirm: 'Are you sure?' } if policy(@submission).destroy?
+= ' | ' if policy(@submission).edit?
+= link_to 'Back', grant_submissions_path(@grant)

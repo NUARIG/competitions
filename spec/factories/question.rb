@@ -4,36 +4,46 @@ FactoryBot.define do
   factory :string_question, class: 'Question' do
     association      :grant, factory: :grant
     answer_type      { 'StringQuestion' }
-    name             { 'Project Title' }
+    text             { 'Project Title' }
     help_text        { 'The title of your project' }
-    placeholder_text { '' }
     required         { true }
+
+    trait :with_constraints do
+      after(:create) do |string_question|
+        create(:string_minimum_number_of_characters_constraint_question, question: string_question)
+        create(:string_maximum_number_of_characters_constraint_question, question: string_question)
+      end
+    end
   end
 
   factory :integer_question, class: 'Question' do
     association      :grant, factory: :grant
     answer_type      { 'IntegerQuestion' }
-    name             { 'Team Size' }
+    text             { 'Team Size' }
     help_text        { 'How many people will be working on this project?' }
-    placeholder_text { 'Including yourself' }
     required         { false }
+
+    trait :with_constraints do
+      after(:create) do |string_question|
+        create(:integer_minimum_value_constraint_question, question: string_question)
+        create(:integer_maximum_value_constraint_question, question: string_question)
+      end
+    end
   end
 
   factory :float_question, class: 'Question' do
     association      :grant, factory: :grant
     answer_type      { 'FloatQuestion' }
-    name             { 'Budget Amount' }
+    text             { 'Budget Amount' }
     help_text        { 'Your budget amount?' }
-    placeholder_text { '0.00' }
     required         { false }
   end
 
   factory :text_question, class: 'Question' do
     association      :grant, factory: :grant
     answer_type      { 'TextQuestion' }
-    name             { 'Abstract' }
+    text             { 'Abstract' }
     help_text        { 'Description of your project' }
-    placeholder_text { '' }
     required         { true }
   end
 end

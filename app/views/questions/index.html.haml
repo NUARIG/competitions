@@ -1,11 +1,9 @@
 %table
   %thead
     %tr
-      %th Field
       %th Grant
-      %th Name
+      %th Text
       %th Help text
-      %th Placeholder text
       %th Required
       %th
       %th
@@ -14,11 +12,9 @@
   %tbody
     - @questions.each do |question|
       %tr
-        %td= question.field
         %td= question.grant.name
-        %td= question.name
+        %td= question.text
         %td= question.help_text
-        %td= question.placeholder_text
         %td= (fa_icon('fa-check-square', text: "Yes")) if question.required?
         %td= link_to 'Show', question
         %td= link_to 'Edit', edit_question_path(question)
