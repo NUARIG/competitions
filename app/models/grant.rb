@@ -36,22 +36,27 @@ class Grant < ApplicationRecord
                         :submission_close_date,
                         :publish_date
 
+  validates_format_of :slug,
+                      with: /\A[a-z0-9]+(?:[-|_][a-z0-9]+)*\z/i,
+                      message: 'may only include letters numbers, dashes and underscores.'
+  validates_format_of :slug,
+                      with: /[a-z]{1,}/i,
+                      message: 'must include at least one letter.'
 
+  validates_length_of :slug, in: 3..15
+
+  validates_numericality_of :max_reviewers_per_proposal,
+                            only_integer: true,
+                            greater_than_or_equal_to: 1,
+                            if: :max_reviewers_per_proposal?
+
+  validates_numericality_of :max_proposals_per_reviewer,
+                            only_integer: true,
+                            greater_than_or_equal_to: 1,
+                            if: :max_proposals_per_reviewer?
+
+  validates_uniqueness_of :name
   validates_uniqueness_of :slug, case_sensitive: false
-
-  validates      :name, uniqueness: true
-  validates      :slug,
-                 length: { minimum: 3,
-                           maximum: 15 },
-                 format: { with: /\A[a-z0-9]+(?:[-|_][a-z0-9]+)*\z/i,
-                           message: 'may only include letters numbers, dashes and underscores.' }
-
-  validates      :max_reviewers_per_proposal,
-                 numericality: { only_integer: true, greater_than_or_equal_to: 1 },
-                 if: :max_reviewers_per_proposal?
-  validates      :max_proposals_per_reviewer,
-                 numericality: { only_integer: true, greater_than_or_equal_to: 1 },
-                 if: :max_proposals_per_reviewer?
 
   validates_date :publish_date,
                  on: :create,

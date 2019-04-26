@@ -112,6 +112,12 @@ RSpec.describe Grant, type: :model do
         expect(grant).not_to be_valid
         expect(grant.errors).to include :slug
       end
+
+      it 'disallows numeric slugs' do
+        grant.slug = "123456"
+        expect(grant).not_to be_valid
+        expect(grant.errors).to include :slug
+      end
     end
 
     context 'dates' do
