@@ -37,6 +37,7 @@ RSpec.describe Grant, type: :model do
 
       it 'does not require a default_set on update' do
         grant.save
+
         grant.default_set = nil
         expect(grant).to be_valid
       end
@@ -71,19 +72,19 @@ RSpec.describe Grant, type: :model do
         expect(new_grant.errors.messages[:slug]).to eq ['has already been taken']
       end
 
-      it 'requires a slug to be at least 3 characters long' do
-        grant.slug = "ab"
+      it "requires a slug to be at least #{Grant::SLUG_MIN_LENGTH} characters long" do
+        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MIN_LENGTH - 1)
         expect(grant).not_to be_valid
         expect(grant.errors).to include :slug
-        grant.slug = "abc"
+        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MIN_LENGTH)
         expect(grant).to be_valid
       end
 
-      it 'requires a slug to be at no more than 15 characters long' do
-        grant.slug = "abcdefghijklmnop"
+      it "requires a slug to be at no more than #{Grant::SLUG_MAX_LENGTH} characters long" do
+        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MAX_LENGTH + 1)
         expect(grant).not_to be_valid
         expect(grant.errors).to include :slug
-        grant.slug = "abcdefghijklmn0"
+        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MAX_LENGTH)
         expect(grant).to be_valid
       end
 
@@ -156,7 +157,7 @@ RSpec.describe Grant, type: :model do
     end
   end
 
-    describe 'SoftDeletable' do
+  describe 'SoftDeletable' do
     it 'cannot be destroyed' do
       expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be soft deleted.')
     end

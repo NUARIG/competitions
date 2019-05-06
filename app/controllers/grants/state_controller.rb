@@ -12,9 +12,8 @@ module Grants
           format.html { redirect_back fallback_location: grant_path(@grant),
                         notice: "Publish status was changed to #{@grant.state}." }
         else
-          # TODO: test this
           format.html { redirect_back fallback_location: grant_path(@grant),
-                        warning: 'Status change failed.' }
+                        alert: "Status change failed. This grant is still in #{@grant.state} mode." }
         end
       end
     end

@@ -26,6 +26,12 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Publish status was changed to draft.'
       end
+
+      scenario 'displays error on failure' do
+        allow_any_instance_of(Grant).to receive(:update).and_return(false)
+        click_button 'Switch to Draft'
+        expect(page).to have_content 'Status change failed. This grant is still in published mode.'
+      end
     end
 
     context 'grant editor user' do
@@ -43,6 +49,12 @@ RSpec.describe 'Grants', type: :system do
         click_button 'Switch to Draft'
         expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Publish status was changed to draft.'
+      end
+
+      scenario 'displays error on failure' do
+        allow_any_instance_of(Grant).to receive(:update).and_return(false)
+        click_button 'Switch to Draft'
+        expect(page).to have_content 'Status change failed. This grant is still in published mode.'
       end
     end
   end
@@ -71,11 +83,10 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_content 'Publish status was changed to published.'
       end
 
-      pending 'failure' do
-        fail 'add failed status change'
+      scenario 'displays error on failure' do
+        allow_any_instance_of(Grant).to receive(:update).and_return(false)
         click_button 'Publish this Grant'
-        expect(@draft_grant).to receive(:update).and_return false
-        expect(page).to have_content 'Current Publish Status: Draft'
+        expect(page).to have_content 'Status change failed. This grant is still in draft mode.'
       end
     end
 
@@ -94,6 +105,12 @@ RSpec.describe 'Grants', type: :system do
         click_button 'Publish this Grant'
         expect(page).to have_content 'Current Publish Status: Published'
         expect(page).to have_content 'Publish status was changed to published.'
+      end
+
+      scenario 'displays error on failure' do
+        allow_any_instance_of(Grant).to receive(:update).and_return(false)
+        click_button 'Publish this Grant'
+        expect(page).to have_content 'Status change failed. This grant is still in draft mode.'
       end
     end
   end

@@ -17,18 +17,23 @@ class Grant < ApplicationRecord
 
   accepts_nested_attributes_for :questions
 
+  SLUG_MIN_LENGTH = 3
+  SLUG_MAX_LENGTH = 15
+
   GRANT_STATES = { demo:      'demo',      # TODO: define specifics of each
                    draft:     'draft',
                    published: 'published', # e.g. can be opened and may be in process
                    completed: 'completed'  # e.g. awarded and closed
                  }.freeze
 
+
   SOFT_DELETABLE_STATES = %w[demo draft]
 
   enum state: GRANT_STATES
 
-  before_destroy :deletable?
+  before_destroy    :deletable?
   before_validation :prepare_slug, if: -> { slug.present? }
+  before_validation :set_default_state, if: :new_record?
 
   validates_presence_of :name,
                         :slug,
@@ -38,12 +43,16 @@ class Grant < ApplicationRecord
 
   validates_format_of :slug,
                       with: /\A[a-z0-9]+(?:[-|_][a-z0-9]+)*\z/i,
-                      message: 'may only include letters numbers, dashes and underscores.'
+                      message: 'may only include letters, numbers, dashes and underscores.'
   validates_format_of :slug,
                       with: /[a-z]{1,}/i,
                       message: 'must include at least one letter.'
 
-  validates_length_of :slug, in: 3..15
+  validates_inclusion_of :state, in: GRANT_STATES.values,
+                                 message: 'is not a valid state.'
+
+
+  validates_length_of :slug, in: Grant::SLUG_MIN_LENGTH..Grant::SLUG_MAX_LENGTH
 
   validates_numericality_of :max_reviewers_per_proposal,
                             only_integer: true,
@@ -104,6 +113,10 @@ class Grant < ApplicationRecord
   end
 
   private
+
+  def set_default_state
+    self.state ||= Grant::GRANT_STATES[:draft]
+  end
 
   def deletable?
     # TODO: Review destroy / soft delete logic as other models are added
