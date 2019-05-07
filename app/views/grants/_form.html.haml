@@ -12,7 +12,7 @@
       %label.middle
         http://example.org/
     .cell.small-12.medium-9
-      = f.text_field :slug, required: true, maxlength: 10, class: 'small-12 medium-6'
+      = f.text_field :slug, required: true, maxlength: Grant::SLUG_MAX_LENGTH, class: 'small-12 medium-6'
 .grid-x.grid-padding-y
   .cell
     = f.label :rfa, 'RFA'

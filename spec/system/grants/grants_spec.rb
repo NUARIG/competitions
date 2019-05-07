@@ -63,9 +63,9 @@ RSpec.describe 'Grants', type: :system do
   describe 'New', js: true do
     before(:each) do
       @default_set  = create(:default_set, :with_questions)
-      @grant        = build(:grant)
+      @grant        = build(:new_grant)
       @user         = create(:user, organization: @grant.organization,
-                                               organization_role: 'admin')
+                                    organization_role: 'admin')
       login_as(@user)
 
       visit new_grant_path

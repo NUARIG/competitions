@@ -4,7 +4,6 @@ class GrantsController < ApplicationController
   include WithGrantRoles
 
   before_action :set_grant,    except: %i[index new create]
-  before_action :set_state,    only: %i[update]
 
   # GET /grants
   # GET /grants.json
@@ -42,12 +41,11 @@ class GrantsController < ApplicationController
     authorize Grant, :create?
     @grant = Grant.new(grant_params)
     @grant.organization_id = current_user.organization_id
-    set_state
     result = GrantServices::New.call(grant: @grant, user: current_user)
     if result.success?
       # TODO: Confirm messages the user should see
       flash[:notice]  = 'Grant saved.'
-      flash[:warning] = 'Review Questions below then click "Save and Publish" to finalize.'
+      flash[:warning] = 'Review Questions below then click "Publish this Grant" to finalize.'
       redirect_to grant_questions_url(@grant)
     else
       respond_to do |format|
@@ -96,7 +94,6 @@ class GrantsController < ApplicationController
     params.require(:grant).permit(
       :name,
       :slug,
-      :state,
       :default_set,
       :publish_date,
       :submission_open_date,
@@ -110,17 +107,12 @@ class GrantsController < ApplicationController
       :max_proposals_per_reviewer,
       :panel_date,
       :panel_location,
-      :draft,
       :duplicate
     )
   end
 
   def set_grant
     @grant = Grant.with_organization.friendly.find(params[:id])
-  end
-
-  def set_state
-    @grant.state = params[:draft].present? ? 'draft' : 'published'
   end
 
   def draft_banner
