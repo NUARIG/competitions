@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GrantUserPolicy < GrantPolicy
+class GrantPermissionPolicy < GrantPolicy
   def index?
     grant_viewer_access?
   end
@@ -19,7 +19,7 @@ class GrantUserPolicy < GrantPolicy
 
   private
 
-  def grant_user
+  def grant_permission
     record
   end
 

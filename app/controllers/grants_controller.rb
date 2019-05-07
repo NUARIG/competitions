@@ -46,7 +46,7 @@ class GrantsController < ApplicationController
       # TODO: Confirm messages the user should see
       flash[:notice]  = 'Grant saved.'
       flash[:warning] = 'Review the information below then click "Publish this Grant" to finalize.'
-      redirect_to grant_grant_users_url(@grant)
+      redirect_to grant_grant_permissions_url(@grant)
     else
       respond_to do |format|
         flash[:alert] = result.messages

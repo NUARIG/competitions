@@ -23,20 +23,20 @@ RSpec.describe GrantServices do
         expect(result.success?).to eql(false)
       end
 
-      it 'duplicates grant_users for valid new grant' do
-        new_grant_user_count = @original_grant.grant_users.count
+      it 'duplicates grant_permissions for valid new grant' do
+        new_grant_permission_count = @original_grant.grant_permissions.count
 
         expect do
           GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @new_grant)
-        end.to (change{GrantUser.count}.by (new_grant_user_count))
+        end.to (change{GrantPermission.count}.by (new_grant_permission_count))
       end
     end
 
     context 'invalid grant' do
-      it 'does not duplicate grant_users' do
+      it 'does not duplicate grant_permissions' do
         result =  GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @invalid_grant)
         expect(result.success?).to eql(false)
-        expect(@invalid_grant.grant_users.count).to eql(0)
+        expect(@invalid_grant.grant_permissions.count).to eql(0)
       end
     end
   end

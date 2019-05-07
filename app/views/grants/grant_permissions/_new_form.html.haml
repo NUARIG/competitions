@@ -2,10 +2,10 @@
   = f.label :user_id, 'Grant User\'s Email'
   = f.collection_select :user_id, users, :id, :email, prompt: true
 .grid-x
-  = f.label :grant_role, 'Grant Role'
-  = f.select :grant_role, grant_user_grant_role_select_options, include_blank: 'Please select'
+  = f.label :role, 'Grant Role'
+  = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
 .grid-x
   .actions
     = f.hidden_field :grant_id, value: grant.id
     = f.submit 'Save', class: 'button'
-    = link_to 'Cancel', grant_grant_users_path, class: 'button secondary'
+    = link_to 'Cancel', grant_grant_permissions_path, class: 'button secondary'

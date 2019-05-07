@@ -11,8 +11,8 @@ class Grant < ApplicationRecord
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
   belongs_to  :organization
-  has_many    :grant_users
-  has_many    :users, through: :grant_users
+  has_many    :grant_permissions
+  has_many    :users, through: :grant_permissions
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -133,7 +133,7 @@ class Grant < ApplicationRecord
   def process_association_soft_delete
     ActiveRecord::Base.transaction do
       # TODO: determine whether any/all of these should these be called
-      # grant_users.update_all(deleted_at: Time.now)
+      # grant_permissions.update_all(deleted_at: Time.now)
       #       reviews
       #       reviewers
       #       panel

@@ -22,7 +22,7 @@ RSpec.describe Grants::PublicDecorator do
 
   context 'admin user' do
     before(:each) do
-      @admin_user = @open_grant.grant_users.grant_role_admin.first.user
+      @admin_user = @open_grant.grant_permissions.role_admin.first.user
       sign_in @admin_user
       @decorated_open_grant = Grants::PublicDecorator.decorate(@open_grant)
     end

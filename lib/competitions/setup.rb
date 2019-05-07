@@ -82,20 +82,20 @@ module Competitions
           grant.save!
           grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
 
-          unless data[:grant_users].nil?
-            load_grant_users(data[:grant_users], grant.id)
+          unless data[:grant_permissions].nil?
+            load_grant_permissions(data[:grant_permissions], grant.id)
           end
         end
       end
 
-      def self.load_grant_users(grant_users, grant_id)
-        grant_users.each do |_, gu|
-          grant_user = GrantUser
+      def self.load_grant_permissions(grant_permissions, grant_id)
+        grant_permissions.each do |_, gu|
+          grant_permission = GrantPermission
                        .where(grant_id: grant_id, user_id: gu[:user_id])
                        .first_or_initialize
 
-          grant_user.grant_role = gu[:grant_role]
-          grant_user.save!
+          grant_permission.role = gu[:role]
+          grant_permission.save!
         end
       end
 

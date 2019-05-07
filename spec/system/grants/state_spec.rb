@@ -6,8 +6,8 @@ RSpec.describe 'Grants', type: :system do
   describe 'published grant', js: true do
     before(:each) do
       @published_grant = create(:grant_with_users)
-      @admin_user      = @published_grant.grant_users.grant_role_admin.first.user
-      @editor_user     = @published_grant.grant_users.grant_role_editor.first.user
+      @admin_user      = @published_grant.grant_permissions.role_admin.first.user
+      @editor_user     = @published_grant.grant_permissions.role_editor.first.user
     end
 
     context 'grant admin user' do
@@ -62,8 +62,8 @@ RSpec.describe 'Grants', type: :system do
   describe 'draft grant', js: true do
     before(:each) do
       @draft_grant     = create(:draft_grant_with_users)
-      @admin_user      = @draft_grant.grant_users.grant_role_admin.first.user
-      @editor_user     = @draft_grant.grant_users.grant_role_editor.first.user
+      @admin_user      = @draft_grant.grant_permissions.role_admin.first.user
+      @editor_user     = @draft_grant.grant_permissions.role_editor.first.user
     end
 
     context 'grant admin user' do

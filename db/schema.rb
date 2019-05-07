@@ -15,15 +15,15 @@ ActiveRecord::Schema.define(version: 2019_02_25_161519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "grant_users", force: :cascade do |t|
+  create_table "grant_permissions", force: :cascade do |t|
     t.bigint "grant_id"
     t.bigint "user_id"
-    t.string "grant_role"
+    t.string "role"
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["grant_id"], name: "index_grant_users_on_grant_id"
-    t.index ["user_id"], name: "index_grant_users_on_user_id"
+    t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
+    t.index ["user_id"], name: "index_grant_permissions_on_user_id"
   end
 
   create_table "grant_versions", force: :cascade do |t|
@@ -87,8 +87,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_161519) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "grant_users", "grants"
-  add_foreign_key "grant_users", "users"
+  add_foreign_key "grant_permissions", "grants"
+  add_foreign_key "grant_permissions", "users"
   add_foreign_key "grants", "organizations"
   add_foreign_key "users", "organizations"
 end

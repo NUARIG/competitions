@@ -61,9 +61,9 @@ FactoryBot.define do
 
     trait :with_users do
       after(:create) do |grant|
-        create(:admin_grant_user, grant: grant)
-        create(:editor_grant_user, grant: grant)
-        create(:viewer_grant_user, grant: grant)
+        create(:admin_grant_permission, grant: grant)
+        create(:editor_grant_permission, grant: grant)
+        create(:viewer_grant_permission, grant: grant)
       end
     end
 

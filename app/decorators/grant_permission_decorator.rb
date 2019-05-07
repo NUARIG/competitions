@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GrantUserDecorator < Draper::Decorator
+class GrantPermissionDecorator < Draper::Decorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through

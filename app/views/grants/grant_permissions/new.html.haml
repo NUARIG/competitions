@@ -7,11 +7,11 @@
 
   %p
     - unless @current_user_role == 'viewer'
-      = link_to 'Back to Permissions', grant_grant_users_path
+      = link_to 'Back to Permissions', grant_grant_permissions_path
       = ' | '
     = link_to 'View all Grants', grants_path
 
 .grid-x
   .cell
-    = form_with model: [@grant, @grant_user], local: true do |f|
+    = form_with model: [@grant, @grant_permission], local: true do |f|
       = render 'new_form', f: f, grant: @grant, users: @users

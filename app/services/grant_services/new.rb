@@ -8,7 +8,7 @@ module GrantServices
         ActiveRecord::Base.transaction(requires_new: true) do
           grant.save!
 
-          GrantUser.create!(grant: grant, user: user, grant_role: 'admin')
+          GrantPermission.create!(grant: grant, user: user, role: 'admin')
 
         end
         OpenStruct.new(success?: true)

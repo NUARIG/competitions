@@ -7,9 +7,9 @@ en:
       messages:
         blank: is required.
       models:
-        grant_user:
+        grant_permission:
           attributes:
             user:
               blank: must be selected.
-            grant_role:
+            role:
               blank: must be selected.

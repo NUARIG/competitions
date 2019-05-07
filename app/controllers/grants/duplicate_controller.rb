@@ -14,7 +14,7 @@ module Grants
     end
 
     def create
-      @original_grant = Grant.includes(:grant_users)
+      @original_grant = Grant.includes(:grant_permissions)
                           .friendly
                           .find(params[:grant_id])
       authorize @original_grant, :edit?
@@ -30,7 +30,7 @@ module Grants
         # TODO: Confirm messages the user should see
         flash[:notice]  = 'New grant based on ' + @original_grant.name + ' has been saved.'
         flash[:warning] = 'Review the information below then click "Save and Publish" to finalize.'
-        redirect_to grant_grant_users_url(@grant)
+        redirect_to grant_grant_permissions_url(@grant)
       else
         respond_to do |format|
           flash[:alert] = result.messages

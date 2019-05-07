@@ -11,7 +11,7 @@
   = render 'grants/state/form', { grant: grant } unless @current_user_role == 'viewer'
 
 %ul.tabs#grant-info{ class: "grant-edit grant-#{grant.id}-edit" }
-  - {'Overview' => edit_grant_path(grant), 'Permissions' => grant_grant_users_path(grant), 'Duplicate' => new_grant_duplicate_path(grant) }.each do |tab, path|
+  - {'Overview' => edit_grant_path(grant), 'Permissions' => grant_grant_permissions_path(grant), 'Duplicate' => new_grant_duplicate_path(grant) }.each do |tab, path|
     %li.tabs-title{ class: [request.path.include?(path) && 'is-active'] }
       = link_to tab, path
 
