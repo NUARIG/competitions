@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Grants::PublicDecorator do
   before do
-    @open_grant = create(:open_grant_with_users_and_questions)
+    @open_grant = create(:open_grant_with_users)
   end
 
   context 'user with no roles' do
@@ -17,11 +17,6 @@ RSpec.describe Grants::PublicDecorator do
     it 'does not generate an edit link' do
       expect(@decorated_open_grant.edit_menu_link).not_to have_css("li#edit-grant_#{@open_grant.id}")
       expect(@decorated_open_grant.edit_menu_link).not_to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
-    end
-
-    it 'generates an apply menu link' do
-      expect(@decorated_open_grant.apply_menu_link).to have_css("li#apply-grant_#{@open_grant.id}")
-      expect(@decorated_open_grant.apply_menu_link).to have_css("a#apply-grant_#{@open_grant.id}-link", text: 'Apply Now')
     end
   end
 
@@ -36,11 +31,6 @@ RSpec.describe Grants::PublicDecorator do
       expect(@decorated_open_grant.edit_menu_link).to have_css("li#edit-grant_#{@open_grant.id}")
       expect(@decorated_open_grant.edit_menu_link).to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
     end
-
-    it 'generates an apply menu link' do
-      expect(@decorated_open_grant.apply_menu_link).to have_css("li#apply-grant_#{@open_grant.id}")
-      expect(@decorated_open_grant.apply_menu_link).to have_css("a#apply-grant_#{@open_grant.id}-link", text: 'Apply Now')
-    end
   end
 
   context 'unauthenticated user' do
@@ -52,12 +42,6 @@ RSpec.describe Grants::PublicDecorator do
       allow(h).to receive(:user_signed_in?).and_return(false)
       expect(@decorated_open_grant.edit_menu_link).not_to have_css("li#edit-grant_#{@open_grant.id}")
       expect(@decorated_open_grant.edit_menu_link).not_to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
-    end
-
-    it 'generates an apply menu link' do
-      allow(h).to receive(:user_signed_in?).and_return(false)
-      expect(@decorated_open_grant.apply_menu_link).to have_css("li#apply-grant_#{@open_grant.id}")
-      expect(@decorated_open_grant.apply_menu_link).to have_css("a#apply-grant_#{@open_grant.id}-link", text: 'Apply Now')
     end
   end
 end

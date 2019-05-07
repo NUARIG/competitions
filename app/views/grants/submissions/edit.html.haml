@@ -1,5 +1,0 @@
-- content_for(:page_title, 'Edit Submission')
-%h1 Edit submission
-
-= form_with model: [@grant, @submission], id: "edit-submission-#{@submission.id}", local: true do |f|
-  = render 'form', f: f, submission: @submission, grant: @grant, questions: @grant.questions

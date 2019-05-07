@@ -10,66 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_190322) do
+ActiveRecord::Schema.define(version: 2019_02_25_161519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "constraint_question_versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.string "event", null: false
-    t.integer "whodunnit"
-    t.text "object"
-    t.datetime "created_at", null: false
-    t.index ["item_type", "item_id"], name: "index_constraint_question_versions_on_item_type_and_item_id"
-    t.index ["whodunnit"], name: "index_constraint_question_versions_on_whodunnit"
-  end
-
-  create_table "constraint_questions", force: :cascade do |t|
-    t.bigint "constraint_id"
-    t.bigint "question_id"
-    t.string "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["constraint_id", "question_id"], name: "index_constraint_questions_on_constraint_id_and_question_id"
-    t.index ["constraint_id"], name: "index_constraint_questions_on_constraint_id"
-    t.index ["question_id"], name: "index_constraint_questions_on_question_id"
-  end
-
-  create_table "constraints", force: :cascade do |t|
-    t.string "type"
-    t.string "name"
-    t.string "value_type"
-    t.string "default"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["value_type"], name: "index_constraints_on_value_type"
-  end
-
-  create_table "default_set_questions", force: :cascade do |t|
-    t.bigint "default_set_id"
-    t.bigint "question_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["default_set_id", "question_id"], name: "index_default_set_questions_on_default_set_id_and_question_id"
-    t.index ["default_set_id"], name: "index_default_set_questions_on_default_set_id"
-    t.index ["question_id"], name: "index_default_set_questions_on_question_id"
-  end
-
-  create_table "default_sets", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 
   create_table "grant_users", force: :cascade do |t|
     t.bigint "grant_id"
     t.bigint "user_id"
     t.string "grant_role"
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
     t.index ["grant_id"], name: "index_grant_users_on_grant_id"
     t.index ["user_id"], name: "index_grant_users_on_user_id"
   end
@@ -87,12 +39,12 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
 
   create_table "grants", force: :cascade do |t|
     t.bigint "organization_id"
-    t.string "name"
-    t.string "slug"
-    t.string "state"
-    t.date "publish_date"
-    t.date "submission_open_date"
-    t.date "submission_close_date"
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "state", null: false
+    t.date "publish_date", null: false
+    t.date "submission_open_date", null: false
+    t.date "submission_close_date", null: false
     t.text "rfa"
     t.integer "applications_per_user"
     t.text "review_guidance"
@@ -102,10 +54,11 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
     t.date "review_close_date"
     t.date "panel_date"
     t.text "panel_location"
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
     t.index ["organization_id"], name: "index_grants_on_organization_id"
+    t.index ["slug"], name: "index_grants_on_slug"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -114,56 +67,6 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "question_versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.string "event", null: false
-    t.integer "whodunnit"
-    t.text "object"
-    t.datetime "created_at", null: false
-    t.index ["item_type", "item_id"], name: "index_question_versions_on_item_type_and_item_id"
-    t.index ["whodunnit"], name: "index_question_versions_on_whodunnit"
-  end
-
-  create_table "questions", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.text "answer_type"
-    t.text "text"
-    t.text "help_text"
-    t.boolean "required"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-    t.index ["grant_id"], name: "index_questions_on_grant_id"
-  end
-
-  create_table "responses", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.bigint "question_id"
-    t.text "type"
-    t.integer "integer_response"
-    t.float "float_response"
-    t.string "string_response"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["grant_id"], name: "index_responses_on_grant_id"
-    t.index ["question_id"], name: "index_responses_on_question_id"
-  end
-
-  create_table "submissions", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.bigint "user_id"
-    t.string "project_title"
-    t.string "state"
-    t.float "composite_score_average"
-    t.float "final_impact_score_average"
-    t.float "award_amount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["grant_id"], name: "index_submissions_on_grant_id"
-    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -187,7 +90,5 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
   add_foreign_key "grant_users", "grants"
   add_foreign_key "grant_users", "users"
   add_foreign_key "grants", "organizations"
-  add_foreign_key "submissions", "grants"
-  add_foreign_key "submissions", "users"
   add_foreign_key "users", "organizations"
 end

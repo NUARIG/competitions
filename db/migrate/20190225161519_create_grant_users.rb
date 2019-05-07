@@ -6,6 +6,7 @@ class CreateGrantUsers < ActiveRecord::Migration[5.2]
       t.references :grant, foreign_key: true
       t.references :user, foreign_key: true
       t.string :grant_role
+      t.datetime :deleted_at
 
       t.timestamps
     end

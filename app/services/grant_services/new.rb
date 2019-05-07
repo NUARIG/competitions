@@ -10,11 +10,6 @@ module GrantServices
 
           GrantUser.create!(grant: grant, user: user, grant_role: 'admin')
 
-          DefaultSet.includes(questions: :constraint_questions).find(grant.default_set).questions.each do |question|
-            ActiveRecord::Base.transaction(requires_new: true) do
-              QuestionServices::Duplicate.call(question: question, new_grant: grant)
-            end
-          end
         end
         OpenStruct.new(success?: true)
       rescue

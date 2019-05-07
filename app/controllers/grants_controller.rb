@@ -45,8 +45,8 @@ class GrantsController < ApplicationController
     if result.success?
       # TODO: Confirm messages the user should see
       flash[:notice]  = 'Grant saved.'
-      flash[:warning] = 'Review Questions below then click "Publish this Grant" to finalize.'
-      redirect_to grant_questions_url(@grant)
+      flash[:warning] = 'Review the information below then click "Publish this Grant" to finalize.'
+      redirect_to grant_grant_users_url(@grant)
     else
       respond_to do |format|
         flash[:alert] = result.messages
@@ -94,7 +94,6 @@ class GrantsController < ApplicationController
     params.require(:grant).permit(
       :name,
       :slug,
-      :default_set,
       :publish_date,
       :submission_open_date,
       :submission_close_date,
@@ -107,7 +106,6 @@ class GrantsController < ApplicationController
       :max_proposals_per_reviewer,
       :panel_date,
       :panel_location,
-      :duplicate
     )
   end
 

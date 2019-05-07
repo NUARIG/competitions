@@ -6,16 +6,13 @@ class Grant < ApplicationRecord
   extend FriendlyId
   friendly_id :slug
 
-  attr_accessor :default_set, :duplicate
+  attr_accessor :duplicate
 
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
   belongs_to  :organization
-  has_many    :questions
   has_many    :grant_users
   has_many    :users, through: :grant_users
-
-  accepts_nested_attributes_for :questions
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -89,8 +86,6 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
-  validate :valid_default_set, on: :create, unless: -> { duplicate.present? }
-
   scope :public_grants,      -> { not_deleted.
                                     published.
                                     where(':date BETWEEN
@@ -101,7 +96,6 @@ class Grant < ApplicationRecord
                                     by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
-  scope :with_questions,     -> { includes :questions }
 
   def is_soft_deletable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
@@ -127,10 +121,6 @@ class Grant < ApplicationRecord
     slug.strip!
   end
 
-  def valid_default_set
-    errors.add(:base, 'Please choose a default question set') unless DefaultSet.where(id: default_set).exists?
-  end
-
   def published_soft_deletable?
     # TODO: e.g. submissions.count.zero?
     raise SoftDeleteException.new('Published grant may not be deleted')
@@ -144,9 +134,6 @@ class Grant < ApplicationRecord
     ActiveRecord::Base.transaction do
       # TODO: determine whether any/all of these should these be called
       # grant_users.update_all(deleted_at: Time.now)
-      # questions.update_all(deleted_at: Time.now)
-      # constraint_questions
-      #       submissions
       #       reviews
       #       reviewers
       #       panel

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'GrantUsers', type: :system do
   describe 'GrantUser', js: true do
     before(:each) do
-      @grant        = create(:grant_with_users_and_questions)
+      @grant        = create(:grant_with_users)
       @invalid_user = create(:user)
 
       @grant_admin  = @grant.grant_users.grant_role_admin.first.user

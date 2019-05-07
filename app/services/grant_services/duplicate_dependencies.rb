@@ -10,10 +10,6 @@ module GrantServices
           original_grant.grant_users.each do |grant_user|
             GrantUserServices::Duplicate.call(original_grant_user: grant_user, new_grant: new_grant)
           end
-
-          original_grant.questions.each do |question|
-            QuestionServices::Duplicate.call(question: question, new_grant: new_grant)
-          end
         end
         OpenStruct.new(success?: true)
       rescue
