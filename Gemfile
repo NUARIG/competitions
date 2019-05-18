@@ -50,6 +50,11 @@ gem 'paper_trail'
 gem 'american_date'
 gem 'validates_timeliness'
 
+# form_builder
+gem "cocoon"
+gem "nested_form"
+gem "select2-rails"
+
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
