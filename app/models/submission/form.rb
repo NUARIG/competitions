@@ -6,13 +6,13 @@ module Submission
     # TODO: Add _versions table
     # has_paper_trail
 
-    has_many :sections,     class_name: 'Submission::Section',
-                            foreign_key: 'submission_form_id',
-                            dependent: :destroy,
-                            inverse_of: :form
-    has_many :response_set, class_name: 'Submission::ResponseSet',
-                            foreign_key: 'form_id',
-                            inverse_of: :form
+    has_many :sections,      class_name: 'Submission::Section',
+                             foreign_key: 'submission_form_id',
+                             dependent: :destroy,
+                             inverse_of: :form
+    has_many :response_sets, class_name: 'Submission::ResponseSet',
+                             foreign_key: 'form_id',
+                             inverse_of: :form
     has_many :questions,               through: :sections
     has_many :multiple_choice_options, through: :questions
 

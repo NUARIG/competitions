@@ -1,27 +1,27 @@
 module Submission
   class Response < ActiveRecord::Base
-    self.table_name = 'form_responses'
+    self.table_name = 'submission_responses'
     # TODO: Add _versions table
     # has_paper_trail
 
-    belongs_to :submission,             class_name: 'Form::Submission',
-                                        foreign_key: 'form_submission_id',
+    belongs_to :response_set,           class_name: 'Submission::ResponseSet',
+                                        foreign_key: 'submission_response_set_id',
                                         inverse_of: :responses
-    belongs_to :question,               class_name: 'Form::Question',
-                                        foreign_key: 'form_question_id',
+    belongs_to :question,               class_name: 'Submission::Question',
+                                        foreign_key: 'submission_question_id',
                                         inverse_of: :responses
-    belongs_to :multiple_choice_option, class_name: 'Form::Answer',
-                                        foreign_key: 'form_answer_id',
+    belongs_to :multiple_choice_option, class_name: 'Submission::MultipleChoiceOption',
+                                        foreign_key: 'submission_multiple_choice_option_id',
                                         inverse_of: :responses,
                                         optional: true
 
-    validates_presence_of   :submission, :question
-    validates_inclusion_of  :form_question_id, in: ->(it){it.submission.responded_to.questions.pluck(:id)}
-    validates_inclusion_of  :form_answer_id,   in: ->(it){it.question.answers.pluck(:id)},
-                                               allow_nil: true
-    validates_uniqueness_of :form_question_id, scope: :form_submission_id
-    validates_uniqueness_of :form_answer_id,   scope: :form_submission_id,
-                                               allow_nil: true
+    validates_presence_of   :response_set, :question
+    validates_inclusion_of  :submission_question_id, in: ->(it){it.response_set.responded_to.questions.pluck(:id)}
+    validates_inclusion_of  :submission_multiple_choice_option_id,   in: ->(it){it.question.multiple_choice_options.pluck(:id)},
+                                                     allow_nil: true
+    validates_uniqueness_of :submission_question_id, scope: :submission_response_set_id
+    validates_uniqueness_of :submission_multiple_choice_option_id, scope: :submission_response_set_id,
+                                                                   allow_nil: true
 
     # custom validations to include question text in error message
     validate :length_if_short_text

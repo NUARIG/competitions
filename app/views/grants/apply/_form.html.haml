@@ -1,0 +1,33 @@
+= grant_form_for [@grant, @response_set], url: :grant_apply_index, html: {multipart: true} do |f|
+  =# TODO: Errors handled in layout - f.error_messages
+  = f.hidden_field :submission_form_id
+  - if policy(@grant).edit?
+    .link_box
+      = link_to 'Show conditional questions', '#', :id => 'show_hidden_questions'
+      = link_to 'Hide conditional questions', '#', :id => 'hide_hidden_questions', style: "display: none"
+  - @response_set.form.sections.sort_by(&:display_order).each do |section|
+    %fieldset
+      %legend= section.title
+      - if section.repeatable
+        = f.fields_for :children, @response_set.children_for_section(section) do |ff|
+          = render partial: 'section_fields', locals: {section: section, f: ff}
+        - if !f.grant_disable_input?
+          %div
+            = link_to_add_association "Add #{section.title.try(:singularize)}", f, :children, |
+              partial: 'form_builder/response_sets/section_fields',                           |
+              class: 'button btn-pill small success',                                         |
+              render_options: {locals: {section: section}}                                    |
+      - else
+        = render partial: 'section_fields', locals: {section: section, f: f}
+  .actions
+    = f.submit 'Save', data: { disable_with: "Please wait..." }, class: 'response-submit'
+=# hidden_field_tag :form_builder_standard_answer_sets_path, form_builder_standard_answer_sets_path
+=# TODO: Will we use conditions?
+=# hidden_field_tag :survey_conditions_path, conditions_form_builder_survey_path(@response_set.form)
+:javascript
+  $(function () {
+    grant.FormBuilderUploadSetup();
+    grant.FormBuilderStandardAnswer.init_in_response_sets();
+    // TODO: Do we want conditionals?
+    // grant.FormBuilderConditions.init();
+  });

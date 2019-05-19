@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         put :update_fields
       end
     end
+    resources :apply,             except: %i[index],         controller: 'grants/apply'
     # resources :submission
   end
 

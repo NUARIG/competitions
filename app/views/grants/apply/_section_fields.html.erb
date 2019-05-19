@@ -1,0 +1,111 @@
+<% if section.repeatable %>
+    <% f.object.section ||= section %>
+    <fieldset class="nested-fields">
+      <legend>
+        <%# if section.allow_follow_up %>
+            <%# TODO: baseline/follow-up can prob be removed %>
+            <%# = f.object.is_baseline? ? 'Baseline' : 'Follow-up' %>
+        <%# end %>
+      </legend>
+<% end %>
+<table class="table table-condensed table-striped">
+  <% if section.repeatable %>
+    <% f.object.form_builder_section_id = section.id %>
+    <%= f.hidden_field :submission_section_id %>
+    <%= f.hidden_field :baseline_id %>
+  <% end %>
+  <% responses = section.questions.sort_by(&:display_order).map do |q| %>
+    <%# if (q.use_baseline_value && f.object.is_follow_up?) %>
+      <%# r = f.object.baseline.responses.detect { |r| r.question == q } %>
+      <%# f.object.baseline.responses.build(r.attributes) %>
+    <%# else %>
+      <% f.object.responses.detect { |r| r.question == q } || f.object.responses.build(question: q) %>
+    <%# end %>
+  <% end %>
+  <%= f.fields_for :responses, responses do |ff| %>
+      <tr class="question question-<%= ff.object.question.id %>">
+        <% ffn = ff.object.form_field_name %>
+        <% is_mandatory = ff.object.question.is_mandatory %>
+        <td style="min-width: 200px"><div>
+          <% if ff.object.response_set == f.object %>
+              <%= ff.hidden_field :submission_question_id %>
+          <% end %>
+          <%= ff.label(ffn, ff.object.question.text) %><%= required_asterisk(is_mandatory) %>
+        </div></td>
+        <td><div>
+          <% if ff.object.response_set == f.object %>
+              <% case ff.object.question.response_type.to_sym
+                 when :pick_one %>
+                  <%= ff.select ffn, options_for_select(ff.object.question.answers.sort_by(&:display_order).map { |a| [a.to_formatted_s, a.id, 'data-value' => a.text] }, ff.object.form_builder_answer_id), {include_blank: true}, data: {question_id: ff.object.question.id} %>
+              <% when :number %>
+                  <%= ff.text_field ffn, data: {question_id: ff.object.question.id} %>
+              <% when :short_text %>
+                  <%= ff.text_area ffn, rows: 1, cols: 30, data: {question_id: ff.object.question.id} %>
+              <% when :long_text %>
+                  <%= ff.text_area ffn, rows: 5, cols: 31, data: {question_id: ff.object.question.id} %>
+              <% when :standard_answer %>
+                  <%= ff.select :submission_std_answer_id,
+                                (ff.object.standard_answer.present? ? options_for_select([[ff.object.standard_answer.text, ff.object.standard_answer.id, 'data-value' => ff.object.standard_answer.value]], ff.object.standard_answer.id) : []),
+                                {include_blank: true},
+                                {style: 'width: 100%',
+                                 class: 'standard-answer',
+                                 data: {standard_answer_set_id: ff.object.question.standard_answer_set.id,
+                                        question_id: ff.object.question.id,
+                                        parent_standard_answer_set_id: ff.object.question.standard_answer_set.parent_id}
+                                } %>
+              <% when :date_opt_time %>
+                  <%= ff.date_opt_time_field :datetime_val, :boolean_val, data: {question_id: ff.object.question.id} %>
+              <% when :partial_date %>
+                  <%= ff.date_select ffn,
+                                     {:prompt => {:year => 'Year', :month => 'Month', :day => 'Day'},
+                                      :use_two_digit_numbers => true,
+                                      :date_separator =>'-',
+                                      :start_year => Date.today.year + 5,
+                                      :end_year => Date.today.year - 100},
+                                     {:data => {:behavior => 'select2', question_id: ff.object.question.id}, style: 'min-width:120px'}
+                  %>
+              <% when :file_upload %>
+                  <%= ff.file_upload_field(
+                          !ff.object.new_record? && !ff.object.changed? && !ff.object.document_file_name.nil?,
+                          ffn,
+                          :remove_document,
+                          ff.object.formatted_response_value,
+                          (!ff.object.new_record? ? polymorphic_path([@grant_patient, ff.object.response_set], action: :download_document, form_builder_response_id: ff.object.id) : nil)) %>
+              <% end %>
+          <% else %>
+              <% if ff.object.question.response_type.to_sym == :standard_answer %>
+                  <%= ff.select :submission_std_answer_id,
+                                (ff.object.standard_answer.present? ? options_for_select([[ff.object.standard_answer.text, ff.object.standard_answer.id, 'data-value' => ff.object.standard_answer.value]], ff.object.standard_answer.id) : []),
+                                {include_blank: true},
+                                {style: 'width: 100%',
+                                 class: 'standard-answer',
+                                 disabled: true,
+                                 data: {standard_answer_set_id: ff.object.question.standard_answer_set.id,
+                                        question_id: ff.object.question.id,
+                                        parent_standard_answer_set_id: ff.object.question.standard_answer_set.parent_id}
+                                } %>
+              <% else %>
+                  <%= ff.object.formatted_response_value %>
+              <% end %>
+          <% end %>
+        </div></td>
+      </tr>
+  <% end %>
+  <% if (!f.grant_disable_input? && section.repeatable && f.object.show_remove_link?) %>
+      <tr>
+        <td colspan="2">
+          <%= link_to_remove_association("Remove #{section.title.singularize}", f, class: 'button btn-pill small warning') %>
+        </td>
+      </tr>
+  <% end %>
+</table>
+
+<% if section.repeatable? %>
+    </fieldset>
+<% end %>
+
+<style>
+ .select2-container{
+   max-width: 700px;
+ }
+</style>

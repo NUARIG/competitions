@@ -21,7 +21,7 @@
   <%#= hidden_field_tag :form_update_fields_url, update_fields_submission_form_url(@form), id: 'survey_update_fields_url' %>
 <% end %>
 
-<% has_edit_permission = policy(@form).update? %>
+<% has_edit_permission = policy(@grant).update? %>
 <%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
   <%# = f.error_messages %>
   <fieldset>
