@@ -45,7 +45,8 @@ class CreateSubmissions < ActiveRecord::Migration[5.2]
     create_table :submission_response_sets do |t|
       t.references :submission_form,      null: false
       t.bigint     :created_id,           null: false
-      t.integer    :submission_section_id
+      t.bigint     :submission_section_id
+      t.bigint     :parent_id
       t.timestamps
     end
 

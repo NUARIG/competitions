@@ -6,13 +6,13 @@ module Submission
     # TODO: Add _versions table
     # has_paper_trail
 
-    has_many :sections,    class_name: 'Submission::Section',
-                           foreign_key: 'submission_form_id',
-                           dependent: :destroy,
-                           inverse_of: :form
-    has_many :submissions, class_name: 'Submission::Form',
-                           foreign_key: 'form_id',
-                           inverse_of: :form
+    has_many :sections,     class_name: 'Submission::Section',
+                            foreign_key: 'submission_form_id',
+                            dependent: :destroy,
+                            inverse_of: :form
+    has_many :response_set, class_name: 'Submission::ResponseSet',
+                            foreign_key: 'form_id',
+                            inverse_of: :form
     has_many :questions,               through: :sections
     has_many :multiple_choice_options, through: :questions
 
@@ -20,13 +20,13 @@ module Submission
                            inverse_of: :form
     has_many :grants, through: :grant_forms
 
-
+    # TODO: THIS ISN'T WORKING
     # Prevents editing of forms with submission
     # first_response_set_id is dynamic, not in database
-    has_one :first_submission_id, -> { select(:id, :form_id).limit(1) },
-                                  class_name: 'Submission::Form',
-                                  foreign_key: 'submission_form_id',
-                                  inverse_of: :form
+    has_one :first_response_set_id, -> { select(:id, :submission_form_id).limit(1) },
+                                    class_name: 'Submission::ResponseSet',
+                                    foreign_key: 'submission_form_id',
+                                    inverse_of: :form
 
     # Added for speed
     belongs_to :form_created_by, class_name: 'User',
@@ -83,7 +83,7 @@ module Submission
       {
           title: title,
           description: description,
-          sections_attributes: sections.includes(questions: :answers).map(&:to_export_hash) #,
+          sections_attributes: sections.includes(questions: :multiple_choice_options).map(&:to_export_hash) #,
       }
     end
 
@@ -150,12 +150,12 @@ module Submission
       if valid?
         reorder.(sections, true)
         sections.each {|s| reorder.(s.questions, true)}
-        sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_answers, true)}
+        sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_options, true)}
         ok = save
 
         reorder.(sections, false)
         sections.each {|s| reorder.(s.questions, false)}
-        sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_answers, false)}
+        sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_options, false)}
         ok = save && ok
         return ok
       else

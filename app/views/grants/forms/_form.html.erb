@@ -1,0 +1,89 @@
+<script>
+  $(function(){Grant.FormBuilderSurvey.init();});
+</script>
+
+<% if !@form.grants.empty? #TODO: Fix this! %>
+<div class="alert">
+  <div>Used in the following Grants:</div>
+  <%= link_to 'Show/Hide Studies', '#', onclick: "$('#shared-survey-grants').toggle(); return false;" %>
+  <div id="shared-survey-grants" class="alert" style="display:none">
+    <ul>
+      <% @form.grants.each do |grant|%>
+      <li><%= grant.name %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<% end %>
+
+<% unless @form.new_record? %>
+  <%= hidden_field_tag :form_update_fields_url, update_fields_grant_form_url(@grant, @form), id: 'survey_update_fields_url' %>
+  <%#= hidden_field_tag :form_update_fields_url, update_fields_submission_form_url(@form), id: 'survey_update_fields_url' %>
+<% end %>
+
+<% has_edit_permission = policy(@form).update? %>
+<%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
+  <%# = f.error_messages %>
+  <fieldset>
+    <table class="survey_table table table-condensed table-striped">
+      <%= form_table_row f, :title do |attr| %>
+        <%= f.text_field attr %>
+      <% end %>
+
+      <%# TODO: we aren't using alerts or notifications. %>
+      <% if true == false && !@form.new_record? && has_edit_permission %>
+          <tr>
+            <td>
+              Has alerts
+            </td>
+            <td>
+              <%# TODO: Figure out notification %>
+              <%# if @form.notification %>
+                  <%#= link_to 'Manage Emails', notification_path(@form.notification), class: 'button tiny btn-pill fancybox.ajax', data: {behavior: 'fb-open'} %>
+                  <%#= link_to 'Remove Emails', notification_path(@form.notification), class: 'button tiny btn-pill warning', data: {remote: true, method: :delete, confirm: 'Are you sure? This will remove email notifications from being sent out.'} %>
+              <%# else %>
+                  <%#= link_to 'Enable Emails', new_notification_path(notificationable_type: @form.class.to_s, notificationable_id: @form.id), data: {confirm: 'Are you sure, you want this survey to send emails when filled out?', remote: true} %>
+              <%# end %>
+            </td>
+          </tr>
+      <% end %>
+    </table>
+  </fieldset>
+
+  <fieldset>
+    <legend>Always editable settings</legend>
+    <table class="always_editable_settings_table table table-condensed table-striped">
+      <%#= form_table_row f, :show_ans_code_in_sep_exp_col do |attr| %>
+        <%#= select_tag 'form_builder_survey[show_ans_code_in_sep_exp_col]', options_for_select(['true', 'false'], f.object.show_ans_code_in_sep_exp_col), class: 'field-always-editable' %>
+      <%# end %>
+
+      <%#= form_table_row f, :show_ans_code_in_form_entry do |attr| %>
+        <%#= select_tag 'form_builder_survey[show_ans_code_in_form_entry]', options_for_select(['true', 'false'], f.object.show_ans_code_in_form_entry), class: 'field-always-editable' %>
+      <%# end %>
+
+      <%= form_table_row f, :description do |attr| %>
+        <%= text_area_tag 'submission_form[description]', f.object.description, class: 'field-always-editable', rows: 2, cols: 80 %>
+      <% end %>
+    </table>
+    <div class="actions">
+      <% if @form.persisted? && has_edit_permission %>
+        <hr/>
+        <%= link_to 'Update settings', '#', class: 'button small update-fields-btn' %>
+        <span class="success_msg" style="color: green"></span>
+        <span class="fail_msg" style="color: red"></span>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <%= f.fields_for :sections, @form.sections.sort_by{|s|s.display_order || 0} do |ff| %>
+  <%= render partial: 'section_form', locals: {section: ff, has_edit_permission: has_edit_permission}%>
+  <% end %>
+
+  <% if has_edit_permission %>
+    <%= f.link_to_add "Add Section", :sections, class: "button btn-pill small success" %>
+    <div class="actions">
+      <hr/>
+      <%= f.submit 'Save' %>
+    </div>
+  <% end %>
+<% end %>

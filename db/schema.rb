@@ -129,7 +129,8 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
   create_table "submission_response_sets", force: :cascade do |t|
     t.bigint "submission_form_id", null: false
     t.bigint "created_id", null: false
-    t.integer "submission_section_id"
+    t.bigint "submission_section_id"
+    t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_id", "submission_form_id"], name: "i_submission_response_sets_on_created_id_and_submission_form_id"

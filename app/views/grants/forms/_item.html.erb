@@ -1,0 +1,46 @@
+<td>
+  <%= link_to survey.title, polymorphic_path(survey, action: :edit) %>
+  <% if true == false %>
+  <%# TODO: if survey.notification %>
+      <%= render partial: "email_alert_tooltip" %>
+  <% end %>
+</td>
+<td>
+  <%= survey.created_at %>
+</td>
+<td>
+  <%= survey.form_created_by.name %>
+</td>
+<td>
+  <%= survey.updated_at %>
+</td>
+<td>
+  <%= survey.form_updated_by.name %>
+</td>
+<td>
+  <%= survey.description %>
+</td>
+<td>
+  <%= link_to "Export", polymorphic_path(survey, action: :export),
+              class: "button tiny btn-pill warning"
+  %>
+  <% if show_edit_delete %>
+    <%# TODO: if survey.notification %>
+        <%# = link_to 'Manage Emails', notification_path(survey.notification), class: 'button tiny btn-pill fancybox.ajax', data: {behavior: 'fb-open'} %>
+        <%# = link_to 'Remove Emails', notification_path(survey.notification), class: 'button tiny btn-pill warning', data: {remote: true, method: :delete, confirm: 'Are you sure? This will remove email notifications from being sent out.'} %>
+    <%# else %>
+        <%# = link_to 'Enable Emails', new_notification_path(notificationable_type: survey.class.to_s, notificationable_id: survey.id), data: {confirm: 'Are you sure, you want this survey to send emails when filled out?', remote: true} %>
+    <%# end %>
+
+    <% if survey.destroyable? %>
+        <%= link_to "Delete", survey,
+                    method: :delete,
+                    data: {confirm: 'Are you sure?'},
+                    class: "button tiny btn-pill warning"
+        %>
+    <% else %>
+        <em><%= survey.grant_survey_ids.count %> studies, <%= FormBuilder::ResponseSet.where(survey: survey).count %> responses.
+          cannot delete</em>
+    <% end %>
+  <% end %>
+</td>

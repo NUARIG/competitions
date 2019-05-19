@@ -1,4 +1,5 @@
-class GrantSubmission < ActionView::Helpers::FormBuilder
+# uses NestedForms FormBuilder
+class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
   include NestedForm::BuilderMixin
 
   attr_accessor :read_only
@@ -23,10 +24,11 @@ class GrantSubmission < ActionView::Helpers::FormBuilder
     super(method, options)
   end
 
-  # def submit def link_to_remove def link_to_add
-  [:submit, :link_to_remove, :link_to_add].each do |m|
+  # dynamically generatest thse methods
+  #   def submit def link_to_remove def link_to_add
+  %i[submit link_to_remove link_to_add].each do |method|
     class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
-      def #{m}(*args)
+      def #{method}(*args)
         if !grant_disable_input?
           super(*args)
         end
@@ -61,7 +63,8 @@ class GrantSubmission < ActionView::Helpers::FormBuilder
 
   def grant_disable_input?
     if options[:parent_builder]
-      options[:parent_builder].instance_of?(GrantFormBuilder) ? options[:parent_builder].grant_disable_input? : !options[:parent_builder].object.available?
+      options[:parent_builder].instance_of?(self.class) ? options[:parent_builder].grant_disable_input? : !options[:parent_builder].object.available?
+      # options[:parent_builder].instance_of?(GrantFormBuilder) ? options[:parent_builder].grant_disable_input? : !options[:parent_builder].object.available?
     else
       read_only || !object.available?
     end
