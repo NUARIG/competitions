@@ -1,0 +1,41 @@
+<div class="link_box">
+  <%= link_to 'Back', polymorphic_path(@grant), :class => "button small btn-info" %>
+</div>
+
+<div class="page-header">
+  <h2><%= "Applications submitted to #{@grant.name}" %></h2>
+</div>
+
+<div>
+  <%#= link_to 'Toggle Data Table', '#', :id => 'toggle_data_table' %>
+
+  <% crud_links = {}
+     @response_sets.each do |rs|
+       crud_links[rs.id] = render partial: 'crud_links', locals: {response_set: rs}
+     end
+  %>
+
+  <div class="non_data_table_wrapper">
+    <table class="table table-condensed table-striped">
+      <thead>
+      <tr>
+        <th>Applicant</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @response_sets.sort_by(&:id).sort_by(&:date_order).each do |response_set| %>
+        <tr>
+          <td>
+            <%= link_to "#{response_set.creator.name}", edit_grant_apply_path(@grant, response_set) %>
+          </td>
+          <td>
+            <%= crud_links[response_set.id] %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

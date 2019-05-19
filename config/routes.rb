@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       end
     end
     resources :apply,             except: %i[index],         controller: 'grants/apply'
-    # resources :submission
+    resources :submissions,       only: :index,              controller: 'grants/submissions'
   end
 
   resources :users, only: %i[show index edit update]
