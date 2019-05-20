@@ -5,7 +5,7 @@ module Grants
       # ASSUMES ONE FORM
       @form          = @grant.forms.first
       # @survey        = @grant.surveys.find(params[:form_builder_survey_id])
-      @submissions = @grant.submissions.eager_loading.where(submission_form_id: @form.id)
+      @submissions = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
       authorize(@grant, :edit?)
       render 'index'
     end

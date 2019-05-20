@@ -15,7 +15,8 @@ class Grant < ApplicationRecord
   has_many   :users, through: :grant_permissions
   has_many   :grant_forms, inverse_of: :grant
   has_many   :forms, through: :grant_forms
-  has_many   :submissions, class_name: 'GrantSubmission::Submission'
+  has_many   :submissions, class_name: 'GrantSubmission::Submission',
+                           foreign_key: :grant_id
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15

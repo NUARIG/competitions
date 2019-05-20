@@ -6,8 +6,7 @@ module GrantSubmission
 
     # TODO: Add versions table
     #has_paper_trail
-    belongs_to :grant,         foreign_key: :grant_id,
-                               inverse_of: :submissions
+    belongs_to :grant,         inverse_of: :submissions
     belongs_to :form,          class_name: 'GrantSubmission::Form',
                                foreign_key: 'grant_submission_form_id',
                                inverse_of: :submissions

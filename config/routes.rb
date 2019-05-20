@@ -15,10 +15,8 @@ Rails.application.routes.draw do
       end
     end
     #resources :submissions,       only: :index,              controller: 'grants/submissions'
-    resources :submissions,       controller: 'grants/submissions'
-    # member do
-    #   get 'apply', to: 'submissions#new'
-    # end
+    resources :submissions,       except: :new,               controller: 'grants/submissions'
+    get 'apply', to: 'grants/submissions#new', as: :apply
   end
 
 
