@@ -15,7 +15,7 @@
       <td><%= question.text_field :display_order, size: 3 %></td>
       <td><%# question.text_field :export_code, size: 5 %></td>
       <td><%= question.select :is_mandatory, options_for_select([true, false], question.object.is_mandatory || false), include_blank: true %></td>
-      <td><%= question.select :response_type, Submission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, {include_blank: true}, class: "form_builder_question_response_type" %></td>
+      <td><%= question.select :response_type, GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, {include_blank: true}, class: "form_builder_question_response_type" %></td>
 <!--       <td class="form_builder_question_std_answer_set">
         <%#= question.select :form_builder_std_answer_set_id, @standard_answer_sets, {include_blank: 'Please select'}, style: 'width: 200px', class: 'form_builder_question_std_answer_set', data: {behavior: 'select2'} %>
       </td> -->
@@ -52,9 +52,9 @@
       <!-- <td>Export Code</td>  -->
       <td></td>
     </tr>
-    <%= question.fields_for :multiple_choice_options, question.object.multiple_choice_options.sort_by{|a|a.display_order || 0}, wrapper: false do |answer| %>
+    <%= question.fields_for :multiple_choice_options, question.object.multiple_choice_options.sort_by{ |option| option.display_order || 0}, wrapper: false do |option| %>
     <tr class="fields">
-      <%= render partial: 'answer_form', locals: {answer: answer} %>
+      <%= render partial: 'answer_form', locals: {multiple_choice_option: option} %>
     </tr>
     <% end %>
   </table>

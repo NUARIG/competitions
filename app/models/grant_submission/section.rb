@@ -1,16 +1,16 @@
-module Submission
+module GrantSubmission
   class Section < ApplicationRecord
-    self.table_name = 'submission_sections'
+    self.table_name = 'grant_submission_sections'
 
     # TODO: Add _version table
     #has_paper_trail ignore: [:display_order]
 
-    belongs_to :form,    class_name: 'Submission::Form',
-                         foreign_key: 'submission_form_id',
+    belongs_to :form,    class_name: 'GrantSubmission::Form',
+                         foreign_key: 'grant_submission_form_id',
                          inverse_of: :sections
-    has_many :questions, class_name: 'Submission::Question',
+    has_many :questions, class_name: 'GrantSubmission::Question',
                          dependent: :destroy,
-                         foreign_key: 'submission_section_id',
+                         foreign_key: 'grant_submission_section_id',
                          inverse_of: :section
     # has_one :condition_group, as: :owner,
     #                           dependent: :destroy

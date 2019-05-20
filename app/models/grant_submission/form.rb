@@ -1,32 +1,30 @@
-module Submission
-  class Form < ApplicationRecord
+class GrantSubmission::Form < ApplicationRecord
 
-    self.table_name = 'submission_forms'
+    self.table_name = 'grant_submission_forms'
 
     # TODO: Add _versions table
     # has_paper_trail
 
-    has_many :sections,      class_name: 'Submission::Section',
-                             foreign_key: 'submission_form_id',
-                             dependent: :destroy,
-                             inverse_of: :form
-    has_many :response_sets, class_name: 'Submission::ResponseSet',
-                             foreign_key: 'form_id',
-                             inverse_of: :form
+    has_many :sections,                class_name: 'GrantSubmission::Section',
+                                       foreign_key: 'grant_submission_form_id',
+                                       dependent: :destroy,
+                                       inverse_of: :form
+    has_many :submissions,             class_name: 'GrantSubmission::Submission',
+                                       foreign_key: 'grant_submission_form_id',
+                                       inverse_of: :form
     has_many :questions,               through: :sections
     has_many :multiple_choice_options, through: :questions
+    has_many :grant_forms,             foreign_key: 'grant_submission_form_id',
+                                       inverse_of: :form
+    has_many :grants,                  through: :grant_forms
 
-    has_many :grant_forms, foreign_key: 'submission_form_id',
-                           inverse_of: :form
-    has_many :grants, through: :grant_forms
-
-    # TODO: THIS ISN'T WORKING
+    # TODO: CONFIRM WHETHER THIS WORKS
     # Prevents editing of forms with submission
-    # first_response_set_id is dynamic, not in database
-    has_one :first_response_set_id, -> { select(:id, :submission_form_id).limit(1) },
-                                    class_name: 'Submission::ResponseSet',
-                                    foreign_key: 'submission_form_id',
-                                    inverse_of: :form
+    # first_submission_id is dynamic, not in database
+    # has_one :first_submission_id, -> { select(:id, :grant_submission_form_id).limit(1) },
+    #                               class_name: 'GrantSubmission::Submission',
+    #                               foreign_key: 'grant_submission_submission_id',
+    #                               inverse_of: :form
 
     # Added for speed
     belongs_to :form_created_by, class_name: 'User',
@@ -93,7 +91,7 @@ module Submission
     end
 
     def available?
-      new_record? || first_response_set_id.blank?
+      new_record? || submissions.none? #first_submission_id.blank?
     end
 
     def destroyable?
@@ -175,5 +173,5 @@ module Submission
     def human_readable_description
       "Form: #{title}"
     end
-  end
+
 end

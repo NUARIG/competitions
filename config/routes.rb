@@ -14,9 +14,13 @@ Rails.application.routes.draw do
         put :update_fields
       end
     end
-    resources :apply,             except: %i[index],         controller: 'grants/apply'
-    resources :submissions,       only: :index,              controller: 'grants/submissions'
+    #resources :submissions,       only: :index,              controller: 'grants/submissions'
+    resources :submissions,       controller: 'grants/submissions'
+    # member do
+    #   get 'apply', to: 'submissions#new'
+    # end
   end
+
 
   resources :users, only: %i[show index edit update]
 end

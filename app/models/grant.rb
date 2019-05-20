@@ -8,28 +8,23 @@ class Grant < ApplicationRecord
 
   attr_accessor :duplicate
 
-  # has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
+  has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
-  belongs_to  :organization
-  has_many    :grant_permissions
-  has_many    :users, through: :grant_permissions
-
-  has_many    :grant_forms, inverse_of: :grant
-  has_many    :forms, through: :grant_forms
-
-  has_many :grant_response_sets, inverse_of: :grant,
-                                 dependent: :destroy
-  has_many :response_sets, class_name: 'Submission::ResponseSet',
-                           through: :grant_response_sets
+  belongs_to :organization
+  has_many   :grant_permissions
+  has_many   :users, through: :grant_permissions
+  has_many   :grant_forms, inverse_of: :grant
+  has_many   :forms, through: :grant_forms
+  has_many   :submissions, class_name: 'GrantSubmission::Submission'
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
 
-  GRANT_STATES = { demo:      'demo',      # TODO: define specifics of each
-                   draft:     'draft',
-                   published: 'published', # e.g. can be opened and may be in process
-                   completed: 'completed'  # e.g. awarded and closed
-                 }.freeze
+  GRANT_STATES    = { demo:      'demo',      # TODO: define specifics of each
+                       draft:     'draft',
+                       published: 'published', # e.g. can be opened and may be in process
+                       completed: 'completed'  # e.g. awarded and closed
+                     }.freeze
 
 
   SOFT_DELETABLE_STATES = %w[demo draft]

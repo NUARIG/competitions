@@ -10,8 +10,8 @@
   <%#= link_to 'Toggle Data Table', '#', :id => 'toggle_data_table' %>
 
   <% crud_links = {}
-     @response_sets.each do |rs|
-       crud_links[rs.id] = render partial: 'crud_links', locals: {response_set: rs}
+     @submissions.each do |rs|
+       crud_links[rs.id] = render partial: 'crud_links', locals: {submission: rs}
      end
   %>
 
@@ -24,13 +24,13 @@
       </tr>
       </thead>
       <tbody>
-      <% @response_sets.sort_by(&:id).sort_by(&:date_order).each do |response_set| %>
+      <% @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission| %>
         <tr>
           <td>
-            <%= link_to "#{response_set.creator.name}", edit_grant_apply_path(@grant, response_set) %>
+            <%= link_to "#{submission.applicant.name}", edit_grant_apply_path(@grant, submission) %>
           </td>
           <td>
-            <%= crud_links[response_set.id] %>
+            <%= crud_links[submission.id] %>
           </td>
         </tr>
       <% end %>

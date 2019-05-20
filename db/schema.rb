@@ -17,15 +17,15 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
 
   create_table "grant_forms", force: :cascade do |t|
     t.bigint "grant_id", null: false
-    t.bigint "submission_form_id", null: false
+    t.bigint "grant_submission_form_id", null: false
     t.integer "display_order"
     t.boolean "disabled"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["display_order", "grant_id"], name: "index_grant_forms_on_display_order_and_grant_id", unique: true
     t.index ["grant_id"], name: "index_grant_forms_on_grant_id"
-    t.index ["submission_form_id", "grant_id"], name: "index_grant_forms_on_submission_form_id_and_grant_id", unique: true
-    t.index ["submission_form_id"], name: "index_grant_forms_on_submission_form_id"
+    t.index ["grant_submission_form_id", "grant_id"], name: "index_grant_forms_on_grant_submission_form_id_and_grant_id", unique: true
+    t.index ["grant_submission_form_id"], name: "index_grant_forms_on_grant_submission_form_id"
   end
 
   create_table "grant_permissions", force: :cascade do |t|
@@ -39,12 +39,82 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
     t.index ["user_id"], name: "index_grant_permissions_on_user_id"
   end
 
-  create_table "grant_response_sets", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.bigint "submission_response_set_id"
-    t.index ["grant_id", "submission_response_set_id"], name: "i_gsrs_on_grant_id_and_submission_submission_id", unique: true
-    t.index ["grant_id"], name: "index_grant_response_sets_on_grant_id"
-    t.index ["submission_response_set_id"], name: "index_grant_response_sets_on_submission_response_set_id"
+  create_table "grant_submission_forms", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "description", limit: 3000
+    t.bigint "created_id"
+    t.bigint "updated_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_grant_submission_forms_on_title", unique: true
+  end
+
+  create_table "grant_submission_multiple_choice_options", force: :cascade do |t|
+    t.bigint "grant_submission_question_id", null: false
+    t.string "text", null: false
+    t.integer "display_order", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order", "grant_submission_question_id"], name: "i_smco_on_display_order_and_submission_question_id", unique: true
+    t.index ["grant_submission_question_id"], name: "i_gsmco_on_submission_question_id"
+    t.index ["text", "grant_submission_question_id"], name: "i_smco_on_text_and_submission_question_id", unique: true
+  end
+
+  create_table "grant_submission_questions", force: :cascade do |t|
+    t.bigint "grant_submission_section_id", null: false
+    t.string "text", limit: 4000, null: false
+    t.string "instruction", limit: 4000
+    t.integer "display_order", null: false
+    t.string "export_code"
+    t.boolean "is_mandatory"
+    t.string "response_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order", "grant_submission_section_id"], name: "i_sqs_on_display_order_and_submission_section_id", unique: true
+    t.index ["grant_submission_section_id"], name: "index_grant_submission_questions_on_grant_submission_section_id"
+    t.index ["text", "grant_submission_section_id"], name: "i_gsq_on_text_and_grant_submission_section_id", unique: true
+  end
+
+  create_table "grant_submission_responses", force: :cascade do |t|
+    t.bigint "grant_submission_submission_id", null: false
+    t.bigint "grant_submission_question_id", null: false
+    t.bigint "grant_submission_multiple_choice_option_id"
+    t.string "string_val"
+    t.text "text_val"
+    t.decimal "decimal_val"
+    t.datetime "datetime_val"
+    t.boolean "boolean_val"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_submission_multiple_choice_option_id"], name: "i_gsr_on_submission_multiple_choice_option_id"
+    t.index ["grant_submission_question_id", "grant_submission_submission_id"], name: "i_gsr_on_submissisubmission_id", unique: true
+    t.index ["grant_submission_question_id"], name: "i_gsr_on_grant_submission_question_id"
+    t.index ["grant_submission_submission_id"], name: "i_gsr_on_grant_submission_submission_id"
+  end
+
+  create_table "grant_submission_sections", force: :cascade do |t|
+    t.bigint "grant_submission_form_id", null: false
+    t.string "title"
+    t.integer "display_order", null: false
+    t.boolean "repeatable"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
+    t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
+  end
+
+  create_table "grant_submission_submissions", force: :cascade do |t|
+    t.bigint "grant_id", null: false
+    t.bigint "grant_submission_form_id", null: false
+    t.bigint "created_id", null: false
+    t.bigint "grant_submission_section_id"
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
+    t.index ["grant_id", "created_id"], name: "i_gss_on_grant_id_and_created_id"
+    t.index ["grant_id"], name: "index_grant_submission_submissions_on_grant_id"
+    t.index ["grant_submission_form_id"], name: "index_grant_submission_submissions_on_grant_submission_form_id"
   end
 
   create_table "grant_versions", force: :cascade do |t|
@@ -90,81 +160,6 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "submission_forms", force: :cascade do |t|
-    t.string "title", null: false
-    t.string "description", limit: 3000
-    t.bigint "created_id"
-    t.bigint "updated_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["title"], name: "index_submission_forms_on_title", unique: true
-  end
-
-  create_table "submission_multiple_choice_options", force: :cascade do |t|
-    t.bigint "submission_question_id", null: false
-    t.string "text", null: false
-    t.integer "display_order", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["display_order", "submission_question_id"], name: "i_smco_on_display_order_and_submission_question_id", unique: true
-    t.index ["submission_question_id"], name: "i_smco_on_submission_question_id"
-    t.index ["text", "submission_question_id"], name: "i_smco_on_text_and_submission_question_id", unique: true
-  end
-
-  create_table "submission_questions", force: :cascade do |t|
-    t.bigint "submission_section_id", null: false
-    t.string "text", limit: 4000, null: false
-    t.string "instruction", limit: 4000
-    t.integer "display_order", null: false
-    t.string "export_code"
-    t.boolean "is_mandatory"
-    t.string "response_type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["display_order", "submission_section_id"], name: "i_sqs_on_display_order_and_submission_section_id", unique: true
-    t.index ["submission_section_id"], name: "index_submission_questions_on_submission_section_id"
-    t.index ["text", "submission_section_id"], name: "index_submission_questions_on_text_and_submission_section_id", unique: true
-  end
-
-  create_table "submission_response_sets", force: :cascade do |t|
-    t.bigint "submission_form_id", null: false
-    t.bigint "created_id", null: false
-    t.bigint "submission_section_id"
-    t.bigint "parent_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["created_id", "submission_form_id"], name: "i_submission_response_sets_on_created_id_and_submission_form_id"
-    t.index ["submission_form_id"], name: "index_submission_response_sets_on_submission_form_id"
-  end
-
-  create_table "submission_responses", force: :cascade do |t|
-    t.bigint "submission_response_set_id", null: false
-    t.bigint "submission_question_id", null: false
-    t.bigint "submission_multiple_choice_option_id"
-    t.string "string_val"
-    t.text "text_val"
-    t.decimal "decimal_val"
-    t.datetime "datetime_val"
-    t.boolean "boolean_val"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["submission_multiple_choice_option_id"], name: "i_sr_on_submission_multiple_choice_option_id"
-    t.index ["submission_question_id", "submission_response_set_id"], name: "i_sr_on_submission_question_id_and_submission_response_set_id", unique: true
-    t.index ["submission_question_id"], name: "index_submission_responses_on_submission_question_id"
-    t.index ["submission_response_set_id"], name: "index_submission_responses_on_submission_response_set_id"
-  end
-
-  create_table "submission_sections", force: :cascade do |t|
-    t.bigint "submission_form_id", null: false
-    t.string "title"
-    t.integer "display_order", null: false
-    t.boolean "repeatable"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["display_order", "submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
-    t.index ["submission_form_id"], name: "index_submission_sections_on_submission_form_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.bigint "organization_id"
     t.string "organization_role"
@@ -185,7 +180,7 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
 
   add_foreign_key "grant_permissions", "grants"
   add_foreign_key "grant_permissions", "users"
+  add_foreign_key "grant_submission_questions", "grant_submission_sections"
   add_foreign_key "grants", "organizations"
-  add_foreign_key "submission_questions", "submission_sections"
   add_foreign_key "users", "organizations"
 end

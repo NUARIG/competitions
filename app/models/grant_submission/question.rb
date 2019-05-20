@@ -1,16 +1,16 @@
-module Submission
+module GrantSubmission
   class Question < ApplicationRecord
-    self.table_name = 'submission_questions'
+    self.table_name = 'grant_submission_questions'
     #has_paper_trail ignore: [:display_order]
-    belongs_to :section,               class_name: 'Submission::Section',
-                                       foreign_key: 'submission_section_id',
+    belongs_to :section,               class_name: 'GrantSubmission::Section',
+                                       foreign_key: 'grant_submission_section_id',
                                        inverse_of: :questions
-    has_many :multiple_choice_options, class_name: 'Submission::MultipleChoiceOption',
+    has_many :multiple_choice_options, class_name: 'GrantSubmission::MultipleChoiceOption',
                                        dependent: :destroy,
-                                       foreign_key: 'submission_question_id',
+                                       foreign_key: 'grant_submission_question_id',
                                        inverse_of: :question
-    has_many :responses,               class_name: 'Submission::Response',
-                                       foreign_key: 'submission_question_id',
+    has_many :responses,               class_name: 'GrantSubmission::Response',
+                                       foreign_key: 'grant_submission_question_id',
                                        inverse_of: :question
 
     accepts_nested_attributes_for :multiple_choice_options, allow_destroy: true
@@ -27,7 +27,7 @@ module Submission
 
     validates_presence_of   :section, :text, :display_order, :response_type
     validates_inclusion_of  :response_type, in: VIEW_RESPONSE_TYPE_TRANSLATION.keys.map(&:to_s)
-    validates_uniqueness_of :text, scope: :submission_section_id
+    validates_uniqueness_of :text, scope: :grant_submission_section_id
     validates_inclusion_of  :is_mandatory, in: [true, false], message: "can't be blank"
 
     validates_numericality_of :display_order, only_integer: true, greater_than: 0
@@ -60,17 +60,17 @@ module Submission
       }
     end
 
-    def self.by_identifiable_hash(submission, hash)
-      section = submission.sections.where(display_order: hash['section_display_order']).first
+    def self.by_identifiable_hash(form, hash)
+      section = form.sections.where(display_order: hash['section_display_order']).first
       section.questions.where(display_order: hash['display_order'], text: hash['text']).first
     end
 
     def available?
-      new_record? || section.submission.available?
+      new_record? || section.form.available?
     end
 
-    def submission
-      section.submission
+    def form
+      section.form
     end
 
     def human_readable_description
@@ -78,7 +78,7 @@ module Submission
     end
 
     def global_report_display_name
-      "#{submission.title}: #{human_readable_description}"
+      "#{form.title}: #{human_readable_description}"
     end
 
     def operator_types

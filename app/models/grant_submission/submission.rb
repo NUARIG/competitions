@@ -1,37 +1,37 @@
-module Submission
-  class ResponseSet < ApplicationRecord
+module GrantSubmission
+  class Submission < ApplicationRecord
     # include EncodingErrorRecoverable
 
-    self.table_name = 'submission_response_sets'
+    self.table_name = 'grant_submission_submissions'
 
     # TODO: Add versions table
     #has_paper_trail
+    belongs_to :grant,         foreign_key: :grant_id,
+                               inverse_of: :submissions
+    belongs_to :form,          class_name: 'GrantSubmission::Form',
+                               foreign_key: 'grant_submission_form_id',
+                               inverse_of: :submissions
+    belongs_to :section,       class_name: 'GrantSubmission::Section',
+                               foreign_key: 'grant_submission_section_id',
+                               optional: true
+    belongs_to :applicant,     class_name: 'User',
+                               foreign_key: 'created_id'
+    has_many :responses,       dependent: :destroy,
+                               class_name: 'GrantSubmission::Response',
+                               foreign_key: 'grant_submission_submission_id',
+                               inverse_of: :submission
+    belongs_to :parent,        class_name: 'GrantSubmission::Submission',
+                               foreign_key: 'parent_id',
+                               inverse_of: :children,
+                               optional: true
+    has_many :children,        class_name: 'GrantSubmission::Submission',
+                               dependent: :destroy,
+                               foreign_key: 'parent_id',
+                               inverse_of: :parent
 
-    belongs_to :form,    class_name: 'Submission::Form',
-                         foreign_key: 'submission_form_id',
-                         inverse_of: :response_sets
-    belongs_to :section, class_name: 'Submission::Section',
-                         foreign_key: 'submission_section_id',
-                         optional: true
-    belongs_to :creator, class_name: 'User',
-                         foreign_key: 'created_id'
-    has_many :responses, dependent: :destroy,
-                         class_name: 'Submission::Response',
-                         foreign_key: 'submission_response_set_id',
-                         inverse_of: :response_set
-    belongs_to :parent,  class_name: 'Submission::ResponseSet',
-                         foreign_key: 'parent_id',
-                         inverse_of: :children,
-                         optional: true
-    has_many :children,  class_name: 'Submission::ResponseSet',
-                         dependent: :destroy,
-                         foreign_key: 'parent_id',
-                         inverse_of: :parent
-
-    has_one :grant_response_set, foreign_key: :submission_response_set_id,
-                                 inverse_of: :response_set,
-                                 dependent: :destroy
-    has_one :grant, through: :grant_response_set
+    has_one :grant_submission, foreign_key: :grant_submission_submission_id,
+                               inverse_of: :submission,
+                               dependent: :destroy
 
     # has_one :user_submission, foreign_key: :form_submission_id,
     #                           inverse_of: :submission,
@@ -124,7 +124,7 @@ module Submission
     end
 
     def response_for_question(question_id)
-      responses.select {|r| r.submission_question_id == question_id}.first
+      responses.select {|r| r.grant_submission_question_id == question_id}.first
     end
 
     def <=> other
@@ -145,21 +145,21 @@ module Submission
       [d ? 1 : 0, d || 0]
     end
 
-    def get_creator_id
-      # if self.class.column_names.include?("created_id")
-      #   created_id = self.created_id
+    def get_applicant_id
+      # if self.class.column_names.include?("applicantid")
+      #   applicant_id = self.applicant_id
       # elsif self.class.include?(PaperTrail::Model::InstanceMethods) &&
       #     self.class.paper_trail.enabled? &&
       #     self.paper_trail.enabled_for_model?
-      #   if created_id = self.get_first_creator
+      #   if applicant_id = self.get_first_applicant
       #   elsif (first_version = self.versions.first) && !first_version.object.blank?
-      #     created_id = YAML.load(first_version.object)['created_id']
+      #     applicant_id = YAML.load(first_version.object)['applicant_id']
       #   end
       # end
-      created_id
+      applicant_id
     end
 
-    def get_first_creator
+    def get_first_applicant
       raise Form.new('Method moved from FormBase')
       # self.versions.loaded? ?
       #     self.versions.select {|v| v.event == 'create'}.first.try(:whodunnit) :
