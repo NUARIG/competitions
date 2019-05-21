@@ -53,7 +53,7 @@ module Grants
       if @form.available? && @form.update_attributes_safe_display_order(form_params)
       # if @survey.available? && @survey.with_safe_encoding {|o| o.update_attributes_safe_display_order(_params[:grant_submission_survey])}
         @form.touch
-        flash[:notice] = 'form successfully updated'
+        flash[:notice] = 'Submission Form successfully updated'
         redirect_to edit_grant_form_path(@grant, @form)
       else
         flash[:alert] = @form.errors.full_messages
@@ -61,9 +61,12 @@ module Grants
       end
     end
 
+    # TODO: Should be its own controller?
     def update_fields
       # authorize :admin, :manage_grant_submission_forms?
-      @form = GrantSubmission::Form.find(params[:form_id])
+      # TODO: Figure out what to do with grant_forms
+      #@form = GrantSubmission::Form.find(params[:form_id])
+      @form  = @grant.form
       authorize @form, :update?
       valid_param = false
       GrantSubmission::Form::ALWAYS_EDITABLE_ATTRIBUTES.each do |field|

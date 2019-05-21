@@ -46,6 +46,7 @@ class CreateGrantSubmissions < ActiveRecord::Migration[5.2]
       t.references :grant,                      null: false
       t.references :grant_submission_form,      null: false
       t.bigint     :created_id,                 null: false
+      t.string     :title,                      null: false
       t.bigint     :grant_submission_section_id
       t.bigint     :parent_id
       t.timestamps

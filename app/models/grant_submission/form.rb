@@ -90,8 +90,13 @@ class GrantSubmission::Form < ApplicationRecord
       #questions.where(is_cycle_date: true).count > 0
     end
 
+    # TODO: What does available mean here?
+    #       available...to edit? ...to submit?
+    #       Do we need an appliable? method in grant
     def available?
-      new_record? || submissions.none? #first_submission_id.blank?
+      # TODO: Figure out relationship between grant and forms (grant_forms table)
+      grant = grants.first
+      !grant.published? || new_record? || submissions.none? #first_submission_id.blank?
     end
 
     def destroyable?

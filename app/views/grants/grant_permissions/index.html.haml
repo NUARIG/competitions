@@ -1,8 +1,9 @@
 - content_for(:page_title, "Edit - #{@grant.name}")
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
 .tabs-panel.is-active
-  %h2
+  %h3
     Permissions
 
   %p
@@ -10,7 +11,6 @@
       = link_to 'Add new permission', new_grant_grant_permission_path
       = ' | '
     = link_to 'View all Grants', grants_path
-
 
   - unless @grant_permissions.present?
     %p

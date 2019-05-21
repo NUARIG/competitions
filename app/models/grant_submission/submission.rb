@@ -6,6 +6,7 @@ module GrantSubmission
 
     # TODO: Add versions table
     #has_paper_trail
+
     belongs_to :grant,         inverse_of: :submissions
     belongs_to :form,          class_name: 'GrantSubmission::Form',
                                foreign_key: 'grant_submission_form_id',
@@ -41,6 +42,7 @@ module GrantSubmission
 
     accepts_nested_attributes_for :children, allow_destroy: true
 
+    validates_presence_of :title
     validates_presence_of :form, :if => Proc.new {|rs| rs.is_root?}
     validates_presence_of :section, :if => Proc.new {|rs| !rs.is_root?}
 

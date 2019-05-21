@@ -1,7 +1,9 @@
 module Grants
   class SubmissionsController < ApplicationController
+    before_action :set_grant
+
     def index
-      @grant         = Grant.friendly.find(params[:grant_id])
+      @grant         = GrantDecorator.new(@grant)
       # ASSUMES ONE FORM
       @form          = @grant.forms.first
       # @survey        = @grant.surveys.find(params[:form_builder_survey_id])
@@ -11,24 +13,23 @@ module Grants
     end
 
     def new
-      @grant         = Grant.friendly.find(params[:grant_id])
+      @grant = GrantDecorator.new(@grant)
       submission
       # TODO: This is not the correct authorization
       authorize(@grant)
-      @the_action = "Apply to #{@grant.name}"
       # TODO: Make a new view
-      render 'grants/submissions/edit'
+      render 'new'
     end
 
     def edit
+      @grant = GrantDecorator.new(@grant)
       authorize(@grant, :show?)
       submission
-      @the_action = 'Edit'
-      render 'grants/submission_std_answer_id/edit'
+      render 'edit'
     end
 
     def create
-      @grant         = Grant.friendly.find(params[:grant_id])
+      # @grant         = Grant.friendly.find(params[:grant_id])
       authorize(@grant, :show?)
       if @grant.grant_forms.first.disabled
       # if @grant.grant_forms.where(submission_form: submission_csubmission.form).first.disabled
@@ -39,19 +40,22 @@ module Grants
           flash[:notice] = 'successfully applied'
           redirect_to grant_path(@grant)
         else
+          @grant = GrantDecorator.new(@grant)
           flash[:alert] = @submission.errors.to_a
           # flash[:error] = 'unable to create'
-          @the_action = 'New'
-          render 'grants/submissions/edit'
+          render 'new'
         end
       end
     end
 
     def update
       authorize(@grant, :show?)
-      if submission.update_attributes(_params[:grant_submission_submission])
+      # if submission.update_attributes(submission_params[:grant_submission_submission])
+      if submission.update(submission_params)
         flash[:notice] = 'successfully updated response'
-        redirect_to index_page
+        #TODO: redirect based on user permissions
+        redirect_to grant_submissions_path(@grant)
+        # redirect_to index_page
       else
         flash[:alert] = @submission.errors.to_a
         # flash[:error] = 'unable to update'
@@ -67,7 +71,9 @@ module Grants
       else
         flash[:notice] = 'successfully deleted response'
       end
-      redirect_to index_page
+      # redirect_to index_page
+      redirect_to grant_submissions_path(@grant)
+
     end
 
     # def download_document
@@ -87,13 +93,11 @@ module Grants
         case action_name
         when 'new'
           # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
-          ## UPDATED: Assumes one from
-          form   = @grant.forms.first
-          rs     = @grant.submissions.build(form: form)
-          rs
-        when 'edit'
-          rs = @grant.submissions.find(params[:id])
-          rs
+          # UPDATED: Assumes one from
+          form   = @grant.forms.includes(sections: { questions: :multiple_choice_options }).first
+          @grant.submissions.build(form: form)
+        when 'edit', 'show'
+          @grant.submissions.find(params[:id])
         when 'create'
           @grant.submissions.build(submission_params.merge(created_id: current_user.id))
         else
@@ -101,13 +105,14 @@ module Grants
         end
     end
 
-    def index_page
-      polymorphic_path([@grant, FormBuilder::ResponseSet], form_builder_survey_id: submission.survey.id)
-    end
+    # def index_page
+    #   polymorphic_path([@grant, FormBuilder::ResponseSet], form_builder_survey_id: submission.survey.id)
+    # end
 
     def submission_params
       params.require(:grant_submission_submission).permit(
                        :id,
+                       :title,
                        :grant_submission_form_id,
                        :parent_id,
                        :grant_submission_section_id,
@@ -162,67 +167,6 @@ module Grants
                          ]
                        ]
       )
-    end
-
-    def _params
-      params.permit(submission_submission: [
-                      :id,
-                      :grant_submission_survey_id,
-                      :parent_id,
-                      :grant_submission_section_id,
-                      :baseline_id,
-                      responses_attributes: [
-                        :id,
-                        :grant_submission_submission_id,
-                        :grant_submission_question_id,
-                        :grant_submission_answer_id,
-                        :datetime_val_date_optional_time_magik,
-                        :grant_submission_std_answer_id,
-                        :string_val,
-                        :text_val,
-                        :decimal_val,
-                        :datetime_val,
-                        :boolean_val,
-                        :document,
-                        :document_file_name,
-                        :document_content_type,
-                        :document_file_size,
-                        :'partial_date_val_virtual(1i)',
-                        :'partial_date_val_virtual(2i)',
-                        :'partial_date_val_virtual(3i)',
-                        :partial_date_val,
-                        :_destroy
-                      ],
-                      children_attributes: [
-                        :id,
-                        :grant_submission_section_id,
-                        :baseline_id,
-                        :_destroy,
-                        responses_attributes: [
-                          :id,
-                          :grant_submission_submission_id,
-                          :grant_submission_question_id,
-                          :grant_submission_answer_id,
-                          :datetime_val_date_optional_time_magik,
-                          :grant_submission_std_answer_id,
-                          :string_val,
-                          :text_val,
-                          :decimal_val,
-                          :datetime_val,
-                          :boolean_val,
-                          :document,
-                          :document_file_name,
-                          :document_content_type,
-                          :document_file_size,
-                          :'partial_date_val_virtual(1i)',
-                          :'partial_date_val_virtual(2i)',
-                          :'partial_date_val_virtual(3i)',
-                          :partial_date_val,
-                          :_destroy
-                        ],
-                      ]
-                     ]
-                    )
     end
   end
 end

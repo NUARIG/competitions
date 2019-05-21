@@ -1,0 +1,12 @@
+- content_for(:page_title, "Edit - #{@grant.name}")
+
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
+.tabs-panel.is-active
+  %h3
+    Questions
+
+  %p
+    Project title is already included.
+
+  = render partial: 'form'

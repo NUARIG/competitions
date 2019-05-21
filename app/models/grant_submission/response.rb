@@ -28,10 +28,8 @@ module GrantSubmission
                             allow_nil: true
 
     # custom validations to include question text in error message
-    validate :length_if_short_text
-    validate :number_if_number
-    validate :attachment_size_if_document
-    validate :response_if_mandatory
+    validate :validate_by_response_type
+    validate :response_if_mandatory, if: -> { question.is_mandatory? }
 
     include DateOptionalTime
     has_date_optional_time(:datetime_val, :boolean_val)
@@ -164,21 +162,30 @@ module GrantSubmission
 
     private
 
-    def response_if_mandatory
-      if question.is_mandatory && response_value.blank?
-        errors.add(form_field_name, "^#{question.text} can't be blank")
+    def validate_by_response_type
+      case question.response_type
+      when 'number'
+        number_if_number
+      when 'short_text'
+        length_if_short_text
+      when 'file_upload'
+        attachment_size_if_document
       end
+    end
+
+    def response_if_mandatory
+      errors.add(form_field_name, "^#{question.text} can't be blank") if response_value.blank?
     end
 
     def number_if_number
       input = read_attribute_before_type_cast('decimal_val')
-      if question.response_type.to_sym == :number && !input.blank? && !parse_raw_value_as_a_number(input)
+      if !input.blank? && !parse_raw_value_as_a_number(input)
         errors.add(:decimal_val, "^#{question.text} is not a number")
       end
     end
 
     def length_if_short_text
-      if question.response_type.to_sym == :short_text && string_val.length > 255
+      if string_val.length > 255
         errors.add(:string_val, "^#{question.text} can be a maxiumum of 255 characters (currently #{string_val.length})")
       end
     end
@@ -186,7 +193,7 @@ module GrantSubmission
     def attachment_size_if_document
       mib = 1048576 # 2**20
       max = 15
-      if question.response_type.to_sym == :file_upload && document_file_size && document_file_size > max*mib
+      if document_file_size && document_file_size > max*mib
         errors.add(:document, "^#{question.text} can be a maxiumum of #{max}MiB (#{document_file_name} is #{(document_file_size.to_f/mib).round(1)}MiB)")
       end
     end

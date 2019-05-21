@@ -8,7 +8,9 @@ main {
   }
 
   &.grants,
-  &.grant_permissions {
+  &.grant_permissions,
+  &.submissions,
+  &.forms {
     // Edit
     #grant-state {
       margin: 2rem 0;

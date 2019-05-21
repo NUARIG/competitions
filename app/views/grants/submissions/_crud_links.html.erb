@@ -1,1 +1,1 @@
-<%= link_to view_or_edit(submission), polymorphic_path([@grant, submission], action: :edit), class: "button tiny btn-pill #{view_or_edit_class(submission)}" %>
+<%= link_to view_or_edit(submission), edit_grant_submission_path(@grant, submission), class: "button tiny btn-pill #{view_or_edit_class(submission)}" %>

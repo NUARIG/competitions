@@ -37,7 +37,7 @@
     <% end %>
   </table>
 
-  <table class="form_builder_answers_table table table-condensed table-striped" style="width: auto;">
+  <table class="submission_multiple_choice_options_table table table-condensed table-striped" style="width: auto;">
     <tr>
       <td colspan=4>
         Multiple Choice Options
@@ -54,7 +54,7 @@
     </tr>
     <%= question.fields_for :multiple_choice_options, question.object.multiple_choice_options.sort_by{ |option| option.display_order || 0}, wrapper: false do |option| %>
     <tr class="fields">
-      <%= render partial: 'answer_form', locals: {multiple_choice_option: option} %>
+      <%= render partial: 'multiple_choice_option_form', locals: { multiple_choice_option: option } %>
     </tr>
     <% end %>
   </table>
