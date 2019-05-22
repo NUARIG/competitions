@@ -48,10 +48,9 @@ module Grants
       # authorize :admin, :manage_grant_submission_forms?
       @form = GrantSubmission::Form.includes(sections: { questions: :multiple_choice_options }).find(params[:id])
       authorize @grant, :edit?
-      @form.updated_id = current_user.id
-
       if @form.available? && @form.update_attributes_safe_display_order(form_params)
       # if @survey.available? && @survey.with_safe_encoding {|o| o.update_attributes_safe_display_order(_params[:grant_submission_survey])}
+        @form.updated_id = current_user.id
         @form.touch
         flash[:notice] = 'Submission Form successfully updated'
         redirect_to edit_grant_form_path(@grant, @form)

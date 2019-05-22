@@ -66,7 +66,7 @@
   answers_dependency:function(scope){
     Grant.dependency(
       $(".form_builder_question_response_type", scope),
-      $(".form_builder_answers_table", scope),
+      $(".submission_multiple_choice_options_table", scope),
       function(){
         return $(".form_builder_question_response_type option:selected", scope).text() == "Multiple Choice - Pick One";
       },

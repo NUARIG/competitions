@@ -7,16 +7,24 @@ class GrantForm < ApplicationRecord
                     foreign_key: 'grant_submission_form_id',
                     inverse_of: :grant_forms
 
-  scope :disabled,          ->(){ where(disabled: [true]) }
-  scope :enabled,           ->(){ where(disabled: [nil, false]) }
-  scope :ordered_with_form, ->(){ includes(:form).order(:display_order) }
-  scope :with_questions,    ->(){ includes(form: :questions) }
-  scope :submissions,       ->(){ includes(:submission) }
+  scope :disabled,          ->(){ where(disabled: [true]) }       # DELETE
+  scope :enabled,           ->(){ where(disabled: [nil, false]) } # DELETE
+  scope :ordered_with_form, ->(){ includes(:form).order(:display_order) } # DELETE
+  scope :with_questions,    ->(){ includes(form: :questions) }    # MOVE TO FORM
 
   validates_presence_of   :display_order, :grant, :form
 
   validates_uniqueness_of :grant_submission_form_id, scope: :grant_id
   validates_uniqueness_of :display_order,            scope: :grant_id
+
+  # ADD reference column to Form in the Grant table
+  # https://launchacademy.com/codecabulary/learn-rails/model-associations
+  # CHANGE Grant Table to
+  #    has_one Form
+  # CHANGE Form Table to
+  #    belongs_to Grant
+  # MOVE validates_uniqueness_of :grant to :form
+  # MOVE validates_uniqueness_of :f to :form
 
   def disabled_at
     if disabled

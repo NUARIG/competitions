@@ -33,7 +33,7 @@ module ApplicationHelper
 
   # Dates
   def date_mmddyyyy(date)
-    date.nil? ? '' : date.strftime('%m/%d/%Y')
+    date.blank? ? '' : date.strftime('%m/%d/%Y')
   end
 
   # BEGIN FormBuilder

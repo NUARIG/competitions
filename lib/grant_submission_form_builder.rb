@@ -43,8 +43,14 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
             else
               @object.send(dt_input)
             end
-    @template.render(partial: 'date_optional_time_picker', locals:
-           {f: self, dt_input: dt_input, value: value, has_time: @object.send(has_time_component),  disabled: grant_disable_input?, options: options})
+    @template.render(partial: 'date_optional_time_picker',
+                     locals: { f: self,
+                               css_id: "grant_submission_question_id_#{object.grant_submission_question_id}",
+                               dt_input: dt_input,
+                               value: value,
+                               has_time: false,
+                               disabled: grant_disable_input?,
+                               options: options} )
   end
 
   def date_field(attr)

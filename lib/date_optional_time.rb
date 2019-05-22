@@ -28,15 +28,13 @@ module DateOptionalTime
       return [nil, nil]
     end
 
-    if input =~ %r{^\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{2}$}
-      inputt, has_time = [input, true]
-    elsif input =~ %r{^\d{1,2}/\d{1,2}/\d{4}$}
-      inputt, has_time = ["#{input} 00:00", false]
+    if input =~ %r{^\d{1,2}/\d{1,2}/\d{4}$}
+      inputt, has_time = ["#{input}", false]
     else
       inputt, has_time = [nil, nil]
     end
 
-    if inputt && (dt = Time.zone.parse(%r{^(\d{1,2})/(\d{1,2})/(\d{4}) (\d{1,2}:\d{2})$}.match(inputt).let{|m|"#{m[3]}-#{m[1]}-#{m[2]} #{m[4]}"}) rescue nil)
+    if input && (dt = Time.zone.parse(%r{^(\d{1,2})/(\d{1,2})/(\d{4})$}.match(inputt) do |m| "#{m[0]}" end ) rescue nil)
       [dt, has_time]
     else
       add_date_optional_time_error(datetime_comp)
@@ -45,7 +43,7 @@ module DateOptionalTime
   end
 
   def add_date_optional_time_error(datetime_comp)
-    errors.add(datetime_comp, "must be a valid Date/Time in the format MM/DD/YYYY or MM/DD/YYYY HH:MM")
+    errors.add(datetime_comp, "must be a valid Date/Time in the format MM/DD/YYYY")
   end
 
   def date_optional_time_errors?(datetime_comp)

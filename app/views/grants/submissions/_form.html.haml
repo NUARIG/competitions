@@ -35,8 +35,8 @@
 =# hidden_field_tag :survey_conditions_path, conditions_form_builder_survey_path(@submission.form)
 :javascript
   $(function () {
-    grant.FormBuilderUploadSetup();
-    grant.FormBuilderStandardAnswer.init_in_submissions();
+    Grant.FormBuilderUploadSetup();
+    Grant.FormBuilderStandardAnswer.init_in_submissions();
     // TODO: Do we want conditionals?
     // grant.FormBuilderConditions.init();
   });

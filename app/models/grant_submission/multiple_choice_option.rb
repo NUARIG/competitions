@@ -6,10 +6,10 @@ module GrantSubmission
 
     belongs_to :question,  class_name: 'GrantSubmission::Question',
                            foreign_key: 'grant_submission_question_id',
-                           inverse_of: :answers
+                           inverse_of: :multiple_choice_options
     has_many   :responses, class_name: 'GrantSubmission::Response',
-                           foreign_key: 'grant_submission_answer_id',
-                           inverse_of: :answer
+                           foreign_key: 'grant_submission_multiple_choice_option_id',
+                           inverse_of: :multiple_choice_option
 
     validates_presence_of :question, :text, :display_order
     validates_uniqueness_of :text, scope: :grant_submission_question_id

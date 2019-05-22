@@ -1,5 +1,5 @@
-<fieldset class="form_builder_question_fieldset">
-  <legend>Question <%= question.link_to_remove "Delete", class: "button tiny btn-pill warning" if has_edit_permission %></legend>
+<fieldset class="fieldset form_builder_question_fieldset">
+  <legend>Question <%= question.link_to_remove 'Delete', class: 'button tiny btn-pill warning' if has_edit_permission %></legend>
   <table class="question_table table table-condensed" style="width: auto;">
     <tr>
       <td>Text</td>
@@ -7,18 +7,14 @@
       <td><!-- Export code --></td>
       <td>Is mandatory</td>
       <td>Response type</td>
-<!--       <td class="form_builder_question_std_answer_set">Standard answer set to use</td>
- -->    </tr>
+    </tr>
 
     <tr>
       <td><%= question.text_area :text, rows: 1 %></td>
       <td><%= question.text_field :display_order, size: 3 %></td>
       <td><%# question.text_field :export_code, size: 5 %></td>
       <td><%= question.select :is_mandatory, options_for_select([true, false], question.object.is_mandatory || false), include_blank: true %></td>
-      <td><%= question.select :response_type, GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, {include_blank: true}, class: "form_builder_question_response_type" %></td>
-<!--       <td class="form_builder_question_std_answer_set">
-        <%#= question.select :form_builder_std_answer_set_id, @standard_answer_sets, {include_blank: 'Please select'}, style: 'width: 200px', class: 'form_builder_question_std_answer_set', data: {behavior: 'select2'} %>
-      </td> -->
+      <td><%= question.select :response_type, GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, { include_blank: true }, class: 'form_builder_question_response_type' %></td>
     </tr>
 
     <tr>
@@ -42,7 +38,7 @@
       <td colspan=4>
         Multiple Choice Options
         <% if has_edit_permission %>
-          <%= question.link_to_add "Add", :multiple_choice_options, data: { location: 'parent', target: ".submission_multiple_choice_options_table"}, class: 'button btn-pill small success' %>
+          <%= question.link_to_add "Add", :multiple_choice_options, data: { location: 'parent', target: '.submission_multiple_choice_options_table'}, class: 'button btn-pill small success' %>
         <% end %>
       </td>
     </tr>
