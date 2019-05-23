@@ -17,11 +17,11 @@ class GrantForm < ApplicationRecord
   validates_uniqueness_of :grant_submission_form_id, scope: :grant_id
   validates_uniqueness_of :display_order,            scope: :grant_id
 
-  # ADD reference column to Form in the Grant table
+  # x ADD reference column to Form in the Grant table
   # https://launchacademy.com/codecabulary/learn-rails/model-associations
-  # CHANGE Grant Table to
+  # xCHANGE Grant Table to
   #    has_one Form
-  # CHANGE Form Table to
+  # xCHANGE Form Table to
   #    belongs_to Grant
   # MOVE validates_uniqueness_of :grant to :form
   # MOVE validates_uniqueness_of :f to :form

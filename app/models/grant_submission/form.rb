@@ -5,6 +5,8 @@ class GrantSubmission::Form < ApplicationRecord
     # TODO: Add _versions table
     # has_paper_trail
 
+    belongs_to :grant,                 class_name: 'Grant',
+                                       inverse_of: :form
     has_many :sections,                class_name: 'GrantSubmission::Section',
                                        foreign_key: 'grant_submission_form_id',
                                        dependent: :destroy,
@@ -14,9 +16,9 @@ class GrantSubmission::Form < ApplicationRecord
                                        inverse_of: :form
     has_many :questions,               through: :sections
     has_many :multiple_choice_options, through: :questions
-    has_many :grant_forms,             foreign_key: 'grant_submission_form_id',
-                                       inverse_of: :form
-    has_many :grants,                  through: :grant_forms
+    # has_many :grant_forms,             foreign_key: 'grant_submission_form_id',
+    #                                    inverse_of: :form
+    # has_many :grants,                  through: :grant_forms
 
     # TODO: CONFIRM WHETHER THIS WORKS
     # Prevents editing of forms with submission
@@ -35,12 +37,16 @@ class GrantSubmission::Form < ApplicationRecord
     accepts_nested_attributes_for :sections, allow_destroy: true
     validates_presence_of :title
     validates_uniqueness_of :title
+    validates_uniqueness_of :grant
     validates_length_of :title, maximum: 255
     validates_length_of :description, maximum: 3000
 
     validate :display_orders_are_uniq
 
-    scope :search_by_title, ->(keyword) { where("UPPER(#{self.table_name}.title) LIKE ?", "%#{keyword.upcase}%")}
+    scope :search_by_title, -> (keyword) { where("UPPER(#{self.table_name}.title) LIKE ?", "%#{keyword.upcase}%")}
+    scope :with_questions,  -> () { includes(form: :questions) }
+    scope :with_sections_questions_options, -> () { includes(sections: { questions: :multiple_choice_options })}
+
 
     scope :order_by, ->(column, direction) {
       return unless SORTABLE_FIELDS.include?(column)
@@ -61,7 +67,7 @@ class GrantSubmission::Form < ApplicationRecord
     }
 
     SORTABLE_FIELDS = %w[title created_at updated_at description].freeze # created_by updated_by
-    ALWAYS_EDITABLE_ATTRIBUTES = %w[description show_ans_code_in_form_entry show_ans_code_in_sep_exp_col]
+    ALWAYS_EDITABLE_ATTRIBUTES = %w[description] # show_ans_code_in_form_entry show_ans_code_in_sep_exp_col
 
     def self.human_readable_attribute(attr)
       {show_ans_code_in_form_entry: 'Show answer export code when entering forms',
@@ -94,8 +100,6 @@ class GrantSubmission::Form < ApplicationRecord
     #       available...to edit? ...to submit?
     #       Do we need an appliable? method in grant
     def available?
-      # TODO: Figure out relationship between grant and forms (grant_forms table)
-      grant = grants.first
       !grant.published? || new_record? || submissions.none? #first_submission_id.blank?
     end
 

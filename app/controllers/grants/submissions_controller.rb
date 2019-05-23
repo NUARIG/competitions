@@ -1,18 +1,22 @@
 module Grants
   class SubmissionsController < ApplicationController
-    before_action :set_grant
+    before_action :set_grant, except: :new
 
     def index
       @grant         = GrantDecorator.new(@grant)
-      # ASSUMES ONE FORM
-      @form          = @grant.forms.first
-      # @survey        = @grant.surveys.find(params[:form_builder_survey_id])
-      @submissions = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
+      @form          = @grant.form
+      @submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
       authorize(@grant, :edit?)
       render 'index'
     end
 
     def new
+      @grant = Grant.friendly
+                    .includes(form:
+                                { sections:
+                                  {questions: :multiple_choice_options} }
+                              )
+                    .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
       submission
       # TODO: This is not the correct authorization
@@ -31,7 +35,7 @@ module Grants
     def create
       # @grant         = Grant.friendly.find(params[:grant_id])
       authorize(@grant, :show?)
-      if @grant.grant_forms.first.disabled
+      if @grant.form.disabled
       # if @grant.grant_forms.where(submission_form: submission_csubmission.form).first.disabled
         flash[:error] = 'unable to create, this form is disabled'
         redirect_to index_page
@@ -94,7 +98,8 @@ module Grants
         when 'new'
           # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
           # UPDATED: Assumes one from
-          form   = @grant.forms.includes(sections: { questions: :multiple_choice_options }).first
+          # set_grant includes everything
+          form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
           @grant.submissions.build(form: form)
         when 'edit', 'show'
           @grant.submissions.find(params[:id])
@@ -104,10 +109,6 @@ module Grants
           @grant.submissions.find(params[:id]) if params[:id]
         end
     end
-
-    # def index_page
-    #   polymorphic_path([@grant, FormBuilder::ResponseSet], form_builder_survey_id: submission.survey.id)
-    # end
 
     def submission_params
       params.require(:grant_submission_submission).permit(

@@ -15,19 +15,6 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "grant_forms", force: :cascade do |t|
-    t.bigint "grant_id", null: false
-    t.bigint "grant_submission_form_id", null: false
-    t.integer "display_order"
-    t.boolean "disabled"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["display_order", "grant_id"], name: "index_grant_forms_on_display_order_and_grant_id", unique: true
-    t.index ["grant_id"], name: "index_grant_forms_on_grant_id"
-    t.index ["grant_submission_form_id", "grant_id"], name: "index_grant_forms_on_grant_submission_form_id_and_grant_id", unique: true
-    t.index ["grant_submission_form_id"], name: "index_grant_forms_on_grant_submission_form_id"
-  end
-
   create_table "grant_permissions", force: :cascade do |t|
     t.bigint "grant_id"
     t.bigint "user_id"
@@ -40,12 +27,15 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
   end
 
   create_table "grant_submission_forms", force: :cascade do |t|
+    t.bigint "grant_id"
     t.string "title", null: false
     t.string "description", limit: 3000
+    t.boolean "disabled"
     t.bigint "created_id"
     t.bigint "updated_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_grant_submission_forms_on_grant_id", unique: true
     t.index ["title"], name: "index_grant_submission_forms_on_title", unique: true
   end
 
@@ -181,6 +171,7 @@ ActiveRecord::Schema.define(version: 2019_05_10_194117) do
 
   add_foreign_key "grant_permissions", "grants"
   add_foreign_key "grant_permissions", "users"
+  add_foreign_key "grant_submission_forms", "grants"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
   add_foreign_key "grants", "organizations"
   add_foreign_key "users", "organizations"

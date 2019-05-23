@@ -1,24 +1,23 @@
 class CreateGrantSubmissions < ActiveRecord::Migration[5.2]
   def change
     create_table :grant_submission_forms do |t|
+      t.belongs_to :grant,         index: { unique: true }, foreign_key: true
       t.string     :title,         null: false
       t.string     :description,   limit: 3000
+      t.boolean    :disabled       # moved from grant_forms table
       t.bigint     :created_id
       t.bigint     :updated_id
       t.timestamps
     end
 
-    # TODO:
-    # add_column reference :grant on Form
-
     # TODO: DELETE THIS TABLE
-    create_table :grant_forms do |t|
-      t.references :grant,            null: false
-      t.references :grant_submission_form,  null: false
-      t.integer    :display_order
-      t.boolean    :disabled
-      t.timestamps
-    end
+    # create_table :grant_forms do |t|
+    #   t.references :grant,            null: false
+    #   t.references :grant_submission_form,  null: false
+    #   t.integer    :display_order
+    #   t.boolean    :disabled
+    #   t.timestamps
+    # end
 
     create_table :grant_submission_sections do |t|
       t.references :grant_submission_form,  null: false
@@ -72,8 +71,8 @@ class CreateGrantSubmissions < ActiveRecord::Migration[5.2]
 
     add_index :grant_submission_forms,       [:title], unique: true
 
-    add_index :grant_forms,                  [:grant_submission_form_id, :grant_id], unique: true
-    add_index :grant_forms,                  [:display_order, :grant_id],  unique: true
+    # add_index :grant_forms,                  [:grant_submission_form_id, :grant_id], unique: true
+    # add_index :grant_forms,                  [:display_order, :grant_id],  unique: true
 
     add_index :grant_submission_sections,    [:display_order, :grant_submission_form_id],  unique: true, name: 'i_submission_sections_on_display_order_and_submission_form_id'
 
