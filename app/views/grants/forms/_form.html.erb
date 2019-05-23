@@ -2,20 +2,6 @@
   $(function(){Grant.FormBuilderSurvey.init();});
 </script>
 
-<% if !@form.grants.empty? #TODO: Fix this! %>
-<div class="alert">
-  <div>Used in the following Grants:</div>
-  <%= link_to 'Show/Hide Studies', '#', onclick: "$('#shared-survey-grants').toggle(); return false;" %>
-  <div id="shared-survey-grants" class="alert" style="display:none">
-    <ul>
-      <% @form.grants.each do |grant|%>
-      <li><%= grant.name %></li>
-      <% end %>
-    </ul>
-  </div>
-</div>
-<% end %>
-
 <% unless @form.new_record? %>
   <%= hidden_field_tag :form_update_fields_url, update_fields_grant_form_url(@grant, @form), id: 'survey_update_fields_url' %>
   <%#= hidden_field_tag :form_update_fields_url, update_fields_submission_form_url(@form), id: 'survey_update_fields_url' %>

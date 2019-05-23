@@ -12,11 +12,12 @@ class Grant < ApplicationRecord
 
   belongs_to :organization
   has_many   :grant_permissions
-  has_many   :users, through: :grant_permissions
-  has_many   :grant_forms, inverse_of: :grant
-  has_many   :forms, through: :grant_forms
-  has_many   :submissions, class_name: 'GrantSubmission::Submission',
-                           foreign_key: :grant_id
+  has_many   :users,            through: :grant_permissions
+  # has_many   :grant_forms,      inverse_of: :grant
+  has_one    :form,             class_name: 'GrantSubmission::Form',
+                                foreign_key: :grant_id
+  has_many   :submissions,      class_name: 'GrantSubmission::Submission',
+                                foreign_key: :grant_id
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -110,9 +111,10 @@ class Grant < ApplicationRecord
                                         submission_close_date.end_of_day)
   end
 
-  def form
-    self.grant_forms.first
-  end
+  # def form
+  #   byebug
+  #   self.grant_forms.first
+  # end
 
   private
 

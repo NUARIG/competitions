@@ -12,7 +12,7 @@
 %ul.tabs#grant-info{ class: "grant-edit grant-#{grant.id}-edit" }
   - {'View' => grant_path(grant),                                                                        |
      'Edit' => edit_grant_path(grant),                                                                   |
-     'Submission Form' => edit_grant_form_path(grant, grant.grant_forms.first.grant_submission_form_id), |
+     'Submission Form' => edit_grant_form_path(grant, grant.form), |
      'Permissions' => grant_grant_permissions_path(grant),                                               |
      'Submissions' => grant_submissions_path(grant),                                                     |
      'Duplicate' => new_grant_duplicate_path(grant) }.each do |tab, path|
