@@ -12,13 +12,13 @@ class CreateGrantSubmissions < ActiveRecord::Migration[5.2]
     # add_column reference :grant on Form
 
     # TODO: DELETE THIS TABLE
-    # create_table :grant_forms do |t|
-    #   t.references :grant,            null: false
-    #   t.references :grant_submission_form,  null: false
-    #   t.integer    :display_order
-    #   t.boolean    :disabled
-    #   t.timestamps
-    # end
+    create_table :grant_forms do |t|
+      t.references :grant,            null: false
+      t.references :grant_submission_form,  null: false
+      t.integer    :display_order
+      t.boolean    :disabled
+      t.timestamps
+    end
 
     create_table :grant_submission_sections do |t|
       t.references :grant_submission_form,  null: false

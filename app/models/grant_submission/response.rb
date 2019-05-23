@@ -77,7 +77,7 @@ module GrantSubmission
     def response_value
       case question.response_type.to_sym
       when :pick_one
-        answer.try(:text)
+        multiple_choice_option.try(:text)
       when :number
         decimal_val
       when :short_text
@@ -90,22 +90,14 @@ module GrantSubmission
         get_partial_date(:partial_date_val)
       when :file_upload
         document_file_name
-      when :standard_answer
-        standard_answer.try(:value)
       end
     end
 
     def formatted_response_value(format = nil)
       case question.response_type.to_sym
       when :pick_one
-        if answer
-          answer.to_formatted_s(format)
-        else
-          format == :export_multi_cols ? [nil, nil] : nil
-        end
-      when :standard_answer
-        if standard_answer
-          standard_answer.to_formatted_s(format)
+        if multiple_choice_option # answer
+          multiple_choice_option.to_formatted_s(format)
         else
           format == :export_multi_cols ? [nil, nil] : nil
         end
@@ -121,7 +113,7 @@ module GrantSubmission
     def form_field_name
       case question.response_type.to_sym
       when :pick_one
-        :form_builder_answer_id
+        :grant_submission_multiple_choice_option_id
       when :number
         :decimal_val
       when :short_text
@@ -134,15 +126,13 @@ module GrantSubmission
         self.class.partial_date_virtual_attribute(:partial_date_val)
       when :file_upload
         :document
-      when :standard_answer
-        :form_builder_std_answer_id
       end
     end
 
     def response_value_raw
       case question.response_type.to_sym
       when :pick_one
-        form_builder_answer_id
+       grant_submission_multiple_choice_option_id
       when :number
         decimal_val
       when :short_text
@@ -155,8 +145,6 @@ module GrantSubmission
         partial_date_val
       when :file_upload
         document_file_name
-      when :standard_answer
-        form_builder_std_answer_id
       end
     end
 
