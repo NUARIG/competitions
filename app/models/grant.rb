@@ -111,11 +111,6 @@ class Grant < ApplicationRecord
                                         submission_close_date.end_of_day)
   end
 
-  # def form
-  #   byebug
-  #   self.grant_forms.first
-  # end
-
   private
 
   def set_default_state

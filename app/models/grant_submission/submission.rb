@@ -71,10 +71,6 @@ module GrantSubmission
       children.select {|sub_rs| sub_rs.section == section}.sort
     end
 
-    def grant_form
-      form.grant_forms.where(grant_id: form_owner.form_grant.id).first
-    end
-
     def form_dates
       []
       #responses.select {|r| r.question.is_cycle_date}.map {|r| r.to_form_date_pair} + children.map(&:form_dates).flatten(1)

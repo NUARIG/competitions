@@ -36,7 +36,6 @@ module Grants
       # @grant         = Grant.friendly.find(params[:grant_id])
       authorize(@grant, :show?)
       if @grant.form.disabled
-      # if @grant.grant_forms.where(submission_form: submission_csubmission.form).first.disabled
         flash[:error] = 'unable to create, this form is disabled'
         redirect_to index_page
       else
