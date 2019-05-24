@@ -67,6 +67,17 @@ FactoryBot.define do
       end
     end
 
+    trait :with_users_and_submission_form do
+      after(:create) do |grant|
+        admin  = create(:admin_grant_permission, grant: grant)
+        editor = create(:editor_grant_permission, grant: grant)
+        viewer = create(:viewer_grant_permission, grant: grant)
+
+        create(:grant_submission_form, grant: grant, created_id: admin.user.id,
+                                                     updated_id: admin.user.id)
+      end
+    end
+
     trait :bypass_validations do
       to_create { |grant| grant.save(validate: false) }
     end
@@ -82,9 +93,9 @@ FactoryBot.define do
     factory :completed_grant,                 traits: %i[completed closed]
     factory :draft_open_grant,                traits: %i[draft open]
     factory :draft_closed_grant,              traits: %i[draft closed]
-    factory :grant_with_users,                traits: %i[published with_users]
+    factory :grant_with_users,                traits: %i[published with_users_and_submission_form]
     factory :demo_grant_with_users,           traits: %i[demo with_users]
-    factory :draft_grant_with_users,          traits: %i[draft with_users]
+    factory :draft_grant_with_users,          traits: %i[draft with_users with_users_and_submission_form]
     factory :completed_grant_with_users,      traits: %i[completed with_users]
   end
 end

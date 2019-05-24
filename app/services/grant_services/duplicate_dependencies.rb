@@ -10,6 +10,9 @@ module GrantServices
           original_grant.grant_permissions.each do |grant_permission|
             GrantPermissionServices::Duplicate.call(original_grant_permission: grant_permission, new_grant: new_grant)
           end
+
+          GrantSubmissionFormServices::Duplicate.call(original_grant: original_grant, new_grant: new_grant)
+
         end
         OpenStruct.new(success?: true)
       rescue

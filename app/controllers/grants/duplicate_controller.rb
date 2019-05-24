@@ -43,7 +43,9 @@ module Grants
 
     def set_original_grant
       begin
-        @original_grant = Grant.friendly.find(params[:grant_id])
+        @original_grant = Grant.friendly
+                               .includes(form: { sections: :questions } )
+                               .find(params[:grant_id])
       rescue
         flash[:alert] = 'Grant not found.'
         redirect_to grants_path
