@@ -5,51 +5,378 @@ require 'rails_helper'
 describe GrantPolicy do
   subject { described_class.new(user, grant) }
 
-  context 'with user and grant of the same organization' do
-    let(:organization) { create(:organization) }
-    let(:grant)        { create(:published_grant, organization: organization) }
+  context 'published, open grant without submissions' do
+    let(:grant)        { create(:published_open_grant) }
 
-    context 'grants for organization none users' do
-      let(:user) { create(:user) }
+    context 'with user having a role on the grant' do
+      context 'grant admin user on the grant' do
+        let(:user) { create(:user) }
+        let(:grant_admin) { create(:admin_grant_permission, grant: grant, user: user) }
 
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
 
-      it { is_expected.to forbid_action(:new) }
-      it { is_expected.to forbid_action(:create) }
-      it { is_expected.to forbid_action(:edit) }
-      it { is_expected.to forbid_action(:update) }
-      it { is_expected.to forbid_action(:destroy) }
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
+
+      context 'grant editor user on the grant' do
+        let(:user) { create(:user) }
+        let(:grant_editor) { create(:editor_grant_permission, grant: grant, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
+
+      context 'grant viewer user on the grant' do
+        let(:user) { create(:user) }
+        let(:grant_viewer) { create(:viewer_grant_permission, grant: grant, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
     end
 
-    context 'grants for organization admin users' do
-      let(:user) { create(:user, organization_role: 'admin', organization: organization) }
+    context 'with user not having a role on the grant' do
+      context 'organization admin user' do
+        let(:user) { create(:organization_admin_user) }
 
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:new) }
-      it { is_expected.to permit_action(:create) }
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+        it { is_expected.to permit_action(:new) }
+        it { is_expected.to permit_action(:create) }
 
-      it { is_expected.to forbid_action(:edit) }
-      it { is_expected.to forbid_action(:update) }
-      it { is_expected.to forbid_action(:destroy) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
+
+      context 'user' do
+        let(:user) { create(:user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
+
+      # This only tests the grant_admin on a different grant and
+      # not the editor or viewer, but they would be assumed
+      # to behave the same way.
+      context 'grant_admin on second grant' do
+        let(:user) { create(:user) }
+        let(:grant2)        { create(:published_open_grant) }
+        let(:grant_admin) { create(:admin_grant_permission, grant: grant2, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
     end
   end
-  context 'with user and grant of different organizations' do
-    context 'grants for organization admin users' do
-      let(:organization1) { create(:organization) }
-      let(:organization2) { create(:organization) }
-      let(:grant)         { create(:published_grant, organization: organization1) }
-      let(:user)          { create(:user, organization_role: 'admin', organization: organization2) }
 
-      it { is_expected.to permit_action(:index) }
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:new) }
-      it { is_expected.to permit_action(:create) }
+  context 'unpublished, open grant without submissions' do
+    let(:grant)        { create(:unpublished_open_grant) }
 
-      it { is_expected.to forbid_action(:edit) }
-      it { is_expected.to forbid_action(:update) }
-      it { is_expected.to forbid_action(:destroy) }
+    context 'with user having a role on the grant' do
+      context 'grant admin user on the grant' do
+        let(:user) { create(:user) }
+        let(:grant_admin) { create(:admin_grant_permission, grant: grant, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to permit_action(:edit) }
+        it { is_expected.to permit_action(:update) }
+        it { is_expected.to permit_action(:destroy) }
+      end
+
+      context 'grant editor user on the grant' do
+        let(:user) { create(:user) }
+        let(:grant_editor) { create(:editor_grant_permission, grant: grant, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to permit_action(:edit) }
+        it { is_expected.to permit_action(:update) }
+        it { is_expected.to permit_action(:destroy) }
+      end
+
+      context 'grant viewer user on the grant' do
+        let(:user) { create(:user) }
+        let(:grant_viewer) { create(:viewer_grant_permission, grant: grant, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
+    end
+
+    context 'with user not having a role on the grant' do
+      context 'organization admin user' do
+        let(:user) { create(:organization_admin_user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+        it { is_expected.to permit_action(:new) }
+        it { is_expected.to permit_action(:create) }
+        it { is_expected.to permit_action(:edit) }
+        it { is_expected.to permit_action(:update) }
+        it { is_expected.to permit_action(:destroy) }
+      end
+
+      context 'user' do
+        let(:user) { create(:user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
+
+      # This only tests the grant_admin on a different grant and
+      # not the editor or viewer, but they would be assumed
+      # to behave the same way.
+      context 'grant_admin on second grant' do
+        let(:user) { create(:user) }
+        let(:grant2)        { create(:unpublished_open_grant) }
+        let(:grant_admin) { create(:admin_grant_permission, grant: grant2, user: user) }
+
+        it { is_expected.to permit_action(:index) }
+        it { is_expected.to permit_action(:show) }
+
+        it { is_expected.to forbid_action(:new) }
+        it { is_expected.to forbid_action(:create) }
+        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.to forbid_action(:update) }
+        it { is_expected.to forbid_action(:destroy) }
+      end
     end
   end
+
+
+  # The specs below require submission and form factories before they will work.
+
+  # context 'published, open grant with submissions' do
+  #   let(:grant)        { create(:published_open_grant) }
+
+  #   context 'with user having a role on the grant' do
+  #     context 'grant admin user on the grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant_admin) { create(:admin_grant_permission, grant: grant, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     context 'grant editor user on the grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant_editor) { create(:editor_grant_permission, grant: grant, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     context 'grant viewer user on the grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant_viewer) { create(:viewer_grant_permission, grant: grant, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+  #   end
+
+  #   context 'with user not having a role on the grant' do
+  #     context 'organization admin user' do
+  #       let(:user) { create(:organization_admin_user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     context 'user' do
+  #       let(:user) { create(:user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     # This only tests the grant_admin on a different grant and
+  #     # not the editor or viewer, but they would be assumed
+  #     # to behave the same way.
+  #     context 'grant_admin on second grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant2)        { create(:published_open_grant) }
+  #       let(:grant_admin) { create(:admin_grant_permission, grant: grant2, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+  #   end
+  # end
+
+  # context 'unpublished, open grant with submissions' do
+  #   let(:grant)        { create(:unpublished_open_grant) }
+
+  #   context 'with user having a role on the grant' do
+  #     context 'grant admin user on the grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant_admin) { create(:admin_grant_permission, grant: grant, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     context 'grant editor user on the grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant_editor) { create(:editor_grant_permission, grant: grant, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     context 'grant viewer user on the grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant_viewer) { create(:viewer_grant_permission, grant: grant, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+  #   end
+
+  #   context 'with user not having a role on the grant' do
+  #     context 'organization admin user' do
+  #       let(:user) { create(:organization_admin_user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     context 'user' do
+  #       let(:user) { create(:user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+
+  #     # This only tests the grant_admin on a different grant and
+  #     # not the editor or viewer, but they would be assumed
+  #     # to behave the same way.
+  #     context 'grant_admin on second grant' do
+  #       let(:user) { create(:user) }
+  #       let(:grant2)        { create(:unpublished_open_grant) }
+  #       let(:grant_admin) { create(:admin_grant_permission, grant: grant2, user: user) }
+
+  #       it { is_expected.to permit_action(:index) }
+  #       it { is_expected.to permit_action(:show) }
+
+  #       it { is_expected.to forbid_action(:new) }
+  #       it { is_expected.to forbid_action(:create) }
+  #       it { is_expected.to forbid_action(:edit) }
+  #       it { is_expected.to forbid_action(:update) }
+  #       it { is_expected.to forbid_action(:destroy) }
+  #     end
+  #   end
+  # end
 end

@@ -9,7 +9,7 @@ class GrantsController < ApplicationController
   # GET /grants.json
   def index
     @grants = Grant.not_deleted.by_publish_date.with_organization
-    authorize @grants
+    @grants = policy_scope(Grant)
   end
 
   # GET /grants/1

@@ -1,5 +1,5 @@
 module Grants
-  class GrantPermissionsController < ApplicationController
+  class GrantPermissionsController < GrantBaseController
     include WithGrantRoles
 
     before_action :set_grant, except: :index
@@ -8,7 +8,10 @@ module Grants
     before_action :authorize_grant_editor_access, except: %i[index destroy]
 
     def index
-      authorize @grant, :grant_viewer_access?
+      @grant_permissions = GrantPermission.where(grant: @grant)
+      @grant_permissions = policy_scope(GrantPermission,
+                                        policy_scope_class: Grant::GrantPermissionPolicy::Scope)
+
       @current_user_role = current_user_grant_permission
     end
 

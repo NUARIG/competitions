@@ -1,12 +1,14 @@
 module Grants
-  class SubmissionsController < ApplicationController
+  class SubmissionsController < GrantBaseController
     before_action :set_grant, except: :new
 
     def index
       @grant         = GrantDecorator.new(@grant)
       @form          = @grant.form
       @submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
-      authorize(@grant, :edit?)
+      @submissions   = policy_scope(GrantSubmission::Submission,
+                                    policy_scope_class: Grant::SubmissionPolicy::Scope)
+
       render 'index'
     end
 

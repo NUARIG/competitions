@@ -1,21 +1,35 @@
 # frozen_string_literal: true
 
 class GrantPolicy < AccessPolicy
-  def index?
-    user.present?
+
+  # Could not figure out how to inherit methods, so the
+  # organization_admin_access? code from AccessPolicy:6
+  # was repeated.
+  # https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
+  class Scope < Scope
+    def resolve
+      if user.organization_role == 'admin' || grant_viewer_access?
+        scope.all
+      else
+        scope.where(published: true)
+      end
+    end
   end
 
+  # def index?
+  # end
+
   def show?
-    case record.published?
+    case grant.published?
     when true
-      index?
+      user.organization_role == 'admin' || grant_viewer_access?
     else
-      grant_viewer_access?
+      organization_admin_access? || grant_viewer_access?
     end
   end
 
   def create?
-    organization_admin_access?
+    organization_admin_access? || grant_editor_access?
   end
 
   def new?
@@ -23,15 +37,16 @@ class GrantPolicy < AccessPolicy
   end
 
   def update?
-    grant_editor_access?
+    # TODO: How to lock this once it has submissions. Should this be is_soft_deletable?
+    grant.is_soft_deletable? && (organization_admin_access? || grant_editor_access?)
   end
 
   def edit?
-    update?
+    grant.is_soft_deletable? && (organization_admin_access? || grant_editor_access?)
   end
 
   def destroy?
-    grant_admin_access?
+    grant.is_soft_deletable?  && (organization_admin_access? || grant_admin_access?)
   end
 
   # Grant Access

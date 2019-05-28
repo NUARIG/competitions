@@ -128,11 +128,13 @@ class Grant < ApplicationRecord
 
   def published_soft_deletable?
     # TODO: e.g. submissions.count.zero?
-    raise SoftDeleteException.new('Published grant may not be deleted')
+    submissions.none?
+    # raise SoftDeleteException.new('Published grant may not be deleted')
   end
 
   def completed_soft_deletable?
-    raise SoftDeleteException.new('Completed grant may not be deleted')
+    false
+    # raise SoftDeleteException.new('Completed grant may not be deleted')
   end
 
   def process_association_soft_delete

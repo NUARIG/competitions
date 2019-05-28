@@ -78,6 +78,12 @@ FactoryBot.define do
       end
     end
 
+    # trait :with_submissions do
+    #   after(:create) do |grant|
+
+    #   end
+    # end
+
     trait :bypass_validations do
       to_create { |grant| grant.save(validate: false) }
     end
