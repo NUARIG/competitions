@@ -29,22 +29,12 @@ module GrantSubmission
                                foreign_key: 'parent_id',
                                inverse_of: :parent
 
-    has_one :grant_submission, foreign_key: :grant_submission_submission_id,
-                               inverse_of: :submission,
-                               dependent: :destroy
-
-    # has_one :user_submission, foreign_key: :form_submission_id,
-    #                           inverse_of: :submission,
-    #                           dependent: :destroy
-    # has_one :user, through: :user_submission
-
     accepts_nested_attributes_for :responses, allow_destroy: true
-
     accepts_nested_attributes_for :children, allow_destroy: true
 
     validates_presence_of :title
-    validates_presence_of :form, :if => Proc.new {|rs| rs.is_root?}
-    validates_presence_of :section, :if => Proc.new {|rs| !rs.is_root?}
+    validates_presence_of :form,    :if => Proc.new { |rs| rs.is_root? }
+    validates_presence_of :section, :if => Proc.new { |rs| !rs.is_root? }
 
     # scope :eager_loading, -> {includes({:responses => [:question, :standard_answer]}, :children)}
     scope :eager_loading, -> {includes({:responses => [:question]}, :children)}
@@ -94,30 +84,12 @@ module GrantSubmission
       parent.blank?
     end
 
-    def is_follow_up?
-      # baseline_id.present?
-      false
-    end
-
-    def is_baseline?
-      # section.allow_follow_up && !is_follow_up?
-      false
-    end
-
+    # TODO: available? to...edit? delete?
     def available?
       return true
       # TODO: Figure out policies
       #       HIGH PRIORITY
       # is_root? ? super : parent.available?
-    end
-
-    def show_remove_link?
-      # if section.allow_follow_up
-      #   (is_baseline? && follow_ups.blank?) || (!is_baseline?)
-      # else
-        # true
-      # end
-      true
     end
 
     def response_for_question(question_id)
@@ -128,7 +100,8 @@ module GrantSubmission
       return 0 if !id && !other.id
       return 1 if !id
       return -1 if !other.id
-      (baseline_id || id) <=> (other.baseline_id || other.id)
+      # (baseline_id || id) <=> (other.baseline_id || other.id)
+      id <=> other.id
     end
 
     ## TODO: Do we need anything from this?

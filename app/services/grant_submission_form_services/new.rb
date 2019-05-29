@@ -17,15 +17,15 @@ module GrantSubmissionFormServices
                                                   updated_id: user.id)
 
           # Create a 'Basic Attributes' section
-          form_section = new_form.sections.create(title: 'Basic Attrributes',
+          form_section = new_form.sections.create(title: 'Basic Attributes',
                                                   display_order: 1)
-
 
           # Create an 'Abstract' question
           form_section.questions.create(text: 'Abstract',
                                         display_order: 1,
                                         is_mandatory: true,
                                         response_type: 'long_text')
+
         end
       end
     end

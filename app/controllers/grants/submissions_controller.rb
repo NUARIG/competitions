@@ -45,7 +45,6 @@ module Grants
         else
           @grant = GrantDecorator.new(@grant)
           flash[:alert] = @submission.errors.to_a
-          # flash[:error] = 'unable to create'
           render 'new'
         end
       end
@@ -53,30 +52,26 @@ module Grants
 
     def update
       authorize(@grant, :show?)
-      # if submission.update_attributes(submission_params[:grant_submission_submission])
       if submission.update(submission_params)
         flash[:notice] = 'successfully updated response'
         #TODO: redirect based on user permissions
         redirect_to grant_submissions_path(@grant)
-        # redirect_to index_page
       else
         flash[:alert] = @submission.errors.to_a
-        # flash[:error] = 'unable to update'
-        @the_action   = 'Edit'
         render 'grants/submissions/edit'
       end
     end
 
     def destroy
-      if !submission.available? || !submission.destroy
-        flash[:error] = @submission.errors.to_a
+      # TODO: Policy for this
+      if submission.destroy
+        flash[:notice] = 'Submission was deleted.'
+        redirect_to grant_submissions_path(@grant)
         # flash[:error] = 'unable to delete'
       else
-        flash[:notice] = 'successfully deleted response'
+        flash[:error] = @submission.errors.to_a
+        redirect_back fallback_location: grant_submissions_path(@grant)
       end
-      # redirect_to index_page
-      redirect_to grant_submissions_path(@grant)
-
     end
 
     # def download_document

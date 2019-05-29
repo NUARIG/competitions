@@ -100,11 +100,12 @@ class GrantSubmission::Form < ApplicationRecord
     #       available...to edit? ...to submit?
     #       Do we need an appliable? method in grant
     def available?
-      !grant.published? || new_record? || submissions.none? #first_submission_id.blank?
+      new_record? || (submissions.none? && !grant.published?)
     end
 
     def destroyable?
-      available? && grant_forms.empty? # && mb_messages.empty? && instructions.empty?
+      false
+      # available? && grant_forms.empty? # && mb_messages.empty? && instructions.empty?
     end
 
     # Checks display order for uniqueness in memory. This can detect

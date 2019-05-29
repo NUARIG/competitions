@@ -17,9 +17,9 @@ module GrantSubmission
 
     validates_presence_of   :submission, :question
     validates_inclusion_of  :grant_submission_question_id,
-                            in: ->(it){it.submission.responded_to.questions.pluck(:id)}
+                            in: -> (it) { it.submission.responded_to.questions.pluck(:id) }
     validates_inclusion_of  :grant_submission_multiple_choice_option_id,
-                            in: ->(it){it.question.multiple_choice_options.pluck(:id)},
+                            in: -> (it) { it.question.multiple_choice_options.pluck(:id) },
                             allow_nil: true
     validates_uniqueness_of :grant_submission_question_id,
                             scope: :grant_submission_submission_id
@@ -162,19 +162,19 @@ module GrantSubmission
     end
 
     def response_if_mandatory
-      errors.add(form_field_name, "^#{question.text} can't be blank") if response_value.blank?
+      errors.add(form_field_name, :blank, question: question.text) if response_value.blank?
     end
 
     def number_if_number
       input = read_attribute_before_type_cast('decimal_val')
       if !input.blank? && !parse_raw_value_as_a_number(input)
-        errors.add(:decimal_val, "^#{question.text} is not a number")
+        errors.add(:decimal_val, :not_a_number, question: question.text)
       end
     end
 
     def length_if_short_text
       if string_val.length > 255
-        errors.add(:string_val, "^#{question.text} can be a maxiumum of 255 characters (currently #{string_val.length})")
+        errors.add(:string_val, :string_too_long, question: question.text)
       end
     end
 

@@ -146,6 +146,8 @@ GEM
       ruby_parser (~> 3.5)
     i18n (1.5.2)
       concurrent-ruby (~> 1.0)
+    i18n-debug (1.2.0)
+      i18n (< 2)
     jaro_winkler (1.5.2)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
@@ -385,6 +387,7 @@ DEPENDENCIES
   foundation-rails
   friendly_id (~> 5.2.4)
   haml-rails (~> 1.0)
+  i18n-debug
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)

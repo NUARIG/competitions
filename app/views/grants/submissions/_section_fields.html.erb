@@ -8,7 +8,7 @@
         <%# end %>
       </legend>
 <% end %>
-<table class="table table-condensed table-striped">
+<table class="table table-condensed">
   <% if section.repeatable %>
     <% f.object.grant_submission_section_id = section.id %>
     <%= f.hidden_field :grant_submission_section_id %>
@@ -25,12 +25,14 @@
       <tr class="question question-<%= ff.object.question.id %>">
         <% ffn = ff.object.form_field_name %>
         <% is_mandatory = ff.object.question.is_mandatory %>
-        <td style="min-width: 200px"><div>
-          <% if ff.object.submission == f.object %>
-              <%= ff.hidden_field :grant_submission_question_id %>
-          <% end %>
-          <%= ff.label(ffn, ff.object.question.text) %><%= required_asterisk(is_mandatory) %>
-        </div></td>
+        <td style="min-width: 200px">
+          <div>
+            <% if ff.object.submission == f.object %>
+                <%= ff.hidden_field :grant_submission_question_id %>
+            <% end %>
+            <%= ff.label(ffn, ff.object.question.text, class: "required-#{is_mandatory}") %>
+          </div>
+        </td>
         <td>
           <div>
             <% if ff.object.submission == f.object %>
@@ -38,13 +40,13 @@
                    when :pick_one %>
                     <%= ff.select ffn, options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.to_formatted_s, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id), { include_blank: true }, data: { question_id: ff.object.question.id } %>
                 <% when :number %>
-                    <%= ff.text_field ffn, data: {question_id: ff.object.question.id} %>
+                    <%= ff.text_field ffn, data: { question_id: ff.object.question.id } %>
                 <% when :short_text %>
-                    <%= ff.text_area ffn, rows: 1, cols: 30, data: {question_id: ff.object.question.id} %>
+                    <%= ff.text_area ffn, rows: 1, cols: 30, data: { question_id: ff.object.question.id } %>
                 <% when :long_text %>
-                    <%= ff.text_area ffn, rows: 5, cols: 31, data: {question_id: ff.object.question.id} %>
+                    <%= ff.text_area ffn, rows: 5, cols: 31, data: { question_id: ff.object.question.id } %>
                 <% when :date_opt_time %>
-                    <%= ff.date_opt_time_field :datetime_val, :boolean_val, data: {question_id: ff.object.question.id} %>
+                    <%= ff.date_opt_time_field :datetime_val, :boolean_val, data: { question_id: ff.object.question.id } %>
                 <% when :partial_date %>
                     <%= ff.date_select ffn,
                                        {:prompt => {:year => 'Year', :month => 'Month', :day => 'Day'},
@@ -72,7 +74,7 @@
         </td>
       </tr>
   <% end %>
-  <% if (!f.grant_disable_input? && section.repeatable && f.object.show_remove_link?) %>
+  <% if (!f.grant_disable_input? && section.repeatable) %>
       <tr>
         <td colspan="2">
           <%= link_to_remove_association("Remove #{section.title.singularize}", f, class: 'button btn-pill small warning') %>

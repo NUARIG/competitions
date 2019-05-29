@@ -61,15 +61,15 @@
     </div>
   </fieldset>
 
-  <%= f.fields_for :sections, @form.sections.sort_by{|s|s.display_order || 0} do |ff| %>
-  <%= render partial: 'section_form', locals: {section: ff, has_edit_permission: has_edit_permission}%>
-  <% end %>
+  <%= f.fields_for :sections, @form.sections.sort_by {|section| section.display_order || 0 } do |ff| %>
+    <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: has_edit_permission} %>
+    <% end %>
 
-  <% if has_edit_permission %>
-    <%= f.link_to_add "Add Section", :sections, class: "button btn-pill small success" %>
-    <div class="actions">
-      <hr/>
-      <%= f.submit 'Save' %>
-    </div>
+    <% if has_edit_permission %>
+      <%= f.link_to_add 'Add a Section', :sections, class: 'button btn-pill small' %>
+      <div class="actions">
+        <hr/>
+        <%= f.submit 'Save', class: 'button' %>
+      </div>
   <% end %>
 <% end %>

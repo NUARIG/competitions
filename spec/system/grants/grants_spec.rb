@@ -149,7 +149,7 @@ RSpec.describe 'Grants', type: :system do
       end.not_to change{ Grant.count }
 
       expect(page).to have_content('Name has already been taken')
-      expect(page).to have_content('Short name has already been taken')
+      expect(page).to have_content('Short Name has already been taken')
     end
 
     scenario 'valid duplicate submission creates new grant' do
