@@ -126,15 +126,13 @@ class Grant < ApplicationRecord
     slug.strip!
   end
 
+  # TODO: Should these two be boolians that then spit out a result
   def published_soft_deletable?
-    # TODO: e.g. submissions.count.zero?
-    submissions.none?
-    # raise SoftDeleteException.new('Published grant may not be deleted')
+    raise SoftDeleteException.new('Published grant may not be deleted')
   end
 
   def completed_soft_deletable?
-    false
-    # raise SoftDeleteException.new('Completed grant may not be deleted')
+    raise SoftDeleteException.new('Completed grant may not be deleted')
   end
 
   def process_association_soft_delete

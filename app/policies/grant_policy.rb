@@ -8,10 +8,12 @@ class GrantPolicy < AccessPolicy
   # https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
   class Scope < Scope
     def resolve
-      if user.organization_role == 'admin' || grant_viewer_access?
-        scope.all
+      if user.organization_role == 'admin'
+        scope.not_deleted.by_publish_date.with_organization
+      elsif (user.grants.any?)
+        user.grants.not_deleted
       else
-        scope.where(published: true)
+        scope.not_deleted.where(published: true)
       end
     end
   end
@@ -37,18 +39,20 @@ class GrantPolicy < AccessPolicy
   end
 
   def update?
-    # TODO: How to lock this once it has submissions. Should this be is_soft_deletable?
-    grant.is_soft_deletable? && (organization_admin_access? || grant_editor_access?)
+    organization_admin_access? || grant_editor_access?
   end
 
   def edit?
-    grant.is_soft_deletable? && (organization_admin_access? || grant_editor_access?)
+    update?
   end
 
   def destroy?
-    grant.is_soft_deletable?  && (organization_admin_access? || grant_admin_access?)
+    grant.is_soft_deletable? && (organization_admin_access? || grant_admin_access?)
+  rescue SoftDeleteException
+    false
   end
 
+  #This needs to be worked out?????
   # Grant Access
   def grant_admin_access?
     check_grant_access(%w[admin])

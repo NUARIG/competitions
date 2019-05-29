@@ -19,7 +19,7 @@ class Grant::SubmissionPolicy < GrantPolicy
 
     def resolve
       if user.organization_role == 'admin' || grant_viewer_access?
-        grant.submissions
+        @grant.submissions
       else
         scope.where(applicant_id == user.id)
       end
@@ -47,7 +47,8 @@ class Grant::SubmissionPolicy < GrantPolicy
   end
 
   def destroy?
-    organization_admin_access? || grant_editor_access?
+    # TODO: Admin and g.unpublished
+    !grant.published? && (organization_admin_access? || grant_editor_access?)
   end
 
   private

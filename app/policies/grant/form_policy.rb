@@ -2,7 +2,18 @@
 
 module Grant
   class FormPolicy < GrantPolicy
-  # TODO: Should there be a GrantObjectPolicy
+
+    def new?
+      organization_admin_access? || grant_editor_access?
+    end
+
+    def update?
+      new?
+    end
+
+    def edit?
+      new?
+    end
 
     private
 

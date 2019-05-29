@@ -8,7 +8,6 @@ class GrantsController < ApplicationController
   # GET /grants
   # GET /grants.json
   def index
-    @grants = Grant.not_deleted.by_publish_date.with_organization
     @grants = policy_scope(Grant)
   end
 
@@ -110,7 +109,7 @@ class GrantsController < ApplicationController
   end
 
   def set_grant
-    @grant = Grant.with_organization.friendly.find(params[:id])
+    @grant = Grant.not_deleted.with_organization.friendly.find(params[:id])
   end
 
   def draft_banner

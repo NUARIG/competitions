@@ -29,7 +29,7 @@ module SoftDeletable
     deleted_at.present?
   end
 
-  # def is_soft_deletable?
-  #   raise NotImplementedError, 'class did not define is_soft_deletable?'
-  # end
+  def is_soft_deletable?
+    raise NotImplementedError, 'class did not define is_soft_deletable?'
+  end
 end
