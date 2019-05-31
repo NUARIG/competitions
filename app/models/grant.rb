@@ -104,7 +104,7 @@ class Grant < ApplicationRecord
   scope :with_organization,  -> { joins(:organization) }
 
   def is_soft_deletable?
-    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
+    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable_error")
   end
 
   def accepting_submissions?
@@ -128,11 +128,11 @@ class Grant < ApplicationRecord
   end
 
   # TODO: Should these two be boolians that then spit out a result
-  def published_soft_deletable?
+  def published_soft_deletable_error
     raise SoftDeleteException.new('Published grant may not be deleted')
   end
 
-  def completed_soft_deletable?
+  def completed_soft_deletable_error
     raise SoftDeleteException.new('Completed grant may not be deleted')
   end
 

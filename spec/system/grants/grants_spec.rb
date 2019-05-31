@@ -5,10 +5,13 @@ require 'rails_helper'
 RSpec.describe 'Grants', type: :system do
   describe 'Index', js: true do
     before(:each) do
-      @grant                = create(:grant_with_users)
-      @inaccessible_grant   = create(:grant_with_users)
-      @soft_deleted_grant   = create(:grant_with_users, deleted_at: 1.hour.ago)
-      @admin_user           = @grant.grant_permissions.role_admin.first.user
+      @grant                  = create(:grant_with_users)
+      @inaccessible_grant     = create(:grant_with_users)
+      @soft_deleted_grant     = create(:grant_with_users, deleted_at: 1.hour.ago)
+      @admin_user             = @grant.grant_permissions.role_admin.first.user
+
+      @draft_grant            = create(:draft_grant)
+      draft_grant_permission  = create(:admin_grant_permission, user: @admin_user, grant: @draft_grant)
       login_as(@admin_user)
       visit grants_path
     end
@@ -21,7 +24,10 @@ RSpec.describe 'Grants', type: :system do
       expect(page).not_to have_link('Edit', href: edit_grant_path(@inaccessible_grant))
       expect(page).not_to have_link('Delete', href: grant_path(@inaccessible_grant))
       expect(page).to have_link('Edit', href: edit_grant_path(@grant))
-      expect(page).to have_link('Delete', href: grant_path(@grant))
+      expect(page).not_to have_link('Delete', href: grant_path(@grant))
+
+      expect(page).to have_link('Edit', href: edit_grant_path(@draft_grant))
+      expect(page).to have_link('Delete', href: grant_path(@draft_grant))
     end
   end
 
@@ -205,12 +211,13 @@ RSpec.describe 'Grants', type: :system do
       expect(page).to have_content 'Grant was successfully deleted.'
     end
 
-    scenario 'demo grant can be soft deleted' do
-      @grant.update_attributes!(state: 'demo')
-      visit edit_grant_path(@grant.id)
-      click_link 'Delete'
-      page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content 'Grant was successfully deleted.'
+    pending scenario 'demo grant can be soft deleted' do
+      fail "demo to be deleted"
+      # @grant.update_attributes!(state: 'demo')
+      # visit edit_grant_path(@grant.id)
+      # click_link 'Delete'
+      # page.driver.browser.switch_to.alert.accept
+      # expect(page).to have_content 'Grant was successfully deleted.'
     end
 
     scenario 'completed grant cannot be soft deleted' do

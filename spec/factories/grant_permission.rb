@@ -10,7 +10,7 @@ FactoryBot.define do
       role { 'editor' }
     end
 
-    trait :editor do
+    trait :viewer do
       role { 'viewer' }
     end
 

@@ -47,11 +47,10 @@ class GrantPolicy < AccessPolicy
   end
 
   def destroy?
-    grant.is_soft_deletable? && (organization_admin_access? || grant_admin_access?)
-  rescue SoftDeleteException
-    false
+    organization_admin_access? || grant_admin_access?
   end
 
+  #
   # def apply?
   #   (organization_admin_access? || grant_editor_access?) || (user.present? && grant.accepting_submissions?)
   # end
