@@ -17,7 +17,8 @@ class Grant < ApplicationRecord
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
   has_many   :submissions,      class_name: 'GrantSubmission::Submission',
-                                foreign_key: :grant_id
+                                foreign_key: :grant_id,
+                                dependent: :destroy
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
