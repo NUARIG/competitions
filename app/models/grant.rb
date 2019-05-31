@@ -107,6 +107,10 @@ class Grant < ApplicationRecord
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable_error")
   end
 
+  def is_open?
+    DateTime.now >= submission_open_date.beginning_of_day
+  end
+
   def accepting_submissions?
     published? && DateTime.now.between?(submission_open_date.beginning_of_day,
                                         submission_close_date.end_of_day)

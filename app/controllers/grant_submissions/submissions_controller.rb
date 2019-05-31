@@ -1,4 +1,4 @@
-module Grants
+module GrantSubmissions
   class SubmissionsController < GrantBaseController
     before_action :set_grant, except: :new
 
@@ -7,7 +7,7 @@ module Grants
       @form          = @grant.form
       @submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
       @submissions   = policy_scope(GrantSubmission::Submission,
-                                    policy_scope_class: Grant::SubmissionPolicy::Scope)
+                                    policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
 
       render 'index'
     end
@@ -30,19 +30,20 @@ module Grants
 
     def edit
       @grant = GrantDecorator.new(@grant)
-      authorize(@grant, :show?)
       submission
+      authorize @submission
       render 'edit'
     end
 
     def create
       # @grant         = Grant.friendly.find(params[:grant_id])
-      authorize(@grant, :show?)
       if @grant.form.disabled
         flash[:error] = 'unable to create, this form is disabled'
         redirect_to index_page
       else
-        if submission.save
+        submission
+        authorize @submission
+        if @submission.save
           flash[:notice] = 'successfully applied'
           redirect_to grant_path(@grant)
         else
@@ -54,8 +55,9 @@ module Grants
     end
 
     def update
-      authorize(@grant, :show?)
-      if submission.update(submission_params)
+      submission
+      authorize @submission
+      if @submission.update(submission_params)
         flash[:notice] = 'successfully updated response'
         #TODO: redirect based on user permissions
         redirect_to grant_submissions_path(@grant)
@@ -67,7 +69,9 @@ module Grants
 
     def destroy
       # TODO: Policy for this
-      if submission.destroy
+      submission
+      authorize @submission
+      if @submission.destroy
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
         # flash[:error] = 'unable to delete'

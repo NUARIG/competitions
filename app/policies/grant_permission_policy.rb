@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Grant::GrantPermissionPolicy < GrantPolicy
+class GrantPermissionPolicy < GrantPolicy
 
   def update?
     organization_admin_access? || grant_editor_access?

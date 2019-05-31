@@ -1,4 +1,4 @@
-module Grants
+module GrantSubmissions
   class FormsController < ApplicationController
     # layout 'admin'
 

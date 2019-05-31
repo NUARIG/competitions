@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Grant
+module GrantSubmssion
   class FormPolicy < GrantPolicy
 
     def new?

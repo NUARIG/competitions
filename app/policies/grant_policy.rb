@@ -22,9 +22,9 @@ class GrantPolicy < AccessPolicy
   # end
 
   def show?
-    case grant.published?
+    case grant.published? && grant.is_open?
     when true
-      user.organization_role == 'admin' || grant_viewer_access?
+      user.present?
     else
       organization_admin_access? || grant_viewer_access?
     end
