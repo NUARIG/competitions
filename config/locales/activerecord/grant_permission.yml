@@ -1,11 +1,8 @@
 en:
   activerecord:
     attributes:
-      grant:
-        slug: Short name
+      grant_permission:
     errors:
-      messages:
-        blank: is required.
       models:
         grant_permission:
           attributes:
@@ -13,3 +10,4 @@ en:
               blank: must be selected.
             role:
               blank: must be selected.
+

@@ -24,7 +24,7 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
     super(method, options)
   end
 
-  # dynamically generatest thse methods
+  # dynamically generates thse methods
   #   def submit def link_to_remove def link_to_add
   %i[submit link_to_remove link_to_add].each do |method|
     class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1

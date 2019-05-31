@@ -14,8 +14,10 @@ Rails.application.routes.draw do
         put :update_fields
       end
     end
-    #resources :submissions,       only: :index,              controller: 'grants/submissions'
-    resources :submissions,       except: :new,               controller: 'grants/submissions'
+    resources :submissions,       except: %[new show],       controller: 'grants/submissions' do
+      get 'delete-all', on: :collection, to: 'grants/submissions/delete_all#index'
+    end
+
     get 'apply', to: 'grants/submissions#new', as: :apply
   end
 

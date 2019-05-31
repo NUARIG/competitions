@@ -1,0 +1,17 @@
+main.forms {
+  form.edit_grant_submission_form {
+    fieldset.fieldset {
+      &.form_builder_section_fieldset,
+      &.form_builder_question_fieldset {
+        legend {
+          span {
+            font-weight: bold;
+          }
+          a.button {
+            margin: 1em;
+          }
+        }
+      }
+    }
+  }
+}

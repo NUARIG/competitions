@@ -38,6 +38,7 @@ module ApplicationHelper
 
   # BEGIN FormBuilder
   def view_or_edit(form)
+    byebug
     # (form.available? && !crf_patient_form_read_only?) ? "Edit" : "View"
     form.available? ? "Edit" : "View"
   end
@@ -60,10 +61,6 @@ module ApplicationHelper
     # TODO: Update/Create Policy for admins, etc.
     #       Using multiple arguments with Pundit
     @user # && !Pundit.policy(current_user, @user).update?
-  end
-
-  def required_asterisk(required)
-    %Q{<span style="color: red;">*</span>}.html_safe if required
   end
 
   def sortable_header(column, title = nil)

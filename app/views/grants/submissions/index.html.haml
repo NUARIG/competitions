@@ -15,15 +15,17 @@
         %tr
           %th Applicant
           %th Title
-          %th Action
+          %th Submitted On
+          %th Actions
       %tbody
         - @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission|
           %tr
             %td
-              = link_to "#{submission.applicant.name}", grant_submission_path(@grant, submission)
+              = link_to submission.applicant.name, grant_submission_path(@grant, submission)
             %td
-              = link_to "#{submission.title}", grant_submission_path(@grant, submission)
-
+              = link_to submission.title, grant_submission_path(@grant, submission)
             %td
-              = render partial: 'crud_links', locals: { submission: submission }
-            =# crud_links[submission.id]
+              = submission.created_at
+            %td
+              = link_to 'Edit', edit_grant_submission_path(@grant, submission), class: 'button clear'
+              = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'button clear alert', confirm: 'Are you sure?'

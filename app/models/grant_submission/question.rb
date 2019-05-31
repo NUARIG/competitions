@@ -12,17 +12,19 @@ module GrantSubmission
     has_many :responses,               class_name: 'GrantSubmission::Response',
                                        foreign_key: 'grant_submission_question_id',
                                        inverse_of: :question
+    # has_one :form,                     through: :section,
+
 
     accepts_nested_attributes_for :multiple_choice_options, allow_destroy: true
 
     VIEW_RESPONSE_TYPE_TRANSLATION = {
-      pick_one:      "Multiple Choice - Pick One",
-      number:        "Number",
-      short_text:    "Short Text (255 max)",
-      long_text:     "Long Text (unlimited)",
-      date_opt_time: "Date w/ Optional Time",
-      partial_date:  "Partial Date",
-      file_upload:   "File Upload (15 MiB max)"
+      pick_one:      'Multiple Choice - Pick One',
+      number:        'Number',
+      short_text:    'Short Text (255 max)',
+      long_text:     'Long Text (unlimited)',
+      date_opt_time: 'Date w/ Optional Time',
+      # partial_date:' "Partial Date',
+      file_upload:   'File Upload (15 MB max)'
     }.freeze
 
     validates_presence_of   :section, :text, :display_order, :response_type
