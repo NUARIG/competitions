@@ -52,6 +52,10 @@ class GrantPolicy < AccessPolicy
     false
   end
 
+  # def apply?
+  #   (organization_admin_access? || grant_editor_access?) || (user.present? && grant.accepting_submissions?)
+  # end
+
   #This needs to be worked out?????
   # Grant Access
   def grant_admin_access?

@@ -7,6 +7,14 @@ class Grant::SubmissionPolicy < GrantPolicy
   # organization_admin_access? code from AccessPolicy:6
   # was repeated.
   # https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
+  attr_reader :user, :grant, :scope
+
+  def initialize(context, scope)
+    @user   = context.user
+    @grant  = context.grant
+    @scope  = scope
+  end
+
   class Scope < Scope
 
     attr_reader :user, :grant, :scope
@@ -24,6 +32,19 @@ class Grant::SubmissionPolicy < GrantPolicy
         scope.where(applicant_id == user.id)
       end
     end
+
+
+    # def resolve
+    #   if user.organization_role == 'admin'
+    #     scope.not_deleted.by_publish_date.with_organization
+    #   elsif (user.grants.any?)
+    #     user.grants.not_deleted
+    #   else
+    #     scope.not_deleted.where(published: true)
+    #   end
+    # end
+
+
   end
 
   # def index?
@@ -31,7 +52,9 @@ class Grant::SubmissionPolicy < GrantPolicy
   # end
 
   def create?
-    organization_admin_access? || grant_viewer_access? || submission.applicant_id == user.id
+    (@user.organization_role =='admin') || (user.present? && @grant.accepting_submissions?)
+    # @user.organization_role =='admin' ||
+    # organization_admin_access? || grant_viewer_access? || submission.applicant_id == user.id
   end
 
   def new?

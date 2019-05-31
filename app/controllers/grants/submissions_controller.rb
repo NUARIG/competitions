@@ -22,7 +22,8 @@ module Grants
       @grant = GrantDecorator.new(@grant)
       submission
       # TODO: This is not the correct authorization
-      authorize(@grant)
+      authorize @submission
+      # authorize(@grant, :apply?)
       # TODO: Make a new view
       render 'new'
     end
