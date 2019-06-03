@@ -23,14 +23,6 @@
     <tr>
       <td colspan="8"><%= question.text_area :instruction, rows: 1, cols: 100 %></td>
     </tr>
-    <%# TODO: Condition Groups %>
-    <% if true == false && !question.object.new_record? %>
-      <tr>
-        <td colspan="8">
-          <%= render partial: 'condition_groups/owner_container_container', locals: {owner: question.object} %>
-        </td>
-      </tr>
-    <% end %>
   </table>
 
   <table class="submission_multiple_choice_options_table table table-condensed table-striped" style="width: auto;">
