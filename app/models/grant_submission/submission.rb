@@ -129,11 +129,11 @@ module GrantSubmission
       applicant_id
     end
 
-    def get_first_applicant
-      raise Form.new('Method moved from FormBase')
-      # self.versions.loaded? ?
-      #     self.versions.select {|v| v.event == 'create'}.first.try(:whodunnit) :
-      #     self.versions.where(event: 'create').first.try(:whodunnit)
-    end
+    # def get_first_applicant
+    #   raise Form.new('Method moved from FormBase')
+    #   # self.versions.loaded? ?
+    #   #     self.versions.select {|v| v.event == 'create'}.first.try(:whodunnit) :
+    #   #     self.versions.where(event: 'create').first.try(:whodunnit)
+    # end
   end
 end

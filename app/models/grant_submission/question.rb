@@ -98,16 +98,16 @@ module GrantSubmission
       end
     end
 
-    def has_export_code_in_answers?
-      false
-      # case response_type.to_sym
-      # when :pick_one
-      #   answers.any? {|answer| answer.export_code.present?}
-      # when :standard_answer
-      #   standard_answer_set.standard_answers.any? {|standard_answer| standard_answer.export_code.present?}
-      # else
-      #   false
-      # end
-    end
+    # def has_export_code_in_answers?
+    #   false
+    #   # case response_type.to_sym
+    #   # when :pick_one
+    #   #   answers.any? {|answer| answer.export_code.present?}
+    #   # when :standard_answer
+    #   #   standard_answer_set.standard_answers.any? {|standard_answer| standard_answer.export_code.present?}
+    #   # else
+    #   #   false
+    #   # end
+    # end
   end
 end
