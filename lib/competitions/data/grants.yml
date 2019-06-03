@@ -16,13 +16,13 @@ research:
   review_close_date: '2020-03-25 06:00:00'
   panel_date: '2020-04-01 06:00:00'
   panel_location: '123 Main - Room 100'
-  grant_users:
+  grant_permissions:
     role1:
       user_id: 4
-      grant_role: 'admin'
+      role: 'admin'
     role2:
       user_id: 3
-      grant_role: 'viewer'
+      role: 'viewer'
   questions:
     abstract:
       grant_id: 1
@@ -79,10 +79,10 @@ kl2:
   grant_users:
     role1:
       user_id: 1
-      grant_role: 'admin'
+      role: 'admin'
     role2:
       user_id: 2
-      grant_role: 'viewer'
+      role: 'viewer'
   questions:
     direct_project_cost:
       grant_id: 2
@@ -139,7 +139,7 @@ research2:
   grant_users:
     role1:
       user_id: 6
-      grant_role: 'admin'
+      role: 'admin'
     role2:
       user_id: 8
-      grant_role: 'editor'
+      role: 'editor'

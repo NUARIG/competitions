@@ -8,8 +8,9 @@ main {
   }
 
   &.grants,
-  &.questions,
-  &.grant_users {
+  &.grant_permissions,
+  &.submissions,
+  &.forms {
     // Edit
     #grant-state {
       margin: 2rem 0;
@@ -21,6 +22,10 @@ main {
       }
     }
   }
+}
+
+th {
+  text-align: left;
 }
 
 

@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe 'Grants', type: :system do
   describe 'published grant', js: true do
     before(:each) do
-      @published_grant = create(:grant_with_users_and_questions)
-      @admin_user      = @published_grant.grant_users.grant_role_admin.first.user
-      @editor_user     = @published_grant.grant_users.grant_role_editor.first.user
+      @published_grant = create(:grant_with_users)
+      @admin_user      = @published_grant.grant_permissions.role_admin.first.user
+      @editor_user     = @published_grant.grant_permissions.role_editor.first.user
     end
 
     context 'grant admin user' do
@@ -61,9 +61,9 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'draft grant', js: true do
     before(:each) do
-      @draft_grant     = create(:draft_grant_with_users_and_questions)
-      @admin_user      = @draft_grant.grant_users.grant_role_admin.first.user
-      @editor_user     = @draft_grant.grant_users.grant_role_editor.first.user
+      @draft_grant     = create(:draft_grant_with_users)
+      @admin_user      = @draft_grant.grant_permissions.role_admin.first.user
+      @editor_user     = @draft_grant.grant_permissions.role_editor.first.user
     end
 
     context 'grant admin user' do
@@ -77,10 +77,14 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_selector(:link_or_button, 'Publish this Grant')
       end
 
-      scenario 'can change status to published' do
+      scenario 'cannot change status to published without questions' do
         click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Published'
-        expect(page).to have_content 'Publish status was changed to published.'
+        expect(page).to have_content 'Current Publish Status: Draft'
+        expect(page).to have_content 'Status change failed.'
+      end
+
+      pending 'can change status to published with at least one question' do
+        fail 'Add form, section, and question to factory.'
       end
 
       scenario 'displays error on failure' do
@@ -101,10 +105,14 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_selector(:link_or_button, 'Publish this Grant')
       end
 
-      scenario 'can change status to draft' do
+      scenario 'cannot change status to published without question' do
         click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Published'
-        expect(page).to have_content 'Publish status was changed to published.'
+        expect(page).to have_content 'Current Publish Status: Draft'
+        expect(page).to have_content 'Status change failed.'
+      end
+
+      pending 'can change status to published with at least one question' do
+        fail 'Add form, section, and question to factory.'
       end
 
       scenario 'displays error on failure' do

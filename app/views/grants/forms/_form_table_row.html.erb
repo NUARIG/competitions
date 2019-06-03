@@ -1,0 +1,4 @@
+<tr class="<%= attr.to_s %>">
+  <td><%= f.label(attr, f.object.class.human_readable_attribute(attr)) %></td>
+  <td><% field.(attr) %></td>
+</tr>

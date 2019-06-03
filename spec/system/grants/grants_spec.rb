@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.describe 'Grants', type: :system do
   describe 'Index', js: true do
     before(:each) do
-      @grant                = create(:grant_with_users_and_questions)
-      @inaccessible_grant   = create(:grant_with_users_and_questions)
-      @soft_deleted_grant   = create(:grant_with_users_and_questions, deleted_at: 1.hour.ago)
-      @admin_user           = @grant.grant_users.grant_role_admin.first.user
+      @grant                = create(:grant_with_users)
+      @inaccessible_grant   = create(:grant_with_users)
+      @soft_deleted_grant   = create(:grant_with_users, deleted_at: 1.hour.ago)
+      @admin_user           = @grant.grant_permissions.role_admin.first.user
       login_as(@admin_user)
       visit grants_path
     end
@@ -27,11 +27,11 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'Edit', js: true do
     before(:each) do
-      @grant          = create(:grant_with_users_and_questions)
-      @admin_user     = @grant.grant_users.grant_role_admin.first.user
+      @grant          = create(:grant_with_users)
+      @admin_user     = @grant.grant_permissions.role_admin.first.user
 
       login_as(@admin_user)
-      visit edit_grant_path(@grant.id)
+      visit edit_grant_path(@grant)
     end
 
     scenario 'date fields edited with datepicker are properly formatted' do
@@ -62,14 +62,12 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'New', js: true do
     before(:each) do
-      @default_set  = create(:default_set, :with_questions)
       @grant        = build(:new_grant)
       @user         = create(:user, organization: @grant.organization,
                                     organization_role: 'admin')
       login_as(@user)
 
       visit new_grant_path
-      select(@default_set.name, from: 'grant[default_set]')
 
       page.fill_in 'Name', with: @grant.name
       page.fill_in 'Short Name', with: @grant.slug
@@ -90,34 +88,29 @@ RSpec.describe 'Grants', type: :system do
       click_button 'Save as Draft'
       grant = Grant.last
       expect(grant.name).to eql(@grant.name)
-      expect(page.current_path).to eq(grant_questions_path(grant))
+      expect(page.current_path).to eq(grant_grant_permissions_path(grant))
       expect(grant.state).to eql('draft')
       expect(page).to have_content 'Grant saved'
-      expect(page).to have_content @default_set.questions.first.text
-      click_link('Permissions', href: grant_grant_users_path(grant).to_s)
+      click_link('Permissions', href: grant_grant_permissions_path(grant).to_s)
       expect(page).to have_content @user.name
       expect(grant.users.count).to eql 1
-      expect(@user.grant_users.where(grant: grant).first.grant_role).to eql 'admin'
+      expect(@user.grant_permissions.where(grant: grant).first.role).to eql 'admin'
     end
 
     scenario 'invalid form submission does not create constraints and permissions' do
-      grant_user_count          = GrantUser.all.count
-      question_count            = Question.all.count
-      constraint_question_count = ConstraintQuestion.all.count
+      grant_permission_count          = GrantPermission.all.count
 
       page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
       click_button 'Save as Draft'
       expect(page).to have_content 'Submission close date must be after the opening date for submissions.'
-      expect(GrantUser.all.count).to eql(grant_user_count)
-      expect(Question.all.count).to eql(question_count)
-      expect(ConstraintQuestion.all.count).to eql(constraint_question_count)
+      expect(GrantPermission.all.count).to eql(grant_permission_count)
     end
   end
 
   describe 'Duplicate', js: true do
     before(:each) do
-      @grant          = create(:grant_with_users_and_questions)
-      @admin_user     = @grant.grant_users.grant_role_admin.first.user
+      @grant          = create(:grant_with_users)
+      @admin_user     = @grant.grant_permissions.role_admin.first.user
 
       login_as(@admin_user)
     end
@@ -156,7 +149,7 @@ RSpec.describe 'Grants', type: :system do
       end.not_to change{ Grant.count }
 
       expect(page).to have_content('Name has already been taken')
-      expect(page).to have_content('Short name has already been taken')
+      expect(page).to have_content('Short Name has already been taken')
     end
 
     scenario 'valid duplicate submission creates new grant' do
@@ -173,7 +166,7 @@ RSpec.describe 'Grants', type: :system do
 
       expect do
         click_button('Save as Draft')
-      end.to change{ Grant.count }.by(1).and change{ GrantUser.count}.by(@grant.grant_users.count).and change{ Question.count}.by(@grant.questions.count)
+      end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
       expect(page).to have_content('Current Publish Status: Draft')
     end
 
@@ -186,8 +179,8 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'SoftDelete', js: true do
     before(:each) do
-      @grant          = create(:grant_with_users_and_questions)
-      @admin_user     = @grant.grant_users.grant_role_admin.first.user
+      @grant          = create(:grant_with_users)
+      @admin_user     = @grant.grant_permissions.role_admin.first.user
 
       login_as(@admin_user)
     end
@@ -231,13 +224,13 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'Policy', js: true do
     before(:each) do
-      @grant        = create(:grant_with_users_and_questions)
+      @grant        = create(:grant_with_users)
       @invalid_user = create(:user)
-      @grant_viewer = @grant.grant_users.grant_role_viewer.first.user
-      @grant_editor = @grant.grant_users.grant_role_editor.first.user
-      @grant_admin  = @grant.grant_users.grant_role_admin.first.user
+      @grant_viewer = @grant.grant_permissions.role_viewer.first.user
+      @grant_editor = @grant.grant_permissions.role_editor.first.user
+      @grant_admin  = @grant.grant_permissions.role_admin.first.user
 
-      @grant_user   = @grant.grant_users.grant_role_editor.first
+      @grant_permission   = @grant.grant_permissions.role_editor.first
     end
 
     context 'invalid user' do
@@ -250,9 +243,9 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_content 'You are not authorized to perform this action.'
         visit edit_grant_path(@grant)
         expect(page).to have_content 'You are not authorized to perform this action.'
-        visit grant_grant_users_path(@grant)
+        visit grant_grant_permissions_path(@grant)
         expect(page).to have_content 'You are not authorized to perform this action.'
-        visit edit_grant_grant_user_path(@grant, @grant_user)
+        visit edit_grant_grant_permission_path(@grant, @grant_permission)
         expect(page).to have_content 'You are not authorized to perform this action.'
         visit new_grant_duplicate_path(@grant)
         expect(page).to have_content 'You are not authorized to perform this action.'
@@ -274,8 +267,8 @@ RSpec.describe 'Grants', type: :system do
         expect(page).not_to have_content 'You are not authorized to perform this action.'
       end
 
-      scenario 'can access grant_users page' do
-        visit grant_grant_users_path(@grant)
+      scenario 'can access grant_permissions page' do
+        visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content 'You are not authorized to perform this action.'
       end
     end
@@ -295,13 +288,13 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_content 'You are not authorized to perform this action.'
       end
 
-      scenario 'can access grant_users page' do
-        visit grant_grant_users_path(@grant)
+      scenario 'can access grant_permissions page' do
+        visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content 'You are not authorized to perform this action.'
       end
 
-      scenario 'cannot edit a grant_user' do
-        visit edit_grant_grant_user_path(@grant, @grant_user)
+      scenario 'cannot edit a grant_permission' do
+        visit edit_grant_grant_permission_path(@grant, @grant_permission)
         expect(page).to have_content 'You are not authorized to perform this action.'
       end
     end

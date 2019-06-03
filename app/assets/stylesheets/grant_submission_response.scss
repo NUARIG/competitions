@@ -1,0 +1,7 @@
+main.submissions {
+  label.required-true:after {
+    content: ' *';
+    font-size: 1.15em;
+    color: red;
+  }
+}

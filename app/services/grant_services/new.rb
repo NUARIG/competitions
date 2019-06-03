@@ -7,14 +7,10 @@ module GrantServices
         # TODO: is requires_new needed?
         ActiveRecord::Base.transaction(requires_new: true) do
           grant.save!
-
-          GrantUser.create!(grant: grant, user: user, grant_role: 'admin')
-
-          DefaultSet.includes(questions: :constraint_questions).find(grant.default_set).questions.each do |question|
-            ActiveRecord::Base.transaction(requires_new: true) do
-              QuestionServices::Duplicate.call(question: question, new_grant: grant)
-            end
-          end
+          # Add user as admin
+          GrantPermission.create!(grant: grant, user: user, role: 'admin')
+          # Create a starter form
+          GrantSubmissionFormServices::New.call(grant: grant, user: user)
         end
         OpenStruct.new(success?: true)
       rescue
