@@ -31,7 +31,7 @@ RSpec.describe 'Grants', type: :system do
       @admin_user     = @grant.grant_permissions.role_admin.first.user
 
       login_as(@admin_user)
-      visit edit_grant_path(@grant.id)
+      visit edit_grant_path(@grant)
     end
 
     scenario 'date fields edited with datepicker are properly formatted' do

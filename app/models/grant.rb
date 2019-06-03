@@ -19,7 +19,8 @@ class Grant < ApplicationRecord
   has_many   :questions,        through: :form
   has_many   :submissions,      class_name: 'GrantSubmission::Submission',
                                 foreign_key: :grant_id,
-                                inverse_of: :grant
+                                inverse_of: :grant,
+                                dependent: :destroy
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15

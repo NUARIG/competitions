@@ -57,14 +57,12 @@ class GrantsController < ApplicationController
   # PATCH/PUT /grants/1.json
   def update
     authorize @grant
-    respond_to do |format|
-      if @grant.update(grant_params)
-        format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
-        format.json { render :show, status: :ok, location: @grant }
-      else
-        flash.now[:alert] = @grant.errors.full_messages
-        render :edit
-      end
+    if @grant.update(grant_params)
+      flash[:notice] = 'Grant was successfully updated.'
+      redirect_to grant_path(@grant)
+    else
+      flash.now[:alert] = @grant.errors.full_messages
+      render :edit
     end
   end
 
