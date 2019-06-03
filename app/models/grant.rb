@@ -24,9 +24,9 @@ class Grant < ApplicationRecord
   SLUG_MAX_LENGTH = 15
 
   GRANT_STATES    = { demo:      'demo',      # TODO: define specifics of each
-                       draft:     'draft',
-                       published: 'published', # e.g. can be opened and may be in process
-                       completed: 'completed'  # e.g. awarded and closed
+                      draft:     'draft',
+                      published: 'published', # e.g. can be opened and may be in process
+                      completed: 'completed'  # e.g. awarded and closed
                      }.freeze
 
 
