@@ -1,13 +1,3 @@
-<%# TODO: The policy check was changed below to be universally false %>
-<% if true == false %>
-<%# if policy(:admin).manage_form_builder_forms? %>
-  <%= form_tag({action: :import}, multipart: true) do %>
-    <%= file_field_tag 'uploaded_survey' %>
-    <%= submit_tag("Import") %>
-    <span class="fail_msg" style="color: red"><%= flash[:import_error_msg] %></span>
-  <% end %>
-<% end %>
-
 <div class="page-header">
   <h2>Form Builder Library</h2>
 </div>

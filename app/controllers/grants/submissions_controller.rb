@@ -64,6 +64,7 @@ module Grants
 
     def destroy
       # TODO: Policy for this
+      authorize(@grant, :edit?)
       if submission.destroy
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
