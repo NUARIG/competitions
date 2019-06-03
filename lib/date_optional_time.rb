@@ -1,6 +1,9 @@
 module DateOptionalTime
   extend ActiveSupport::Concern
 
+  # TODO: Remove optional time methods
+  # TODO: Move to app/models/concerns?
+
   module ClassMethods
     def has_date_optional_time(datetime_comp, has_time_comp)
       dt_input = date_optional_time_attribute(datetime_comp)

@@ -29,14 +29,14 @@ module GrantSubmission
       {}[attr] || attr.to_s.humanize
     end
 
-    def to_export_hash
-      {
-          title: title,
-          display_order: display_order,
-          repeatable: repeatable,
-          questions_attributes: questions.map(&:to_export_hash)
-      }
-    end
+    # def to_export_hash
+    #   {
+    #       title: title,
+    #       display_order: display_order,
+    #       repeatable: repeatable,
+    #       questions_attributes: questions.map(&:to_export_hash)
+    #   }
+    # end
 
     def available?
       new_record? || form.available?

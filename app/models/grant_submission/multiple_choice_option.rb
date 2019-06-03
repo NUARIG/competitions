@@ -26,9 +26,9 @@ module GrantSubmission
       text
     end
 
-    def to_export_hash
-      raise FormBuilderException.new('Answer to_export_hash method, no longer needed without export. line 28')
-    end
+    # def to_export_hash
+    #   raise FormBuilderException.new('Answer to_export_hash method, no longer needed without export. line 28')
+    # end
 
     def available?
       new_record? || question.section.form.available?

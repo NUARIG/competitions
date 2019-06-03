@@ -91,10 +91,10 @@ class GrantSubmission::Form < ApplicationRecord
       }
     end
 
-    def has_cycle_dates?
-      false
-      #questions.where(is_cycle_date: true).count > 0
-    end
+    # def has_cycle_dates?
+    #   false
+    #   #questions.where(is_cycle_date: true).count > 0
+    # end
 
     # TODO: What does available mean here?
     #       available...to edit? ...to submit?

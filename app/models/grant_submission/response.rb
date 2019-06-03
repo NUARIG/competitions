@@ -64,15 +64,15 @@ module GrantSubmission
     end
 
     # returns a pair of Time object for cycle date comparison and a string for display
-    def to_form_date_pair
-      case question.response_type.to_sym
-      when :date_opt_time
-        [datetime_val, response_value]
-      when :partial_date
-        time = get_partial_date(:partial_date_val).try(:to_time)
-        time ? [time, time.strftime('%m/%d/%Y')] : [nil, nil]
-      end
-    end
+    # def to_form_date_pair
+    #   case question.response_type.to_sym
+    #   when :date_opt_time
+    #     [datetime_val, response_value]
+    #   when :partial_date
+    #     time = get_partial_date(:partial_date_val).try(:to_time)
+    #     time ? [time, time.strftime('%m/%d/%Y')] : [nil, nil]
+    #   end
+    # end
 
     def response_value
       case question.response_type.to_sym
