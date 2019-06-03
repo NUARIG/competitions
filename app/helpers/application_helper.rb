@@ -38,13 +38,11 @@ module ApplicationHelper
 
   # BEGIN FormBuilder
   def view_or_edit(form)
-    byebug
-    # (form.available? && !crf_patient_form_read_only?) ? "Edit" : "View"
     form.available? ? "Edit" : "View"
   end
 
   def view_or_edit_class(form)
-    form.available? ? "btn-warning" : "btn-info"
+    form.available? ? "warning" : "secondary"
   end
 
   # see https://github.com/ryanb/nested_form/wiki/How-To:-Custom-nested-form-builders

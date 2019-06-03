@@ -16,8 +16,10 @@ class Grant < ApplicationRecord
   # has_many   :grant_forms,      inverse_of: :grant
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
+  has_many   :questions,        through: :form
   has_many   :submissions,      class_name: 'GrantSubmission::Submission',
-                                foreign_key: :grant_id
+                                foreign_key: :grant_id,
+                                inverse_of: :grant
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -91,6 +93,9 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
+  validate      :has_at_least_one_question?, on: :update,
+                                             if: -> () { will_save_change_to_attribute?('state', to: 'published') }
+
   scope :public_grants,      -> { not_deleted.
                                     published.
                                     where(':date BETWEEN
@@ -133,6 +138,10 @@ class Grant < ApplicationRecord
 
   def completed_soft_deletable?
     raise SoftDeleteException.new('Completed grant may not be deleted')
+  end
+
+  def has_at_least_one_question?
+    errors.add(:base, 'A question is required before a grant can be published.') unless questions.any?
   end
 
   def process_association_soft_delete

@@ -48,10 +48,8 @@ class GrantsController < ApplicationController
       flash[:warning] = 'Review the information below then click "Publish this Grant" to finalize.'
       redirect_to grant_grant_permissions_url(@grant)
     else
-      respond_to do |format|
-        flash[:alert] = result.messages
-        format.html { render :new }
-      end
+      flash.now[:alert] = result.messages
+      render :new
     end
   end
 
@@ -64,9 +62,8 @@ class GrantsController < ApplicationController
         format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
         format.json { render :show, status: :ok, location: @grant }
       else
-        flash[:alert] = @grant.errors.full_messages
-        format.html { render :edit }
-        format.json { render json: @grant.errors, status: :unprocessable_entity }
+        flash.now[:alert] = @grant.errors.full_messages
+        render :edit
       end
     end
   end

@@ -60,7 +60,6 @@
       <% end %>
     </div>
   </fieldset>
-
   <%= f.fields_for :sections, @form.sections.sort_by {|section| section.display_order || 0 } do |ff| %>
     <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: has_edit_permission} %>
     <% end %>
