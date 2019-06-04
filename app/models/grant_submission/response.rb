@@ -14,6 +14,7 @@ module GrantSubmission
                                         foreign_key: 'grant_submission_multiple_choice_option_id',
                                         inverse_of: :responses,
                                         optional: true
+    has_one_attached :document
 
     validates_presence_of   :submission, :question
     validates_inclusion_of  :grant_submission_question_id,
@@ -89,14 +90,14 @@ module GrantSubmission
       when :partial_date
         get_partial_date(:partial_date_val)
       when :file_upload
-        document_file_name
+        self.document.attached? ? self.document.filename : nil
       end
     end
 
     def formatted_response_value(format = nil)
       case question.response_type.to_sym
       when :pick_one
-        if multiple_choice_option # answer
+        if multiple_choice_option
           multiple_choice_option.to_formatted_s(format)
         else
           format == :export_multi_cols ? [nil, nil] : nil
@@ -144,7 +145,8 @@ module GrantSubmission
       when :partial_date
         partial_date_val
       when :file_upload
-        document_file_name
+        "FIX: file name"
+        #document_file_name
       end
     end
 
@@ -157,7 +159,7 @@ module GrantSubmission
       when 'short_text'
         length_if_short_text
       when 'file_upload'
-        attachment_size_if_document
+        attachment_size_if_document if document.attached?
       end
     end
 
@@ -179,11 +181,12 @@ module GrantSubmission
     end
 
     def attachment_size_if_document
-      mib = 1048576 # 2**20
-      max = 15
-      if document_file_size && document_file_size > max*mib
-        errors.add(:document, "^#{question.text} can be a maxiumum of #{max}MiB (#{document_file_name} is #{(document_file_size.to_f/mib).round(1)}MiB)")
+      if document.blob.byte_size > 15.megabytes
+        errors.add(:document, :file_too_large, question: question.text, uploaded_file_size: (document.byte_size/(1.megabyte)).round(1))
       end
+      # if document_file_size && document_file_size > max*mib
+      #   errors.add(:document, "^#{question.text} can be a maxiumum of #{max}MiB (#{document_file_name} is #{(document_file_size.to_f/mib).round(1)}MiB)")
+      # end
     end
 
     #copied from ActiveModel::Validations::NumericalityValidator

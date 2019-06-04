@@ -21,6 +21,7 @@ class Grant < ApplicationRecord
                                 foreign_key: :grant_id,
                                 inverse_of: :grant,
                                 dependent: :destroy
+  has_one_attached :document
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15

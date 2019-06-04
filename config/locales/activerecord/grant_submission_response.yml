@@ -3,6 +3,7 @@ en:
     attributes:
       grant_submission/submission/responses:
         decimal_val: Response
+        document: File
         text_val: Response
         grant_submission_multiple_choice_option_id: A selection
         datetime_val_date_optional_time_magik: Response
@@ -13,6 +14,9 @@ en:
           attributes:
             decimal_val:
               not_a_number: to '%{question}' must be a number.
+            document:
+              blank: upload for '%{question} is required.'
+              file_too_large: uploaded for '%{question}'' is too large (%{uploaded_file_size}MB).'
             grant_submission_multiple_choice_option_id:
               blank: for '%{question}' is required.
             datetime_val_date_optional_time_magik:
