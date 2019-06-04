@@ -6,30 +6,25 @@ class Grant < ApplicationRecord
   extend FriendlyId
   friendly_id :slug
 
-  attr_accessor :duplicate
+  attr_accessor :default_set, :duplicate
 
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
-  belongs_to :organization
-  has_many   :grant_permissions
-  has_many   :users,            through: :grant_permissions
-  # has_many   :grant_forms,      inverse_of: :grant
-  has_one    :form,             class_name: 'GrantSubmission::Form',
-                                foreign_key: :grant_id
-  has_many   :questions,        through: :form
-  has_many   :submissions,      class_name: 'GrantSubmission::Submission',
-                                foreign_key: :grant_id,
-                                inverse_of: :grant,
-                                dependent: :destroy
+  belongs_to  :organization
+  has_many    :questions
+  has_many    :grant_users
+  has_many    :users, through: :grant_users
+
+  accepts_nested_attributes_for :questions
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
 
-  GRANT_STATES    = { demo:      'demo',      # TODO: define specifics of each
-                       draft:     'draft',
-                       published: 'published', # e.g. can be opened and may be in process
-                       completed: 'completed'  # e.g. awarded and closed
-                     }.freeze
+  GRANT_STATES = { demo:      'demo',      # TODO: define specifics of each
+                   draft:     'draft',
+                   published: 'published', # e.g. can be opened and may be in process
+                   completed: 'completed'  # e.g. awarded and closed
+                 }.freeze
 
 
   SOFT_DELETABLE_STATES = %w[demo draft]
@@ -94,8 +89,7 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
-  validate      :has_at_least_one_question?, on: :update,
-                                             if: -> () { will_save_change_to_attribute?('state', to: 'published') }
+  validate :valid_default_set, on: :create, unless: -> { duplicate.present? }
 
   scope :public_grants,      -> { not_deleted.
                                     published.
@@ -107,6 +101,7 @@ class Grant < ApplicationRecord
                                     by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
+  scope :with_questions,     -> { includes :questions }
 
   def is_soft_deletable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
@@ -132,6 +127,10 @@ class Grant < ApplicationRecord
     slug.strip!
   end
 
+  def valid_default_set
+    errors.add(:base, 'Please choose a default question set') unless DefaultSet.where(id: default_set).exists?
+  end
+
   def published_soft_deletable?
     # TODO: e.g. submissions.count.zero?
     raise SoftDeleteException.new('Published grant may not be deleted')
@@ -141,14 +140,13 @@ class Grant < ApplicationRecord
     raise SoftDeleteException.new('Completed grant may not be deleted')
   end
 
-  def has_at_least_one_question?
-    errors.add(:base, 'A question is required before a grant can be published.') unless questions.any?
-  end
-
   def process_association_soft_delete
     ActiveRecord::Base.transaction do
       # TODO: determine whether any/all of these should these be called
-      # grant_permissions.update_all(deleted_at: Time.now)
+      # grant_users.update_all(deleted_at: Time.now)
+      # questions.update_all(deleted_at: Time.now)
+      # constraint_questions
+      #       submissions
       #       reviews
       #       reviewers
       #       panel

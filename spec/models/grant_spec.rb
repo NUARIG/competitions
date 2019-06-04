@@ -28,6 +28,21 @@ RSpec.describe Grant, type: :model do
       expect(grant).to be_valid
     end
 
+    context 'default set' do
+      it 'requires a valid default_set' do
+        grant.default_set = DefaultSet.last.id + 1
+        expect(grant).not_to be_valid
+        expect(grant.errors.messages[:base]).to eq ['Please choose a default question set']
+      end
+
+      it 'does not require a default_set on update' do
+        grant.save
+
+        grant.default_set = nil
+        expect(grant).to be_valid
+      end
+    end
+
     context 'name' do
       it 'requires a name' do
         grant.name = nil

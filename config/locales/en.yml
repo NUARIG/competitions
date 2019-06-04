@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    attributes:
+      grant:
+        slug: Short name
+    errors:
+      messages:
+        blank: is required.
+      models:
+        grant_user:
+          attributes:
+            user:
+              blank: must be selected.
+            grant_role:
+              blank: must be selected.

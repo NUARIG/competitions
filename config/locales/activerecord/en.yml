@@ -1,5 +1,0 @@
-en:
-  activerecord:
-    errors:
-      messages:
-        blank: is required.

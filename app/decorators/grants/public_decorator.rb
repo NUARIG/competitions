@@ -9,5 +9,9 @@ module Grants
     def edit_menu_link
       super if h.user_signed_in?
     end
+
+    def view_submissions_menu_link
+      super if h.user_signed_in?
+    end
   end
 end

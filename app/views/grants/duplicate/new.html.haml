@@ -4,7 +4,7 @@
   = @grant.name
 
 %p
-  Once you update and save, it will copy all roles from
+  Once you update and save, it will copy all questions and roles from
   = link_to "#{@grant.name}", grant_path(params[:grant_id])
 
 = form_with model: @grant, url: grant_duplicate_path, local: true do |f|

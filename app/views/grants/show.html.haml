@@ -9,7 +9,23 @@
 
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
-    = render partial: 'dates_card', locals: { grant: @grant }
+    .card#grant-dates
+      %h4.card-divider
+        Dates
+      .card-section
+        %dl
+          %dt
+            Publish Date:
+          %dd
+            = @grant.publish_date
+          %dt
+            Submission Open Date:
+          %dd
+            = @grant.submission_open_date
+          %dt.secondary
+            Submission Close Date:
+          %dd
+            = @grant.submission_close_date
   .small-12.medium-9.cell#rfa
     %h4
       RFA
@@ -18,11 +34,11 @@
     %hr
 
     %ul.menu.simple#user-links
-      =# @grant.apply_menu_link
+      = @grant.apply_menu_link
       %li
         = link_to 'View All Grants', root_path
 
     %ul.menu.simple#admin-links
       = @grant.edit_menu_link
-      =# @grant.view_submissions_menu_link
+      = @grant.view_submissions_menu_link
 

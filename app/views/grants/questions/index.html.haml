@@ -1,0 +1,28 @@
+- content_for(:page_title, "Edit - #{@grant.name}")
+
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
+.tabs-panel.is-active
+  %h2
+    Questions
+
+  %table
+    %thead
+      %tr
+        %th Question Text
+        %th Help text
+        %th Required
+        %th
+
+    %tbody
+      - @questions.each do |question|
+        %tr
+          %td= question.text
+          %td= question.help_text
+          %td= (fa_icon('fa-check-square', text: "Yes")) if question.required?
+          %td= link_to 'Edit', edit_grant_question_path(@grant, question)
+          %td=# link_to 'Destroy', question, method: :delete, data: { confirm: 'Are you sure?' }
+
+  %br
+
+  =# link_to 'New Question', new_question_path
