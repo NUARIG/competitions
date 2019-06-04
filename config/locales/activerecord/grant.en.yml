@@ -1,8 +1,0 @@
-en:
-  activerecord:
-    attributes:
-      grant:
-        slug: Short Name
-    errors:
-      models:
-        grant:

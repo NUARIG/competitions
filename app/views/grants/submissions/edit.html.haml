@@ -1,15 +1,5 @@
-.grid-x.grid-margin-x
-  .small-12.cell#title
-    %h1.name{class: @grant.name_length_class}
-      = @grant.name
-      %small
-        = @grant.organization.name
+- content_for(:page_title, 'Edit Submission')
+%h1 Edit submission
 
-.grid-x.grid-margin-x
-  %aside.small-12.medium-3.cell
-    = render partial: 'grants/dates_card', locals: { grant: @grant }
-  .small-12.medium-9.cell#rfa
-    %h4
-      Editing Application
-    = grant_form_for [@grant, @submission], url: grant_submission_url(@grant, @submission), html: {multipart: true} do |f|
-      = render partial: 'form', locals: { f: f }
+= form_with model: [@grant, @submission], id: "edit-submission-#{@submission.id}", local: true do |f|
+  = render 'form', f: f, submission: @submission, grant: @grant, questions: @grant.questions

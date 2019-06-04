@@ -1,0 +1,20 @@
+- content_for(:page_title, "Editing: #{@question.text}")
+
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+.tabs-panel.is-active
+  %h2
+    = "Editing #{@question.text}"
+
+  .div
+    = link_to "Return to #{@grant.name}", grant_path(@grant)
+
+  #remote_form_messages
+
+  = form_with model: [@grant, @question], id: "edit-question-#{@question.id}" do |f|
+    = render 'form', f: f, grant: @grant, question: @question, constraint_questions: @constraint_questions
+
+
+  .cell
+  = link_to 'Back to Grant', grant_path(@grant)
+  |
+  = link_to 'Edit Grant', edit_grant_path(@grant)

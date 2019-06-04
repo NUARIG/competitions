@@ -7,8 +7,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to  :organization
-  has_many    :grant_permissions
-  has_many    :grants, through: :grant_permissions
+  has_many    :grant_users
+  has_many    :grants, through: :grant_users
 
   after_initialize :set_default_organization_role, if: :new_record?
 

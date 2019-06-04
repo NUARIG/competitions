@@ -1,0 +1,25 @@
+%table
+  %thead
+    %tr
+      %th Grant
+      %th Text
+      %th Help text
+      %th Required
+      %th
+      %th
+      %th
+
+  %tbody
+    - @questions.each do |question|
+      %tr
+        %td= question.grant.name
+        %td= question.text
+        %td= question.help_text
+        %td= (fa_icon('fa-check-square', text: "Yes")) if question.required?
+        %td= link_to 'Show', question
+        %td= link_to 'Edit', edit_question_path(question)
+        %td= link_to 'Destroy', question, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+=# link_to 'New Question', new_question_path

@@ -49,7 +49,7 @@ class GrantPolicy < AccessPolicy
 
   def check_grant_access(role_list)
     user.id.in?(
-      GrantPermission.where(role: role_list)
+      GrantUser.where(grant_role: role_list)
       .where(grant: grant)
       .pluck(:user_id)
     )
