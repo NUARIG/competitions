@@ -1,0 +1,35 @@
+<td>
+  <%= link_to survey.title, polymorphic_path(survey, action: :edit) %>
+</td>
+<td>
+  <%= survey.created_at %>
+</td>
+<td>
+  <%= survey.form_created_by.name %>
+</td>
+<td>
+  <%= survey.updated_at %>
+</td>
+<td>
+  <%= survey.form_updated_by.name %>
+</td>
+<td>
+  <%= survey.description %>
+</td>
+<td>
+  <%= link_to "Export", polymorphic_path(survey, action: :export),
+              class: "button tiny btn-pill warning"
+  %>
+  <% if show_edit_delete %>
+    <% if survey.destroyable? %>
+        <%= link_to "Delete", survey,
+                    method: :delete,
+                    data: {confirm: 'Are you sure?'},
+                    class: "button tiny btn-pill warning"
+        %>
+    <% else %>
+        <em><%= survey.grant_survey_ids.count %> studies, <%= FormBuilder::ResponseSet.where(survey: survey).count %> responses.
+          cannot delete</em>
+    <% end %>
+  <% end %>
+</td>

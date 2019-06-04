@@ -14,21 +14,23 @@ module Grants
     end
 
     def create
-      @original_grant = Grant.includes([questions: :constraint_questions], :grant_users).friendly.find(params[:grant_id])
+      @original_grant = Grant.includes(:grant_permissions)
+                          .friendly
+                          .find(params[:grant_id])
       authorize @original_grant, :edit?
 
       @grant = Grant.new(grant_params)
       @grant.duplicate       = true
-      @grant.state           = 'draft'
       @grant.organization_id = current_user.organization_id
 
-      result = GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @grant)
+      result = GrantServices::DuplicateDependencies.call(original_grant: @original_grant,
+                                                         new_grant: @grant)
 
       if result.success?
         # TODO: Confirm messages the user should see
         flash[:notice]  = 'New grant based on ' + @original_grant.name + ' has been saved.'
-        flash[:warning] = 'Review Questions below then click "Save and Publish" to finalize.'
-        redirect_to grant_questions_url(@grant)
+        flash[:warning] = 'Review the information below then click "Save and Publish" to finalize.'
+        redirect_to grant_grant_permissions_url(@grant)
       else
         respond_to do |format|
           flash[:alert] = result.messages
@@ -41,7 +43,9 @@ module Grants
 
     def set_original_grant
       begin
-        @original_grant = Grant.friendly.find(params[:grant_id])
+        @original_grant = Grant.friendly
+                               .includes(form: { sections: :questions } )
+                               .find(params[:grant_id])
       rescue
         flash[:alert] = 'Grant not found.'
         redirect_to grants_path

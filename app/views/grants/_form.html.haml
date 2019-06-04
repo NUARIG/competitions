@@ -91,15 +91,15 @@
 
 :javascript
   $(function() {
-  $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
-    format: 'mm/dd/yyyy',
-    closeIcon: ' X ',
-    closeButton: true
-  });
+    $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
+      format: 'mm/dd/yyyy',
+      closeIcon: ' X ',
+      closeButton: true
+    });
   });
   document.addEventListener("trix-initialize", function(event) {
-  var elementButtons = event.target.toolbarElement.querySelectorAll("button")
-  for (i=0; i<elementButtons.length; i++) {
-    elementButtons[i].tabIndex = -1 ;
-  }
+    var elementButtons = event.target.toolbarElement.querySelectorAll("button")
+    for (i=0; i<elementButtons.length; i++) {
+      elementButtons[i].tabIndex = -1 ;
+    }
   });

@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    attributes:
+      grant_permission:
+    errors:
+      models:
+        grant_permission:
+          attributes:
+            user:
+              blank: must be selected.
+            role:
+              blank: must be selected.
+

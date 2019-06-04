@@ -1,19 +1,56 @@
-%h2
-  Overview
+=# grant_form_for [@grant, @submission], url: grant_submissions_url, html: {multipart: true} do |f|
+= f.hidden_field :grant_submission_form_id
 .grid-x
-  .cell
-    = f.label :project_title, 'Project Title'
-    = f.text_field :project_title, required: true
-/ .grid-x
-/   - grant.questions.each do |question|
-/     .cell
-/       %h3
-/         = question.text
-/       = f.text_field :award_amount
-/       = question.help_text
+  .cell.small-12.medium-3
+    = f.label :title, 'Project Title', class: 'middle'
+  .cell.small-12.medium-9
+    = f.text_field :title, required: true
 
+  -# if policy(@grant).edit?
+    -# .link_box -- SEE COMMENTED JS BELOW
+      =# link_to 'Show conditional questions', '#', :id => 'show_hidden_questions'
+      =# link_to 'Hide conditional questions', '#', :id => 'hide_hidden_questions', style: "display: none"
+
+- @submission.form.sections.sort_by(&:display_order).each do |section|
+  .grid-x
+    .cell.small-12
+      %fieldset.fieldset
+        %legend= section.title
+        - if section.repeatable
+          = f.fields_for :children, @submission.children_for_section(section) do |ff|
+            = render partial: 'section_fields', locals: {section: section, f: ff}
+          - if !f.grant_disable_input?
+            %div
+              = link_to_add_association "Add #{section.title.try(:singularize)}", f, :children, |
+                partial: 'grants/submissions/section_fields',                           |
+                class: 'button btn-pill small success',                                         |
+                render_options: {locals: {section: section}}                                    |
+        - else
+          = render partial: 'section_fields', locals: {section: section, f: f}
 .grid-x
+  .cell.small-12
   .actions
-    = f.submit 'Save and Submit', class: 'button'
-    = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not be considered for funding'
-    = link_to 'Cancel', grant_submissions_path, class: 'button secondary'
+    = f.submit 'Save', data: { disable_with: "Please wait..." }, class: 'response-submit'
+=# TODO: Will we use conditions?
+=# hidden_field_tag :survey_conditions_path, conditions_form_builder_survey_path(@submission.form)
+:javascript
+  $(function () {
+    Grant.FormBuilderUploadSetup();
+    Grant.FormBuilderStandardAnswer.init_in_submissions();
+    // TODO: Do we want conditionals?
+    // grant.FormBuilderConditions.init();
+  });
+
+/ :javascript
+/ $(function() {
+/   $('#show_hidden_questions').click(function(){
+/     $('tr.question div').slideDown();
+/     $('#show_hidden_questions').hide();
+/     $('#hide_hidden_questions').show();
+/   });
+/   $('#hide_hidden_questions').click(function() {
+/     grant.FormBuilderConditions.init();
+/     $('#hide_hidden_questions').hide();
+/     $('#show_hidden_questions').show();
+/   });
+/ });

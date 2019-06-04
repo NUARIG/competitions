@@ -50,6 +50,11 @@ gem 'paper_trail'
 gem 'american_date'
 gem 'validates_timeliness'
 
+# form_builder
+gem "cocoon"
+gem "nested_form"
+gem "select2-rails"
+
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -63,6 +68,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'bullet'
+  gem 'i18n-debug'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'mailcatcher'
   gem 'rubocop'

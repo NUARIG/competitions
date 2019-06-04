@@ -5,10 +5,7 @@ module Competitions
     def self.all
       Competitions::Setup::Organizations.load_organizations
       Competitions::Setup::Users.load_users
-      Competitions::Setup::Constraints.load_constraints
-      Competitions::Setup::DefaultSets.load_default_sets
       Competitions::Setup::Grants.load_grants
-      Competitions::Setup::Submissions.load_submissions
     end
 
     module_function
@@ -16,23 +13,6 @@ module Competitions
     def parse_yml_file(filename)
       HashWithIndifferentAccess
         .new(YAML.load_file("./lib/competitions/data/#{filename}.yml"))
-    end
-
-    module Constraints
-      def self.load_constraints
-        constraints = Competitions::Setup.parse_yml_file('constraints')
-        constraints.each do |_, data|
-          constraint = Constraint
-                       .where(type: data[:type], name: data[:name])
-                       .first_or_initialize
-
-          constraint.name       = data[:name]
-          constraint.type       = data[:type]
-          constraint.value_type = data[:value_type]
-          constraint.default    = data[:default]
-          constraint.save!
-        end
-      end
     end
 
     module Users
@@ -98,97 +78,28 @@ module Competitions
           grant.review_close_date          = data[:review_close_date]
           grant.panel_date                 = data[:panel_date]
           grant.panel_location             = data[:panel_location]
-          grant.default_set                = data[:default_set]
 
           grant.save!
           grant.versions.last.update_attribute(:whodunnit, org_admin_user.id)
 
-          unless data[:grant_users].nil?
-            load_grant_users(data[:grant_users], grant.id)
-          end
-
-          next unless data[:questions].present? && data[:default_set].present?
-
-          data[:questions].each do |_, question|
-            DefaultSetQuestion
-              .find_or_create_by(default_set_id: data[:default_set],
-                                 question_id: load_question(question, grant.id).id)
+          unless data[:grant_permissions].nil?
+            load_grant_permissions(data[:grant_permissions], grant.id)
           end
         end
       end
 
-      def self.load_grant_users(grant_users, grant_id)
-        grant_users.each do |_, gu|
-          grant_user = GrantUser
+      def self.load_grant_permissions(grant_permissions, grant_id)
+        grant_permissions.each do |_, gu|
+          grant_permission = GrantPermission
                        .where(grant_id: grant_id, user_id: gu[:user_id])
                        .first_or_initialize
 
-          grant_user.grant_role = gu[:grant_role]
-          grant_user.save!
+          grant_permission.role = gu[:role]
+          grant_permission.save!
         end
       end
 
-      def self.load_question(q, grant_id)
-        question = Question
-                   .where(grant_id: grant_id, text: q[:text])
-                   .first_or_initialize
-        question.text    = q[:text]
-        question.answer_type      = q[:answer_type]
-        question.help_text        = q[:help_text]
-        question.required         = q[:required]
-        question.save!
-
-        if q[:constraints].any?
-          q[:constraints].each do |_, constraint|
-            load_constraint_questions(question.id, constraint)
-          end
-        end
-
-        question
-      end
-
-      def self.load_constraint_questions(question_id, constraint)
-        constraint_id       = Constraint
-                              .where(type: constraint[:type],
-                                     name: constraint[:name])
-                              .pluck(:id)
-                              .first
-        constraint_question = ConstraintQuestion
-                              .where(constraint_id: constraint_id,
-                                     question_id: question_id)
-                              .first_or_initialize
-
-        constraint_question.value = constraint[:value]
-        constraint_question.save!
-      end
     end
 
-    module Submissions
-      def self.load_submissions
-        submissions = Competitions::Setup.parse_yml_file('submissions')
-        submissions.each do |_, data|
-          submission = Submission
-                  .where(project_title: data[:project_title])
-                  .first_or_initialize
-
-          submission.grant_id       = data[:grant_id]
-          submission.user_id        = data[:user_id]
-          submission.project_title  = data[:project_title]
-          submission.state          = data[:state]
-          submission.save(validate: false)
-        end
-      end
-    end
-
-    module DefaultSets
-      def self.load_default_sets
-        default_sets = Competitions::Setup.parse_yml_file('default_sets')
-        default_sets.each do |_, data|
-          set = DefaultSet.where(name: data[:name]).first_or_initialize
-          set.name = data[:name]
-          set.save!
-        end
-      end
-    end
   end
 end
