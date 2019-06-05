@@ -52,8 +52,9 @@ module Grants
 
     def update
       authorize(@grant, :show?)
-      if submission.update(submission_params)
-        flash[:notice] = 'successfully updated response'
+
+      if submission.valid && @submission.update_attributes(submission_params)
+        flash[:notice] = 'Submission was successfully updated'
         #TODO: redirect based on user permissions
         redirect_to grant_submissions_path(@grant)
       else
@@ -88,21 +89,21 @@ module Grants
 
     # def status_object
     def submission
-      @submission ||=
-        case action_name
-        when 'new'
-          # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
-          # UPDATED: Assumes one from
-          # set_grant includes everything
-          form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
-          @grant.submissions.build(form: form)
-        when 'edit', 'show'
-          @grant.submissions.find(params[:id])
-        when 'create'
-          @grant.submissions.build(submission_params.merge(created_id: current_user.id))
-        else
-          @grant.submissions.find(params[:id]) if params[:id]
-        end
+      @submission ||= case action_name
+                      when 'new'
+                        # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
+                        # UPDATED: Assumes one form
+                        # set_grant includes everything
+                        form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
+                        @grant.submissions.build(form: form)
+                      when 'edit', 'show'
+                        @grant.submissions.find(params[:id])
+                      when 'create'
+                        @grant.submissions.build(submission_params.merge(created_id: current_user.id))
+                      else
+                        byebug
+                        @grant.submissions.find(params[:id]) if params[:id]
+                      end
     end
 
     def submission_params
@@ -126,9 +127,9 @@ module Grants
                          :datetime_val,
                          :boolean_val,
                          :document,
-                         :document_file_name,
-                         :document_content_type,
-                         :document_file_size,
+                         # :document_file_name,
+                         # :document_content_type,
+                         # :document_file_size,
                          :'partial_date_val_virtual(1i)',
                          :'partial_date_val_virtual(2i)',
                          :'partial_date_val_virtual(3i)',
@@ -152,9 +153,9 @@ module Grants
                            :datetime_val,
                            :boolean_val,
                            :document,
-                           :document_file_name,
-                           :document_content_type,
-                           :document_file_size,
+                           # :document_file_name,
+                           # :document_content_type,
+                           # :document_file_size,
                            :'partial_date_val_virtual(1i)',
                            :'partial_date_val_virtual(2i)',
                            :'partial_date_val_virtual(3i)',

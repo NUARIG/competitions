@@ -4,6 +4,15 @@ module GrantSubmission
     # TODO: Add _versions table
     # has_paper_trail
 
+    MAXIMUM_DOCUMENT_FILE_SIZE      = 15.megabytes
+    ALLOWED_DOCUMENT_TYPES          = {'PDF' => 'application/pdf',
+                                       'Word' => %w[application/doc application/docx]}
+    ALLOWED_MIME_TYPES              = ALLOWED_DOCUMENT_TYPES.values.flatten
+    READABLE_ALLOWED_DOCUMENT_TYPES = ALLOWED_DOCUMENT_TYPES.keys
+                                      .to_sentence(words_connector: ', ',
+                                                   two_words_connector: ' or ',
+                                                   last_word_connector: ' or ')
+
     belongs_to :submission,             class_name: 'GrantSubmission::Submission',
                                         foreign_key: 'grant_submission_submission_id',
                                         inverse_of: :responses
@@ -27,7 +36,11 @@ module GrantSubmission
     validates_uniqueness_of :grant_submission_multiple_choice_option_id,
                             scope: :grant_submission_submission_id,
                             allow_nil: true
-
+    # validates :document,    attached: true,
+    #                         if: -> { question.response_type == 'file_upload' && question.is_mandatory? }
+    # validates :document,    content_type: { in: ALLOWED_MIME_TYPES,
+    #                                         message: "must be #{READABLE_ALLOWED_DOCUMENT_TYPES}." },
+    #                         if: -> { question.response_type == 'file_upload' }
     # custom validations to include question text in error message
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
@@ -153,13 +166,15 @@ module GrantSubmission
     private
 
     def validate_by_response_type
+      byebug
       case question.response_type
       when 'number'
-        number_if_number
+        validate_number_if_number_response
       when 'short_text'
-        length_if_short_text
+        validate_length_if_short_text_response
       when 'file_upload'
-        attachment_size_if_document if document.attached?
+        validate_attachment_size_if_file_upload_response
+        validate_attachment_type_if_file_upload_response
       end
     end
 
@@ -167,28 +182,35 @@ module GrantSubmission
       errors.add(form_field_name, :blank, question: question.text) if response_value.blank?
     end
 
-    def number_if_number
+    def validate_number_if_number_response
       input = read_attribute_before_type_cast('decimal_val')
       if !input.blank? && !parse_raw_value_as_a_number(input)
         errors.add(:decimal_val, :not_a_number, question: question.text)
       end
     end
 
-    def length_if_short_text
+    def validate_length_if_short_text_response
       if string_val.length > 255
         errors.add(:string_val, :string_too_long, question: question.text)
       end
     end
 
-    def attachment_size_if_document
-      if document.blob.byte_size > 15.megabytes
-        errors.add(:document, :file_too_large, question: question.text, uploaded_file_size: (document.byte_size/(1.megabyte)).round(1))
+    def validate_attachment_size_if_file_upload_response
+      if document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
+        errors.add(:document, :file_too_large, question: question.text,
+                                               allowed_file_size: MAXIMUM_DOCUMENT_FILE_SIZE,
+                                               uploaded_file_size: (document.byte_size.to_f/(1.megabyte)).round(1))
+        document.purge
       end
-      # if document_file_size && document_file_size > max*mib
-      #   errors.add(:document, "^#{question.text} can be a maxiumum of #{max}MiB (#{document_file_name} is #{(document_file_size.to_f/mib).round(1)}MiB)")
-      # end
     end
 
+    def validate_attachment_type_if_file_upload_response
+      if ALLOWED_MIME_TYPES.exclude?(document.blob.content_type)
+        errors.add(:document, :excluded_mime_type, question: question.text,
+                                                   allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
+        document.purge
+      end
+    end
     #copied from ActiveModel::Validations::NumericalityValidator
     def parse_raw_value_as_a_number(raw_value)
       case raw_value
