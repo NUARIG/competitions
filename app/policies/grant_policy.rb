@@ -11,9 +11,10 @@ class GrantPolicy < AccessPolicy
       if user.organization_role == 'admin'
         scope.not_deleted.by_publish_date.with_organization
       elsif (user.grants.any?)
-        user.grants.not_deleted
+        # TODO: This needs to be ordered.
+        (scope.where(state: ['published', 'completed']).not_deleted + user.grants.not_deleted).uniq
       else
-        scope.not_deleted.where(published: true)
+        scope.where(state: ['published', 'completed']).not_deleted.by_publish_date.with_organization
       end
     end
   end

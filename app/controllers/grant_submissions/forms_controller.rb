@@ -12,20 +12,21 @@ module GrantSubmissions
     #                  # .page(params[:page]) # PAGINATION
     # end
 
-    def new
-      # authorize :admin, :manage_grant_submission_forms?
-      @form = GrantSubmission::Form.new
-      authorize @grant, :edit?
-      # TODO: Separate new and edit views
-      #render :edit
-      render :new
-    end
+    # def new
+    #   # authorize :admin, :manage_grant_submission_forms?
+    #   @form = GrantSubmission::Form.new
+    #   authorize @grant, :edit?
+    #   # TODO: Separate new and edit views
+    #   #render :edit
+    #   render :new
+    # end
 
     def edit
       # authorize :admin, :view_grant_submission_forms?
       # @survey = FormBuilder::Survey.includes(:sections=>{:questions=>[:answers, :condition_group]}).find(params[:id])
       @form = GrantSubmission::Form.includes(:sections=>{:questions=>[:multiple_choice_options]}).find(params[:id])
-      authorize @grant, :edit?
+      authorize @form
+      # authorize @grant, :edit?
     end
 
     # def create
@@ -47,7 +48,8 @@ module GrantSubmissions
     def update
       # authorize :admin, :manage_grant_submission_forms?
       @form = GrantSubmission::Form.includes(sections: { questions: :multiple_choice_options }).find(params[:id])
-      authorize @grant, :edit?
+      authorize @form
+      # authorize @grant, :edit?
       if @form.available? && @form.update_attributes_safe_display_order(form_params)
       # if @survey.available? && @survey.with_safe_encoding {|o| o.update_attributes_safe_display_order(_params[:grant_submission_survey])}
         @form.updated_id = current_user.id
@@ -66,7 +68,8 @@ module GrantSubmissions
       # TODO: Figure out what to do with grant_forms
       #@form = GrantSubmission::Form.find(params[:form_id])
       @form  = @grant.form
-      authorize @form, :update?
+      authorize @form
+      # authorize @grant, :edit?
       valid_param = false
       GrantSubmission::Form::ALWAYS_EDITABLE_ATTRIBUTES.each do |field|
         if _params[:grant_submission_survey][field]
@@ -98,7 +101,8 @@ module GrantSubmissions
     def export
       # authorize :admin, :view_grant_submission_forms?
       @form = GrantSubmission::Form.find(params[:id])
-      authorize @form, :show?
+      authorize @form
+      # authorize @form, :show?
       send_data(JSON.pretty_generate(@survey.to_export_hash),
                 filename: "NOTIS_eCRF_FormBuilder_Form_#{@survey.title}_#{Time.now.iso8601}.json")
     end
@@ -109,6 +113,7 @@ module GrantSubmissions
     # end
 
     def import
+      authorize @form
       raise FormBuilder.new('Survey import method deleted app/controllers/grant_submission/survey_controller:110')
       # authorize :admin, :manage_grant_submission_forms?
       # ActiveRecord::Base.transaction do

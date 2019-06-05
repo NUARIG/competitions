@@ -6,7 +6,7 @@ module Grants
 
     # PATCH/PUT /grants/1/state
     def update
-      authorize @grant
+      authorize @grant, :edit?
       respond_to do |format|
         if @grant.update(grant_params)
           format.html { redirect_back fallback_location: grant_path(@grant),
