@@ -3,10 +3,10 @@ module Grants
     before_action :set_grant, except: :new
 
     def index
+      authorize(@grant, :edit?)
       @grant         = GrantDecorator.new(@grant)
       @form          = @grant.form
-      @submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
-      authorize(@grant, :edit?)
+      @submissions   = @grant.submissions.includes(:applicant).where(grant_submission_form_id: @form.id)
       render 'index'
     end
 
@@ -21,7 +21,6 @@ module Grants
       submission
       # TODO: This is not the correct authorization
       authorize(@grant)
-      # TODO: Make a new view
       render 'new'
     end
 
@@ -33,7 +32,6 @@ module Grants
     end
 
     def create
-      # @grant         = Grant.friendly.find(params[:grant_id])
       authorize(@grant, :show?)
       if @grant.form.disabled
         flash[:error] = 'unable to create, this form is disabled'
@@ -44,7 +42,7 @@ module Grants
           redirect_to grant_path(@grant)
         else
           @grant = GrantDecorator.new(@grant)
-          flash[:alert] = @submission.errors.to_a
+          flash.now[:alert] = @submission.errors.to_a
           render 'new'
         end
       end
@@ -52,25 +50,26 @@ module Grants
 
     def update
       authorize(@grant, :show?)
-
-      if submission.valid && @submission.update_attributes(submission_params)
+      submission
+      if @submission.update_attributes(submission_params)
         flash[:notice] = 'Submission was successfully updated'
         #TODO: redirect based on user permissions
         redirect_to grant_submissions_path(@grant)
       else
-        flash[:alert] = @submission.errors.to_a
+        @grant = GrantDecorator.new(@grant)
+        flash.now[:alert] = @submission.errors.to_a
         render 'grants/submissions/edit'
       end
     end
 
     def destroy
-      # TODO: Policy for this
       authorize(@grant, :edit?)
       if submission.destroy
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
         # flash[:error] = 'unable to delete'
       else
+        @grant = GrantDecorator.new(@grant)
         flash[:error] = @submission.errors.to_a
         redirect_back fallback_location: grant_submissions_path(@grant)
       end
@@ -87,12 +86,10 @@ module Grants
       @grant = Grant.friendly.find(params[:grant_id])
     end
 
-    # def status_object
     def submission
       @submission ||= case action_name
                       when 'new'
                         # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
-                        # UPDATED: Assumes one form
                         # set_grant includes everything
                         form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
                         @grant.submissions.build(form: form)
@@ -101,7 +98,6 @@ module Grants
                       when 'create'
                         @grant.submissions.build(submission_params.merge(created_id: current_user.id))
                       else
-                        byebug
                         @grant.submissions.find(params[:id]) if params[:id]
                       end
     end
@@ -127,9 +123,6 @@ module Grants
                          :datetime_val,
                          :boolean_val,
                          :document,
-                         # :document_file_name,
-                         # :document_content_type,
-                         # :document_file_size,
                          :'partial_date_val_virtual(1i)',
                          :'partial_date_val_virtual(2i)',
                          :'partial_date_val_virtual(3i)',
@@ -153,9 +146,6 @@ module Grants
                            :datetime_val,
                            :boolean_val,
                            :document,
-                           # :document_file_name,
-                           # :document_content_type,
-                           # :document_file_size,
                            :'partial_date_val_virtual(1i)',
                            :'partial_date_val_virtual(2i)',
                            :'partial_date_val_virtual(3i)',

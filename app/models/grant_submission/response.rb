@@ -4,14 +4,16 @@ module GrantSubmission
     # TODO: Add _versions table
     # has_paper_trail
 
-    MAXIMUM_DOCUMENT_FILE_SIZE      = 15.megabytes
-    ALLOWED_DOCUMENT_TYPES          = {'PDF' => 'application/pdf',
-                                       'Word' => %w[application/doc application/docx]}
-    ALLOWED_MIME_TYPES              = ALLOWED_DOCUMENT_TYPES.values.flatten
-    READABLE_ALLOWED_DOCUMENT_TYPES = ALLOWED_DOCUMENT_TYPES.keys
-                                      .to_sentence(words_connector: ', ',
-                                                   two_words_connector: ' or ',
-                                                   last_word_connector: ' or ')
+    MAXIMUM_DOCUMENT_FILE_SIZE          = 15.megabytes
+    READABLE_MAXIMUM_DOCUMENT_FILE_SIZE = "#{MAXIMUM_DOCUMENT_FILE_SIZE/1024/1024}MB"
+
+    ALLOWED_DOCUMENT_TYPES           = { 'PDF'  => '.pdf',
+                                         'Word' => %w[.doc .docx .dotx] }.freeze
+    ALLOWED_DOCUMENT_FILE_EXTENSIONS = ALLOWED_DOCUMENT_TYPES.values.flatten.freeze
+    READABLE_ALLOWED_DOCUMENT_TYPES  = ALLOWED_DOCUMENT_TYPES.keys
+                                       .to_sentence(words_connector: ', ',
+                                                    two_words_connector: ' or ',
+                                                    last_word_connector: ' or ').freeze
 
     belongs_to :submission,             class_name: 'GrantSubmission::Submission',
                                         foreign_key: 'grant_submission_submission_id',
@@ -36,12 +38,6 @@ module GrantSubmission
     validates_uniqueness_of :grant_submission_multiple_choice_option_id,
                             scope: :grant_submission_submission_id,
                             allow_nil: true
-    # validates :document,    attached: true,
-    #                         if: -> { question.response_type == 'file_upload' && question.is_mandatory? }
-    # validates :document,    content_type: { in: ALLOWED_MIME_TYPES,
-    #                                         message: "must be #{READABLE_ALLOWED_DOCUMENT_TYPES}." },
-    #                         if: -> { question.response_type == 'file_upload' }
-    # custom validations to include question text in error message
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
 
@@ -50,14 +46,6 @@ module GrantSubmission
 
     include PartialDate
     has_partial_date(:partial_date_val)
-
-    # PAPERCLIP
-    # keep_old_files is cheap (and a bit shoddy) insurance, not an
-    # advertised feature. Old files with the same name for the same
-    # response will be overwritten. This is scoped to a response as
-    # :id_partition makes a uniq folder for reach FormBuilder::Response
-    # has_attached_file :document, keep_old_files: true, path:  "#{FILE_UPLOAD_PATH}/:class/:attachment/:id_partition/:filename"
-    # do_not_validate_attachment_file_type :document
 
     def remove_document=(val)
       @remove_document = val # allows clearing file inputs to persist across validation errors
@@ -158,23 +146,23 @@ module GrantSubmission
       when :partial_date
         partial_date_val
       when :file_upload
-        "FIX: file name"
-        #document_file_name
+        document.filename
       end
     end
 
     private
 
     def validate_by_response_type
-      byebug
       case question.response_type
       when 'number'
         validate_number_if_number_response
       when 'short_text'
         validate_length_if_short_text_response
       when 'file_upload'
-        validate_attachment_size_if_file_upload_response
-        validate_attachment_type_if_file_upload_response
+        if document.attached?
+          validate_attachment_size_if_file_upload_response
+          validate_attachment_type_if_file_upload_response
+        end
       end
     end
 
@@ -198,19 +186,20 @@ module GrantSubmission
     def validate_attachment_size_if_file_upload_response
       if document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
         errors.add(:document, :file_too_large, question: question.text,
-                                               allowed_file_size: MAXIMUM_DOCUMENT_FILE_SIZE,
+                                               allowed_file_size: READABLE_MAXIMUM_DOCUMENT_FILE_SIZE,
                                                uploaded_file_size: (document.byte_size.to_f/(1.megabyte)).round(1))
         document.purge
       end
     end
 
     def validate_attachment_type_if_file_upload_response
-      if ALLOWED_MIME_TYPES.exclude?(document.blob.content_type)
+      if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(document.filename.extension_with_delimiter)
         errors.add(:document, :excluded_mime_type, question: question.text,
                                                    allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
         document.purge
       end
     end
+
     #copied from ActiveModel::Validations::NumericalityValidator
     def parse_raw_value_as_a_number(raw_value)
       case raw_value

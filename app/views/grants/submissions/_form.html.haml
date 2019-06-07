@@ -22,15 +22,15 @@
           - if !f.grant_disable_input?
             %div
               = link_to_add_association "Add #{section.title.try(:singularize)}", f, :children, |
-                partial: 'grants/submissions/section_fields',                           |
+                partial: 'grants/submissions/section_fields',                                   |
                 class: 'button btn-pill small success',                                         |
                 render_options: {locals: {section: section}}                                    |
         - else
-          = render partial: 'section_fields', locals: {section: section, f: f}
+          = render partial: 'section_fields', locals: { section: section, f: f }
 .grid-x
   .cell.small-12
   .actions
-    = f.submit 'Save', data: { disable_with: "Please wait..." }, class: 'response-submit'
+    = f.submit 'Submit', data: { disable_with: "Please wait..." }, class: 'button'
 =# TODO: Will we use conditions?
 =# hidden_field_tag :survey_conditions_path, conditions_form_builder_survey_path(@submission.form)
 :javascript

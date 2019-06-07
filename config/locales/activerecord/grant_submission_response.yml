@@ -17,7 +17,7 @@ en:
             document:
               blank: upload for '%{question} is required.
               content_type_invalid: uploaded for '%{question} must be a PDF, Word or Excel file.
-              file_too_large: uploaded for '%{question}' is too large (%{uploaded_file_size}MB).
+              file_too_large: uploaded for '%{question}' is larger than %{allowed_file_size} (%{uploaded_file_size}MB).
               excluded_mime_type: uploaded for '%{question}' must be a %{allowed_types} file.
             grant_submission_multiple_choice_option_id:
               blank: for '%{question}' is required.

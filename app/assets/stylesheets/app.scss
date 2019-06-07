@@ -28,4 +28,8 @@ th {
   text-align: left;
 }
 
-
+.field_with_errors {
+  input, select, textarea {
+    border: 1px solid #cc4b37;
+  }
+}

@@ -62,16 +62,13 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
            {f: self, attr: attr, disabled: grant_disable_input?, options: options})
   end
 
-  def file_upload_field(has_saved_file:, file_field:, document:, remove_document:)#, remove_file:, file:)
-
+  def file_upload_field(has_saved_file:, file_field:, document:, remove_document:)
     @template.render(partial: 'file_upload_field',
-                     locals: {
-                               f: self,
+                     locals: { f: self,
                                has_saved_file: has_saved_file,
                                document: document,
                                remove_document: remove_document,
-                               disabled: grant_disable_input?
-                              }) # , file_field: file_field, remove_file: remove_file, disabled: grant_disable_input?})
+                               disabled: grant_disable_input? } )
   end
 
   def grant_disable_input?
