@@ -20,12 +20,16 @@ module GrantSubmissionFormServices
           form_section = new_form.sections.create(title: 'Basic Attributes',
                                                   display_order: 1)
 
-          # Create an 'Abstract' question
+          # Create an 'Abstract' long_text question
           form_section.questions.create(text: 'Abstract',
                                         display_order: 1,
                                         is_mandatory: true,
                                         response_type: 'long_text')
-
+          # Create an 'Application Document' file_upload question
+          form_section.questions.create(text: 'Application Document',
+                                        display_order: 2,
+                                        is_mandatory: true,
+                                        response_type: 'file_upload')
         end
       end
     end

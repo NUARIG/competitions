@@ -8,18 +8,13 @@
         <%# end %>
       </legend>
 <% end %>
-<table class="table table-condensed">
+<table class="unstriped">
   <% if section.repeatable %>
     <% f.object.grant_submission_section_id = section.id %>
     <%= f.hidden_field :grant_submission_section_id %>
   <% end %>
   <% responses = section.questions.sort_by(&:display_order).map do |q| %>
-    <%# if (q.use_baseline_value && f.object.is_follow_up?) %>
-      <%# r = f.object.baseline.responses.detect { |r| r.question == q } %>
-      <%# f.object.baseline.responses.build(r.attributes) %>
-    <%# else %>
       <% f.object.responses.detect { |r| r.question == q } || f.object.responses.build(question: q) %>
-    <%# end %>
   <% end %>
   <%= f.fields_for :responses, responses do |ff| %>
       <tr class="question question-<%= ff.object.question.id %>">
@@ -44,7 +39,7 @@
                 <% when :short_text %>
                     <%= ff.text_area ffn, rows: 1, cols: 30, data: { question_id: ff.object.question.id } %>
                 <% when :long_text %>
-                    <%= ff.text_area ffn, rows: 5, cols: 31, data: { question_id: ff.object.question.id } %>
+                    <%= ff.text_area ffn, rows: 5, cols: 31, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } %>
                 <% when :date_opt_time %>
                     <%= ff.date_opt_time_field :datetime_val, :boolean_val, data: { question_id: ff.object.question.id } %>
                 <% when :partial_date %>
@@ -58,11 +53,12 @@
                     %>
                 <% when :file_upload %>
                     <%= ff.file_upload_field(
-                            !ff.object.new_record? && !ff.object.changed? && !ff.object.document_file_name.nil?,
-                            ffn,
-                            :remove_document,
-                            ff.object.formatted_response_value,
-                            (!ff.object.new_record? ? polymorphic_path([@grant_patient, ff.object.submission], action: :download_document, grant_submission_response_id: ff.object.id) : nil)) %>
+                          has_saved_file: (ff.object.document && ff.object.document.attached?),
+                          file_field: ffn,
+                          remove_document: :remove_document,
+                          document: ff.object.document
+                        )
+                    %>
                 <% end %>
             <% else %>
                 <%= ff.object.formatted_response_value %>
