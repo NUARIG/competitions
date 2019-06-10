@@ -73,8 +73,8 @@ FactoryBot.define do
         editor = create(:editor_grant_permission, grant: grant)
         viewer = create(:viewer_grant_permission, grant: grant)
 
-        create(:grant_submission_form, grant: grant, created_id: admin.user.id,
-                                                     updated_id: admin.user.id)
+        create(:grant_submission_form, grant: grant, form_created_by: admin.user,
+                                                     form_updated_by: admin.user)
       end
     end
 
