@@ -4,8 +4,9 @@ module GrantSubmission
     # TODO: Add _versions table
     # has_paper_trail
 
-    MAXIMUM_DOCUMENT_FILE_SIZE          = 15.megabytes
-    READABLE_MAXIMUM_DOCUMENT_FILE_SIZE = "#{MAXIMUM_DOCUMENT_FILE_SIZE/1024/1024}MB"
+    MAXIMUM_DOCUMENT_MEGABYTES          = 15
+    MAXIMUM_DOCUMENT_FILE_SIZE          = MAXIMUM_DOCUMENT_MEGABYTES.megabytes
+    READABLE_MAXIMUM_DOCUMENT_FILE_SIZE = "#{MAXIMUM_DOCUMENT_MEGABYTES}MB"
 
     ALLOWED_DOCUMENT_TYPES           = { 'PDF'  => '.pdf',
                                          'Word' => %w[.doc .docx .dotx] }.freeze
