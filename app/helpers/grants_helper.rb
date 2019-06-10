@@ -2,7 +2,7 @@
 
 module GrantsHelper
 
-  def display_delete_link?(grant)
-    grant.submissions.none? && grant.state == 'draft'
+  def grant_can_be_deleted?(grant)
+    grant.submissions.none? && grant.state.in?(Grant::SOFT_DELETABLE_STATES)
   end
 end
