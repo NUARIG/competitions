@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # TODO: This should never get hit because the controller authorizes against grant.
-# module Grant
 class Grant::DuplicatePolicy < GrantPolicy
 
   def create?
@@ -14,18 +13,7 @@ class Grant::DuplicatePolicy < GrantPolicy
 
   private
 
-  # def duplicate
-  #   record
-  # end
-
   def grant
     record
-    # clean_record_from_collection.grant
   end
-
-    # def confirm_organization
-    #   user.present? &&
-    #     clean_record_from_collection.grant.organization == user.organization
-    # end
-  # end
 end

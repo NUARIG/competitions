@@ -4,8 +4,6 @@ describe GrantPolicy do
   # This file only tests the permissions based on role in pundit.
   # Permissions based on state changes are handled in system specs.
   # TODO: implement the system specs to test state changes.
-  #
-  # These still need to have the index method / scope accounted for.
 
   context 'policy scope tests on index' do
     let(:scope) { Pundit.policy_scope!(user, Grant) }

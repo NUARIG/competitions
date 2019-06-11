@@ -137,7 +137,6 @@ class Grant < ApplicationRecord
     slug.strip!
   end
 
-
   def published_soft_deletable?
     # TODO: e.g. submissions.count.zero?
     raise SoftDeleteException.new('Published grant may not be deleted')

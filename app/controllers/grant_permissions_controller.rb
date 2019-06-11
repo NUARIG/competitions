@@ -77,7 +77,6 @@ class GrantPermissionsController < ApplicationController
     end
   end
 
-
   private
 
   def set_grant

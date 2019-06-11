@@ -21,7 +21,6 @@ class GrantPermissionPolicy < GrantPolicy
 
   def destroy?
     update?
-    # organization_admin_access? || grant_editor_access?
   end
 
   private

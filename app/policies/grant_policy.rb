@@ -2,9 +2,8 @@
 
 class GrantPolicy < AccessPolicy
 
-  # Could not figure out how to inherit methods, so the
-  # organization_admin_access? code from AccessPolicy:6
-  # was repeated.
+  # Can't inherit methods inside scope, so the organization_admin_access?
+  # code from AccessPolicy:6 was repeated.
   # https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
   class Scope < Scope
     def resolve
@@ -18,9 +17,6 @@ class GrantPolicy < AccessPolicy
       end
     end
   end
-
-  # def index?
-  # end
 
   def show?
     case grant.published? && grant.is_open?
@@ -51,13 +47,7 @@ class GrantPolicy < AccessPolicy
     organization_admin_access? || grant_admin_access?
   end
 
-  #
-  # def apply?
-  #   (organization_admin_access? || grant_editor_access?) || (user.present? && grant.accepting_submissions?)
-  # end
-
-  #This needs to be worked out?????
-  # Grant Access
+  # TODO: add organization_admin_access? to these.
   def grant_admin_access?
     check_grant_access(%w[admin])
   end

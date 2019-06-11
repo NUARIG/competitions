@@ -64,13 +64,11 @@ module GrantSubmissions
     end
 
     def destroy
-      # TODO: Policy for this
       submission
       authorize @submission
       if @submission.destroy
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
-        # flash[:error] = 'unable to delete'
       else
         flash[:error] = @submission.errors.to_a
         redirect_back fallback_location: grant_submissions_path(@grant)
@@ -88,12 +86,9 @@ module GrantSubmissions
       @grant = Grant.friendly.find(params[:grant_id])
     end
 
-    # def status_object
     def submission
       @submission ||= case action_name
                       when 'new'
-                        # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
-                        # set_grant includes everything
                         form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
                         @grant.submissions.build(form: form)
                       when 'edit', 'show'

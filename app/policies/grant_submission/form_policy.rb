@@ -30,11 +30,5 @@ class GrantSubmission::FormPolicy < GrantPolicy
 
   def grant
     form.grant
-    # clean_record_from_collection.grant
   end
-
-  # def confirm_organization
-  #   user.present? &&
-  #     clean_record_from_collection.grant.organization == user.organization
-  # end
 end
