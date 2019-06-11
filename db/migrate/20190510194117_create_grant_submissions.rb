@@ -62,9 +62,6 @@ class CreateGrantSubmissions < ActiveRecord::Migration[5.2]
 
     add_index :grant_submission_forms,       [:title], unique: true
 
-    # add_index :grant_forms,                  [:grant_submission_form_id, :grant_id], unique: true
-    # add_index :grant_forms,                  [:display_order, :grant_id],  unique: true
-
     add_index :grant_submission_sections,    [:display_order, :grant_submission_form_id],  unique: true, name: 'i_submission_sections_on_display_order_and_submission_form_id'
 
     add_index :grant_submission_questions,   [:display_order, :grant_submission_section_id], unique: true, name: 'i_sqs_on_display_order_and_submission_section_id'

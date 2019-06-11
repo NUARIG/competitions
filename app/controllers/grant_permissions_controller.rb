@@ -63,7 +63,8 @@ class GrantPermissionsController < ApplicationController
   # DELETE /grant_permission/1
   # DELETE /grant_permission/1.json
   def destroy
-    authorize @grant, :destroy?
+    # authorize @grant, :edit?
+    authorize @grant_permission
     @grant_permission.destroy
     if @grant_permission.errors.any?
       flash[:alert] = @grant_permission.errors.full_messages

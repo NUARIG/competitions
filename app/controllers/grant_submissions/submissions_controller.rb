@@ -21,10 +21,7 @@ module GrantSubmissions
                     .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
       submission
-      # TODO: This is not the correct authorization
       authorize @submission
-      # authorize(@grant, :apply?)
-      # TODO: Make a new view
       render 'new'
     end
 
@@ -36,7 +33,6 @@ module GrantSubmissions
     end
 
     def create
-      # @grant         = Grant.friendly.find(params[:grant_id])
       if @grant.form.disabled
         flash[:error] = 'unable to create, this form is disabled'
         redirect_to index_page
@@ -48,7 +44,7 @@ module GrantSubmissions
           redirect_to grant_path(@grant)
         else
           @grant = GrantDecorator.new(@grant)
-          flash[:alert] = @submission.errors.to_a
+          flash.now[:alert] = @submission.errors.to_a
           render 'new'
         end
       end
@@ -58,11 +54,11 @@ module GrantSubmissions
       submission
       authorize @submission
       if @submission.update(submission_params)
-        flash[:notice] = 'successfully updated response'
+        flash[:notice] = 'Submission was successfully updated'
         #TODO: redirect based on user permissions
         redirect_to grant_submissions_path(@grant)
       else
-        flash[:alert] = @submission.errors.to_a
+        flash.now[:alert] = @submission.errors.to_a
         render 'grants/submissions/edit'
       end
     end
@@ -94,21 +90,19 @@ module GrantSubmissions
 
     # def status_object
     def submission
-      @submission ||=
-        case action_name
-        when 'new'
-          # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
-          # UPDATED: Assumes one from
-          # set_grant includes everything
-          form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
-          @grant.submissions.build(form: form)
-        when 'edit', 'show'
-          @grant.submissions.find(params[:id])
-        when 'create'
-          @grant.submissions.build(submission_params.merge(created_id: current_user.id))
-        else
-          @grant.submissions.find(params[:id]) if params[:id]
-        end
+      @submission ||= case action_name
+                      when 'new'
+                        # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
+                        # set_grant includes everything
+                        form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
+                        @grant.submissions.build(form: form)
+                      when 'edit', 'show'
+                        @grant.submissions.find(params[:id])
+                      when 'create'
+                        @grant.submissions.build(submission_params.merge(created_id: current_user.id))
+                      else
+                        @grant.submissions.find(params[:id]) if params[:id]
+                      end
     end
 
     def submission_params
@@ -132,9 +126,6 @@ module GrantSubmissions
                          :datetime_val,
                          :boolean_val,
                          :document,
-                         :document_file_name,
-                         :document_content_type,
-                         :document_file_size,
                          :'partial_date_val_virtual(1i)',
                          :'partial_date_val_virtual(2i)',
                          :'partial_date_val_virtual(3i)',
@@ -158,9 +149,6 @@ module GrantSubmissions
                            :datetime_val,
                            :boolean_val,
                            :document,
-                           :document_file_name,
-                           :document_content_type,
-                           :document_file_size,
                            :'partial_date_val_virtual(1i)',
                            :'partial_date_val_virtual(2i)',
                            :'partial_date_val_virtual(3i)',

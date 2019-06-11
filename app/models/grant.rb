@@ -13,11 +13,15 @@ class Grant < ApplicationRecord
   belongs_to :organization
   has_many   :grant_permissions
   has_many   :users,            through: :grant_permissions
+
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
+  has_many   :questions,        through: :form
   has_many   :submissions,      class_name: 'GrantSubmission::Submission',
                                 foreign_key: :grant_id,
+                                inverse_of: :grant,
                                 dependent: :destroy
+  has_one_attached :document
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -91,6 +95,9 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
+  validate      :has_at_least_one_question?, on: :update,
+                                             if: -> () { will_save_change_to_attribute?('state', to: 'published') }
+
   scope :public_grants,      -> { not_deleted.
                                     published.
                                     where(':date BETWEEN
@@ -103,7 +110,7 @@ class Grant < ApplicationRecord
   scope :with_organization,  -> { joins(:organization) }
 
   def is_soft_deletable?
-    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable_error")
+    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
   end
 
   def is_open?
@@ -130,13 +137,18 @@ class Grant < ApplicationRecord
     slug.strip!
   end
 
-  # TODO: Should these two be boolians that then spit out a result
-  def published_soft_deletable_error
+
+  def published_soft_deletable?
+    # TODO: e.g. submissions.count.zero?
     raise SoftDeleteException.new('Published grant may not be deleted')
   end
 
-  def completed_soft_deletable_error
+  def completed_soft_deletable?
     raise SoftDeleteException.new('Completed grant may not be deleted')
+  end
+
+  def has_at_least_one_question?
+    errors.add(:base, 'A question is required before a grant can be published.') unless questions.any?
   end
 
   def process_association_soft_delete

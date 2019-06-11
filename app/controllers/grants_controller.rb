@@ -47,10 +47,8 @@ class GrantsController < ApplicationController
       flash[:warning] = 'Review the information below then click "Publish this Grant" to finalize.'
       redirect_to grant_grant_permissions_url(@grant)
     else
-      respond_to do |format|
-        flash[:alert] = result.messages
-        format.html { render :new }
-      end
+      flash.now[:alert] = result.messages
+      render :new
     end
   end
 
@@ -58,15 +56,12 @@ class GrantsController < ApplicationController
   # PATCH/PUT /grants/1.json
   def update
     authorize @grant
-    respond_to do |format|
-      if @grant.update(grant_params)
-        format.html { redirect_to grant_path(@grant), notice: 'Grant was successfully updated.' }
-        format.json { render :show, status: :ok, location: @grant }
-      else
-        flash[:alert] = @grant.errors.full_messages
-        format.html { render :edit }
-        format.json { render json: @grant.errors, status: :unprocessable_entity }
-      end
+    if @grant.update(grant_params)
+      flash[:notice] = 'Grant was successfully updated.'
+      redirect_to grant_path(@grant)
+    else
+      flash.now[:alert] = @grant.errors.full_messages
+      render :edit
     end
   end
 

@@ -3,6 +3,7 @@ en:
     attributes:
       grant_submission/submission/responses:
         decimal_val: Response
+        document: File
         text_val: Response
         grant_submission_multiple_choice_option_id: A selection
         datetime_val_date_optional_time_magik: Response
@@ -13,6 +14,11 @@ en:
           attributes:
             decimal_val:
               not_a_number: to '%{question}' must be a number.
+            document:
+              blank: upload for '%{question} is required.
+              content_type_invalid: uploaded for '%{question} must be a PDF, Word or Excel file.
+              file_too_large: uploaded for '%{question}' is larger than %{allowed_file_size} (%{uploaded_file_size}MB).
+              excluded_mime_type: uploaded for '%{question}' must be a %{allowed_types} file.
             grant_submission_multiple_choice_option_id:
               blank: for '%{question}' is required.
             datetime_val_date_optional_time_magik:

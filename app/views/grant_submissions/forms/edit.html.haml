@@ -6,7 +6,17 @@
   %h3
     Questions
 
-  %p
-    Project title is already included.
+  - unless @grant.form.available?
+    .callout.warning
+      %h5
+        - if @grant.submissions.any?
+          This grant has received submissions. To edit this form, please
+          = link_to 'delete all existing submissions', grant_submissions_path(@grant)
+          \.
+        - elsif @grant.published? && @grant.submissions.none?
+          Form may not be edited when the grant is published. To edit this form, please |
+          switch to Draft mode above.
+        - else
+          This form may not be edited.
 
   = render partial: 'form'

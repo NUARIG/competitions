@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         put :update_fields
       end
     end
+
     resources :submissions,       except: %[new show],       controller: 'grant_submissions/submissions'
 
     get 'apply', to: 'grant_submissions/submissions#new', as: :apply

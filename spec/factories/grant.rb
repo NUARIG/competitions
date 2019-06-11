@@ -59,6 +59,13 @@ FactoryBot.define do
       to_create { |instance| instance.save(validate: false) }
     end
 
+    trait :not_yet_open do
+      publish_date           { 3.days.ago }
+      submission_open_date   { 1.day.from_now }
+      submission_close_date  { 2.days.from_now }
+      to_create { |instance| instance.save(validate: false) }
+    end
+
     trait :with_users do
       after(:create) do |grant|
         create(:admin_grant_permission, grant: grant)

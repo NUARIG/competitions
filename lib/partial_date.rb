@@ -1,6 +1,9 @@
 module PartialDate
   extend ActiveSupport::Concern
 
+  # TODO: Can this be removed?
+  # TODO: If not, move to app/models/concerns?
+
   module ClassMethods
     def has_partial_date(db_date_attribute)
       virtual_attribute = partial_date_virtual_attribute(db_date_attribute)

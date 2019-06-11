@@ -1,20 +1,28 @@
 # frozen_string_literal: true
+# This file never seems to be used since all permission
+# policies are handled by grant policy.
 
 class GrantPermissionPolicy < GrantPolicy
-
-  def update?
-    organization_admin_access? || grant_editor_access?
+  def index?
+    grant_viewer_access?
   end
 
-  def edit?
-    update?
+  def show?
+    index?
+  end
+
+  def create?
+    grant_editor_access?
+  end
+
+  def new?
+    create?
   end
 
   def destroy?
-    # TODO: Is this the right policy
     update?
+    # organization_admin_access? || grant_editor_access?
   end
-
 
   private
 
@@ -26,8 +34,8 @@ class GrantPermissionPolicy < GrantPolicy
     clean_record_from_collection.grant
   end
 
-  # def confirm_organization
-  #   user.present? &&
-  #     clean_record_from_collection.grant.organization == user.organization
-  # end
+  def confirm_organization
+    user.present? &&
+      clean_record_from_collection.grant.organization == user.organization
+  end
 end

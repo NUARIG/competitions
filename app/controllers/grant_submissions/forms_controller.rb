@@ -64,12 +64,8 @@ module GrantSubmissions
 
     # TODO: Should be its own controller?
     def update_fields
-      # authorize :admin, :manage_grant_submission_forms?
-      # TODO: Figure out what to do with grant_forms
-      #@form = GrantSubmission::Form.find(params[:form_id])
       @form  = @grant.form
       authorize @form
-      # authorize @grant, :edit?
       valid_param = false
       GrantSubmission::Form::ALWAYS_EDITABLE_ATTRIBUTES.each do |field|
         if _params[:grant_submission_survey][field]
@@ -99,10 +95,8 @@ module GrantSubmissions
     # end
 
     def export
-      # authorize :admin, :view_grant_submission_forms?
       @form = GrantSubmission::Form.find(params[:id])
       authorize @form
-      # authorize @form, :show?
       send_data(JSON.pretty_generate(@survey.to_export_hash),
                 filename: "NOTIS_eCRF_FormBuilder_Form_#{@survey.title}_#{Time.now.iso8601}.json")
     end
@@ -114,7 +108,7 @@ module GrantSubmissions
 
     def import
       authorize @form
-      raise FormBuilder.new('Survey import method deleted app/controllers/grant_submission/survey_controller:110')
+      raise FormBuilder.new('Survey import method deleted app/controllers/grant_submission/survey_controller:111')
       # authorize :admin, :manage_grant_submission_forms?
       # ActiveRecord::Base.transaction do
       #   json = JSON.load(params[:uploaded_survey].try(:read))
