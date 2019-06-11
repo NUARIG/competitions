@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+# This file never seems to be used since all permission
+# policies are handled by grant policy.
 
 class GrantPermissionPolicy < GrantPolicy
   def index?
@@ -15,6 +17,10 @@ class GrantPermissionPolicy < GrantPolicy
 
   def new?
     create?
+  end
+
+  def destroy?
+    update?
   end
 
   private

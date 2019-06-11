@@ -1,4 +1,4 @@
-module Grants
+module GrantSubmissions
   class FormsController < ApplicationController
     # layout 'admin'
 
@@ -12,20 +12,18 @@ module Grants
     #                  # .page(params[:page]) # PAGINATION
     # end
 
-    def new
-      # authorize :admin, :manage_grant_submission_forms?
-      @form = GrantSubmission::Form.new
-      authorize @grant, :edit?
-      # TODO: Separate new and edit views
-      #render :edit
-      render :new
-    end
+    # def new
+    #   # authorize :admin, :manage_grant_submission_forms?
+    #   @form = GrantSubmission::Form.new
+    #   authorize @grant, :edit?
+    #   # TODO: Separate new and edit views
+    #   #render :edit
+    #   render :new
+    # end
 
     def edit
-      # authorize :admin, :view_grant_submission_forms?
-      # @survey = FormBuilder::Survey.includes(:sections=>{:questions=>[:answers, :condition_group]}).find(params[:id])
       @form = GrantSubmission::Form.includes(:sections=>{:questions=>[:multiple_choice_options]}).find(params[:id])
-      authorize @grant, :edit?
+      authorize @form
     end
 
     # def create
@@ -45,11 +43,9 @@ module Grants
     # end
 
     def update
-      # authorize :admin, :manage_grant_submission_forms?
       @form = GrantSubmission::Form.includes(sections: { questions: :multiple_choice_options }).find(params[:id])
-      authorize @grant, :edit?
+      authorize @form
       if @form.available? && @form.update_attributes_safe_display_order(form_params)
-      # if @survey.available? && @survey.with_safe_encoding {|o| o.update_attributes_safe_display_order(_params[:grant_submission_survey])}
         @form.updated_id = current_user.id
         @form.touch
         flash[:notice] = 'Submission Form successfully updated'
@@ -62,11 +58,8 @@ module Grants
 
     # TODO: Should be its own controller?
     def update_fields
-      # authorize :admin, :manage_grant_submission_forms?
-      # TODO: Figure out what to do with grant_forms
-      #@form = GrantSubmission::Form.find(params[:form_id])
       @form  = @grant.form
-      authorize @form, :update?
+      authorize @form
       valid_param = false
       GrantSubmission::Form::ALWAYS_EDITABLE_ATTRIBUTES.each do |field|
         if _params[:grant_submission_survey][field]
@@ -96,9 +89,8 @@ module Grants
     # end
 
     def export
-      # authorize :admin, :view_grant_submission_forms?
       @form = GrantSubmission::Form.find(params[:id])
-      authorize @form, :show?
+      authorize @form
       send_data(JSON.pretty_generate(@survey.to_export_hash),
                 filename: "NOTIS_eCRF_FormBuilder_Form_#{@survey.title}_#{Time.now.iso8601}.json")
     end
@@ -108,23 +100,24 @@ module Grants
     #   render :json => @survey.questions.select {|q| q.condition_group && q.condition_group.has_conditions? }.map {|q| {question_id: q.id, condition_group: q.condition_group.as_hash}}
     # end
 
-    def import
-      raise FormBuilder.new('Survey import method deleted app/controllers/grant_submission/survey_controller:110')
-      # authorize :admin, :manage_grant_submission_forms?
-      # ActiveRecord::Base.transaction do
-      #   json = JSON.load(params[:uploaded_survey].try(:read))
-      #   @survey = FormBuilder::Survey.new(json.select {|k, v| k != 'conditions'})
-      #   convert_result = @survey.convert_virtual_attrs!
-      #   if convert_result[:success] && @survey.with_safe_encoding(&:save)
-      #     @survey.import_conditions(json)
-      #     flash[:notice] = 'form successfully imported'
-      #     redirect_to polymorphic_path(FormBuilder::Survey)
-      #   else
-      #     flash[:import_error_msg] = 'Unable to import - ' + (convert_result[:error_msg] || @survey.errors.full_messages.join('. '))
-      #     redirect_to polymorphic_path(FormBuilder::Survey)
-      #   end
-      # end
-    end
+    # def import
+    #   authorize @form
+    #   raise FormBuilder.new('Survey import method deleted app/controllers/grant_submission/survey_controller:111')
+    #   # authorize :admin, :manage_grant_submission_forms?
+    #   # ActiveRecord::Base.transaction do
+    #   #   json = JSON.load(params[:uploaded_survey].try(:read))
+    #   #   @survey = FormBuilder::Survey.new(json.select {|k, v| k != 'conditions'})
+    #   #   convert_result = @survey.convert_virtual_attrs!
+    #   #   if convert_result[:success] && @survey.with_safe_encoding(&:save)
+    #   #     @survey.import_conditions(json)
+    #   #     flash[:notice] = 'form successfully imported'
+    #   #     redirect_to polymorphic_path(FormBuilder::Survey)
+    #   #   else
+    #   #     flash[:import_error_msg] = 'Unable to import - ' + (convert_result[:error_msg] || @survey.errors.full_messages.join('. '))
+    #   #     redirect_to polymorphic_path(FormBuilder::Survey)
+    #   #   end
+    #   # end
+    # end
 
     private
 

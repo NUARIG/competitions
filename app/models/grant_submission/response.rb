@@ -26,6 +26,7 @@ module GrantSubmission
                                         foreign_key: 'grant_submission_multiple_choice_option_id',
                                         inverse_of: :responses,
                                         optional: true
+
     has_one_attached :document
 
     validates_presence_of   :submission, :question
@@ -39,6 +40,7 @@ module GrantSubmission
     validates_uniqueness_of :grant_submission_multiple_choice_option_id,
                             scope: :grant_submission_submission_id,
                             allow_nil: true
+
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
 

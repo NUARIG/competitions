@@ -1,12 +1,14 @@
-module Grants
-  class SubmissionsController < ApplicationController
+module GrantSubmissions
+  class SubmissionsController < GrantBaseController
     before_action :set_grant, except: :new
 
     def index
-      authorize(@grant, :edit?)
       @grant         = GrantDecorator.new(@grant)
       @form          = @grant.form
-      @submissions   = @grant.submissions.includes(:applicant).where(grant_submission_form_id: @form.id)
+      @submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
+      @submissions   = policy_scope(GrantSubmission::Submission,
+                                    policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
+
       render 'index'
     end
 
@@ -19,25 +21,25 @@ module Grants
                     .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
       submission
-      # TODO: This is not the correct authorization
-      authorize(@grant)
+      authorize @submission
       render 'new'
     end
 
     def edit
       @grant = GrantDecorator.new(@grant)
-      authorize(@grant, :show?)
       submission
+      authorize @submission
       render 'edit'
     end
 
     def create
-      authorize(@grant, :show?)
       if @grant.form.disabled
         flash[:error] = 'unable to create, this form is disabled'
         redirect_to index_page
       else
-        if submission.save
+        submission
+        authorize @submission
+        if @submission.save
           flash[:notice] = 'successfully applied'
           redirect_to grant_path(@grant)
         else
@@ -49,27 +51,25 @@ module Grants
     end
 
     def update
-      authorize(@grant, :show?)
       submission
-      if @submission.update_attributes(submission_params)
+      authorize @submission
+      if @submission.update(submission_params)
         flash[:notice] = 'Submission was successfully updated'
         #TODO: redirect based on user permissions
         redirect_to grant_submissions_path(@grant)
       else
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'grants/submissions/edit'
       end
     end
 
     def destroy
-      authorize(@grant, :edit?)
-      if submission.destroy
+      submission
+      authorize @submission
+      if @submission.destroy
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
-        # flash[:error] = 'unable to delete'
       else
-        @grant = GrantDecorator.new(@grant)
         flash[:error] = @submission.errors.to_a
         redirect_back fallback_location: grant_submissions_path(@grant)
       end
@@ -89,8 +89,6 @@ module Grants
     def submission
       @submission ||= case action_name
                       when 'new'
-                        # survey = @grant.surveys.includes(:sections => {:questions => :answers}).find(params[:form_builder_survey_id])
-                        # set_grant includes everything
                         form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
                         @grant.submissions.build(form: form)
                       when 'edit', 'show'

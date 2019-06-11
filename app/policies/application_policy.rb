@@ -47,7 +47,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      scope.all
+      scope.none
     end
   end
 end

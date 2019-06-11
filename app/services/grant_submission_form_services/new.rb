@@ -25,6 +25,7 @@ module GrantSubmissionFormServices
                                         display_order: 1,
                                         is_mandatory: true,
                                         response_type: 'long_text')
+
           # Create an 'Application Document' file_upload question
           form_section.questions.create(text: 'Application Document',
                                         display_order: 2,

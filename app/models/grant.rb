@@ -13,7 +13,7 @@ class Grant < ApplicationRecord
   belongs_to :organization
   has_many   :grant_permissions
   has_many   :users,            through: :grant_permissions
-  # has_many   :grant_forms,      inverse_of: :grant
+
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
   has_many   :questions,        through: :form
@@ -27,9 +27,9 @@ class Grant < ApplicationRecord
   SLUG_MAX_LENGTH = 15
 
   GRANT_STATES    = { demo:      'demo',      # TODO: define specifics of each
-                       draft:     'draft',
-                       published: 'published', # e.g. can be opened and may be in process
-                       completed: 'completed'  # e.g. awarded and closed
+                      draft:     'draft',
+                      published: 'published', # e.g. can be opened and may be in process
+                      completed: 'completed'  # e.g. awarded and closed
                      }.freeze
 
 
@@ -111,6 +111,10 @@ class Grant < ApplicationRecord
 
   def is_soft_deletable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
+  end
+
+  def is_open?
+    DateTime.now >= submission_open_date.beginning_of_day
   end
 
   def accepting_submissions?

@@ -1,0 +1,6 @@
+en:
+ pundit:
+   default: 'You are not authorized to perform this action.'
+   grant_policy:
+     update?: 'You cannot edit this grant!'
+     create?: 'You cannot create grants!'
