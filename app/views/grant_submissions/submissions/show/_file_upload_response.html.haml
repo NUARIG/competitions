@@ -1,0 +1,5 @@
+- if response.document.attached?
+  = link_to response.document.filename, rails_blob_path(response.document, disposition: 'attachment')
+- else
+  .no-response
+    No file uploaded

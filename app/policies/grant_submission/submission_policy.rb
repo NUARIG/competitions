@@ -33,6 +33,10 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
     end
   end
 
+  def show?
+    organization_admin_access? || grant_editor_access? || current_user_is_applicant?
+  end
+
   def create?
     organization_admin_access? || (user.present? && @grant.accepting_submissions?)
   end
@@ -42,7 +46,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def update?
-    organization_admin_access? || grant_editor_access? || submission.applicant_id == user.id
+    organization_admin_access? || grant_editor_access? || current_user_is_applicant?
   end
 
   def edit?
@@ -62,5 +66,9 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
 
   def grant
     @grant
+  end
+
+  def current_user_is_applicant?
+    submission.applicant_id == user.id
   end
 end

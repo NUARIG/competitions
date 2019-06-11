@@ -18,7 +18,7 @@
     <% end %>
   </table>
 
-  <%= render 'title_placeholder_field' if section.object.display_order.to_i <= 1 %>
+  <%= render 'title_placeholder_field' if section.object.display_order.to_i == 1 %>
 
   <%= section.fields_for :questions, section.object.questions.sort_by{|q|q.display_order || 0} do |fff| %>
     <%= render partial: 'question_form', locals: {question: fff, has_edit_permission: has_edit_permission}%>
