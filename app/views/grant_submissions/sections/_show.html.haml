@@ -10,4 +10,4 @@
         %td
           = response.question.text
         %td
-          = render partial: "grant_submissions/submissions/show/#{response.question.response_type}_response", locals: { response: response }
+          = render partial: "grant_submissions/responses/#{response.question.response_type}_response", locals: { response: response }

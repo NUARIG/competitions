@@ -18,4 +18,4 @@
 
     .cell
       - @submission.form.sections.sort_by(&:display_order).each do |section|
-        = render partial: 'grant_submissions/submissions/show/section', locals: { submission:  @submission, form: @submission.form, section: section }
+        = render partial: 'grant_submissions/sections/show', locals: { submission:  @submission, form: @submission.form, section: section }
