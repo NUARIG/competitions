@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe 'Home', type: :system do
   describe 'Index', js: true do
     before(:each) do
-      @open_grant         = create(:grant_with_users_and_questions)
+      @open_grant         = create(:grant_with_users)
       @closed_grant       = create(:published_closed_grant)
       @completed_grant    = create(:completed_grant)
       @draft_grant        = create(:draft_open_grant)
-      @soft_deleted_grant = create(:grant_with_users_and_questions, deleted_at: 1.hour.ago)
+      @soft_deleted_grant = create(:grant_with_users, deleted_at: 1.hour.ago)
     end
 
     scenario 'does not require a login' do

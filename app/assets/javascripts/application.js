@@ -16,5 +16,8 @@
 //= require activestorage
 //= require foundation
 //= require foundation-datepicker
+//= require jquery_nested_form
+//= require cocoon
+//= require select2
 //= require_tree .
 $(function(){ $(document).foundation(); });

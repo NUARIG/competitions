@@ -9,10 +9,10 @@ FactoryBot.define do
     password          { 'secret' }
     organization_role { 'none' }
 
-    trait :organization_admin do
-      organization_role { 'none' }
+    trait :admin do
+      organization_role { 'admin' }
     end
 
-    factory :organization_admin_user, traits: :organization_role
+    factory :organization_admin_user, traits: %i[admin]
   end
 end

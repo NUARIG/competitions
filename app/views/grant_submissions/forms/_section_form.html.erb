@@ -1,0 +1,30 @@
+<fieldset class="fieldset form_builder_section_fieldset">
+  <legend>
+    <span>Section</span>
+    <%= section.link_to_remove 'Delete', { class: 'button tiny btn-pill warning hollow', title: 'Delete this section and its questions'} if has_edit_permission %>
+  </legend>
+
+  <table class="section_table table table-condensed">
+    <%= form_table_row section, :title do |attr| %>
+      <%= section.text_field attr %>
+    <% end %>
+
+    <%= form_table_row section, :display_order do |attr| %>
+      <%= section.text_field attr, size: 3 %>
+    <% end %>
+
+    <%= form_table_row section, :repeatable do |attr| %>
+      <%= section.check_box attr, class: 'form_builder_section_repeatable' %>
+    <% end %>
+  </table>
+
+  <%= render 'title_placeholder_field' if section.object.display_order.to_i == 1 %>
+
+  <%= section.fields_for :questions, section.object.questions.sort_by{|q|q.display_order || 0} do |fff| %>
+    <%= render partial: 'question_form', locals: {question: fff, has_edit_permission: has_edit_permission}%>
+  <% end %>
+
+  <% if has_edit_permission %>
+    <%= section.link_to_add 'Add a Question to this Section', :questions, class: 'button btn-pill small hollow success' %>
+  <% end %>
+</fieldset>

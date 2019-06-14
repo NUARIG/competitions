@@ -10,68 +10,123 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_190322) do
+ActiveRecord::Schema.define(version: 2019_06_04_155817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "constraint_question_versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.string "event", null: false
-    t.integer "whodunnit"
-    t.text "object"
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.index ["item_type", "item_id"], name: "index_constraint_question_versions_on_item_type_and_item_id"
-    t.index ["whodunnit"], name: "index_constraint_question_versions_on_whodunnit"
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "constraint_questions", force: :cascade do |t|
-    t.bigint "constraint_id"
-    t.bigint "question_id"
-    t.string "value"
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["constraint_id", "question_id"], name: "index_constraint_questions_on_constraint_id_and_question_id"
-    t.index ["constraint_id"], name: "index_constraint_questions_on_constraint_id"
-    t.index ["question_id"], name: "index_constraint_questions_on_question_id"
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "constraints", force: :cascade do |t|
-    t.string "type"
-    t.string "name"
-    t.string "value_type"
-    t.string "default"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["value_type"], name: "index_constraints_on_value_type"
-  end
-
-  create_table "default_set_questions", force: :cascade do |t|
-    t.bigint "default_set_id"
-    t.bigint "question_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["default_set_id", "question_id"], name: "index_default_set_questions_on_default_set_id_and_question_id"
-    t.index ["default_set_id"], name: "index_default_set_questions_on_default_set_id"
-    t.index ["question_id"], name: "index_default_set_questions_on_question_id"
-  end
-
-  create_table "default_sets", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "grant_users", force: :cascade do |t|
+  create_table "grant_permissions", force: :cascade do |t|
     t.bigint "grant_id"
     t.bigint "user_id"
-    t.string "grant_role"
+    t.string "role"
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-    t.index ["grant_id"], name: "index_grant_users_on_grant_id"
-    t.index ["user_id"], name: "index_grant_users_on_user_id"
+    t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
+    t.index ["user_id"], name: "index_grant_permissions_on_user_id"
+  end
+
+  create_table "grant_submission_forms", force: :cascade do |t|
+    t.bigint "grant_id"
+    t.string "title", null: false
+    t.string "description", limit: 3000
+    t.boolean "disabled"
+    t.bigint "created_id"
+    t.bigint "updated_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_grant_submission_forms_on_grant_id", unique: true
+    t.index ["title"], name: "index_grant_submission_forms_on_title", unique: true
+  end
+
+  create_table "grant_submission_multiple_choice_options", force: :cascade do |t|
+    t.bigint "grant_submission_question_id", null: false
+    t.string "text", null: false
+    t.integer "display_order", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order", "grant_submission_question_id"], name: "i_smco_on_display_order_and_submission_question_id", unique: true
+    t.index ["grant_submission_question_id"], name: "i_gsmco_on_submission_question_id"
+    t.index ["text", "grant_submission_question_id"], name: "i_smco_on_text_and_submission_question_id", unique: true
+  end
+
+  create_table "grant_submission_questions", force: :cascade do |t|
+    t.bigint "grant_submission_section_id", null: false
+    t.string "text", limit: 4000, null: false
+    t.string "instruction", limit: 4000
+    t.integer "display_order", null: false
+    t.string "export_code"
+    t.boolean "is_mandatory"
+    t.string "response_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order", "grant_submission_section_id"], name: "i_sqs_on_display_order_and_submission_section_id", unique: true
+    t.index ["grant_submission_section_id"], name: "index_grant_submission_questions_on_grant_submission_section_id"
+    t.index ["text", "grant_submission_section_id"], name: "i_gsq_on_text_and_grant_submission_section_id", unique: true
+  end
+
+  create_table "grant_submission_responses", force: :cascade do |t|
+    t.bigint "grant_submission_submission_id", null: false
+    t.bigint "grant_submission_question_id", null: false
+    t.bigint "grant_submission_multiple_choice_option_id"
+    t.string "string_val"
+    t.text "text_val"
+    t.decimal "decimal_val"
+    t.datetime "datetime_val"
+    t.boolean "boolean_val"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_submission_multiple_choice_option_id"], name: "i_gsr_on_submission_multiple_choice_option_id"
+    t.index ["grant_submission_question_id", "grant_submission_submission_id"], name: "i_gsr_on_submissisubmission_id", unique: true
+    t.index ["grant_submission_question_id"], name: "i_gsr_on_grant_submission_question_id"
+    t.index ["grant_submission_submission_id"], name: "i_gsr_on_grant_submission_submission_id"
+  end
+
+  create_table "grant_submission_sections", force: :cascade do |t|
+    t.bigint "grant_submission_form_id", null: false
+    t.string "title"
+    t.integer "display_order", null: false
+    t.boolean "repeatable"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
+    t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
+  end
+
+  create_table "grant_submission_submissions", force: :cascade do |t|
+    t.bigint "grant_id", null: false
+    t.bigint "grant_submission_form_id", null: false
+    t.bigint "created_id", null: false
+    t.string "title", null: false
+    t.bigint "grant_submission_section_id"
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
+    t.index ["grant_id", "created_id"], name: "i_gss_on_grant_id_and_created_id"
+    t.index ["grant_id"], name: "index_grant_submission_submissions_on_grant_id"
+    t.index ["grant_submission_form_id"], name: "index_grant_submission_submissions_on_grant_submission_form_id"
   end
 
   create_table "grant_versions", force: :cascade do |t|
@@ -87,12 +142,12 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
 
   create_table "grants", force: :cascade do |t|
     t.bigint "organization_id"
-    t.string "name"
-    t.string "slug"
-    t.string "state"
-    t.date "publish_date"
-    t.date "submission_open_date"
-    t.date "submission_close_date"
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "state", null: false
+    t.date "publish_date", null: false
+    t.date "submission_open_date", null: false
+    t.date "submission_close_date", null: false
     t.text "rfa"
     t.integer "applications_per_user"
     t.text "review_guidance"
@@ -102,10 +157,11 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
     t.date "review_close_date"
     t.date "panel_date"
     t.text "panel_location"
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
     t.index ["organization_id"], name: "index_grants_on_organization_id"
+    t.index ["slug"], name: "index_grants_on_slug"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -114,56 +170,6 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "question_versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.string "event", null: false
-    t.integer "whodunnit"
-    t.text "object"
-    t.datetime "created_at", null: false
-    t.index ["item_type", "item_id"], name: "index_question_versions_on_item_type_and_item_id"
-    t.index ["whodunnit"], name: "index_question_versions_on_whodunnit"
-  end
-
-  create_table "questions", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.text "answer_type"
-    t.text "text"
-    t.text "help_text"
-    t.boolean "required"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-    t.index ["grant_id"], name: "index_questions_on_grant_id"
-  end
-
-  create_table "responses", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.bigint "question_id"
-    t.text "type"
-    t.integer "integer_response"
-    t.float "float_response"
-    t.string "string_response"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["grant_id"], name: "index_responses_on_grant_id"
-    t.index ["question_id"], name: "index_responses_on_question_id"
-  end
-
-  create_table "submissions", force: :cascade do |t|
-    t.bigint "grant_id"
-    t.bigint "user_id"
-    t.string "project_title"
-    t.string "state"
-    t.float "composite_score_average"
-    t.float "final_impact_score_average"
-    t.float "award_amount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["grant_id"], name: "index_submissions_on_grant_id"
-    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -184,10 +190,11 @@ ActiveRecord::Schema.define(version: 2019_04_01_190322) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "grant_users", "grants"
-  add_foreign_key "grant_users", "users"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "grant_permissions", "grants"
+  add_foreign_key "grant_permissions", "users"
+  add_foreign_key "grant_submission_forms", "grants"
+  add_foreign_key "grant_submission_questions", "grant_submission_sections"
   add_foreign_key "grants", "organizations"
-  add_foreign_key "submissions", "grants"
-  add_foreign_key "submissions", "users"
   add_foreign_key "users", "organizations"
 end

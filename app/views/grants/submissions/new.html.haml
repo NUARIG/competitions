@@ -1,7 +1,0 @@
-- content_for(:page_title, 'New Submission')
-%h1 New submission
-
-= form_with model: [@grant, @submission], id: "new-submission", local: true do |f|
-  = render 'form', f: f, submission: @submission, grant: @grant
-
-= link_to 'Back', grant_submissions_path(@grant)

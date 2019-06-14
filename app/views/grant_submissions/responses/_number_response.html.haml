@@ -1,0 +1,5 @@
+- if response.decimal_val.present?
+  = number_with_precision(response.decimal_val, precision: 2, strip_insignificant_zeros: true)
+- else
+  .no-response
+    No response

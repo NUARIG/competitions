@@ -5,6 +5,6 @@ class HomeController < ApplicationController
 
   def index
     @grants = Grants::PublicDecorator.decorate_collection(Grant.public_grants)
-    skip_authorization
+    skip_policy_scope
   end
 end

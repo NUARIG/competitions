@@ -1,0 +1,16 @@
+.grid-x
+  .cell
+    .grid-x
+      = f.label :grant, 'Grant: '
+      = link_to grant.name, grant_path(grant)
+    .grid-x
+      = f.label :user, 'User\'s Email: '
+      = @user.email
+    .grid-x
+      = f.label :role, 'Grant Role'
+      = f.select :role, grant_permission_role_select_options
+
+.grid-x
+  .actions
+    = f.submit 'Update', class: 'button'
+    = link_to 'Cancel', grant_grant_permissions_path(grant), class: 'button secondary'

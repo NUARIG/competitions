@@ -6,15 +6,14 @@ module Grants
 
     # PATCH/PUT /grants/1/state
     def update
-      authorize @grant
-      respond_to do |format|
-        if @grant.update(grant_params)
-          format.html { redirect_back fallback_location: grant_path(@grant),
-                        notice: "Publish status was changed to #{@grant.state}." }
-        else
-          format.html { redirect_back fallback_location: grant_path(@grant),
-                        alert: "Status change failed. This grant is still in #{@grant.state} mode." }
-        end
+      authorize @grant, :edit?
+      if @grant.update(grant_params)
+        flash[:notice] = "Publish status was changed to #{@grant.state}."
+        redirect_back fallback_location: grant_path(@grant)
+      else
+        @grant.errors.add(:base, "Status change failed. This grant is still in #{@grant.reload.state} mode.")
+        flash[:alert] = @grant.errors.full_messages
+        redirect_back fallback_location: grant_path(@grant)
       end
     end
 

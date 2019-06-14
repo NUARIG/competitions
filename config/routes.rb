@@ -6,12 +6,20 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   resources :grants do
-    resources :questions,   only: %i[index edit update], controller: 'grants/questions'
-    resources :grant_users, except: :show,               controller: 'grants/grant_users'
-    resource  :duplicate,   only: %i[new create],        controller: 'grants/duplicate'
-    resources :submissions,                              controller: 'grants/submissions'
-    resource  :state,       only: :update,               controller: 'grants/state'
+    resources :grant_permissions, except: :show,                        controller: 'grant_permissions'
+    resource  :duplicate,         only: %i[new create],                 controller: 'grants/duplicate'
+    resource  :state,             only: :update,                        controller: 'grants/state'
+    resources :forms,             only: %i[update edit update_fields],  controller: 'grant_submissions/forms' do
+      member do
+        put :update_fields
+      end
+    end
+
+    resources :submissions,       except: %[new show],       controller: 'grant_submissions/submissions'
+
+    get 'apply', to: 'grant_submissions/submissions#new', as: :apply
   end
+
 
   resources :users, only: %i[show index edit update]
 end

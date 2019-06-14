@@ -1,0 +1,21 @@
+.grid-x.grid-margin-x
+  .small-12.cell#title
+    %h1.name{class: @grant.name_length_class}
+      = @grant.name
+      %small
+        = @grant.organization.name
+
+.grid-x.grid-margin-x
+  %aside.small-12.medium-3.cell
+    = render partial: 'grants/dates_card', locals: { grant: @grant }
+  .small-12.medium-9.cell#rfa
+    %h4
+      Application:
+      = @submission.title
+    %h5
+      Submitted By:
+      = "#{@submission.applicant.first_name} #{@submission.applicant.last_name}"
+
+    .cell
+      - @submission.form.sections.sort_by(&:display_order).each do |section|
+        = render partial: 'grant_submissions/sections/show', locals: { submission:  @submission, form: @submission.form, section: section }

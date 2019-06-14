@@ -1,0 +1,26 @@
+main.submissions {
+  fieldset {
+    legend {
+      font-weight: bold;
+      padding: 0 1em;
+    }
+    td {
+      border-top: 1px solid #EEE;
+      vertical-align: top;
+      label.required-true:after {
+        content: ' *';
+        font-size: 1.15em;
+        color: red;
+      }
+      .helper-text {
+        font-size: .85em;
+        font-style: italic;
+      }
+      .no-response {
+        font-size: .85em;
+        font-style: italic;
+        text-transform: uppercase
+      }
+    }
+  }
+}
