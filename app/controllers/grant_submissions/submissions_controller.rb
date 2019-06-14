@@ -12,6 +12,13 @@ module GrantSubmissions
       render 'index'
     end
 
+    def show
+      submission
+      authorize @submission
+      @grant = GrantDecorator.new(@grant)
+      render 'show'
+    end
+
     def new
       @grant = Grant.friendly
                     .includes(form:
