@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_04_155817) do
+ActiveRecord::Schema.define(version: 2019_06_14_161632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,27 @@ ActiveRecord::Schema.define(version: 2019_06_04_155817) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "criteria", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.boolean "is_mandatory", default: true, null: false
+    t.boolean "show_comment_field", default: true, null: false
+    t.boolean "allow_no_score", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "criterion_review", force: :cascade do |t|
+    t.bigint "criterion_id"
+    t.bigint "review_id"
+    t.integer "score"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["criterion_id"], name: "index_criterion_review_on_criterion_id"
+    t.index ["review_id"], name: "index_criterion_review_on_review_id"
   end
 
   create_table "grant_permissions", force: :cascade do |t|
@@ -172,6 +193,18 @@ ActiveRecord::Schema.define(version: 2019_06_04_155817) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "grant_submission_submission_id", null: false
+    t.bigint "created_id", null: false
+    t.integer "overall_impact_score"
+    t.text "overall_impact_comment"
+    t.string "criterion_average"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grant_submission_submission_id", "created_id"], name: "index_review_reviewer_on_grant_submission_id_and_user_id", unique: true
+    t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.bigint "organization_id"
     t.string "organization_role"
@@ -191,10 +224,13 @@ ActiveRecord::Schema.define(version: 2019_06_04_155817) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "criterion_review", "criteria"
+  add_foreign_key "criterion_review", "reviews"
   add_foreign_key "grant_permissions", "grants"
   add_foreign_key "grant_permissions", "users"
   add_foreign_key "grant_submission_forms", "grants"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
   add_foreign_key "grants", "organizations"
+  add_foreign_key "reviews", "grant_submission_submissions"
   add_foreign_key "users", "organizations"
 end
