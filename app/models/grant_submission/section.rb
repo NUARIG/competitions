@@ -21,8 +21,8 @@ module GrantSubmission
 
     accepts_nested_attributes_for :questions, allow_destroy: true
 
-    validates_presence_of :form, :display_order
-    validates_numericality_of :display_order, only_integer: true, greater_than: 0
+    validates_presence_of :form, :title #, :display_order
+    # validates_numericality_of :display_order, only_integer: true, greater_than: 0
     validates_length_of :title, maximum: 255
 
     def self.human_readable_attribute(attr)

@@ -1,5 +1,11 @@
 main.forms {
   form.edit_grant_submission_form {
+    a.button {
+      margin: 1em;
+    }
+    td {
+      vertical-align: top;
+    }
     fieldset.fieldset {
       &.form_builder_section_fieldset,
       &.form_builder_question_fieldset {
@@ -7,11 +13,9 @@ main.forms {
           span {
             font-weight: bold;
           }
-          a.button {
-            margin: 1em;
-          }
         }
       }
+
     }
   }
 }

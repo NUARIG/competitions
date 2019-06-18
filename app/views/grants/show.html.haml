@@ -15,6 +15,7 @@
       RFA
     = @grant.rfa.html_safe
 
+    = link_to 'Apply Now', grant_apply_path(@grant), class: 'button expanded' if @grant.accepting_submissions?
     %hr
 
     %ul.menu.simple#user-links

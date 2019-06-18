@@ -51,28 +51,8 @@ module GrantSubmissions
         flash[:notice] = 'Submission Form successfully updated'
         redirect_to edit_grant_form_path(@grant, @form)
       else
-        flash[:alert] = @form.errors.full_messages
+        flash.now[:alert] = @form.errors.full_messages
         render :edit
-      end
-    end
-
-    # TODO: Should be its own controller?
-    def update_fields
-      @form  = @grant.form
-      authorize @form
-      valid_param = false
-      GrantSubmission::Form::ALWAYS_EDITABLE_ATTRIBUTES.each do |field|
-        if _params[:grant_submission_survey][field]
-          @form[field] = _params[:grant_submission_survey][field]
-          valid_param = true
-        end
-      end
-      respond_to do |format|
-        if valid_param && @form.save
-          format.json { render body: nil, status: :no_content }
-        else
-          format.json { render json: @form.errors, status: :unprocessable_entity }
-        end
       end
     end
 
@@ -136,9 +116,6 @@ module GrantSubmissions
     # Never trust parameters from the scary internet, only allow the white list through.
     def form_params
       params.require(:grant_submission_form).permit(
-          :title,
-          :show_ans_code_in_sep_exp_col,
-          :show_ans_code_in_form_entry,
           :description,
           :has_alerts,
           sections_attributes: [
@@ -157,7 +134,6 @@ module GrantSubmissions
               :export_code,
               :is_mandatory,
               :response_type,
-              :grant_submission_std_answer_set_id,
               :instruction,
               :grant_submission_section_id,
               multiple_choice_options_attributes: [
@@ -166,7 +142,6 @@ module GrantSubmissions
                 :text,
                 :export_code,
                 :display_order,
-                :grant_submission_std_answer_id,
                 :_destroy
               ]
             ]

@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    attributes:
+      grant_submission:
+        sections:
+    errors:
+      models:
+        grant_submission/form/sections:
+  helpers:
+    label:
+      grant_submission_form:
+        sections:
+          title: Section Title

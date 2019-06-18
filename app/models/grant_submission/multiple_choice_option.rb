@@ -11,10 +11,10 @@ module GrantSubmission
                            foreign_key: 'grant_submission_multiple_choice_option_id',
                            inverse_of: :multiple_choice_option
 
-    validates_presence_of :question, :text, :display_order
+    validates_presence_of :question, :text #, :display_order
     validates_uniqueness_of :text, scope: :grant_submission_question_id
-    validates_numericality_of :display_order, only_integer: true,
-                                              greater_than: 0
+    # validates_numericality_of :display_order, only_integer: true,
+    #                                           greater_than: 0
     validates_length_of :text, maximum: 255
 
     def self.human_readable_attribute(attr)

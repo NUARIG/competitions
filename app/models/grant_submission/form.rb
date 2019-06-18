@@ -41,7 +41,7 @@ class GrantSubmission::Form < ApplicationRecord
     validates_length_of :title, maximum: 255
     validates_length_of :description, maximum: 3000
 
-    validate :display_orders_are_uniq
+    # validate :display_orders_are_uniq -- display order is set by incoming order
 
     scope :search_by_title, -> (keyword) { where("UPPER(#{self.table_name}.title) LIKE ?", "%#{keyword.upcase}%")}
     scope :with_questions,  -> () { includes(form: :questions) }
@@ -114,28 +114,28 @@ class GrantSubmission::Form < ApplicationRecord
     # checks each record against values already saved to the
     # database. This problem is an artifact of how mass-assignment and
     # accepts_nested_attributes_for works.
-    def display_orders_are_uniq
-      uniq_display_order = ->(relation) do
-        fg = relation.reject(&:marked_for_destruction?)
-        fg.map(&:display_order).uniq.size != fg.size
-      end
+        # def display_orders_are_uniq
+        #   uniq_display_order = ->(relation) do
+        #     fg = relation.reject(&:marked_for_destruction?)
+        #     fg.map(&:display_order).uniq.size != fg.size
+        #   end
 
-      if uniq_display_order.(sections)
-        errors.add(:base, "Sections display order must be unique")
-      end
+        #   if uniq_display_order.(sections)
+        #     errors.add(:base, "Sections display order must be unique")
+        #   end
 
-      sections.each do |section|
-        if uniq_display_order.(section.questions)
-          errors.add(:base, "Section '#{section.title}' questions display order must be unique")
-        end
-      end
+        #   sections.each do |section|
+        #     if uniq_display_order.(section.questions)
+        #       errors.add(:base, "Section '#{section.title}' questions display order must be unique")
+        #     end
+        #   end
 
-      sections.flat_map(&:questions).each do |question|
-        if uniq_display_order.(question.multiple_choice_options)
-          errors.add(:base, "Question '#{question.text}' multiple choice option display order must be unique")
-        end
-      end
-    end
+        #   sections.flat_map(&:questions).each do |question|
+        #     if uniq_display_order.(question.multiple_choice_options)
+        #       errors.add(:base, "Question '#{question.text}' multiple choice option display order must be unique")
+        #     end
+        #   end
+        # end
 
     # if display_orders_are_uniq this will re-number
     # sections/questions/multiple_choice_options from an offset while still respecting
@@ -147,32 +147,22 @@ class GrantSubmission::Form < ApplicationRecord
     # account for existing display orders in the db and new records
     # being created. e.g. add questions and reorder at the same time.
     def update_attributes_safe_display_order(params)
+      order = ->(relation) do
+                  return if relation.size.zero?
+                  relation.each_with_index{ |el, i| el.display_order = i + 1 }
+                end
 
-      reorder = ->(relation, offset) do
-        return if relation.size == 0
-        start = offset ? [relation.size, *relation.pluck(:display_order), *relation.map(&:display_order)].max.to_i + 1 : 1
-        relation.sort_by(&:display_order).each_with_index {|el, i| el.display_order = start + i}
-      end
-
-      assign_attributes(params)
+      assign_attributes(params) # updates the title and description
       if valid?
-        reorder.(sections, true)
-        sections.each {|s| reorder.(s.questions, true)}
-        sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_options, true)}
-        ok = save
-
-        reorder.(sections, false)
-        sections.each {|s| reorder.(s.questions, false)}
-        sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_options, false)}
-        ok = save && ok
-        return ok
+        order.(sections)
+        sections.each { |section| order.(section.questions) }
+        sections.flat_map(&:questions).each do |question|
+          order.(question.multiple_choice_options) if question.multiple_choice_options.present?
+        end
+        save
       else
         return false
       end
-    end
-
-    def has_repeatable_sections?
-      sections.repeatable.present?
     end
 
     def convert_virtual_attrs!
