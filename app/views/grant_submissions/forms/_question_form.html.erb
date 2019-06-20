@@ -8,14 +8,12 @@
     <thead>
       <tr>
         <th><%= question.label :text %></th>
-        <!-- <th><%#= question.label :display_order %></th> -->
         <th><%= question.label :is_mandatory %></th>
         <th><%= question.label :response_type %></th>
       </tr>
     </thead>
     <tr>
       <td><%= question.text_area :text, rows: 1 %></td>
-      <!-- <td><%#= question.text_field :display_order, size: 3 %></td> -->
       <td><%= question.select :is_mandatory, options_for_select([['Yes', true], ['No', false]], question.object.is_mandatory || false), { include_blank: 'Select One' } %></td>
       <td><%= question.select :response_type, GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, { include_blank: 'Select a Response Type' }, class: 'form_builder_question_response_type' %></td>
     </tr>
@@ -43,8 +41,6 @@
     </thead>
     <tr>
       <td>Select Text</td>
-      <!-- <td>Display Order</td> -->
-      <!-- <td>Export Code</td>  -->
       <td></td>
     </tr>
     <%= question.fields_for :multiple_choice_options, question.object.multiple_choice_options.sort_by{ |option| option.display_order || 0}, wrapper: false do |option| %>

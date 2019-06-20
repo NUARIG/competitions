@@ -23,8 +23,7 @@ module GrantSubmission
       number:        'Number',
       short_text:    'Short Text (255 max)',
       long_text:     'Long Text (unlimited)',
-      date_opt_time: 'Date w/ Optional Time',
-      # partial_date:' "Partial Date',
+      date_opt_time: 'Date',
       file_upload:   'File Upload (15 MB max)'
     }.freeze
 
@@ -38,6 +37,7 @@ module GrantSubmission
     validates_length_of :export_code, maximum: 255
     validates_length_of :instruction, maximum: 4000
 
+    validate :validate_has_at_least_one_option, if: -> { response_type == 'pick_one' }
 
     def self.human_readable_attribute(attr)
       {}[attr] || attr.to_s.humanize
@@ -86,7 +86,7 @@ module GrantSubmission
 
     def operator_types
       case response_type.to_sym
-      when :pick_one, :standard_answer
+      when :pick_one
         ['list', 'comparable']
       when :short_text, :long_text
         ['text', 'comparable']
@@ -97,6 +97,12 @@ module GrantSubmission
       else
         []
       end
+    end
+
+    private
+
+    def validate_has_at_least_one_option
+      errors.add(:response_type, :requires_option) unless multiple_choice_options.present?
     end
 
     # def has_export_code_in_answers?

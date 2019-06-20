@@ -20,6 +20,7 @@ en:
             response_type:
               blank: must be selected.
               inclusion: must be selected.
+              requires_option: '"Multiple Choice -- Pick One" requires at least one option.'
   helpers:
     label:
       grant_submission/question:
