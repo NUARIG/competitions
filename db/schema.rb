@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_14_161632) do
+ActiveRecord::Schema.define(version: 2019_06_19_145622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_161632) do
   end
 
   create_table "criteria", force: :cascade do |t|
+    t.bigint "grant_id"
     t.string "name"
     t.text "description"
     t.boolean "is_mandatory", default: true, null: false
@@ -44,17 +45,18 @@ ActiveRecord::Schema.define(version: 2019_06_14_161632) do
     t.boolean "allow_no_score", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["grant_id"], name: "index_criteria_on_grant_id"
   end
 
-  create_table "criterion_review", force: :cascade do |t|
+  create_table "criteria_reviews", force: :cascade do |t|
     t.bigint "criterion_id"
     t.bigint "review_id"
     t.integer "score"
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["criterion_id"], name: "index_criterion_review_on_criterion_id"
-    t.index ["review_id"], name: "index_criterion_review_on_review_id"
+    t.index ["criterion_id"], name: "index_criteria_reviews_on_criterion_id"
+    t.index ["review_id"], name: "index_criteria_reviews_on_review_id"
   end
 
   create_table "grant_permissions", force: :cascade do |t|
@@ -144,6 +146,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_161632) do
     t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "reviews_count", default: 0
     t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
     t.index ["grant_id", "created_id"], name: "i_gss_on_grant_id_and_created_id"
     t.index ["grant_id"], name: "index_grant_submission_submissions_on_grant_id"
@@ -224,8 +227,8 @@ ActiveRecord::Schema.define(version: 2019_06_14_161632) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "criterion_review", "criteria"
-  add_foreign_key "criterion_review", "reviews"
+  add_foreign_key "criteria_reviews", "criteria"
+  add_foreign_key "criteria_reviews", "reviews"
   add_foreign_key "grant_permissions", "grants"
   add_foreign_key "grant_permissions", "users"
   add_foreign_key "grant_submission_forms", "grants"

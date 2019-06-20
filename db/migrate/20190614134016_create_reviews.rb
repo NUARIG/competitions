@@ -5,7 +5,9 @@ class CreateReviews < ActiveRecord::Migration[5.2]
       t.bigint     :created_id,                  foreign_key: true, null: false
       t.integer    :overall_impact_score
       t.text       :overall_impact_comment
-      t.string     :criterion_average
+      t.string     :criterion_average # if this is stored,
+                                      # be sure to set triggers to recalculate
+                                      # otherwise, calculate as needed and cache
 
       t.timestamps
     end
