@@ -1,8 +1,11 @@
 en:
   activerecord:
     attributes:
-      grant:
-        slug: Short Name
+      grant: &grant
+        friendly_id: Short Name
     errors:
       models:
         grant:
+          <<: *grant
+
+

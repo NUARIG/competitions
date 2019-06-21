@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    attributes:
+      grant_submission/form: &form
+        description: Submission Instructions
+    errors:
+      models:
+        grant_submission/form:
+  helpers:
+    label:
+      grant_submission/form:
+        <<: *form

@@ -8,30 +8,23 @@
 
 <% has_edit_permission = policy(@grant).update? %>
 <%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
-  <fieldset>
-    <table class="survey_table table table-condensed table-striped">
-      <%= form_table_row f, :title do |attr| %>
-        <%= f.text_field attr %>
-      <% end %>
-    </table>
-  </fieldset>
-  <fieldset>
-    <legend>Always editable settings</legend>
-    <table class="always_editable_settings_table table table-condensed table-striped">
-      <%= form_table_row f, :description do |attr| %>
-        <%= text_area_tag 'grant_submission_form[description]', f.object.description, class: 'field-always-editable', rows: 2, cols: 80 %>
-      <% end %>
-    </table>
-    <div class="actions">
-      <% if @form.persisted? && has_edit_permission %>
-        <hr/>
-        <%= link_to 'Update settings', '#', class: 'button small update-fields-btn' %>
-        <span class="success_msg" style="color: green"></span>
-        <span class="fail_msg" style="color: red"></span>
-      <% end %>
-    </div>
-  </fieldset>
-  <%= f.fields_for :sections, @form.sections.sort_by {|section| section.display_order || 0 } do |ff| %>
+  <table class="table">
+    <tr>
+      <td><%= f.label :description %></td>
+      <td>
+          <%= text_area_tag 'grant_submission_form[description]', f.object.description, rows: 2, cols: 80, aria: { 'described-by': 'submissionInstructionsHelp' } %>
+          <p id="#submissionInstructionsHelp" class="help-text">
+              This optional text will be included on the application form.
+            </p>
+      </td>
+  </table>
+
+  <hr/>
+
+  <%= render 'title_placeholder_field' %>
+
+  <%#= f.fields_for :sections, @form.sections.sort_by {|section| section.display_order || 0 } do |ff| %>
+  <%= f.fields_for :sections, @form.sections do |ff| %>
     <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: has_edit_permission} %>
     <% end %>
 

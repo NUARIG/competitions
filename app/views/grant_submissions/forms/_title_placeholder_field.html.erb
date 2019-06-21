@@ -7,8 +7,13 @@
       <tbody>
         <tr>
           <td>
-            <%= label :project_title, 'Project Title' %>
-            <%= text_field :project_title, '', placeholder: 'Project Title field is required', disabled: true %>
+            <%= label_tag :project_title, 'Project Title' %>
+          </td>
+          <td>
+            <%= text_field :project_title, '', placeholder: 'Project Title field is required', disabled: true, aria: { 'described-by': 'projectTitleDateHelp' } %>
+            <p id="#projectTitleDateHelp" class="help-text">
+              This field is required for all submissions and may not be deleted.
+            </p>
           </td>
         </tr>
       </tbody>
