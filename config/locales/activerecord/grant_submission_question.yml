@@ -1,12 +1,29 @@
 en:
   activerecord:
     attributes:
-      grant_submission/question:
+      grant_submission/question: &question
         text: Question Text
         instruction: Help Text
-        is_mandatory: Is Mandatory
+        is_mandatory: Required
         response_type: Type of Response
+      grant_submission/form/sections/questions:
+        <<: *question
+        is_mandatory: Question Required
+        response_type: Question Response Type
     errors:
       models:
         grant_submission/question:
+          attributes:
+            is_mandatory:
+              blank: must be selected.
+              inclusion: must be selected.
+            response_type:
+              blank: must be selected.
+              inclusion: must be selected.
+              requires_option: '"Multiple Choice -- Pick One" requires at least one option.'
+  helpers:
+    label:
+      grant_submission/question:
+        <<: *question
+
 

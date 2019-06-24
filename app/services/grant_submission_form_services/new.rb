@@ -12,7 +12,7 @@ module GrantSubmissionFormServices
                                                   # TODO: Delete title
                                                   title: "Grant #{grant.id}: #{grant.name} Submission Form",
                                                   # TODO: change to help_text/instruction
-                                                  description: 'Should we use this as an intro or instruction section?',
+                                                  description: '',
                                                   created_id: user.id,
                                                   updated_id: user.id)
 

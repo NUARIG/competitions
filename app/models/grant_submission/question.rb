@@ -12,8 +12,9 @@ module GrantSubmission
     has_many :responses,               class_name: 'GrantSubmission::Response',
                                        foreign_key: 'grant_submission_question_id',
                                        inverse_of: :question
-    # has_one :form,                     through: :section,
-
+    has_one :form,                     through: :section,
+                                       class_name: 'GrantSubmission::Form',
+                                       foreign_key: 'grant_submission_form_id'
 
     accepts_nested_attributes_for :multiple_choice_options, allow_destroy: true
 
@@ -22,21 +23,21 @@ module GrantSubmission
       number:        'Number',
       short_text:    'Short Text (255 max)',
       long_text:     'Long Text (unlimited)',
-      date_opt_time: 'Date w/ Optional Time',
-      # partial_date:' "Partial Date',
+      date_opt_time: 'Date',
       file_upload:   'File Upload (15 MB max)'
     }.freeze
 
-    validates_presence_of   :section, :text, :display_order, :response_type
+    validates_presence_of   :section, :text, :response_type #, :display_order
     validates_inclusion_of  :response_type, in: VIEW_RESPONSE_TYPE_TRANSLATION.keys.map(&:to_s)
     validates_uniqueness_of :text, scope: :grant_submission_section_id
-    validates_inclusion_of  :is_mandatory, in: [true, false], message: "can't be blank"
+    validates_inclusion_of  :is_mandatory, in: [true, false]
 
-    validates_numericality_of :display_order, only_integer: true, greater_than: 0
+    # validates_numericality_of :display_order, only_integer: true, greater_than: 0
     validates_length_of :text, maximum: 4000
     validates_length_of :export_code, maximum: 255
     validates_length_of :instruction, maximum: 4000
 
+    validate :validate_has_at_least_one_option, if: -> { response_type == 'pick_one' }
 
     def self.human_readable_attribute(attr)
       {}[attr] || attr.to_s.humanize
@@ -85,7 +86,7 @@ module GrantSubmission
 
     def operator_types
       case response_type.to_sym
-      when :pick_one, :standard_answer
+      when :pick_one
         ['list', 'comparable']
       when :short_text, :long_text
         ['text', 'comparable']
@@ -96,6 +97,12 @@ module GrantSubmission
       else
         []
       end
+    end
+
+    private
+
+    def validate_has_at_least_one_option
+      errors.add(:response_type, :requires_option) unless multiple_choice_options.present?
     end
 
     # def has_export_code_in_answers?
