@@ -1,8 +1,6 @@
 class CriteriaReview < ApplicationRecord
   include WithScoring
 
-  self.table_name = 'criteria_reviews'
-
   belongs_to :criterion
   belongs_to :review
 
