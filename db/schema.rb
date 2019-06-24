@@ -199,9 +199,9 @@ ActiveRecord::Schema.define(version: 2019_06_19_145622) do
   create_table "reviews", force: :cascade do |t|
     t.bigint "grant_submission_submission_id", null: false
     t.bigint "created_id", null: false
+    t.bigint "reviewer_id", null: false
     t.integer "overall_impact_score"
     t.text "overall_impact_comment"
-    t.string "criterion_average"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["grant_submission_submission_id", "created_id"], name: "index_review_reviewer_on_grant_submission_id_and_user_id", unique: true

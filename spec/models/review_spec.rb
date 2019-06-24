@@ -5,6 +5,4 @@ RSpec.describe Review, type: :model do
   it { is_expected.to respond_to(:reviewer) }
   it { is_expected.to respond_to(:overall_impact_score) }
   it { is_expected.to respond_to(:overall_impact_comment) }
-  it { is_expected.to respond_to(:criterion_average) }
-
 end
