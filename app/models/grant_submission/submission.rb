@@ -28,6 +28,9 @@ module GrantSubmission
                                dependent: :destroy,
                                foreign_key: 'parent_id',
                                inverse_of: :parent
+    has_many :reviews,         dependent: :destroy,
+                               inverse_of: :submission
+
 
     accepts_nested_attributes_for :responses, allow_destroy: true
     accepts_nested_attributes_for :children, allow_destroy: true

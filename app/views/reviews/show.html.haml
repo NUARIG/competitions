@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Overall impact score:
+  = @review.overall_impact_score
+%p
+  %b Overall impact comment:
+  = @review.overall_impact_comment
+%p
+  %b Criterion average:
+  = @review.criterion_average
+%p
+  %b User:
+  = @review.user
+%p
+  %b Submission:
+  = @review.submission
+
+= link_to 'Edit', edit_review_path(@review)
+\|
+= link_to 'Back', reviews_path
