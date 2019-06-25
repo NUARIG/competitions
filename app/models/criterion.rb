@@ -1,4 +1,10 @@
 class Criterion < ApplicationRecord
+  DEFAULT_CRITERIA = %w[Significance
+                        Investigator(s)
+                        Innovation
+                        Approach
+                        Environment].freeze
+
   belongs_to :grant,            inverse_of: :criteria
   has_many   :criteria_reviews
   # TODO: will we need this?

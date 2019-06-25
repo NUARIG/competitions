@@ -11,6 +11,8 @@ module GrantServices
           GrantPermission.create!(grant: grant, user: user, role: 'admin')
           # Create a starter form
           GrantSubmissionFormServices::New.call(grant: grant, user: user)
+          # Create starter criteria
+          CriterionServices::New.call(grant: grant)
         end
         OpenStruct.new(success?: true)
       rescue
