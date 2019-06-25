@@ -1,0 +1,19 @@
+development:
+  host:     <%= Rails.application.credentials.development[:host] %>
+  adapter:  <%= Rails.application.credentials.development[:adapter] %>
+  database: <%= Rails.application.credentials.development[:database] %>
+  username: <%= Rails.application.credentials.development[:username] %>
+  password: <%= Rails.application.credentials.development[:password] %>
+staging:
+  host:     <%= Rails.application.credentials.staging[:host] %>
+  adapter:  <%= Rails.application.credentials.staging[:adapter] %>
+  database: <%= Rails.application.credentials.staging[:database] %>
+  username: <%= Rails.application.credentials.staging[:username] %>
+  password: <%= Rails.application.credentials.staging[:password] %>
+  sslmode: <%= Rails.application.credentials.staging[:sslmode] %>
+test: &TEST
+  host:     <%= Rails.application.credentials.test[:host] %>
+  adapter:  <%= Rails.application.credentials.test[:adapter] %>
+  database: <%= Rails.application.credentials.test[:database] %>
+  username: <%= Rails.application.credentials.test[:username] %>
+  password: <%= Rails.application.credentials.test[:password] %>

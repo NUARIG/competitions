@@ -36,6 +36,7 @@ gem 'pundit'
 gem 'rubyzip'
 
 # frontend
+gem 'haml-rails', '~> 1.0'
 gem 'font-awesome-rails'
 gem 'foundation-datepicker-rails'
 gem 'foundation-rails'
@@ -58,7 +59,6 @@ gem "select2-rails"
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'haml-rails', '~> 1.0'
   gem 'puma', '~> 3.11'
   gem 'rspec-rails'
 end
@@ -75,6 +75,14 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'
+
+  # Use Capistrano for deployment
+  gem "capistrano", require: false
+  gem "capistrano-rails", require: false
+  gem 'capistrano-rvm'
+  gem 'capistrano-passenger'
+  # gem 'capistrano-rbenv'
+  gem 'capistrano-service'
 end
 
 group :test do
