@@ -11,6 +11,9 @@ class Grant < ApplicationRecord
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
   belongs_to :organization
+
+  has_one_attached :document
+
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
   has_many   :grant_permissions
@@ -24,7 +27,8 @@ class Grant < ApplicationRecord
                                 dependent: :destroy
 
   has_many    :criteria,        inverse_of: :grant
-  has_one_attached :document
+  accepts_nested_attributes_for :criteria, reject_if: :all_blank,
+                                           allow_destroy: true
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -111,6 +115,7 @@ class Grant < ApplicationRecord
                                     by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
+
 
   def is_soft_deletable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")

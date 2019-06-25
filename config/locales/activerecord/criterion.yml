@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    attributes:
+      criterion: &criterion
+        name: Criterion Name
+        description: Instructions / Help Text
+        is_mandatory: Required
+    errors:
+      models:
+        criterion:
+          attributes:
+  helpers:
+    label:
+      criterion:
+        <<: *criterion
+
+

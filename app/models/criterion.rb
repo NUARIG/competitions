@@ -11,4 +11,6 @@ class Criterion < ApplicationRecord
   # has_many   :reviews,          through: :criterion_reviews
 
   validates_presence_of :name
+  validates :name, uniqueness: { scope: :grant }
+
 end

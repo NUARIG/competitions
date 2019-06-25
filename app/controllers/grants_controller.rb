@@ -81,6 +81,17 @@ class GrantsController < ApplicationController
     end
   end
 
+  def update_criteria
+    authorize @grant, :edit?
+    if @grant.update(grant_params)
+      flash[:notice] = 'Criteria updated'
+      redirect_to grant_criteria_path(@grant)
+    else
+      flash.now[:alert] = @grant.errors.full_messages
+      render 'criteria/index'
+    end
+  end
+
   private
 
   # Never trust parameters from the scary internet, only allow the white list through.
@@ -100,6 +111,14 @@ class GrantsController < ApplicationController
       :max_proposals_per_reviewer,
       :panel_date,
       :panel_location,
+      criteria_attributes: [
+        :id,
+        :name,
+        :description,
+        :is_mandatory,
+        :show_comment_field,
+        :allow_no_score,
+        :_destroy]
     )
   end
 
