@@ -66,11 +66,11 @@ namespace :deploy do
     end
   end
 
-  task :httpd_graceful do
-    on roles(:web), in: :sequence, wait: 5 do
-      execute :sudo, "service httpd graceful"
-    end
-  end
+  # task :httpd_graceful do
+  #   on roles(:web), in: :sequence, wait: 5 do
+  #     execute :sudo, "service httpd graceful"
+  #   end
+  # end
 end
 
 
@@ -90,3 +90,4 @@ end
 # after "deploy:updated", "deploy:migrate"
 # after "deploy:migrate", "deploy:httpd_graceful"
 # after "deploy:httpd_graceful", "deploy:restart"
+after "deploy:finished", "deploy:restart"

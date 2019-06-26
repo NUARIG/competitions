@@ -7,7 +7,7 @@ server DEPLOY_CONFIG[fetch(:stage).to_s]['server_name'],
 
 set :deploy_to, DEPLOY_CONFIG['deploy_to']
 
-set :rails_env, :staging
+# set :rails_env, :staging
 
 # server-based syntax
 # ======================
