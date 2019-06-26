@@ -27,8 +27,8 @@ class Grant < ApplicationRecord
                                 dependent: :destroy
 
   has_many    :criteria,        inverse_of: :grant
-  accepts_nested_attributes_for :criteria, reject_if: :all_blank,
-                                           allow_destroy: true
+
+  accepts_nested_attributes_for :criteria, allow_destroy: true
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
@@ -102,6 +102,8 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
+  validate      :requires_one_criteria,      on: :update
+
   validate      :has_at_least_one_question?, on: :update,
                                              if: -> () { will_save_change_to_attribute?('state', to: 'published') }
 
@@ -128,6 +130,13 @@ class Grant < ApplicationRecord
   def accepting_submissions?
     published? && DateTime.now.between?(submission_open_date.beginning_of_day,
                                         submission_close_date.end_of_day)
+  end
+
+  def requires_one_criteria
+    if criteria.empty? || criteria.all? { |criterion| criterion.marked_for_destruction? }
+      criteria.each { |c| c.reload if c.marked_for_destruction? }
+      errors.add(:base, 'Must have at least one review criteria.')
+    end
   end
 
   private

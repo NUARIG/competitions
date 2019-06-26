@@ -26,5 +26,18 @@ module Grants
     def set_grant
       @grant = Grant.not_deleted.with_organization.friendly.find(params[:id])
     end
+
+    def grant_params
+      params.require(:grant).permit(
+        criteria_attributes: [
+          :id,
+          :name,
+          :description,
+          :is_mandatory,
+          :show_comment_field,
+          :allow_no_score,
+          :_destroy]
+      )
+    end
   end
 end

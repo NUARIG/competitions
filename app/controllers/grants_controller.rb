@@ -81,20 +81,8 @@ class GrantsController < ApplicationController
     end
   end
 
-  def update_criteria
-    authorize @grant, :edit?
-    if @grant.update(grant_params)
-      flash[:notice] = 'Criteria updated'
-      redirect_to grant_criteria_path(@grant)
-    else
-      flash.now[:alert] = @grant.errors.full_messages
-      render 'criteria/index'
-    end
-  end
-
   private
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def grant_params
     params.require(:grant).permit(
       :name,

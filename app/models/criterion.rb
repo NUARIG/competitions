@@ -1,4 +1,6 @@
 class Criterion < ApplicationRecord
+  attr_accessor :_destroy
+
   DEFAULT_CRITERIA = %w[Significance
                         Investigator(s)
                         Innovation
@@ -12,5 +14,4 @@ class Criterion < ApplicationRecord
 
   validates_presence_of :name
   validates :name, uniqueness: { scope: :grant }
-
 end
