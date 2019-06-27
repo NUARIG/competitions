@@ -29,6 +29,7 @@ module GrantSubmission
                                foreign_key: 'parent_id',
                                inverse_of: :parent
     has_many :reviews,         dependent: :destroy,
+                               foreign_key: 'grant_submission_submission_id',
                                inverse_of: :submission
 
 

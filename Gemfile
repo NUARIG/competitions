@@ -56,6 +56,9 @@ gem "cocoon"
 gem "nested_form"
 gem "select2-rails"
 
+# s3
+gem "aws-sdk-s3", require: false
+
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
