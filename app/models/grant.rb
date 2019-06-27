@@ -102,7 +102,8 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the submission close date.',
                  if: :panel_date?
 
-  validate      :requires_one_criteria,      on: :update
+  validate      :requires_one_criteria,      on: :update,
+                                             if: -> () { criteria.all?(&:marked_for_destruction?) || criteria.empty? }
 
   validate      :has_at_least_one_question?, on: :update,
                                              if: -> () { will_save_change_to_attribute?('state', to: 'published') }
@@ -133,10 +134,8 @@ class Grant < ApplicationRecord
   end
 
   def requires_one_criteria
-    if criteria.empty? || criteria.all? { |criterion| criterion.marked_for_destruction? }
-      criteria.each { |c| c.reload if c.marked_for_destruction? }
-      errors.add(:base, 'Must have at least one review criteria.')
-    end
+    criteria.each { |c| c.reload if c.marked_for_destruction? }
+    errors.add(:base, 'Must have at least one review criteria.')
   end
 
   private
