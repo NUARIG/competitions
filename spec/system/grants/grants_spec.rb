@@ -150,7 +150,6 @@ RSpec.describe 'Grants', type: :system do
       page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
       page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
       page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
-
       expect do
         click_button('Save as Draft')
       end.not_to change{ Grant.count }

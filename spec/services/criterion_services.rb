@@ -11,7 +11,7 @@ RSpec.describe CriterionServices do
     it 'creates the correct number of criteria' do
       expect do
         CriterionServices::New.call(grant: @grant)
-      end.to (change{Criterion.count}.by (Criterion::DEFAULT_CRITERIA.count))
+      end.to (change{@grant.criteria.count}.by (Criterion::DEFAULT_CRITERIA.count))
     end
   end
 end

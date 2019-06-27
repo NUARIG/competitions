@@ -9,8 +9,8 @@ module Grants
       authorize @original_grant, :edit?
       @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
-      flash[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
-      flash[:alert]   = 'Please review and update the following information.'
+      flash.now[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
+      flash.now[:alert]   = 'Please review and update the following information.'
     end
 
     def create
@@ -32,10 +32,8 @@ module Grants
         flash[:warning] = 'Review the information below then click "Save and Publish" to finalize.'
         redirect_to grant_grant_permissions_url(@grant)
       else
-        respond_to do |format|
-          flash[:alert] = result.messages
-          format.html { render :new }
-        end
+        flash.now[:alert] = result.messages
+        render 'new'
       end
     end
 
