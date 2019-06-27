@@ -81,7 +81,6 @@ group :development do
   gem "capistrano-rails", require: false
   gem 'capistrano-rvm'
   gem 'capistrano-passenger'
-  # gem 'capistrano-rbenv'
   gem 'capistrano-service'
 end
 

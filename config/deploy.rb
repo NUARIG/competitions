@@ -6,10 +6,6 @@ DEPLOY_CONFIG = YAML.load(File.open('config/deploy_config.yml'))
 set :application, DEPLOY_CONFIG['application']
 set :repo_url,    DEPLOY_CONFIG['repository']
 
-# set :linked_files, %w{.env}
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets tmp/setup public/system storage}
-# set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system', 'public/uploads')
-
 set :rvm_type, :system
 set :rvm_ruby_version, 'ruby-2.6.1'
 
@@ -65,29 +61,6 @@ namespace :deploy do
       execute :touch, release_path.join('tmp/restart.txt')
     end
   end
-
-  # task :httpd_graceful do
-  #   on roles(:web), in: :sequence, wait: 5 do
-  #     execute :sudo, "service httpd graceful"
-  #   end
-  # end
 end
 
-
-
-# namespace :deploy do
-#   namespace :symlink do
-#     task :database_config do
-#       on roles(:web) do
-#         execute "ln -nfs /etc/arig/competitions/database.yml #{release_path}/config/database.yml"
-#       end
-#     end
-#   end
-#   before 'deploy:assets:precompile', 'deploy:symlink:database_config'
-# #   after: finishing, 'service:nginx:restart'
-# end
-
-# after "deploy:updated", "deploy:migrate"
-# after "deploy:migrate", "deploy:httpd_graceful"
-# after "deploy:httpd_graceful", "deploy:restart"
 after "deploy:finished", "deploy:restart"
