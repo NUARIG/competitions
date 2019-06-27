@@ -30,8 +30,8 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# Environment variables
-/config/database.yml
+# Ignore configuration yml files
+/config/deploy_config.yml
 
 # Rspec
 /spec/examples.txt
