@@ -2,7 +2,6 @@
 
 = form_for @grant, url: update_criteria_grant_path(@grant) do |f|
   %h3 Review Criteria
-  %p The following...lorem ipsum dolor sum.
   #criteria.grid-x
     .cell
       = f.fields_for :criteria, @criteria do |criterion|
