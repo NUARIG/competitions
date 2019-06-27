@@ -5,8 +5,8 @@ class GrantPermission < ApplicationRecord
   belongs_to :user
 
   ROLES = { admin: 'admin',
-                  editor: 'editor',
-                  viewer: 'viewer' }.freeze
+            editor: 'editor',
+            viewer: 'viewer' }.freeze
 
   enum role: ROLES, _prefix: true
 

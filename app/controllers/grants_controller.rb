@@ -83,7 +83,6 @@ class GrantsController < ApplicationController
 
   private
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def grant_params
     params.require(:grant).permit(
       :name,
@@ -100,6 +99,14 @@ class GrantsController < ApplicationController
       :max_proposals_per_reviewer,
       :panel_date,
       :panel_location,
+      criteria_attributes: [
+        :id,
+        :name,
+        :description,
+        :is_mandatory,
+        :show_comment_field,
+        :allow_no_score,
+        :_destroy]
     )
   end
 

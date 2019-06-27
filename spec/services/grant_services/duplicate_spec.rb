@@ -32,6 +32,14 @@ RSpec.describe GrantServices do
         end.to (change{GrantPermission.count}.by (new_grant_permission_count))
       end
 
+      it 'duplicates criteria for valid new grant' do
+        new_criteria_count = @original_grant.criteria.count
+
+        expect do
+          GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @new_grant)
+        end.to (change{Criterion.count}.by (new_criteria_count))
+      end
+
       it 'duplicates grant_submission_form for valid new grant' do
         expect do
           GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @new_grant)
@@ -44,6 +52,12 @@ RSpec.describe GrantServices do
         result =  GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @invalid_grant)
         expect(result.success?).to eql(false)
         expect(@invalid_grant.grant_permissions.count).to eql(0)
+      end
+
+      it 'does not duplicate criteria' do
+        result =  GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @invalid_grant)
+        expect(result.success?).to eql(false)
+        expect(@invalid_grant.criteria.count).to eql(0)
       end
     end
   end
