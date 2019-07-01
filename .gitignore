@@ -32,6 +32,7 @@
 
 # Ignore configuration yml files
 /config/deploy_config.yml
+/config/attribute-map.yml
 
 # Rspec
 /spec/examples.txt
