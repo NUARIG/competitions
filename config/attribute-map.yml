@@ -1,0 +1,3 @@
+<%= Rails.application.credentials.staging[:attribute_map_email] %>
+<%= Rails.application.credentials.staging[:attribute_map_last_name] %>
+<%= Rails.application.credentials.staging[:attribute_map_first_name] %>
