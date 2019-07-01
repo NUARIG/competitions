@@ -348,7 +348,7 @@ Devise.setup do |config|
     settings.authn_context                      = Rails.application.credentials.staging[:una_authn_context]
     settings.idp_slo_target_url                 = Rails.application.credentials.staging[:una_idp_slo_target_url]
     settings.idp_sso_target_url                 = Rails.application.credentials.staging[:una_idp_sso_target_url]
-    settings.una_idp_cert                       = Rails.application.credentials.staging[:una_idp_cert]
+    settings.idp_cert                       = Rails.application.credentials.staging[:una_idp_cert]
 
   end
 end
