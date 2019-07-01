@@ -10,7 +10,6 @@ staging:
   database: <%= Rails.application.credentials.staging[:database] %>
   username: <%= Rails.application.credentials.staging[:username] %>
   password: <%= Rails.application.credentials.staging[:password] %>
-  sslmode: <%= Rails.application.credentials.staging[:sslmode] %>
 test: &TEST
   host:     <%= Rails.application.credentials.test[:host] %>
   adapter:  <%= Rails.application.credentials.test[:adapter] %>
