@@ -1,4 +1,4 @@
 # attribute-map.yml
-<%= Rails.application.credentials.staging[:attribute_map_email] %>: "email"
-<%= Rails.application.credentials.staging[:attribute_map_last_name] %>: "last_name"
-<%= Rails.application.credentials.staging[:attribute_map_first_name] %>: "first_name"
+"urn:mace:dir:attribute-def:emailaddress": "email"
+"urn:mace:dir:attribute-def:surname": "last_name"
+"urn:mace:dir:attribute-def:givenname": "first_name"
