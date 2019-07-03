@@ -78,13 +78,16 @@ RSpec.describe 'Grants', type: :system do
       end
 
       scenario 'cannot change status to published without questions' do
+        @draft_grant.questions.each { |q| q.destroy! }
         click_button 'Publish this Grant'
         expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Status change failed.'
       end
 
-      pending 'can change status to published with at least one question' do
-        fail 'Add form, section, and question to factory.'
+      scenario 'can change status to published with at least one question' do
+        click_button 'Publish this Grant'
+        expect(page).to have_content 'Current Publish Status: Published'
+        expect(page).to have_content 'Publish status was changed to published'
       end
 
       scenario 'displays error on failure' do
@@ -106,13 +109,16 @@ RSpec.describe 'Grants', type: :system do
       end
 
       scenario 'cannot change status to published without question' do
+        @draft_grant.questions.each { |q| q.destroy! }
         click_button 'Publish this Grant'
         expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Status change failed.'
       end
 
-      pending 'can change status to published with at least one question' do
-        fail 'Add form, section, and question to factory.'
+      scenario 'can change status to published with at least one question' do
+        click_button 'Publish this Grant'
+        expect(page).to have_content 'Current Publish Status: Published'
+        expect(page).to have_content 'Publish status was changed to published'
       end
 
       scenario 'displays error on failure' do
