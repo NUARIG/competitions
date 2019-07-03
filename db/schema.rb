@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_19_145622) do
+ActiveRecord::Schema.define(version: 2019_07_02_153645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,12 @@ ActiveRecord::Schema.define(version: 2019_06_19_145622) do
     t.datetime "updated_at", null: false
     t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
     t.index ["user_id"], name: "index_grant_permissions_on_user_id"
+  end
+
+  create_table "grant_reviewers", force: :cascade do |t|
+    t.bigint "grant_id", null: false
+    t.bigint "reviewer_id", null: false
+    t.index ["grant_id"], name: "index_grant_reviewers_on_grant_id"
   end
 
   create_table "grant_submission_forms", force: :cascade do |t|
