@@ -2,7 +2,7 @@ class Review < ApplicationRecord
   include WithScoring
 
   belongs_to :assigner,       class_name: 'User',
-                              foreign_key: 'created_id'
+                              foreign_key: 'assigner_id'
   belongs_to :reviewer,       class_name: 'User',
                               foreign_key: 'reviewer_id'
   belongs_to :submission,     class_name: 'GrantSubmission::Submission',
