@@ -91,7 +91,7 @@ RSpec.describe 'Grants', type: :system do
       page.fill_in 'Panel Location', with: @grant.panel_location
     end
 
-    scenario 'valid form submission creates constraints and permissions' do
+    scenario 'valid form submission creates permissions' do
       click_button 'Save as Draft'
       grant = Grant.last
       expect(grant.name).to eql(@grant.name)
@@ -104,7 +104,7 @@ RSpec.describe 'Grants', type: :system do
       expect(@user.grant_permissions.where(grant: grant).first.role).to eql 'admin'
     end
 
-    scenario 'invalid form submission does not create constraints and permissions' do
+    scenario 'invalid form submission does not create permissions' do
       grant_permission_count          = GrantPermission.all.count
 
       page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
