@@ -1,4 +1,11 @@
 # attribute-map.yml
-"urn:mace:dir:attribute-def:emailaddress": "email"
-"urn:mace:dir:attribute-def:surname": "last_name"
-"urn:mace:dir:attribute-def:givenname": "first_name"
+
+# development
+"urn:mace:dir:attribute-def:email": "email"
+"urn:mace:dir:attribute-def:firstName": "first_name"
+"urn:mace:dir:attribute-def:lastName": "last_name"
+
+# staging
+# "urn:mace:dir:attribute-def:emailaddress": "email"
+# "urn:mace:dir:attribute-def:surname": "last_name"
+# "urn:mace:dir:attribute-def:givenname": "first_name"

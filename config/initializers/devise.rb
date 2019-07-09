@@ -341,14 +341,19 @@ Devise.setup do |config|
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
     # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
-    settings.assertion_consumer_service_url     = Rails.application.credentials.staging[:una_assertion_consumer_service_url]
-    settings.assertion_consumer_service_binding = Rails.application.credentials.staging[:una_assertion_consumer_service_binding]
-    settings.name_identifier_format             = Rails.application.credentials.staging[:una_name_identifier_format]
-    settings.issuer                             = Rails.application.credentials.staging[:una_issuer]
-    settings.authn_context                      = Rails.application.credentials.staging[:una_authn_context]
-    settings.idp_slo_target_url                 = Rails.application.credentials.staging[:una_idp_slo_target_url]
-    settings.idp_sso_target_url                 = Rails.application.credentials.staging[:una_idp_sso_target_url]
-    settings.idp_cert                           = Rails.application.credentials.staging[:una_idp_cert]
+    settings.assertion_consumer_service_url     = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_url)
+    settings.assertion_consumer_service_binding = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_binding)
+    settings.name_identifier_format             = Rails.application.credentials.dig(Rails.env.to_sym, :una_name_identifier_format)
+    settings.issuer                             = Rails.application.credentials.dig(Rails.env.to_sym, :una_issuer)
+    settings.authn_context                      = Rails.application.credentials.dig(Rails.env.to_sym, :una_authn_context)
+    settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
+    settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
 
+    # staging
+    # settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
+
+    # development
+    settings.idp_cert_fingerprint               = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert_fingerprint)
+    settings.idp_cert_fingerprint_algorithm     = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert_fingerprint_algorithm)
   end
 end
