@@ -4,5 +4,7 @@ class CreateGrantReviewers < ActiveRecord::Migration[5.2]
       t.belongs_to :grant,        null: false
       t.bigint     :reviewer_id,  null: false
     end
+
+    add_index :grant_reviewers, [:reviewer_id]
   end
 end

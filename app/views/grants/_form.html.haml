@@ -53,12 +53,12 @@
   .cell.small-12.medium-3
     = f.label :max_reviewers_per_proposal, 'Maximum Reviewers / Proposal', class: 'middle'
   .cell.small-12.medium-9
-    = f.number_field :max_reviewers_per_proposal, min: 1, class: 'middle small-12 medium-4'
+    = f.number_field :max_reviewers_per_proposal, min: 1, class: 'middle small-12 medium-4', required: true
 .grid-x
   .cell.small-12.medium-3
     = f.label :max_proposals_per_reviewer, 'Maximum Proposals / Reviewer', class: 'middle'
   .cell.small-12.medium-9
-    = f.number_field :max_proposals_per_reviewer, min: 1, class: 'middle small-12 medium-4'
+    = f.number_field :max_proposals_per_reviewer, min: 1, class: 'middle small-12 medium-4', required: true
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_open_date, 'Review Open Date', class: 'middle'

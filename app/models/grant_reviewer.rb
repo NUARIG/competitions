@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class GrantReviewer < ApplicationRecord
+
+  attr_accessor :reviewer_email
+
   belongs_to :grant
   belongs_to :reviewer, class_name: 'User',
                         foreign_key: :reviewer_id

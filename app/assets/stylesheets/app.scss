@@ -6,6 +6,7 @@ main {
   &.grants,
   &.grant_permissions,
   &.submissions,
+  &.criteria,
   &.forms {
     // Edit
     #grant-state {
@@ -22,6 +23,12 @@ main {
 
 th {
   text-align: left;
+}
+
+label.required-true:after {
+  content: ' *';
+  font-size: 1.15em;
+  color: red;
 }
 
 .field_with_errors {

@@ -10,21 +10,23 @@ Rails.application.routes.draw do
     resource  :duplicate,         only: %i[new create],                 controller: 'grants/duplicate'
     resource  :state,             only: :update,                        controller: 'grants/state'
     member do
-      get   'criteria',        to: 'grants/criteria#index',  as: :criteria
-      patch 'criteria/update', to: 'grants/criteria#update', as: :update_criteria
+      get   'criteria',           to: 'grants/criteria#index',   as: :criteria
+      patch 'criteria/update',    to: 'grants/criteria#update',  as: :update_criteria
     end
     resources :forms,             only: %i[update edit update_fields],  controller: 'grant_submissions/forms' do
       member do
         put :update_fields
       end
     end
-
-    resources :submissions,       except: %[new show],       controller: 'grant_submissions/submissions'
+    resources :submissions,       except: %i[new],       controller: 'grant_submissions/submissions' do
+      member do
+        resources :reviews,       except: %[index],   as: :submission_reviews, controller: 'reviews'
+      end
+    end
+    resources :reviewers,         only: %i[index create destroy], controller: 'grants/grant_reviewers'
 
     get 'apply', to: 'grant_submissions/submissions#new', as: :apply
   end
-
-  resources :reviews
 
   resources :users, only: %i[show index edit update]
 end

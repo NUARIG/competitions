@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_153645) do
     t.bigint "grant_id", null: false
     t.bigint "reviewer_id", null: false
     t.index ["grant_id"], name: "index_grant_reviewers_on_grant_id"
+    t.index ["reviewer_id"], name: "index_grant_reviewers_on_reviewer_id"
   end
 
   create_table "grant_submission_forms", force: :cascade do |t|

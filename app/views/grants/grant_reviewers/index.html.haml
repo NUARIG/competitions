@@ -1,0 +1,98 @@
+%h4
+  Search for a Reviewer by Email Address
+  .grid-x
+    .cell
+    = form_for :grant_reviewer, url: grant_reviewers_path(@grant) do |f|
+      = render('shared/flash_messages', object: f.object) if f.object && !f.object.try(:errors).blank?
+      = f.label :reviewer_email, 'Email'
+      = f.email_field :reviewer_email
+      = f.submit 'Look Up'
+
+.grid-x
+  .cell.small-6
+    %h3
+      Reviewers and Submissions
+    %p
+      To remove an assignment, drag the submission from the reviewer's box back to the unassigned submissions box on the right. Each reviewer may assess up to #{@grant.max_proposals_per_reviewer} submissions.
+  .cell.small-6
+    %h3
+      Unassigned Submissions
+    %p
+      Drag the unassigned submissions below to the box under the desired reviewer on the left.
+    %p
+      Each submission should be assessed by
+      = "#{@grant.max_reviewers_per_proposal}"
+      reviewers
+
+.grid-x
+  .cell.small-6
+
+    - if @grant_reviewers.none?
+      There are no reviewers. Use the form above to define reviewers by their email address.
+    - else
+      %table
+        %thead
+          %th
+            Reviewer Name (# reviews available)
+          %th
+
+        - @grant_reviewers.each do |grant_reviewer|
+          - reviewer = grant_reviewer.reviewer
+          %tr
+            %td.reviewer
+              =# link_to_contact(reviewer).html_safe
+              %span.name
+                #{reviewer.first_name} #{reviewer.last_name}
+              %span.remaining-count{title: 'Remaining assignable reviews'}
+                ( #{@grant.max_proposals_per_reviewer - reviewer.reviewable_submissions.count} )
+            %td
+              = link_to('Remove', grant_reviewer_path(@grant, grant_reviewer), method: :delete,          |
+                                              title: 'Remove this reviewer',         |
+                                              data: { confirm:                       |
+                                                'This will delete any reviews        |
+                                                associated with this reviewer and    |
+                                                their association with the sponsor.  |
+                                                Are you sure you want to delete      |
+                                                this reviewer?'                      |
+                                              })                                     |
+          %tr
+            %td{colspan: "3"}
+              %div{id: "assigned_submissions_#{reviewer.id}"}
+                =# render 'assigned_submissions', reviewer: user, grant: grant
+                %ul.assigned_submission_list
+                  -# reviewer.submission_reviews.this_grant(grant.id).includes(submission: :applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name").each do |item|
+                    %li.assigned_submission{id: "submission_review_#{"#{item.id}"}"}
+                      %span
+                        =# "#{item.applicant.last_name}, #{item.applicant.first_name}: #{truncate_words(item.submission.submission_title, 50)}"
+              / :javascript
+              /   jQuery('.assigned_submission').draggable({
+              /     revert: "invalid"
+              /   });
+              /   jQuery('.assigned_submission_list').droppable({
+              /     hoverClass: 'hover',
+              /     drop: function(event, ui) {
+              /       reviewerID = jQuery(this).parent().attr('id').split('_').splice(-1)[0];
+              /       submissionID = jQuery(ui.draggable).attr('id').split('_').slice(-1)[0];
+
+              /       jQuery.ajax({
+              /         type: "POST",
+              /         url: '/grants/' + #{@grant.id} + '/admins/' + reviewerID + '/assign_submission.js',
+              /         data: { "submission_id": submissionID },
+              /         success: function(data) {
+              /           window.location.href = '/grants/' + #{@grant.id} + '/admins/reviewers';
+              /         }
+              /       });
+              /     }
+              /   })
+
+
+  .cell.small-6
+    #unassigned_submissions
+      .unassigned_submission_list
+        - @unassigned_submissions.each do |submission|
+          .grid-x
+            .cell.unassigned_submission{id: "submission_#{submission.id}"}
+              %span
+                = "#{submission.applicant.last_name}, #{submission.applicant.first_name}: #{submission.title.truncate_words(10)}"
+                .span
+                = "(#{@grant.max_reviewers_per_proposal  - submission.reviewers.count})"

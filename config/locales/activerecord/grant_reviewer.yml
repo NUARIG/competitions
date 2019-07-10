@@ -10,4 +10,6 @@ en:
               blank: is required.
             reviewer:
               blank: is required.
-              taken: has already been assigned.
+              taken: is already a reviewer for this grant.
+
+
