@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
   # opt-in saml_authenticatable
   devise_scope :user do
-    scope "users", controller: 'saml_sessions' do
+    scope "users", controller: 'devise/saml_sessions' do
       get :new, path: "saml/sign_in", as: :new_user_sso_session
       post :create, path: "saml/auth", as: :user_sso_session
       get :destroy, path: "sign_out", as: :destroy_user_sso_session

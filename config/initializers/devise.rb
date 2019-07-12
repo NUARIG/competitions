@@ -348,12 +348,6 @@ Devise.setup do |config|
     settings.authn_context                      = Rails.application.credentials.dig(Rails.env.to_sym, :una_authn_context)
     settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
     settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
-
-    # staging
-    # settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
-
-    # development
-    settings.idp_cert_fingerprint               = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert_fingerprint)
-    settings.idp_cert_fingerprint_algorithm     = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert_fingerprint_algorithm)
+    settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
   end
 end
