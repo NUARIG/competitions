@@ -23,8 +23,8 @@ class User < ApplicationRecord
   # validates :organization, presence: true
   validates :organization_role, presence: true
   validates :email, presence: true, uniqueness: true
-  # validates :first_name, presence: true
-  # validates :last_name, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
   scope :with_organization, -> { includes :organization }
 
