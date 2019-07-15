@@ -1,5 +1,4 @@
 # attribute-map.yml
-
-<%= Rails.application.credentials.dig(Rails.env.to_sym, :una_attribute_email) %>: "email"
-<%= Rails.application.credentials.dig(Rails.env.to_sym, :una_attribute_first_name) %>: "first_name"
-<%= Rails.application.credentials.dig(Rails.env.to_sym, :una_attribute_last_name) %>: "last_name"
+"email": "email"
+"firstName": "first_name"
+"lastName": "last_name"
