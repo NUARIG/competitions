@@ -3,19 +3,13 @@ main {
     margin: 1rem 0;
   }
 
-  &.grants,
-  &.grant_permissions,
-  &.submissions,
-  &.criteria,
-  &.forms {
-    // Edit
-    #grant-state {
-      margin: 2rem 0;
-      form.grant-state {
-        display: inline-block;
-        .button {
-          margin: 0;
-        }
+  // Edit
+  #grant-state {
+    margin: 2rem 0;
+    form.grant-state {
+      display: inline-block;
+      .button {
+        margin: 0;
       }
     }
   }

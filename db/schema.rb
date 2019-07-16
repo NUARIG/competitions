@@ -211,7 +211,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_153645) do
     t.text "overall_impact_comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["grant_submission_submission_id", "assigner_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
+    t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
     t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"
   end
 

@@ -33,6 +33,8 @@ class Grant < ApplicationRecord
                                 inverse_of: :grant,
                                 dependent: :destroy
 
+  has_many   :reviews,          through: :submissions
+
   has_many   :applicants,       through: :submissions,
                                 inverse_of: :applied_grants
 

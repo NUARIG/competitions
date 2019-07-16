@@ -1,0 +1,35 @@
+%table
+  %thead
+    %th
+      Reviewer Name (# reviews available)
+    %th
+  - grant_reviewers.each do |grant_reviewer|
+    - reviewer = grant_reviewer.reviewer
+    %tr
+      %td.reviewer
+        =# link_to_contact(reviewer).html_safe
+        %span.name
+          #{reviewer.first_name} #{reviewer.last_name}
+        %span.remaining-count{title: 'Remaining assignable reviews'}
+          ( #{grant.max_proposals_per_reviewer - reviewer.reviewable_submissions.by_grant(grant).count} )
+      %td
+        = link_to('Remove', grant_reviewer_path(grant, grant_reviewer), method: :delete,          |
+                                        title: 'Remove this reviewer',         |
+                                        data: { confirm:                       |
+                                          'This will delete any reviews |
+                                          associated with this reviewer and |
+                                          their association with the sponsor. |
+                                          Are you sure you want to delete |
+                                          this reviewer?' |
+                                        }) |
+    %tr
+      %td{colspan: "3"}
+        %div{id: "reviews_#{reviewer.id}"}
+          %ul.review_list.small-10.large-offset-1
+            - reviews = reviewer.reviews.with_grant_and_applicant.by_grant(grant)
+            - reviews.each do |review|
+              - submission = review.submission
+              %li.review{id: "review_#{"#{review.id}"}", data: { destination_url: grant_submission_submission_review_path(grant, submission, review) }}
+                %span
+                  = "#{sortable_full_name(submission.applicant)}: #{submission.title.truncate_words(15)}"
+

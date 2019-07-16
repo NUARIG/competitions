@@ -60,6 +60,9 @@ RSpec.describe 'GrantReviewers', type: :system do
                              max_reviewers_per_proposal: Faker::Number.between(1, 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
+      @review       = create(:review, assigner: @grant_admin,
+                                      reviewer: @reviewer,
+                                      submission: @grant.submissions.first)
       @user         = create(:user)
       @unknown_user = build(:user)
 
@@ -70,21 +73,23 @@ RSpec.describe 'GrantReviewers', type: :system do
     scenario 'reviewer can be deleted' do
       click_link('Remove', href: grant_reviewer_path(@grant, @grant.grant_reviewers.first))
       page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content "Removed reviewer #{@reviewer.first_name} #{@reviewer.last_name}"
+      expect(page).to have_content "Reviewer and their reviews have been deleted for this grant."
     end
 
-    pending 'reviewer and reviwer submissions can be deleted' do
+    scenario 'reviewer and reveiwer submissions can be deleted' do
+      reviewer = @grant.grant_reviewers.first.reviewer
+      expect(reviewer.reviews.by_grant(Grant.last).count).to eq(1)
       click_link('Remove', href: grant_reviewer_path(@grant, @grant.grant_reviewers.first))
       page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content "Removed reviewer #{@reviewer.first_name} #{@reviewer.last_name}"
-      expect(page).not_to have_content 'NOTE: DELETE REVIEWS HERE'
+      expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
+      expect(reviewer.reviews.by_grant(Grant.last).count).to eq(0)
     end
 
     scenario 'displays error when reviewer is not found' do
       allow_any_instance_of(GrantReviewer).to receive(:nil?).and_return(true)
       click_link('Remove', href: grant_reviewer_path(@grant, @grant.grant_reviewers.first))
       page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content('Could not find this reviewer to delete.')
+      expect(page).to have_content('Reviewer could not be found.')
     end
   end
 end
