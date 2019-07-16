@@ -90,6 +90,16 @@ FactoryBot.define do
       end
     end
 
+    trait :with_submission do
+      after(:create) do |grant|
+        applicant = create(:user)
+        create(:submission_with_response, grant: grant,
+                                          form: grant.form,
+                                          applicant: applicant)
+
+      end
+    end
+
     trait :bypass_validations do
       to_create { |grant| grant.save(validate: false) }
     end
@@ -113,5 +123,7 @@ FactoryBot.define do
     factory :demo_grant_with_users,                    traits: %i[demo with_users]
     factory :draft_grant_with_users,                   traits: %i[draft with_users with_users_and_submission_form]
     factory :completed_grant_with_users,               traits: %i[completed with_users]
+
+    factory :open_grant_with_users_and_form_and_submission, traits: %i[published open with_users_and_submission_form with_submission]
   end
 end

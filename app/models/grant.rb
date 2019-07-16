@@ -16,17 +16,24 @@ class Grant < ApplicationRecord
 
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
-  has_many   :grant_permissions
-  has_many   :users,            through: :grant_permissions
+  has_many   :grant_reviewers
+  has_many   :reviewers,        through: :grant_reviewers
 
+  has_many   :grant_permissions
+  has_many   :editors,          through: :grant_permissions,
+                                source: :user
 
   has_many   :questions,        through: :form
+
   has_many   :submissions,      class_name: 'GrantSubmission::Submission',
                                 foreign_key: :grant_id,
                                 inverse_of: :grant,
                                 dependent: :destroy
 
-  has_many    :criteria,        inverse_of: :grant
+  has_many   :applicants,       through: :submissions,
+                                inverse_of: :applied_grants
+
+  has_many   :criteria,         inverse_of: :grant
 
   accepts_nested_attributes_for :criteria, allow_destroy: true
 

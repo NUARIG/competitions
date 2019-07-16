@@ -1,5 +1,7 @@
 - content_for(:page_title, "Edit Review Criteria")
 
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
 = form_for @grant, url: update_criteria_grant_path(@grant) do |f|
   %h3 Review Criteria
   #criteria.grid-x
@@ -7,5 +9,5 @@
       = f.fields_for :criteria, @criteria do |criterion|
         = render 'criterion_fields', f: criterion
       .links
-        = link_to_add_association 'Add Criteria', f, :criteria
-    = f.submit 'Submit', class: 'button'
+        = link_to_add_association 'Add a New Review Criteria', f, :criteria, class: 'button hollow small warning'
+    = f.submit 'Save Changes', class: 'button'
