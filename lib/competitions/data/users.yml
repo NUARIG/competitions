@@ -18,39 +18,32 @@ user3:
   email: 'b-zoom@northwestern.edu'
   organization_role: 'none'
 user4:
-  organization_id: 1
-  first_name: 'D.J.'
-  last_name: 'Bonebrake'
-  email: 'd-bonebrake@northwestern.edu'
-  organization_role: 'none'
-  era_commons: 'DBonebr90069'
-user5:
   organization_id: 2
   first_name: 'Lou'
   last_name: 'Reed'
   email: 'l-reed@nm.org'
   organization_role: 'admin'
   era_commons: 'louRee10017'
-user6:
+user5:
   organization_id: 2
   first_name: 'John'
   last_name: 'Cale'
   email: 'j-cale@nm.org'
   organization_role: 'admin'
   era_commons: 'JohnCa10017'
-user7:
+user6:
   organization_id: 2
   first_name: 'Doug'
   last_name: 'Yule'
   email: 'd-yule@nm.org'
   organization_role: 'none'
-user8:
+user7:
   organization_id: 2
   first_name: 'Moe'
   last_name: 'Tucker'
   email: 'm-tucker@nm.org'
   organization_role: 'none'
-user9:
+user8:
   organization_id: 2
   first_name: 'Sterling'
   last_name: 'Morrison'
