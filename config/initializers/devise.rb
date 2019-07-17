@@ -338,6 +338,10 @@ Devise.setup do |config|
   # If saml_route_helper_prefix = 'saml' then the new_user_session route becomes new_saml_user_session
   # config.saml_route_helper_prefix = 'saml'
 
+  # Added to account for clock drift. See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
+  # This should be a time in seconds.
+  config.allowed_clock_drift_in_seconds = 1
+
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
     # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
