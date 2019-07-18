@@ -38,4 +38,7 @@ Rails.application.routes.draw do
       match :idp_sign_out, path: "saml/idp_sign_out", via: [:get, :post]
     end
   end
+
+  # Passthru for SAML sign_out
+  get 'idp_sessions/sign_out', to: 'idp_sessions#index', as: :idp_sessions_sign_out
 end
