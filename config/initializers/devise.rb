@@ -353,11 +353,5 @@ Devise.setup do |config|
     settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
     settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
     settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
-
-    settings.security[:authn_requests_signed]   = false     # Enable or not signature on AuthNRequest
-    settings.security[:logout_requests_signed]  = false     # Enable or not signature on Logout Request
-    settings.security[:logout_responses_signed] = false     # Enable or not signature on Logout Response
-    settings.security[:want_assertions_signed]  = false     # Enable or not the requirement of signed assertion
-    settings.security[:metadata_signed]         = false     # Enable or not signature on Metadata
   end
 end
