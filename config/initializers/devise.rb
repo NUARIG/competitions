@@ -353,7 +353,5 @@ Devise.setup do |config|
     settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
     settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
     settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
-
-    settings.security[:logout_requests_signed] = false
   end
 end
