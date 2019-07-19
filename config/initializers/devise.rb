@@ -342,8 +342,6 @@ Devise.setup do |config|
   # This should be a time in seconds.
   config.allowed_clock_drift_in_seconds = 1
 
-  config.saml_sign_out_success_url = "/users/saml/idp_sign_out"
-
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
     # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
