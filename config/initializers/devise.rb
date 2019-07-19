@@ -314,7 +314,7 @@ Devise.setup do |config|
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
-  # config.saml_session_index_key = :session_index
+  config.saml_session_index_key = :session_index
 
   # You can set this value to use Subject or SAML assertation as info to which email will be compared.
   # If you don't set it then email will be extracted from SAML assertation attributes.
@@ -341,6 +341,8 @@ Devise.setup do |config|
   # Added to account for clock drift. See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
   # This should be a time in seconds.
   config.allowed_clock_drift_in_seconds = 1
+
+  # config.saml_sign_out_success_url = "/idp_sessions/sign_out"
 
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
