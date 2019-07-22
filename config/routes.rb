@@ -27,7 +27,4 @@ Rails.application.routes.draw do
   resources :reviews
 
   resources :users, only: %i[show index edit update]
-
-  # Passthru for SAML sign_out
-  get 'idp_sessions/sign_out', to: 'idp_sessions#index', as: :idp_sessions_sign_out
 end
