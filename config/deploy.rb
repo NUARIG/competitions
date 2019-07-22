@@ -4,7 +4,7 @@ lock "~> 3.11.0"
 DEPLOY_CONFIG = YAML.load(File.open('config/deploy_config.yml'))
 
 set :application, DEPLOY_CONFIG['application']
-set :repo_url,    DEPLOY_CONFIG['repository']
+set :repo_url,    DEPLOY_CONFIG['local_repository']
 
 set :rvm_type, :system
 set :rvm_ruby_version, 'ruby-2.6.1'
