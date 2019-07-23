@@ -9,13 +9,13 @@ class GrantReviewersController < ApplicationController
     authorize @grant, :grant_viewer_access?
 
     @grant_reviewers        = @grant.grant_reviewers.includes(:reviewer).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
-    @unassigned_submissions = @grant.submissions.to_be_assigned(@grant.max_reviewers_per_proposal) #.unassigned_submissions(@grant.max_reviewers_per_proposal).includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name"))
+    @unassigned_submissions = @grant.submissions.to_be_assigned(@grant.max_reviewers_per_proposal).includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
   end
 
   def create
     authorize @grant, :grant_editor_access?
 
-    email   = grant_reviewer_params[:reviewer_email].strip
+    email   = grant_reviewer_params[:reviewer_email].downcase.strip
     reviewer = User.find_by(email: email)
 
     if reviewer.nil?
@@ -23,7 +23,7 @@ class GrantReviewersController < ApplicationController
     else
       grant_reviewer = GrantReviewer.create(grant: @grant, reviewer: reviewer)
       if grant_reviewer.errors.none?
-        flash[:success] = "Added #{grant_reviewer.reviewer.first_name} as reviewer."
+        flash[:success] = "Added #{helpers.full_name(grant_reviewer.reviewer)} as reviewer."
       else
         flash[:alert]   = grant_reviewer.errors.full_messages
       end

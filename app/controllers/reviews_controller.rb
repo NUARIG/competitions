@@ -10,12 +10,12 @@ class ReviewsController < ApplicationController
   # GET /reviews/1
   # GET /reviews/1.json
   def show
-    authorize @review, :show?
+    authorize @review
   end
 
   # GET /reviews/1/edit
   def edit
-    authorize @review, :edit?
+    authorize @review
     build_criteria_reviews
   end
 
@@ -25,7 +25,7 @@ class ReviewsController < ApplicationController
     @review = Review.new(grant_submission_submission_id: params[:submission_id],
                          reviewer_id: params[:reviewer_id],
                          assigner: current_user)
-    authorize @review, :create?
+    authorize @review
     respond_to do |format|
       if @review.save
         flash[:success] = 'Submission assigned for review.'
@@ -40,7 +40,7 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1
   # PATCH/PUT /reviews/1.json
   def update
-    authorize @review, :update?
+    authorize @review
     respond_to do |format|
       if @review.update(review_params)
         format.html { redirect_back fallback_location: edit_grant_submission_submission_review_path(@review, @review.submission, @review),
@@ -58,7 +58,7 @@ class ReviewsController < ApplicationController
   # DELETE /reviews/1
   # DELETE /reviews/1.json
   def destroy
-    authorize @review, :destroy?
+    authorize @review
     @review.destroy
     respond_to do |format|
       flash[:success] = 'Review was successfully deleted.'
