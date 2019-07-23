@@ -10,15 +10,16 @@ class Review < ApplicationRecord
                               counter_cache: true,
                               inverse_of: :reviews
   has_one :grant,             through: :submission
+  has_many :grant_criteria,   through: :grant,
+                              source: :criteria
 
-  has_many :criteria_reviews
+  has_many :criteria_reviews, dependent: :destroy
   has_many :criteria,         through: :criteria_reviews
-
 
   accepts_nested_attributes_for :criteria_reviews
 
   validates_presence_of     :reviewer
-  validates_presence_of     :overall_impact_score, unless: :new_record? #on: :update
+  validates_presence_of     :overall_impact_score, unless: :new_record?
 
   validates_uniqueness_of   :reviewer, scope: :submission
 
@@ -26,23 +27,28 @@ class Review < ApplicationRecord
                                                    greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
                                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                                    unless: :new_record?
-                                                   #on: :update,
 
   validate :reviewer_is_a_grant_reviewer
   validate :assigner_is_a_grant_editor
   validate :reviewer_is_not_applicant
   validate :reviewer_may_be_assigned,       if: :new_record?
-  validate :reviewer_may_not_be_reassigned, on: :update
+  validate :reviewer_may_not_be_reassigned, on: :update,
+                                            if: :reviewer_id_changed?
 
-  scope :with_grant,    ->              { includes(submission: :grant) }
-  scope :by_grant,      -> (grant)      { with_grant.where(grants: { id: grant.id}) }
+  scope :with_grant,               -> { includes(submission: :grant) }
+  scope :with_grant_and_applicant, -> { includes(submission: [:grant, :applicant]) }
+  scope :by_grant,                 -> (grant) { with_grant.where(grants: { id: grant.id}) }
 
-  scope :with_grant_and_applicant, ->   { includes( submission: [:grant, :applicant]) }
-  scope :by_reviewer,   -> (reviewer)   { where(reviewer_id: reviewer.id) }
-  scope :by_submission, -> (submission) { where(grant_submission_submission_id: submission.id) }
+
+  scope :by_reviewer,              -> (reviewer)   { where(reviewer_id: reviewer.id) }
+  scope :by_submission,            -> (submission) { where(grant_submission_submission_id: submission.id) }
 
   def is_complete?
     created_at != updated_at
+  end
+
+  def criterion_average
+    return "tbd"
   end
 
   private
@@ -64,11 +70,11 @@ class Review < ApplicationRecord
   end
 
   def reviewer_may_not_be_reassigned
-    errors.add(:reviewer, :may_not_be_reassigned) if reviewer_id_changed?
+    errors.add(:reviewer, :may_not_be_reassigned)
   end
 
   # TODO: use this for every review load?
-  # after_initialize :define_criteria_reviews, if: :new_record?
+  # after_initialize :define_criteria_reviews
 
   # def define_criteria_reviews
   #   submission.grant.criteria.each do |criterion|

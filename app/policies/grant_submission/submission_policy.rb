@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-
 class GrantSubmission::SubmissionPolicy < GrantPolicy
 
   # Can't inherit methods inside scope, so the organization_admin_access?
   # code from AccessPolicy:6 was repeated.
   # https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
-  attr_reader :user, :grant, :scope
+  attr_reader :user, :grant
 
-  def initialize(context, scope)
+  def initialize(context, record)
     @user   = context.user
     @grant  = context.grant
-    @scope  = scope
+    @record = record
   end
 
   class Scope < Scope
@@ -25,16 +24,22 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
     end
 
     def resolve
-      if user.organization_role == 'admin' || grant_viewer_access?
+      if user.organization_role == 'admin' || check_grant_access(%i[admin editor viewer])
         @grant.submissions
       else
-        scope.where(applicant_id == user.id)
+        scope.where(applicant: user)
       end
+    end
+
+    def check_grant_access(role_list)
+      user.id.in?(GrantPermission.where(role: role_list)
+                                 .where(grant: grant)
+                                 .pluck(:user_id))
     end
   end
 
   def show?
-    organization_admin_access? || grant_editor_access? || current_user_is_applicant?
+    organization_admin_access? || grant_editor_access? || current_user_is_applicant? || current_user_is_reviewer?
   end
 
   def create?
@@ -55,7 +60,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
 
   def destroy?
     # TODO: Admin and g.unpublished
-    !@grant.published? && (organization_admin_access? || grant_editor_access?)
+    !grant.published? && (organization_admin_access? || grant_editor_access?)
   end
 
   private
@@ -69,6 +74,10 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def current_user_is_applicant?
-    submission.applicant_id == user.id
+    submission.applicant == user
+  end
+
+  def current_user_is_reviewer?
+    submission.reviewers.include?(user)
   end
 end

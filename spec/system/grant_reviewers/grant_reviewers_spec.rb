@@ -16,7 +16,7 @@ RSpec.describe 'GrantReviewers', type: :system do
     end
 
     scenario 'max_reviewers_per_proposal is displayed' do
-      expect(page).to have_content("Each reviewer may assess up to #{@grant.max_proposals_per_reviewer} submissions.")
+      expect(page).to have_content("Each reviewer may assess up to #{@grant.max_proposals_per_reviewer} #{'submission'.pluralize(@grant.max_proposals_per_reviewer)}.")
     end
 
     scenario 'displays reviewer name and number of available reviews' do

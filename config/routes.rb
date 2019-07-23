@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       end
     end
     resources :submissions,       except: %i[new],       controller: 'grant_submissions/submissions' do
-      resources :reviews,       except: %[index],   as: :submission_reviews, controller: 'reviews'
+      resources :reviews,         except: %[index new],  controller: 'reviews', as: :submission_reviews
     end
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers'
 

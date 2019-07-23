@@ -105,7 +105,6 @@ class GrantsController < ApplicationController
         :description,
         :is_mandatory,
         :show_comment_field,
-        :allow_no_score,
         :_destroy]
     )
   end

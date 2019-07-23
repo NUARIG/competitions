@@ -16,6 +16,10 @@
       Submitted By:
       = "#{@submission.applicant.first_name} #{@submission.applicant.last_name}"
 
+    - if @submission.reviewers.include?(current_user)
+      %p
+        = link_to 'Review this Submission', edit_grant_submission_submission_review_path(@grant, @submission, find_review_by_submission_and_reviewer(@submission, current_user)), class: 'button'
+
     .cell
       - @submission.form.sections.sort_by(&:display_order).each do |section|
         = render partial: 'grant_submissions/sections/show', locals: { submission:  @submission, form: @submission.form, section: section }

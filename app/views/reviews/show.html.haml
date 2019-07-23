@@ -1,21 +1,46 @@
-%p#notice= notice
+%h1 Submission Review
+%h2 Reviewer
+%h3 #{full_name(@review.reviewer)}
+
+%h2 Submission
+%h3 Title: #{@review.submission.title}
+%h3 Applicant: #{full_name(@review.submission.applicant)}
 
 %p
-  %b Overall impact score:
+  %strong
+    Scores
+- if @review.criteria_reviews.none?
+  %p
+    %strong
+      This review has not yet been scored.
+- else
+  %ul.no-bullet
+  - @review.criteria_reviews.each do |reviewed_criterion|
+    %li
+      %strong
+        = "#{reviewed_criterion.criterion.name}:"
+      %ul.no-bullet
+        %li
+          Score:
+          = reviewed_criterion.score ? reviewed_criterion.score : '-'
+        - if reviewed_criterion.criterion.show_comment_field?
+          %li
+            Comments:
+            - if reviewed_criterion.comment.present?
+              = reviewed_criterion.comment
+            - else
+              %em
+                No comment provided.
+
+%p
+  %strong Overall impact score:
   = @review.overall_impact_score
 %p
-  %b Overall impact comment:
+  %strong Overall impact comment:
   = @review.overall_impact_comment
 %p
-  %b Criterion average:
+  %strong Composite Score (average of scored criteria):
   = @review.criterion_average
-%p
-  %b User:
-  = @review.user
-%p
-  %b Submission:
-  = @review.submission
 
-= link_to 'Edit', edit_review_path(@review)
-\|
-= link_to 'Back', reviews_path
+
+= link_to 'Edit', edit_grant_submission_submission_review_path(@review.grant, @review.submission, @review)

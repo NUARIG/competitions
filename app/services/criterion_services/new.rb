@@ -9,8 +9,7 @@ module CriterionServices
                            name: criterion,
                            description: '',
                            is_mandatory: true,
-                           show_comment_field: true,
-                           allow_no_score: true)
+                           show_comment_field: true)
         end
       end
     end

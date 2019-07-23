@@ -46,6 +46,7 @@ module GrantSubmission
 
     scope :by_grant,       -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned, -> (max) { where(["reviews_count < ?", max]) }
+    scope :with_reviews,   -> { includes(reviews: :reviewer) }
 
     def form_owner
       user || grant

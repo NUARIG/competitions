@@ -1,5 +1,5 @@
 class ReviewsController < ApplicationController
-  before_action :set_review, only: [:show, :edit, :update, :destroy]
+  before_action :set_review,     only: %i[show edit update destroy]
 
   # GET /reviews
   # GET /reviews.json
@@ -10,29 +10,29 @@ class ReviewsController < ApplicationController
   # GET /reviews/1
   # GET /reviews/1.json
   def show
-  end
-
-  # GET /reviews/new
-  def new
-    @review = Review.new
+    authorize @review, :show?
   end
 
   # GET /reviews/1/edit
   def edit
+    authorize @review, :edit?
+    build_criteria_reviews
   end
 
-  # POST /reviews
-  # POST /reviews.json
+  # # POST /reviews
+  # # POST /reviews.json
   def create
-    @review = Review.new(review_params)
-
+    @review = Review.new(grant_submission_submission_id: params[:submission_id],
+                         reviewer_id: params[:reviewer_id],
+                         assigner: current_user)
+    authorize @review, :create?
     respond_to do |format|
       if @review.save
-        format.html { redirect_to @review, notice: 'Review was successfully created.' }
-        format.json { render :show, status: :created, location: @review }
+        flash[:success] = 'Submission assigned for review.'
+        format.json   { head :ok }
       else
-        format.html { render :new }
-        format.json { render json: @review.errors, status: :unprocessable_entity }
+        flash[:alert] = @review.errors.full_messages
+        format.json   { head :unprocessable_entity }
       end
     end
   end
@@ -40,11 +40,15 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1
   # PATCH/PUT /reviews/1.json
   def update
+    authorize @review, :update?
     respond_to do |format|
       if @review.update(review_params)
-        format.html { redirect_to @review, notice: 'Review was successfully updated.' }
+        format.html { redirect_back fallback_location: edit_grant_submission_submission_review_path(@review, @review.submission, @review),
+                                    notice: 'Review was successfully updated.' }
         format.json { render :show, status: :ok, location: @review }
       else
+        flash.now[:alert] = @review.errors.full_messages
+        build_criteria_reviews
         format.html { render :edit }
         format.json { render json: @review.errors, status: :unprocessable_entity }
       end
@@ -54,21 +58,35 @@ class ReviewsController < ApplicationController
   # DELETE /reviews/1
   # DELETE /reviews/1.json
   def destroy
+    authorize @review, :destroy?
     @review.destroy
     respond_to do |format|
-      format.html { redirect_to reviews_url, notice: 'Review was successfully destroyed.' }
+      flash[:success] = 'Review was successfully deleted.'
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_review
-      @review = Review.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def review_params
-      params.require(:review).permit(:overall_impact_score, :overall_impact_comment, :criterion_average, :user_id, :submission_id)
+  def build_criteria_reviews
+    @review.grant.criteria.each do |criterion|
+      unless @review.criteria_reviews.detect{ |cr| cr.criterion_id == criterion.id }.present?
+        @review.criteria_reviews.build(criterion: criterion)
+      end
     end
+  end
+
+  def set_review
+    @review = Review.includes(:criteria, submission: :applicant).find(params[:id])
+  end
+
+  def review_params
+    params.require(:review).permit(:overall_impact_score,
+                                   :overall_impact_comment,
+                                   criteria_reviews_attributes: [
+                                    :id,
+                                    :criterion_id,
+                                    :score,
+                                    :comment])
+  end
 end
