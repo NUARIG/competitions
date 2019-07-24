@@ -43,7 +43,7 @@ class ReviewsController < ApplicationController
     authorize @review
     respond_to do |format|
       if @review.update(review_params)
-        format.html { redirect_back fallback_location: edit_grant_submission_submission_review_path(@review, @review.submission, @review),
+        format.html { redirect_back fallback_location: edit_grant_submission_review_path(@review, @review.submission, @review),
                                     notice: 'Review was successfully updated.' }
         format.json { render :show, status: :ok, location: @review }
       else

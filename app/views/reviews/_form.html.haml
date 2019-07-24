@@ -1,4 +1,4 @@
-= form_for (review), url: grant_submission_submission_review_url(grant, submission, review) do |f|
+= form_for (review), url: grant_submission_review_url(grant, submission, review) do |f|
   - if review.criteria_reviews.any?
     %h3
       Review Criteria

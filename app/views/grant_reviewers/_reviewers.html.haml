@@ -29,7 +29,7 @@
             - reviews = reviewer.reviews.with_grant_and_applicant.by_grant(grant)
             - reviews.each do |review|
               - submission = review.submission
-              %li.review{id: "review_#{"#{review.id}"}", data: { destination_url: grant_submission_submission_review_path(grant, submission, review) }}
+              %li.review{id: "review_#{"#{review.id}"}", data: { destination_url: grant_submission_review_path(grant, submission, review) }}
                 %span
                   = "#{sortable_full_name(submission.applicant)}: #{truncate(submission.title, length: 40)}"
 
