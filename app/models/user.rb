@@ -6,20 +6,25 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  belongs_to  :organization
-  has_many    :grant_permissions
-  has_many    :editable_grants,   through: :grant_permissions,
-                                  source: :grant
+  belongs_to :organization
+  has_many   :grant_permissions
+  has_many   :editable_grants,        through: :grant_permissions,
+                                      source: :grant
 
-  has_many    :grant_reviewers
-  has_many    :reviewable_grants, through: :grant_reviewers,
-                                  source: :grant
+  has_many   :grant_reviewers
+  has_many   :reviewable_grants,      through: :grant_reviewers,
+                                      source: :grant
 
-  has_many    :submissions,       class_name: 'GrantSubmission::Submission',
-                                  foreign_key: :created_id,
-                                  inverse_of: :applicant
-  has_many    :applied_grants,    through: :submissions,
-                                  source: :grant
+  has_many   :submissions,            class_name: 'GrantSubmission::Submission',
+                                      foreign_key: :created_id,
+                                      inverse_of: :applicant
+  has_many   :applied_grants,         through: :submissions,
+                                      source: :grant
+
+  has_many   :reviews,                inverse_of: :reviewer,
+                                      foreign_key: :reviewer_id
+  has_many   :reviewable_submissions, through: :reviews,
+                                      source: :submission
 
   after_initialize :set_default_organization_role, if: :new_record?
 

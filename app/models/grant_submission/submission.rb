@@ -31,6 +31,8 @@ module GrantSubmission
     has_many :reviews,         dependent: :destroy,
                                foreign_key: 'grant_submission_submission_id',
                                inverse_of: :submission
+    has_many :reviewers,       through: :reviews,
+                               source: :reviewer
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true
@@ -40,9 +42,11 @@ module GrantSubmission
     validates_presence_of :form,    :if => Proc.new { |rs| rs.is_root? }
     validates_presence_of :section, :if => Proc.new { |rs| !rs.is_root? }
 
-    # scope :eager_loading, -> {includes({:responses => [:question, :standard_answer]}, :children)}
-    scope :eager_loading, -> {includes({:responses => [:question]}, :children)}
+    scope :eager_loading,  -> {includes({:responses => [:question]}, :children)}
 
+    scope :by_grant,       -> (grant) { where(grant_id: grant.id) }
+    scope :to_be_assigned, -> (max) { where(["reviews_count < ?", max]) }
+    scope :with_reviews,   -> { includes(reviews: :reviewer) }
 
     def form_owner
       user || grant

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_19_145622) do
+ActiveRecord::Schema.define(version: 2019_07_19_173908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,6 @@ ActiveRecord::Schema.define(version: 2019_06_19_145622) do
     t.text "description"
     t.boolean "is_mandatory", default: true, null: false
     t.boolean "show_comment_field", default: true, null: false
-    t.boolean "allow_no_score", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["grant_id"], name: "index_criteria_on_grant_id"
@@ -68,6 +67,13 @@ ActiveRecord::Schema.define(version: 2019_06_19_145622) do
     t.datetime "updated_at", null: false
     t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
     t.index ["user_id"], name: "index_grant_permissions_on_user_id"
+  end
+
+  create_table "grant_reviewers", force: :cascade do |t|
+    t.bigint "grant_id", null: false
+    t.bigint "reviewer_id", null: false
+    t.index ["grant_id"], name: "index_grant_reviewers_on_grant_id"
+    t.index ["reviewer_id"], name: "index_grant_reviewers_on_reviewer_id"
   end
 
   create_table "grant_submission_forms", force: :cascade do |t|
@@ -198,13 +204,13 @@ ActiveRecord::Schema.define(version: 2019_06_19_145622) do
 
   create_table "reviews", force: :cascade do |t|
     t.bigint "grant_submission_submission_id", null: false
-    t.bigint "created_id", null: false
+    t.bigint "assigner_id", null: false
     t.bigint "reviewer_id", null: false
     t.integer "overall_impact_score"
     t.text "overall_impact_comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["grant_submission_submission_id", "created_id"], name: "index_review_reviewer_on_grant_submission_id_and_user_id", unique: true
+    t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
     t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"
   end
 

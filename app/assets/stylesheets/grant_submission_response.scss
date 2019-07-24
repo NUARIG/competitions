@@ -7,11 +7,6 @@ main.submissions {
     td {
       border-top: 1px solid #EEE;
       vertical-align: top;
-      label.required-true:after {
-        content: ' *';
-        font-size: 1.15em;
-        color: red;
-      }
       .helper-text {
         font-size: .85em;
         font-style: italic;

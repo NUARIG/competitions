@@ -3,18 +3,13 @@ main {
     margin: 1rem 0;
   }
 
-  &.grants,
-  &.grant_permissions,
-  &.submissions,
-  &.forms {
-    // Edit
-    #grant-state {
-      margin: 2rem 0;
-      form.grant-state {
-        display: inline-block;
-        .button {
-          margin: 0;
-        }
+  // Edit
+  #grant-state {
+    margin: 2rem 0;
+    form.grant-state {
+      display: inline-block;
+      .button {
+        margin: 0;
       }
     }
   }
@@ -22,6 +17,12 @@ main {
 
 th {
   text-align: left;
+}
+
+label.required-true:after {
+  content: ' *';
+  font-size: 1.15em;
+  color: red;
 }
 
 .field_with_errors {

@@ -8,6 +8,9 @@ class Grant < ApplicationRecord
 
   attr_accessor :duplicate
 
+  attribute :max_reviewers_per_proposal, :integer, default: 2
+  attribute :max_proposals_per_reviewer, :integer, default: 2
+
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
   belongs_to :organization
@@ -29,6 +32,8 @@ class Grant < ApplicationRecord
                                 foreign_key: :grant_id,
                                 inverse_of: :grant,
                                 dependent: :destroy
+
+  has_many   :reviews,          through: :submissions
 
   has_many   :applicants,       through: :submissions,
                                 inverse_of: :applied_grants
@@ -76,13 +81,11 @@ class Grant < ApplicationRecord
 
   validates_numericality_of :max_reviewers_per_proposal,
                             only_integer: true,
-                            greater_than_or_equal_to: 1,
-                            if: :max_reviewers_per_proposal?
+                            greater_than_or_equal_to: 1
 
   validates_numericality_of :max_proposals_per_reviewer,
                             only_integer: true,
-                            greater_than_or_equal_to: 1,
-                            if: :max_proposals_per_reviewer?
+                            greater_than_or_equal_to: 1
 
   validates_uniqueness_of :name
   validates_uniqueness_of :slug, case_sensitive: false
@@ -125,6 +128,7 @@ class Grant < ApplicationRecord
                                     by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
   scope :with_organization,  -> { joins(:organization) }
+  scope :unassigned_submissions, lambda { |*args| where('submission_reviews_count < :max_reviewers', { :max_reviewers => args.first || 2 }) }
 
 
   def is_soft_deletable?
