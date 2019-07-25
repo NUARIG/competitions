@@ -5,7 +5,6 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :omniauthable, :database_authenticatable, :registerable, :recoverable, :validatable
   devise :saml_authenticatable, :trackable, :rememberable, :timeoutable
 
-  # belongs_to :organization
   has_many   :grant_permissions
   has_many   :editable_grants,        through: :grant_permissions,
                                       source: :grant
@@ -33,14 +32,11 @@ class User < ApplicationRecord
 
   enum organization_role: ORG_ROLES, _prefix: true
 
-  # validates :organization, presence: true
   validates :organization_role, presence: true
   validates :email,             presence: true,
                                 uniqueness: true
   validates :first_name,        presence: true
   validates :last_name,         presence: true
-
-  scope :with_organization, -> { includes :organization }
 
   def name
     "#{first_name} #{last_name}".strip

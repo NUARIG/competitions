@@ -8,12 +8,12 @@ class GrantPolicy < AccessPolicy
   class Scope < Scope
     def resolve
       if user.organization_role == 'admin'
-        scope.not_deleted.by_publish_date.with_organization
+        scope.not_deleted.by_publish_date
       elsif (user.editable_grants.any?)
         # TODO: This needs to be ordered.
         (scope.where(state: ['published', 'completed']).not_deleted + user.editable_grants.not_deleted).uniq
       else
-        scope.where(state: ['published', 'completed']).not_deleted.by_publish_date.with_organization
+        scope.where(state: ['published', 'completed']).not_deleted.by_publish_date
       end
     end
   end

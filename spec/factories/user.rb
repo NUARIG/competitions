@@ -5,8 +5,6 @@ FactoryBot.define do
     first_name        { Faker::Name.first_name }
     last_name         { Faker::Name.last_name }
     email             { Faker::Internet.email }
-    # TODO: add organizations back in.
-    # association       :organization, factory: :organization
     organization_role { 'none' }
 
     trait :admin do

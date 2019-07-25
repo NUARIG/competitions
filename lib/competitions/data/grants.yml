@@ -1,6 +1,5 @@
 research:
   default_set: 1
-  organization_id: 1
   name: 'Model NIH Research Grant'
   slug: 'model-nih'
   state: 'demo'
@@ -60,7 +59,6 @@ research:
           value: 1000
 kl2:
   default_set: 2
-  organization_id: 1
   name: 'Model KL2 Grant'
   slug: 'model-kl2'
   state: 'demo'
@@ -120,7 +118,6 @@ kl2:
           value: 100
 research2:
   default_set: 1
-  organization_id: 2
   name: 'Sample NIH Rresearch Grant'
   slug: 'sample'
   state: 'completed'

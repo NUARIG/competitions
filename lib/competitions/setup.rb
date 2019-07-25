@@ -3,7 +3,6 @@
 module Competitions
   module Setup
     def self.all
-      Competitions::Setup::Organizations.load_organizations
       Competitions::Setup::Users.load_users
       Competitions::Setup::Grants.load_grants
     end
@@ -23,7 +22,6 @@ module Competitions
                  .where(email: data[:email])
                  .first_or_initialize
 
-          user.organization_id    = data[:organization_id]
           user.first_name         = data[:first_name]
           user.last_name          = data[:last_name]
           user.email              = data[:email]
@@ -31,22 +29,6 @@ module Competitions
           user.era_commons        = data[:era_commons]
 
           user.save!
-        end
-      end
-    end
-
-    module Organizations
-      def self.load_organizations
-        organizations = Competitions::Setup.parse_yml_file('organizations')
-        organizations.each do |_, data|
-          organization = Organization
-                         .where(name: data[:name])
-                         .first_or_initialize
-
-          organization.name       = data[:name]
-          organization.slug       = data[:slug]
-          organization.url        = data[:url]
-          organization.save!
         end
       end
     end
@@ -61,7 +43,6 @@ module Competitions
                   .where(name: data[:name])
                   .first_or_initialize
 
-          grant.organization_id            = data[:organization_id]
           grant.name                       = data[:name]
           grant.slug                       = data[:slug]
           grant.state                      = data[:state]

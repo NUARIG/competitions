@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :grant do
-    association :organization, factory: :organization
     sequence(:name)             { |n| "Grant Name #{n}" }
     sequence(:slug)             { |n| "GN#{n}" }
     publish_date                { Date.current }

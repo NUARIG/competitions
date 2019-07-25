@@ -1,31 +1,26 @@
 user1:
-  organization_id: 1
   first_name: 'John'
   last_name: 'Doe'
   email: 'j-doe@northwestern.edu'
   organization_role: 'admin'
 user2:
-  organization_id: 1
   first_name: 'Exene'
   last_name: 'Cervenka'
   email: 'e-cervenaka@northwestern.edu'
   organization_role: 'none'
   era_commons: 'ECervenk90069'
 user3:
-  organization_id: 1
   first_name: 'Billy'
   last_name: 'Zoom'
   email: 'b-zoom@northwestern.edu'
   organization_role: 'none'
 user4:
-  organization_id: 2
   first_name: 'Lou'
   last_name: 'Reed'
   email: 'l-reed@nm.org'
   organization_role: 'admin'
   era_commons: 'louRee10017'
 user5:
-  organization_id: 2
   first_name: 'John'
   last_name: 'Cale'
   email: 'j-cale@nm.org'
@@ -38,13 +33,11 @@ user6:
   email: 'd-yule@nm.org'
   organization_role: 'none'
 user7:
-  organization_id: 2
   first_name: 'Moe'
   last_name: 'Tucker'
   email: 'm-tucker@nm.org'
   organization_role: 'none'
 user8:
-  organization_id: 2
   first_name: 'Sterling'
   last_name: 'Morrison'
   email: 's-morrison@nm.org'

@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  it { is_expected.to respond_to(:organization) }
   it { is_expected.to respond_to(:organization_role) }
   it { is_expected.to respond_to(:email) }
   it { is_expected.to respond_to(:first_name) }
@@ -18,12 +17,6 @@ RSpec.describe User, type: :model do
   end
 
   describe '#validations' do
-    it 'validates presence of organization' do
-      user.organization = nil
-      expect(user).not_to be_valid
-      expect(user.errors).to include :organization
-    end
-
     it 'validates presence of organization_role' do
       user.organization_role = nil
       expect(user).not_to be_valid
