@@ -8,12 +8,11 @@ RSpec.describe GrantPermission, type: :model do
   it { is_expected.to respond_to(:role) }
   it { is_expected.to respond_to(:deleted_at) }
 
-  let(:organization)      { create(:organization) }
-  let(:grant)             { create(:grant, organization_id: organization.id) }
+  let(:grant)             { create(:grant) }
 
-  let(:admin_user)        { create(:user, organization_id: organization.id) }
-  let(:editor_user)       { create(:user, organization_id: organization.id) }
-  let(:viewer_user)       { create(:user, organization_id: organization.id) }
+  let(:admin_user)        { create(:user) }
+  let(:editor_user)       { create(:user) }
+  let(:viewer_user)       { create(:user) }
 
   let(:admin_grant_permission)  { build(:admin_grant_permission, grant_id: grant.id, user_id: admin_user.id) }
   let(:editor_grant_permission) { build(:editor_grant_permission, grant_id: grant.id, user_id: editor_user.id) }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_19_173908) do
+ActiveRecord::Schema.define(version: 2019_07_25_131358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -171,7 +171,6 @@ ActiveRecord::Schema.define(version: 2019_07_19_173908) do
   end
 
   create_table "grants", force: :cascade do |t|
-    t.bigint "organization_id"
     t.string "name", null: false
     t.string "slug", null: false
     t.string "state", null: false
@@ -190,16 +189,7 @@ ActiveRecord::Schema.define(version: 2019_07_19_173908) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["organization_id"], name: "index_grants_on_organization_id"
     t.index ["slug"], name: "index_grants_on_slug"
-  end
-
-  create_table "organizations", force: :cascade do |t|
-    t.string "name"
-    t.string "slug"
-    t.string "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -215,7 +205,6 @@ ActiveRecord::Schema.define(version: 2019_07_19_173908) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.bigint "organization_id"
     t.string "organization_role"
     t.string "email", default: "", null: false
     t.string "first_name"
@@ -228,7 +217,6 @@ ActiveRecord::Schema.define(version: 2019_07_19_173908) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -239,7 +227,5 @@ ActiveRecord::Schema.define(version: 2019_07_19_173908) do
   add_foreign_key "grant_permissions", "users"
   add_foreign_key "grant_submission_forms", "grants"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
-  add_foreign_key "grants", "organizations"
   add_foreign_key "reviews", "grant_submission_submissions"
-  add_foreign_key "users", "organizations"
 end

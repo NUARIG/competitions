@@ -13,8 +13,6 @@ class Grant < ApplicationRecord
 
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
-  belongs_to :organization
-
   has_one_attached :document
 
   has_one    :form,             class_name: 'GrantSubmission::Form',
@@ -127,7 +125,6 @@ class Grant < ApplicationRecord
                                           date: Date.current).
                                     by_publish_date }
   scope :by_publish_date,    -> { order(publish_date: :asc) }
-  scope :with_organization,  -> { joins(:organization) }
   scope :unassigned_submissions, lambda { |*args| where('submission_reviews_count < :max_reviewers', { :max_reviewers => args.first || 2 }) }
 
 
