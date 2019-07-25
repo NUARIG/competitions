@@ -100,30 +100,36 @@ FactoryBot.define do
       end
     end
 
+    trait :with_reviewer do
+      after(:create) do |grant|
+        grant_reviewer = create(:grant_reviewer, grant: grant)
+      end
+    end
+
     trait :bypass_validations do
       to_create { |grant| grant.save(validate: false) }
     end
 
-    factory :new_grant,                                traits: %i[new]
-    factory :new_grant_with_users,                     traits: %i[new with_users]
-    factory :draft_grant,                              traits: %i[draft]
-    factory :published_grant,                          traits: %i[published]
-    factory :open_grant_with_users,                    traits: %i[published open with_users]
-    factory :closed_grant_with_users,                  traits: %i[closed with_users]
-    factory :published_open_grant,                     traits: %i[published open]
-    factory :published_open_grant_with_users,          traits: %i[published open with_users]
-    factory :published_closed_grant,                   traits: %i[published closed]
-    factory :published_closed_grant_with_users,        traits: %i[published closed with_users]
-    factory :published_not_yet_open_grant,             traits: %i[published not_yet_open]
-    factory :published_not_yet_open_grant_with_users,  traits: %i[published not_yet_open with_users]
-    factory :completed_grant,                          traits: %i[completed closed]
-    factory :draft_open_grant,                         traits: %i[draft open]
-    factory :draft_closed_grant,                       traits: %i[draft closed]
-    factory :grant_with_users,                         traits: %i[published with_users_and_submission_form]
-    factory :demo_grant_with_users,                    traits: %i[demo with_users]
-    factory :draft_grant_with_users,                   traits: %i[draft with_users with_users_and_submission_form]
-    factory :completed_grant_with_users,               traits: %i[completed with_users]
+    factory :new_grant,                                     traits: %i[new]
+    factory :new_grant_with_users,                          traits: %i[new with_users]
+    factory :draft_grant,                                   traits: %i[draft]
+    factory :published_grant,                               traits: %i[published]
+    factory :open_grant_with_users,                         traits: %i[published open with_users]
+    factory :closed_grant_with_users,                       traits: %i[closed with_users]
+    factory :published_open_grant,                          traits: %i[published open]
+    factory :published_open_grant_with_users,               traits: %i[published open with_users]
+    factory :published_closed_grant,                        traits: %i[published closed]
+    factory :published_closed_grant_with_users,             traits: %i[published closed with_users]
+    factory :published_not_yet_open_grant,                  traits: %i[published not_yet_open]
+    factory :published_not_yet_open_grant_with_users,       traits: %i[published not_yet_open with_users]
+    factory :completed_grant,                               traits: %i[completed closed]
+    factory :draft_open_grant,                              traits: %i[draft open]
+    factory :draft_closed_grant,                            traits: %i[draft closed]
+    factory :grant_with_users,                              traits: %i[published with_users_and_submission_form]
+    factory :demo_grant_with_users,                         traits: %i[demo with_users]
+    factory :draft_grant_with_users,                        traits: %i[draft with_users with_users_and_submission_form]
+    factory :completed_grant_with_users,                    traits: %i[completed with_users]
 
-    factory :open_grant_with_users_and_form_and_submission, traits: %i[published open with_users_and_submission_form with_submission]
+    factory :open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published open with_users_and_submission_form with_submission with_reviewer]
   end
 end

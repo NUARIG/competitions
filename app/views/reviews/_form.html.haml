@@ -1,25 +1,14 @@
-= form_for @review do |f|
-  - if @review.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@review.errors.count, "error")} prohibited this review from being saved:"
-      %ul
-        - @review.errors.full_messages.each do |message|
-          %li= message
+= form_for (review), url: grant_submission_review_url(grant, submission, review) do |f|
+  - if review.criteria_reviews.any?
+    %h3
+      Review Criteria
+    %p
+      Please score this submission using the following criteria:
+    - review.criteria_reviews.each do |criterion_review|
+      = f.fields_for :criteria_reviews, criterion_review do |criterion_review_fields|
+        = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review }
 
-  .field
-    = f.label :overall_impact_score
-    = f.number_field :overall_impact_score
-  .field
-    = f.label :overall_impact_comment
-    = f.text_area :overall_impact_comment
-  .field
-    = f.label :criterion_average
-    = f.text_field :criterion_average
-  .field
-    = f.label :user
-    = f.text_field :user
-  .field
-    = f.label :submission
-    = f.text_field :submission
+  = render partial: 'overall_impact', locals: { f: f }
+
   .actions
-    = f.submit 'Save'
+    = f.submit 'Submit Your Review', class: 'button'

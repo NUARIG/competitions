@@ -6,7 +6,6 @@ FactoryBot.define do
     name               { Faker::Lorem.sentence(2) }
     description        { Faker::Lorem.paragraph(2) }
     is_mandatory       { false }
-    allow_no_score     { false }
     show_comment_field { false }
 
     trait :mandatory do

@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    attributes:
+      grant_reviewer:
+    errors:
+      models:
+        grant_reviewer:
+          attributes:
+            grant:
+              blank: is required.
+            reviewer:
+              blank: is required.
+              taken: is already a reviewer for this grant.
+
+

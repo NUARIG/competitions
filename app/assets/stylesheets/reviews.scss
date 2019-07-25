@@ -1,3 +1,56 @@
-// Place all the styles related to the Reviews controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+$base-color: gray;
+$contrast-color: white;
+
+main {
+  &.reviews {
+    #overall,
+    #review-guidance {
+      margin: 2em 0em;
+    }
+    #overall,
+    .criterion {
+      border-bottom: 1px solid #CCC;
+      margin: 1em 0em;
+      padding: 1em;
+      &:first-of-type {
+        border-top: 1px solid #CCC;
+      }
+      .description {
+        margin-bottom: 1em;
+      }
+    }
+    #overall {
+      border-bottom: none;
+    }
+    .button-group {
+      .score_value,{
+        display: inline-block;
+        margin-right: .5em;
+        &:last-of-type {
+          margin-right: none;
+        }
+        label {
+          border: 1px solid $base-color;
+          background-color: $contrast-color;
+          color: $base-color;
+          &:hover {
+            background-color: $base-color;
+            color: $contrast-color;
+          }
+        }
+        .field_with_errors,
+        input {
+          display: none;
+          + label.button {
+            border-radius: 1000px;
+          }
+          &:checked + label,
+          &:checked + label:active {
+            background-color: $base-color;
+            color: $contrast-color;
+          }
+        }
+      }
+    }
+  }
+}

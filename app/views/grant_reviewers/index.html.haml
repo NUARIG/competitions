@@ -1,0 +1,94 @@
+- content_for(:page_title, "Reviewers - #{@grant.name}")
+
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
+.tabs-panel.is-active
+  %h3
+    Reviewers
+
+  %h5
+    Add a Reviewer by Email Address
+  .grid-x
+    .cell.small-12
+    = form_for :grant_reviewer, url: grant_reviewers_path(@grant) do |f|
+      .input-group
+        = f.email_field :reviewer_email, placeholder: 'Email', class: 'input-group-field'
+        .input-group-button
+          = f.submit 'Look Up', class: 'button small'
+  %hr
+  .grid-x
+    .cell.small-5
+      %h4
+        Reviewers and Submissions
+      %p
+        To remove an assignment, drag the submission from the reviewer's box back to the unassigned submissions box on the right.
+      %p
+        Each reviewer may assess up to #{@grant.max_proposals_per_reviewer} #{'submission'.pluralize(@grant.max_proposals_per_reviewer)}.
+    .cell.small-5.small-offset-2
+      %h4
+        Unassigned Submissions
+      %p
+        Drag the unassigned submissions below to the box under the desired reviewer on the left.
+      %p
+        Each submission may be assessed by up to #{@grant.max_reviewers_per_proposal} reviewers
+  .grid-x
+    .cell.small-5
+      - if @grant_reviewers.none?
+        There are no reviewers. Use the form above to define reviewers by their email address.
+      - else
+        = render partial: 'reviewers', locals: { grant: @grant, grant_reviewers: @grant_reviewers }
+
+    .gridx.small-5.small-offset-2
+      #unassigned_submissions
+        .unassigned_submission_list
+          - if @unassigned_submissions.none?
+            There are no submissions that need to be assigned.
+          - else
+            = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
+
+:javascript
+  $(function() {
+    current_location = '/grants/#{@grant.to_param}/reviewers';
+    $('.review').draggable({
+      revert: 'invalid'
+    });
+    $('.review_list').droppable({
+      hoverClass: 'hover',
+      drop: function(event, ui) {
+        if ($(ui.draggable).attr('id').split('_').length == 2) {
+          reviewer_id = $(this).parent().attr('id').split('_').splice(-1)[0];
+
+          $.ajax({
+            type: "POST",
+            url: $(ui.draggable).data("destinationUrl"),
+            data: { "reviewer_id": reviewer_id },
+            success: function(data) {
+              window.location.href = current_location;
+            },
+            error: function() {
+              window.location.href = current_location;
+            }
+          });
+        }
+      }
+    })
+  });
+
+  $('.unassigned_submission').draggable({
+    revert: "invalid"
+  });
+  $('.unassigned_submission_list').droppable({
+    hoverClass: "hover",
+    drop: function(event, ui) {
+      $.ajax({
+        type: "DELETE",
+        url: $(ui.draggable).data("destinationUrl"),
+        success: function(data) {
+          window.location.href = current_location;
+        },
+        error: function() {
+          window.location.href = current_location;
+        }
+      });
+    }
+  });

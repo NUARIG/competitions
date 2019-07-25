@@ -1,0 +1,18 @@
+#overall
+  %h4
+    Overall
+  #overall_score_value.grid-x
+    .cell.small-12.medium-3
+      = f.label :overall_impact_score, class: 'required-true'
+    .cell.small-12.medium-9
+      .button-group
+        - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
+          .score_value
+            = f.radio_button('overall_impact_score', value, { id: "overall-#{value}" })
+            = f.label "#{value}", { class: 'button', for: "overall-#{value}" }
+
+  #overall_comment.grid-x
+    .cell.small-12.medium-3
+      = f.label :overall_impact_comment
+    .cell.small-12.medium-9
+      = f.text_area :overall_impact_comment

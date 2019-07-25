@@ -37,12 +37,13 @@ gem 'pundit'
 gem 'rubyzip'
 
 # frontend
-gem 'haml-rails', '~> 1.0'
 gem 'font-awesome-rails'
 gem 'foundation-datepicker-rails'
 gem 'foundation-rails'
 gem 'friendly_id', '~> 5.2.4'
+gem 'haml-rails', '~> 1.0'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'sprockets-es6'
 gem 'trix'
 

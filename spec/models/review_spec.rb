@@ -2,7 +2,76 @@ require 'rails_helper'
 
 RSpec.describe Review, type: :model do
   it { is_expected.to respond_to(:submission) }
+  it { is_expected.to respond_to(:assigner) }
   it { is_expected.to respond_to(:reviewer) }
   it { is_expected.to respond_to(:overall_impact_score) }
   it { is_expected.to respond_to(:overall_impact_comment) }
+
+  let(:grant)          { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+  let(:new_reviewer)   { create(:grant_reviewer, grant: grant)}
+  let(:review)         { build(:review, assigner: grant.editors.first,
+                                        reviewer: grant.grant_reviewers.first.reviewer,
+                                        submission: grant.submissions.first) }
+  let(:invalid_review) { build(:review, assigner: grant.editors.first,
+                                        reviewer: grant.grant_reviewers.first.reviewer,
+                                        submission: grant.submissions.first) }
+  let(:invalid_user)   { create(:user) }
+
+  describe 'validations' do
+    context '#new' do
+      it 'validates a valid review' do
+        expect(review).to be_valid
+      end
+
+      it 'requires reviewer to be a grant reviewer' do
+        review.reviewer = invalid_user
+        expect(review).not_to be_valid
+      end
+
+      it 'requires assigner to be a grant editor' do
+        review.assigner = invalid_user
+        expect(review).not_to be_valid
+      end
+
+      it 'requires reviewer to not be the applicant' do
+        review.reviewer = grant.submissions.first.applicant
+        expect(review).not_to be_valid
+      end
+
+      it 'prevents a reviewer from being assigned twice' do
+        review.save
+        expect(invalid_review).not_to be_valid
+      end
+    end
+
+    describe '#update' do
+      it 'requires an overall score' do
+        review.update(overall_impact_score: nil)
+        expect(review).not_to be_valid
+        expect(review.errors).to include(:overall_impact_score)
+      end
+
+      it 'requires an overall score to be less than or equal to Review::MAXIMUM_ALLOWED_SCORE' do
+        review.update(overall_impact_score: Review::MAXIMUM_ALLOWED_SCORE + 1)
+        expect(review).not_to be_valid
+        expect(review.errors).to include(:overall_impact_score)
+        review.update(overall_impact_score: Review::MAXIMUM_ALLOWED_SCORE)
+        expect(review).to be_valid
+      end
+
+      it 'requires an overall score to be greater than or equal to Review::MINIMUM_ALLOWED_SCORE' do
+        review.update(overall_impact_score: Review::MINIMUM_ALLOWED_SCORE - 1)
+        expect(review).not_to be_valid
+        expect(review.errors).to include(:overall_impact_score)
+        review.overall_impact_score = (Review::MINIMUM_ALLOWED_SCORE)
+        expect(review).to be_valid
+      end
+
+      it 'prevents a change in reviewer' do
+        review.save
+        review.update(reviewer: new_reviewer.reviewer)
+        expect(review.errors[:reviewer]).to include(I18n.t('activerecord.errors.models.review.attributes.reviewer.may_not_be_reassigned'))
+      end
+    end
+  end
 end

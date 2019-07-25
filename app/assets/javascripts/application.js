@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery-ui
 //= require trix
 //= require rails-ujs
 //= require activestorage
