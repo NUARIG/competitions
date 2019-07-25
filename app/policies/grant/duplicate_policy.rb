@@ -4,7 +4,7 @@
 class Grant::DuplicatePolicy < GrantPolicy
 
   def create?
-    organization_admin_access? || grant_editor_access?
+    user.system_admin? || (user.grant_creator? && grant_editor_access?)
   end
 
   def new?

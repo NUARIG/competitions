@@ -36,8 +36,8 @@ describe GrantPermissionPolicy do
   end
 
   context 'with user not having a role on the grant' do
-    context 'organization admin user' do
-      let(:user) { create(:organization_admin_user) }
+    context 'system admin user' do
+      let(:user) { create(:system_admin_user) }
 
       it { is_expected.to permit_action(:edit) }
       it { is_expected.to permit_action(:update) }
@@ -50,6 +50,7 @@ describe GrantPermissionPolicy do
       it { is_expected.not_to permit_action(:edit) }
       it { is_expected.not_to permit_action(:update) }
       it { is_expected.not_to permit_action(:destroy) }
+      it { is_expected.not_to permit_action(:create) }
     end
   end
 end

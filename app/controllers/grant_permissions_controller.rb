@@ -4,13 +4,13 @@ class GrantPermissionsController < ApplicationController
   before_action :set_grant, except: :index
   before_action :set_grant_and_grant_permissions, only: :index
   before_action :set_grant_permission, only: %i[edit update destroy]
-  before_action :authorize_grant_editor_access, except: %i[index destroy]
+  before_action :authorize_grant_edit, except: %i[index destroy]
 
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    authorize @grant, :grant_viewer_access?
     @grant_permissions = GrantPermission.where(grant: @grant)
+    authorize @grant_permissions, :index?
 
     @current_user_role = current_user_grant_permission
   end
@@ -63,7 +63,6 @@ class GrantPermissionsController < ApplicationController
   # DELETE /grant_permission/1
   # DELETE /grant_permission/1.json
   def destroy
-    # authorize @grant, :edit?
     authorize @grant_permission
     @grant_permission.destroy
     if @grant_permission.errors.any?
@@ -92,8 +91,8 @@ class GrantPermissionsController < ApplicationController
     @grant_permission = GrantPermission.find(params[:id])
   end
 
-  def authorize_grant_editor_access
-    authorize @grant, :grant_editor_access?
+  def authorize_grant_edit
+    authorize @grant, :edit?
   end
 
   def unassigned_users_by_grant

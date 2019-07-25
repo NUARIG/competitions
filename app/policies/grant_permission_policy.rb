@@ -4,7 +4,7 @@
 
 class GrantPermissionPolicy < GrantPolicy
   def index?
-    grant_viewer_access?
+    user.system_admin? || grant_viewer_access?
   end
 
   def show?
@@ -12,11 +12,19 @@ class GrantPermissionPolicy < GrantPolicy
   end
 
   def create?
-    grant_editor_access?
+    user.system_admin? || grant_editor_access?
   end
 
   def new?
     create?
+  end
+
+  def edit?
+    super
+  end
+
+  def update?
+    super
   end
 
   def destroy?

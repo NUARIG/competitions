@@ -17,8 +17,8 @@ describe Grant::DuplicatePolicy, type: :policy do
     context 'grant editor user on the grant' do
       let(:user) { grant.grant_permissions.role_editor.first.user }
 
-      it { is_expected.to permit_action(:new) }
-      it { is_expected.to permit_action(:create) }
+      it { is_expected.not_to permit_action(:new) }
+      it { is_expected.not_to permit_action(:create) }
     end
 
     context 'grant viewer user on the grant' do
@@ -31,10 +31,17 @@ describe Grant::DuplicatePolicy, type: :policy do
 
   context 'with user not having a role on the grant' do
     context 'organization admin user' do
-      let(:user) { create(:organization_admin_user) }
+      let(:user) { create(:system_admin_user) }
 
       it { is_expected.to permit_action(:new) }
       it { is_expected.to permit_action(:create) }
+    end
+
+    context 'grant creator user' do
+      let(:user) { create(:grant_creator_user) }
+
+      it { is_expected.not_to permit_action(:new) }
+      it { is_expected.not_to permit_action(:create) }
     end
 
     context 'user' do

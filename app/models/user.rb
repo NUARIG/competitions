@@ -25,14 +25,14 @@ class User < ApplicationRecord
   has_many   :reviewable_submissions, through: :reviews,
                                       source: :submission
 
-  after_initialize :set_default_organization_role, if: :new_record?
+  # after_initialize :set_default_organization_role, if: :new_record?
 
-  ORG_ROLES = { admin: 'admin',
-                none: 'none' }.freeze
+  # ORG_ROLES = { admin: 'admin',
+  #               none: 'none' }.freeze
 
-  enum organization_role: ORG_ROLES, _prefix: true
+  # enum organization_role: ORG_ROLES, _prefix: true
 
-  validates :organization_role, presence: true
+  # validates :organization_role, presence: true
   validates :email,             presence: true,
                                 uniqueness: true
   validates :first_name,        presence: true
@@ -44,7 +44,7 @@ class User < ApplicationRecord
 
   private
 
-  def set_default_organization_role
-    self.organization_role ||= :none
-  end
+  # def set_default_organization_role
+  #   self.organization_role ||= :none
+  # end
 end

@@ -47,7 +47,7 @@ describe UserPolicy do
 
     context 'with user not having a role on the grant' do
       context 'organization admin user' do
-        let(:user) { create(:organization_admin_user) }
+        let(:user) { create(:system_admin_user) }
 
         it 'allows user to see own record' do
           expect(scope.to_a).to include(user)
@@ -99,7 +99,7 @@ describe UserPolicy do
 
     context 'with user not having a role on the grant' do
       context 'organization admin user' do
-        let(:user) { create(:organization_admin_user) }
+        let(:user) { create(:system_admin_user) }
 
         it { is_expected.to permit_action(:show) }
         it { is_expected.to permit_action(:edit) }

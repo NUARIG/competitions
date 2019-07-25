@@ -27,7 +27,7 @@ describe Grant::StatePolicy, type: :policy do
 
   context 'with user not having a role on the grant' do
     context 'organization admin user' do
-      let(:user) { create(:organization_admin_user) }
+      let(:user) { create(:system_admin_user) }
 
       it { is_expected.to permit_action(:update) }
     end
