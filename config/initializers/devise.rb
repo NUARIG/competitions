@@ -338,7 +338,8 @@ Devise.setup do |config|
   # If saml_route_helper_prefix = 'saml' then the new_user_session route becomes new_saml_user_session
   # config.saml_route_helper_prefix = 'saml'
 
-  # Added to account for clock drift. See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
+  # You can add allowance for clock drift between servers.
+  # See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
   # This should be a time in seconds.
   config.allowed_clock_drift_in_seconds = 1
 
