@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-    @user = User.with_organization.find(params[:id])
+    @user = User.find(params[:id])
     authorize @user
   end
 

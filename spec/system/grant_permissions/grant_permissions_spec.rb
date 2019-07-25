@@ -17,8 +17,6 @@ RSpec.describe 'GrantPermissions', type: :system do
       @grant_viewer_role = @grant.grant_permissions.role_viewer.first
 
       @unassigned_user   = create(:user)
-      @organization2     = create(:organization)
-      @unaffiliated_user = create(:user, organization: @organization2)
     end
 
     describe 'grant editor user' do
@@ -53,15 +51,6 @@ RSpec.describe 'GrantPermissions', type: :system do
       end
 
       context '#new' do
-        scenario 'user from another organization can be given a role' do
-          visit new_grant_grant_permission_path(@grant)
-          expect(page.all('select#grant_permission_user_id option').map(&:value)).to include(@unaffiliated_user.id.to_s)
-          select("#{@unaffiliated_user.email}", from: 'grant_permission[user_id]')
-          select('admin', from:'grant_permission[role]')
-          click_button 'Save'
-          expect(page).to have_content "#{@unaffiliated_user.name} was granted 'admin'"
-        end
-
         scenario 'assigned grant_permission does not appear in select' do
           visit new_grant_grant_permission_path(@grant.id)
           expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
@@ -122,11 +111,11 @@ RSpec.describe 'GrantPermissions', type: :system do
 
     describe 'unauthorized_user' do
       before(:each) do
-        @unauthorized_user = create(:user, organization: @grant.organization)
+        @unauthorized_user = create(:user)
 
         @grant2            = create(:grant)
         @grant2_user       = create(:admin_grant_permission, grant: @grant2,
-                                                       user: @unauthorized_user)
+                                                             user: @unauthorized_user)
 
         login_as(@unauthorized_user)
       end

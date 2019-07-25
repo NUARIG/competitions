@@ -39,7 +39,6 @@ class GrantsController < ApplicationController
   def create
     authorize Grant, :create?
     @grant = Grant.new(grant_params)
-    @grant.organization_id = current_user.organization_id
     result = GrantServices::New.call(grant: @grant, user: current_user)
     if result.success?
       # TODO: Confirm messages the user should see
@@ -110,7 +109,7 @@ class GrantsController < ApplicationController
   end
 
   def set_grant
-    @grant = Grant.not_deleted.with_organization.friendly.find(params[:id])
+    @grant = Grant.not_deleted.friendly.find(params[:id])
   end
 
   def draft_banner

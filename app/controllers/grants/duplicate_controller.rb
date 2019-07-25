@@ -21,7 +21,6 @@ module Grants
 
       @grant = Grant.new(grant_params)
       @grant.duplicate       = true
-      @grant.organization_id = current_user.organization_id
 
       result = GrantServices::DuplicateDependencies.call(original_grant: @original_grant,
                                                          new_grant: @grant)
