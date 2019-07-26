@@ -288,13 +288,25 @@ RSpec.describe 'Grants', type: :system do
         expect(page).not_to have_content 'You are not authorized to perform this action.'
       end
 
-      scenario 'can duplicate a grant' do
+      scenario 'cannot duplicate a grant' do
         visit new_grant_duplicate_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content 'You are not authorized to perform this action.'
       end
 
       scenario 'can access grant_permissions page' do
         visit grant_grant_permissions_path(@grant)
+        expect(page).not_to have_content 'You are not authorized to perform this action.'
+      end
+    end
+
+    context 'grant editor who is also grant_creator' do
+      before(:each) do
+        @grant_editor.update_attribute(:grant_creator, true)
+        login_as @grant_editor
+      end
+
+      scenario 'cannot duplicate a grant' do
+        visit new_grant_duplicate_path(@grant)
         expect(page).not_to have_content 'You are not authorized to perform this action.'
       end
     end

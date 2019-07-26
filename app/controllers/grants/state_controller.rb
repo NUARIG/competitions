@@ -6,7 +6,7 @@ module Grants
 
     # PATCH/PUT /grants/1/state
     def update
-      authorize @grant, :edit?
+      authorize @grant, :update?
       if @grant.update(grant_params)
         flash[:notice] = "Publish status was changed to #{@grant.state}."
         redirect_back fallback_location: grant_path(@grant)

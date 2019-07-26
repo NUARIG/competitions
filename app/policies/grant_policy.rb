@@ -43,6 +43,10 @@ class GrantPolicy < AccessPolicy
     user.system_admin? || grant_admin_access?
   end
 
+  def duplicate?
+    user.system_admin? || (user.grant_creator? && grant_editor_access?)
+  end
+
   def grant_admin_access?
     check_grant_access(%w[admin])
   end
