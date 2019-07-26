@@ -1,5 +1,5 @@
 - content_for(:page_title, "Edit - #{@grant.name}")
-= current_user.email
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 .tabs-panel.is-active
   = form_with model: @grant, local: true, id: 'grant-edit' do |f|
