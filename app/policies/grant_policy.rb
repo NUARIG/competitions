@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GrantPolicy < AccessPolicy
+class GrantPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user.system_admin?

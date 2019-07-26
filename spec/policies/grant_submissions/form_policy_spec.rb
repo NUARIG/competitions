@@ -40,7 +40,7 @@ describe GrantSubmission::FormPolicy, type: :policy do
   end
 
   context 'with user not having a role on the grant' do
-    context 'organization admin user' do
+    context 'system_admin user' do
       let(:user) { create(:system_admin_user) }
 
       it { is_expected.to permit_action(:update) }

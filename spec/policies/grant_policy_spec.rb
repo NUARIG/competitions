@@ -111,10 +111,10 @@ describe GrantPolicy do
 
     context 'with user not having a role on the grant' do
 
-      context 'organization admin user' do
+      context 'system_admin user' do
         let(:user) { create(:system_admin_user) }
 
-        it 'allows organization grant all grants' do
+        it 'allows system_admin access to all grants' do
           expect(scope.to_a).to include(@draft_grant_with_users_without_permission)
           expect(scope.to_a).to include(@draft_grant_with_users_with_permission)
           expect(scope.to_a).to include(@published_not_yet_open_grant_without_permission)
@@ -197,7 +197,7 @@ describe GrantPolicy do
 
     context 'with user not having a role on the grant' do
 
-      context 'organization admin user' do
+      context 'system_admin user' do
         let(:user) { create(:system_admin_user) }
 
         it { is_expected.to permit_action(:show) }

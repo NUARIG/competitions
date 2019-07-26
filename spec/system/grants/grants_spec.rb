@@ -331,7 +331,8 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_content 'You are not authorized to perform this action.'
       end
 
-      scenario 'can access grant_permissions page' do
+      pending 'can access grant_permissions page' do
+        fail 'grant_viewer to be deleted'
         visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content 'You are not authorized to perform this action.'
       end
