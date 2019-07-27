@@ -3,53 +3,53 @@ user1:
   last_name: 'Doe'
   email: 'j-doe@northwestern.edu'
   organization_role: 'admin'
-  name_identifier: 'jd1@northwestern.edu'
+  upn: 'jd1@northwestern.edu'
 user2:
   first_name: 'Exene'
   last_name: 'Cervenka'
   email: 'e-cervenaka@northwestern.edu'
   organization_role: 'none'
   era_commons: 'ECervenk90069'
-  name_identifier: 'ec1@northwestern.edu'
+  upn: 'ec1@northwestern.edu'
 user3:
   first_name: 'Billy'
   last_name: 'Zoom'
   email: 'b-zoom@northwestern.edu'
   organization_role: 'none'
-  name_identifier: 'bz1@northwestern.edu'
+  upn: 'bz1@northwestern.edu'
 user4:
   first_name: 'Lou'
   last_name: 'Reed'
   email: 'l-reed@nm.org'
   organization_role: 'admin'
   era_commons: 'louRee10017'
-  name_identifier: 'lr1@nm.org'
+  upn: 'lr1@nm.org'
 user5:
   first_name: 'John'
   last_name: 'Cale'
   email: 'j-cale@nm.org'
   organization_role: 'admin'
   era_commons: 'JohnCa10017'
-  name_identifier: 'jc1@nm.org'
+  upn: 'jc1@nm.org'
 user6:
   organization_id: 2
   first_name: 'Doug'
   last_name: 'Yule'
   email: 'd-yule@nm.org'
   organization_role: 'none'
-  name_identifier: 'dy1@nm.org'
+  upn: 'dy1@nm.org'
 user7:
   first_name: 'Moe'
   last_name: 'Tucker'
   email: 'm-tucker@nm.org'
   organization_role: 'none'
-  name_identifier: 'mt1@nm.org'
+  upn: 'mt1@nm.org'
 user8:
   first_name: 'Sterling'
   last_name: 'Morrison'
   email: 's-morrison@nm.org'
   organization_role: 'none'
-  name_identifier: 'sm1@nm.org'
+  upn: 'sm1@nm.org'
 
 
 

@@ -33,7 +33,7 @@ class User < ApplicationRecord
   enum organization_role: ORG_ROLES, _prefix: true
 
   validates :organization_role, presence: true
-  validates :name_identifier,   presence: true,
+  validates :upn,               presence: true,
                                 uniqueness: true
   validates :email,             presence: true,
                                 uniqueness: true

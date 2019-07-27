@@ -19,13 +19,13 @@ module Competitions
         users = Competitions::Setup.parse_yml_file('users')
         users.each do |_, data|
           user = User
-                 .where(name_identifier: data[:name_identifier])
+                 .where(upn: data[:upn])
                  .first_or_initialize
 
           user.first_name         = data[:first_name]
           user.last_name          = data[:last_name]
           user.email              = data[:email]
-          user.name_identifier    = data[:name_identifier]
+          user.upn                = data[:upn]
           user.organization_role  = data[:organization_role]
           user.era_commons        = data[:era_commons]
 

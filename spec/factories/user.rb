@@ -5,7 +5,7 @@ FactoryBot.define do
     first_name                  { Faker::Name.first_name }
     last_name                   { Faker::Name.last_name }
     sequence(:email)            { |n| Faker::Internet.email("user#{n}")  }
-    name_identifier             { email }
+    upn                         { email }
     organization_role           { 'none' }
 
     trait :admin do
