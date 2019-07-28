@@ -5,11 +5,11 @@ module WithGrantRoles
 
   def current_user_grant_permission
     grant_permission  = role_by_user(@grant, current_user)
-    organization_role = current_user.organization_role
+    current_user.system_admin?
 
-    return 'admin' if grant_permission == 'admin' || organization_role == 'admin'
+    return 'admin' if grant_permission == 'admin' || current_user.system_admin?
 
-    grant_permission.present? ? grant_permission.role : organization_role
+    grant_permission.present? ? grant_permission.role : 'none'
   end
 
   def role_by_user(grant, user)

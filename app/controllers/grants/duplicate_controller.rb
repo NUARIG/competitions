@@ -6,7 +6,8 @@ module Grants
     skip_before_action :set_grant
 
     def new
-      authorize @original_grant, :edit?
+
+      authorize @original_grant, :duplicate?
       @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
       flash.now[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
@@ -17,7 +18,7 @@ module Grants
       @original_grant = Grant.includes(:grant_permissions)
                           .friendly
                           .find(params[:grant_id])
-      authorize @original_grant, :edit?
+      authorize @original_grant, :duplicate?
 
       @grant = Grant.new(grant_params)
       @grant.duplicate       = true

@@ -26,8 +26,9 @@ module Competitions
           user.last_name          = data[:last_name]
           user.email              = data[:email]
           user.upn                = data[:upn]
-          user.organization_role  = data[:organization_role]
+          user.system_admin       = data[:system_admin]
           user.era_commons        = data[:era_commons]
+          user.grant_creator      = data[:grant_creator]
 
           user.save!
         end
@@ -36,7 +37,7 @@ module Competitions
 
     module Grants
       def self.load_grants
-        org_admin_user = User.where(organization_role: 'admin').first
+        org_admin_user = User.where(system_admin: 'admin').first
 
         grants = Competitions::Setup.parse_yml_file('grants')
         grants.each do |_, data|

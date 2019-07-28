@@ -13,7 +13,7 @@ class GrantReviewersController < ApplicationController
   end
 
   def create
-    authorize @grant, :grant_editor_access?
+    authorize @grant, :edit?
 
     email   = grant_reviewer_params[:reviewer_email].downcase.strip
     reviewer = User.find_by(email: email)
@@ -34,7 +34,7 @@ class GrantReviewersController < ApplicationController
   end
 
   def destroy
-    authorize @grant, :grant_editor_access?
+    authorize @grant, :edit?
 
     grant_reviewer = GrantReviewer.find(params[:id])
 

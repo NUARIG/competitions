@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(version: 2019_07_27_014151) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "organization_role"
+    t.boolean "system_admin", default: false, null: false
     t.string "email", default: "", null: false
     t.string "first_name"
     t.string "last_name"
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2019_07_27_014151) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
+    t.boolean "grant_creator", default: false, null: false
     t.string "upn", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end

@@ -24,15 +24,6 @@ class User < ApplicationRecord
   has_many   :reviewable_submissions, through: :reviews,
                                       source: :submission
 
-  # before_validation :set_organization, if: :new_record?
-  after_initialize :set_default_organization_role, if: :new_record?
-
-  ORG_ROLES = { admin: 'admin',
-                none: 'none' }.freeze
-
-  enum organization_role: ORG_ROLES, _prefix: true
-
-  validates :organization_role, presence: true
   validates :upn,               presence: true,
                                 uniqueness: true
   validates :email,             presence: true,
@@ -43,26 +34,4 @@ class User < ApplicationRecord
   def name
     "#{first_name} #{last_name}".strip
   end
-
-  private
-
-  # TODO: This section still needs to be sorted out to create Organizations on the fly from emails.
-  # def parse_organization_from_email
-  #   byebug
-  #   url_fragment = self.email.split('@')[1]
-  #   url = "https://www.#{url_fragment}"
-  #   organization_name = url_fragment.split('.')[0]
-  #   organization = Organization.first_or_create(name: organization_name, url: url, slug: organization_name)
-  #   # TODO: Add error handling for an email error.
-  # end
-
-  # def set_organization
-  #   byebug
-  #   self.organization = parse_organization_from_email
-  # end
-
-  def set_default_organization_role
-    self.organization_role ||= :none
-  end
-
 end
