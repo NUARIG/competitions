@@ -25,7 +25,8 @@ RSpec.describe 'GrantPermissions', type: :system do
       end
 
       context '#edit' do
-        scenario 'removes edit links for user who changes their permission to viewer' do
+        pending 'removes edit links for user who changes their permission to viewer' do
+          fail 'grant_viewer to be deleted'
           visit edit_grant_grant_permission_path(@grant, @grant_editor_role)
           select('viewer', from: 'grant_permission[role]')
           click_button 'Update'
@@ -82,9 +83,6 @@ RSpec.describe 'GrantPermissions', type: :system do
 
     describe 'grant admin user' do
       before(:each) do
-        # @grant_viewer_user       = create(:user, organization: @organization)
-        # @grant_viewer_user_role  = create(:viewer_grant_permission, grant_id: @grant.id,
-        #                                                       user_id: @grant_viewer_user.id)
         login_as(@grant_admin)
         visit grant_grant_permissions_path(@grant)
       end

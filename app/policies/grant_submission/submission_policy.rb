@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class GrantSubmission::SubmissionPolicy < GrantPolicy
-
-  # Can't inherit methods inside scope, so the organization_admin_access?
-  # code from AccessPolicy:6 was repeated.
-  # https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
   attr_reader :user, :grant
 
   def initialize(context, record)
@@ -24,7 +20,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
     end
 
     def resolve
-      if user.organization_role == 'admin' || check_grant_access(%i[admin editor viewer])
+      if user.system_admin? || check_grant_access(%i[admin editor viewer])
         @grant.submissions
       else
         scope.where(applicant: user)
@@ -39,11 +35,11 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def show?
-    organization_admin_access? || grant_editor_access? || current_user_is_applicant? || current_user_is_reviewer?
+    user.system_admin? || grant_editor_access? || current_user_is_applicant? || current_user_is_reviewer?
   end
 
   def create?
-    organization_admin_access? || (user.present? && @grant.accepting_submissions?)
+    user.system_admin? || (user.present? && @grant.accepting_submissions?)
   end
 
   def new?
@@ -51,7 +47,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def update?
-    organization_admin_access? || grant_editor_access? || current_user_is_applicant?
+    user.system_admin? || grant_editor_access? || current_user_is_applicant?
   end
 
   def edit?
@@ -60,7 +56,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
 
   def destroy?
     # TODO: Admin and g.unpublished
-    !grant.published? && (organization_admin_access? || grant_editor_access?)
+    !grant.published? && (user.system_admin? || grant_editor_access?)
   end
 
   private

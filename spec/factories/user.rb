@@ -6,12 +6,18 @@ FactoryBot.define do
     last_name         { Faker::Name.last_name }
     email             { Faker::Internet.email }
     password          { 'secret' }
-    organization_role { 'none' }
+    system_admin      { false }
+    grant_creator     { false }
 
-    trait :admin do
-      organization_role { 'admin' }
+    trait :system_admin do
+      system_admin { true }
     end
 
-    factory :organization_admin_user, traits: %i[admin]
+    trait :grant_creator do
+      grant_creator { true }
+    end
+
+    factory :system_admin_user,  traits: %i[system_admin]
+    factory :grant_creator_user, traits: %i[grant_creator]
   end
 end

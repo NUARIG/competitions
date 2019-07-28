@@ -11,7 +11,7 @@ class GrantSubmission::FormPolicy < GrantPolicy
   end
 
   def update_fields?
-    organization_admin_access? || grant_editor_access?
+    user.system_admin? || grant_editor_access?
   end
 
   def export?

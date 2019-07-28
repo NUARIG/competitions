@@ -11,11 +11,11 @@ class ReviewPolicy < GrantPolicy
   end
 
   def create?
-    organization_admin_access? || grant_editor_access?
+    user.system_admin? || grant_editor_access?
   end
 
   def edit?
-    current_user_is_reviewer? || organization_admin_access? || grant_editor_access?
+    current_user_is_reviewer? || user.system_admin? || grant_editor_access?
   end
 
   def show?
@@ -27,7 +27,7 @@ class ReviewPolicy < GrantPolicy
   end
 
   def destroy?
-    organization_admin_access? || grant_editor_access?
+    user.system_admin? || grant_editor_access?
   end
 
   private
