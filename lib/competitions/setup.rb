@@ -19,14 +19,14 @@ module Competitions
         users = Competitions::Setup.parse_yml_file('users')
         users.each do |_, data|
           user = User
-                 .where(email: data[:email])
+                 .where(upn: data[:upn])
                  .first_or_initialize
 
           user.first_name         = data[:first_name]
           user.last_name          = data[:last_name]
           user.email              = data[:email]
+          user.upn                = data[:upn]
           user.system_admin       = data[:system_admin]
-          user.password           = data[:password]
           user.era_commons        = data[:era_commons]
           user.grant_creator      = data[:grant_creator]
 

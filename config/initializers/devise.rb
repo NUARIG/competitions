@@ -41,6 +41,7 @@ Devise.setup do |config|
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
   # config.authentication_keys = [:email]
+  config.authentication_keys = [:upn]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -52,12 +53,12 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
-  config.case_insensitive_keys = [:email]
+  config.case_insensitive_keys = [:email, :upn]
 
   # Configure which authentication keys should have whitespace stripped.
   # These keys will have whitespace before and after removed upon creating or
   # modifying a user and when used to authenticate or find a user. Default is :email.
-  config.strip_whitespace_keys = [:email]
+  config.strip_whitespace_keys = [:email, :upn]
 
   # Tell if authentication through request.params is enabled. True by default.
   # It can be set to an array that will enable params authentication only for the
@@ -145,7 +146,7 @@ Devise.setup do |config|
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
   # db field (see migrations). Until confirmed, new email is stored in
   # unconfirmed_email column, and copied to email column on successful confirmation.
-  config.reconfirmable = true
+  # config.reconfirmable = true
 
   # Defines which key will be used when confirming an account
   # config.confirmation_keys = [:email]
@@ -166,7 +167,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  config.password_length = 6..128
+  # config.password_length = 6..128
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
@@ -212,7 +213,7 @@ Devise.setup do |config|
   # Time interval you can reset your password with a reset password key.
   # Don't put a too small interval or your users won't have the time to
   # change their passwords.
-  config.reset_password_within = 6.hours
+  # config.reset_password_within = 6.hours
 
   # When set to false, does not sign a user in automatically after their password is
   # reset. Defaults to true, so a user is signed in automatically after a reset.
@@ -292,8 +293,62 @@ Devise.setup do |config|
   # end
 
   # ==> Configuration for :registerable
-
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+
+  # ==> Configuration for :saml_authenticatable
+  # Create user if the user does not exist. (Default is false)
+  config.saml_create_user = true
+
+  # Update the attributes of the user after a successful login. (Default is false)
+  config.saml_update_user = true
+
+  # Set the default user key. The user will be looked up by this key. Make
+  # sure that the Authentication Response includes the attribute.
+  config.saml_default_user_key = :upn
+
+  # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
+  # for the user's session to facilitate an IDP initiated logout request.
+  config.saml_session_index_key = :session_index
+
+  # You can set this value to use Subject or SAML assertation as info to which email will be compared.
+  # If you don't set it then email will be extracted from SAML assertation attributes.
+  config.saml_use_subject = false
+
+  # You can support multiple IdPs by setting this value to a class that implements a #settings method which takes
+  # an IdP entity id as an argument and returns a hash of idp settings for the corresponding IdP.
+  config.idp_settings_adapter = nil
+
+  # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
+  # by setting this to a custom reader class, or use the default.
+  # config.idp_entity_id_reader = DeviseSamlAuthenticatable::DefaultIdpEntityIdReader
+
+  # You can set a handler object that takes the response for a failed SAML request and the strategy,
+  # and implements a #handle method. This method can then redirect the user, return error messages, etc.
+  # config.saml_failed_callback = nil
+
+  # You can customize the named routes generated in case of named route collisions with
+  # other Devise modules or libraries. Set the saml_route_helper_prefix to a string that will
+  # be appended to the named route.
+  # If saml_route_helper_prefix = 'saml' then the new_user_session route becomes new_saml_user_session
+  # config.saml_route_helper_prefix = 'saml'
+
+  # You can add allowance for clock drift between servers.
+  # See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
+  # This should be a time in seconds.
+  config.allowed_clock_drift_in_seconds = 1
+
+  # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
+  config.saml_configure do |settings|
+    # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
+    settings.assertion_consumer_service_url     = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_url)
+    settings.assertion_consumer_service_binding = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_binding)
+    settings.name_identifier_format             = Rails.application.credentials.dig(Rails.env.to_sym, :una_name_identifier_format)
+    settings.issuer                             = Rails.application.credentials.dig(Rails.env.to_sym, :una_issuer)
+    settings.authn_context                      = Rails.application.credentials.dig(Rails.env.to_sym, :una_authn_context)
+    settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
+    settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
+    settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
+  end
 end

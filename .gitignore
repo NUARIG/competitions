@@ -31,6 +31,7 @@
 /config/master.key
 
 # Ignore configuration yml files
+/config/attribute-map.yml
 /config/deploy_config.yml
 
 # Rspec

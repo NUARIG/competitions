@@ -2,12 +2,12 @@
 
 FactoryBot.define do
   factory :user do
-    first_name        { Faker::Name.first_name }
-    last_name         { Faker::Name.last_name }
-    email             { Faker::Internet.email }
-    password          { 'secret' }
-    system_admin      { false }
-    grant_creator     { false }
+    first_name                  { Faker::Name.first_name }
+    last_name                   { Faker::Name.last_name }
+    sequence(:email)            { |n| Faker::Internet.email("user#{n}")  }
+    upn                         { email }
+    system_admin                { false }
+    grant_creator               { false }
 
     trait :system_admin do
       system_admin { true }
