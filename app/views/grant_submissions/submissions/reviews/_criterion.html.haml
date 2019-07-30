@@ -13,14 +13,18 @@
       = ff.label 'Score', class: "required-#{criterion_review.criterion.is_mandatory}"
     .cell.small-12.medium-9
       .button-group
+        %label.scoring-guidance
+          Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           = ff.hidden_field :criterion_id
           .score_value
             = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}" })
             = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}" }
+        %label.scoring-guidance
+          Poor
   - if criterion_review.criterion.show_comment_field
-    .grid-x
+    .comment.grid-x
       .cell.small-12.medium-3
         = ff.label "Comments"
       .cell.small-12.medium-9
-        = ff.text_area :comment
+        = ff.text_area :comment, { id: "#{criterion_id}-comment", class: 'comment'}

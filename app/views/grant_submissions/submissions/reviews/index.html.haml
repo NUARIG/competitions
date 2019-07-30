@@ -1,0 +1,44 @@
+
+= render 'shared/grant_edit_tabbed_menu', { grant: @submission.grant }
+
+.tabs-panel.is-active
+  %h3
+    Reviews:
+  #reviews-overview.grid-container-x
+    .grid-x
+      .cell.small-12.medium-2
+        %strong
+          Submission:
+      .cell.small-12.medium-10
+        = link_to @submission.title, grant_submission_path(@submission.grant, @submission)
+    .grid-x
+      .cell.small-12.medium-2
+        %strong
+          Applicant:
+      .cell.small-12.medium-10
+        = full_name(@submission.applicant)
+  %table.hover
+    %thead
+      %tr
+        %th
+          Reviewer
+        %th
+          Review
+        %th
+          Overall Impact
+        %th
+          Composite
+        - @grant.criteria.each do |criterion|
+          %th= criterion.name
+
+    %tbody
+      - @reviews.each do |review|
+        %tr
+          %td= full_name(review.reviewer)
+          %td= link_to 'Full Review', grant_submission_review_path(@grant, @submission, review)
+          %td= (review.overall_impact_score || 0)
+          %td= review.composite_score
+          - @grant.criteria.each do |criterion|
+            - criterion_score = review.criteria_reviews.detect { |cr| cr.criterion_id == criterion.id }
+            %td= criterion_score.score || ''
+

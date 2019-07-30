@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewPolicy < GrantPolicy
-  def index
-    # TODO: scope, context, etc
+  def index?
     false
   end
 

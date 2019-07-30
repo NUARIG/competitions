@@ -1,38 +1,39 @@
 module GrantSubmission
   class Submission < ApplicationRecord
-    # include EncodingErrorRecoverable
+    include WithScoring
 
     self.table_name = 'grant_submission_submissions'
 
     # TODO: Add versions table
     #has_paper_trail
 
-    belongs_to :grant,         inverse_of: :submissions
-    belongs_to :form,          class_name: 'GrantSubmission::Form',
-                               foreign_key: 'grant_submission_form_id',
-                               inverse_of: :submissions
-    belongs_to :section,       class_name: 'GrantSubmission::Section',
-                               foreign_key: 'grant_submission_section_id',
-                               optional: true
-    belongs_to :applicant,     class_name: 'User',
-                               foreign_key: 'created_id'
-    has_many :responses,       dependent: :destroy,
-                               class_name: 'GrantSubmission::Response',
-                               foreign_key: 'grant_submission_submission_id',
-                               inverse_of: :submission
-    belongs_to :parent,        class_name: 'GrantSubmission::Submission',
-                               foreign_key: 'parent_id',
-                               inverse_of: :children,
-                               optional: true
-    has_many :children,        class_name: 'GrantSubmission::Submission',
-                               dependent: :destroy,
-                               foreign_key: 'parent_id',
-                               inverse_of: :parent
-    has_many :reviews,         dependent: :destroy,
-                               foreign_key: 'grant_submission_submission_id',
-                               inverse_of: :submission
-    has_many :reviewers,       through: :reviews,
-                               source: :reviewer
+    belongs_to :grant,          inverse_of: :submissions
+    belongs_to :form,           class_name: 'GrantSubmission::Form',
+                                foreign_key: 'grant_submission_form_id',
+                                inverse_of: :submissions
+    belongs_to :section,        class_name: 'GrantSubmission::Section',
+                                foreign_key: 'grant_submission_section_id',
+                                optional: true
+    belongs_to :applicant,      class_name: 'User',
+                                foreign_key: 'created_id'
+    has_many :responses,        dependent: :destroy,
+                                class_name: 'GrantSubmission::Response',
+                                foreign_key: 'grant_submission_submission_id',
+                                inverse_of: :submission
+    belongs_to :parent,         class_name: 'GrantSubmission::Submission',
+                                foreign_key: 'parent_id',
+                                inverse_of: :children,
+                                optional: true
+    has_many :children,         class_name: 'GrantSubmission::Submission',
+                                dependent: :destroy,
+                                foreign_key: 'parent_id',
+                                inverse_of: :parent
+    has_many :reviews,          dependent: :destroy,
+                                foreign_key: 'grant_submission_submission_id',
+                                inverse_of: :submission
+    has_many :reviewers,        through: :reviews,
+                                source: :reviewer
+    has_many :criteria_reviews, through: :reviews
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true
@@ -46,7 +47,7 @@ module GrantSubmission
 
     scope :by_grant,       -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned, -> (max) { where(["reviews_count < ?", max]) }
-    scope :with_reviews,   -> { includes(reviews: :reviewer) }
+    scope :with_reviews,   -> { includes(reviews: [:reviewer, :criteria_reviews]) }
 
     def form_owner
       user || grant
@@ -143,5 +144,18 @@ module GrantSubmission
     #   #     self.versions.select {|v| v.event == 'create'}.first.try(:whodunnit) :
     #   #     self.versions.where(event: 'create').first.try(:whodunnit)
     # end
+
+    def all_scored_criteria
+      criteria_reviews.scored.pluck(:score)
+    end
+
+    def scores_by_criterion(criterion)
+      byebug
+      criteria_reviews.by_criterion(criterion).pluck(:score).to_s
+    end
+
+    def overall_impact_scores
+      reviews.pluck(:overal_impact_score)
+    end
   end
 end

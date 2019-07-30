@@ -6,9 +6,10 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   resources :grants do
-    resources :grant_permissions, except: :show,                        controller: 'grant_permissions'
-    resource  :duplicate,         only: %i[new create],                 controller: 'grants/duplicate'
-    resource  :state,             only: :update,                        controller: 'grants/state'
+    resources :grant_permissions, except: :show,        controller: 'grant_permissions'
+    resource  :duplicate,         only: %i[new create], controller: 'grants/duplicate'
+    resource  :state,             only: :update,        controller: 'grants/state'
+    resources :reviews,           only: :index,         controller: 'grants/reviews'
     member do
       get   'criteria',           to: 'grants/criteria#index',   as: :criteria
       patch 'criteria/update',    to: 'grants/criteria#update',  as: :update_criteria
@@ -18,8 +19,8 @@ Rails.application.routes.draw do
         put :update_fields
       end
     end
-    resources :submissions,       except: %i[new],       controller: 'grant_submissions/submissions' do
-      resources :reviews,         except: %[index new],  controller: 'reviews'
+    resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
+      resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews'
     end
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers'
 

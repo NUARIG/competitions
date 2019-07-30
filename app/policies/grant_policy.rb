@@ -70,4 +70,8 @@ class GrantPolicy < ApplicationPolicy
   def grant
     record
   end
+
+  def user
+    @user
+  end
 end

@@ -17,6 +17,9 @@
     - if @submission.reviewers.include?(current_user)
       %p
         = link_to 'Review this Submission', edit_grant_submission_review_path(@grant, @submission, find_review_by_submission_and_reviewer(@submission, current_user)), class: 'button'
+    %p
+      - if policy(@submission).edit?
+        = link_to 'See Reviews of this Submission', grant_submission_reviews_path(@submission.grant, @submission)
 
     .cell
       - @submission.form.sections.sort_by(&:display_order).each do |section|

@@ -18,8 +18,17 @@ FactoryBot.define do
       overall_impact_comment { Faker::Lorem.paragraph }
     end
 
-    factory :review_with_score,             traits: %i[with_score]
-    factory :review_with_comment,           traits: %i[with_comment]
-    factory :review_with_score_and_comment, traits: %i[with_score with_comment]
+    trait :with_scored_mandatory_criteria_review do
+      after(:create) do |review|
+        review.grant_criteria.each do |criterion|
+          create(:scored_criteria_review, criterion: criterion, review: review)
+        end
+      end
+    end
+
+    factory :review_with_score,                                   traits: %i[with_score]
+    factory :review_with_comment,                                 traits: %i[with_comment]
+    factory :review_with_score_and_comment,                       traits: %i[with_score with_comment]
+    factory :scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review]
   end
 end

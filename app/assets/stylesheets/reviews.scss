@@ -3,51 +3,70 @@ $contrast-color: white;
 
 main {
   &.reviews {
-    #overall,
-    #review-guidance {
+    #review-header,
+    #review-guidance,
+    #overall, {
       margin: 2em 0em;
     }
     #overall,
+    #composite-score,
     .criterion {
-      border-bottom: 1px solid #CCC;
-      margin: 1em 0em;
+      margin: .5em 0em;
       padding: 1em;
       &:first-of-type {
         border-top: 1px solid #CCC;
       }
-      .description {
-        margin-bottom: 1em;
-      }
     }
     #overall {
-      border-bottom: none;
+      border-top: 1px solid #CCC;
     }
-    .button-group {
-      .score_value,{
-        display: inline-block;
-        margin-right: .5em;
-        &:last-of-type {
-          margin-right: none;
+    form {
+      textarea.comment {
+        overflow: hidden;
+      }
+      #overall,
+      .criterion {
+        border-bottom: 1px solid #CCC;
+        margin: 1em 0em;
+        padding: 1em;
+        .description {
+          margin-bottom: 1em;
         }
-        label {
-          border: 1px solid $base-color;
-          background-color: $contrast-color;
+      }
+      #overall {
+        border-bottom: none;
+      }
+      .button-group {
+        .scoring-guidance {
           color: $base-color;
-          &:hover {
-            background-color: $base-color;
-            color: $contrast-color;
-          }
+          padding: 0.5em 1em;
         }
-        .field_with_errors,
-        input {
-          display: none;
-          + label.button {
-            border-radius: 1000px;
+        .score_value,{
+          display: inline-block;
+          margin-right: .5em;
+          &:last-of-type {
+            margin-right: none;
           }
-          &:checked + label,
-          &:checked + label:active {
-            background-color: $base-color;
-            color: $contrast-color;
+          label {
+            border: 1px solid $base-color;
+            background-color: $contrast-color;
+            color: $base-color;
+            &:hover {
+              background-color: $base-color;
+              color: $contrast-color;
+            }
+          }
+          .field_with_errors,
+          input {
+            display: none;
+            + label.button {
+              border-radius: 1000px;
+            }
+            &:checked + label,
+            &:checked + label:active {
+              background-color: $base-color;
+              color: $contrast-color;
+            }
           }
         }
       }

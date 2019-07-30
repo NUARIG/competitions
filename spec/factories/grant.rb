@@ -19,6 +19,8 @@ FactoryBot.define do
 
     after(:create) do |grant|
       create(:mandatory_criterion, grant: grant)
+      create(:mandatory_criterion, grant: grant)
+      create(:mandatory_criterion_with_comment, grant: grant)
     end
 
     trait :new do
