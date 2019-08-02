@@ -49,7 +49,7 @@ class Review < ApplicationRecord
   scope :incomplete,               -> { where(overall_impact_score: nil)}
 
   def is_complete?
-    created_at != updated_at
+    !overall_impact_score.nil?
   end
 
   def scored_criteria_scores

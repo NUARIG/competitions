@@ -3,13 +3,10 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %h2
-    = "Reviews"
-
+  %h2 Reviews
   .grid-x
     .cell
-
-    - if @reviews.none?
+    - if @reviews.empty?
       %p
         There are no assigned reviews for this grant.
       %p

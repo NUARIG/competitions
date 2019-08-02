@@ -150,8 +150,7 @@ module GrantSubmission
     end
 
     def scores_by_criterion(criterion)
-      byebug
-      criteria_reviews.by_criterion(criterion).pluck(:score).to_s
+      criteria_reviews.by_criterion(criterion).pluck(:score)
     end
 
     def overall_impact_scores

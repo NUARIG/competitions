@@ -16,7 +16,7 @@
           %th Applicant
           %th Title
           %th Submitted On
-          %th Actions
+          %th
       %tbody
         - @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission|
           %tr
@@ -27,5 +27,6 @@
             %td
               = submission.created_at
             %td
+              = link_to 'Reviews', grant_submission_reviews_path(@grant, submission), class: 'button clear'
               = link_to 'Edit', edit_grant_submission_path(@grant, submission), class: 'button clear'
               = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'button clear alert', confirm: 'Are you sure?'

@@ -16,9 +16,9 @@ class CriteriaReview < ApplicationRecord
   validate :score_if_mandatory,   if: -> { criterion.is_mandatory? }
   validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? }
 
-  scope :by_criterion,          -> (criterion)  { where(criterion: criterion.id) }
-  scope :by_submission,         -> (submission) { includes(:submission).where(submission: submission.id) }
-  scope :scored,                -> { where.not(score: nil) }
+  scope :by_criterion,  -> (criterion)  { where(criterion: criterion.id) }
+  scope :by_submission, -> (submission) { joins(:submission).where('grant_submission_submission_id = ?', submission.id) }
+  scope :scored,        -> { where.not(score: nil) }
 
   private
 
