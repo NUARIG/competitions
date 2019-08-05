@@ -10,7 +10,6 @@ module GrantSubmissions
         @grant = Grant.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :edit?
         @submission = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
-        #@reviews = Review.with_reviewer.with_criteria_reviews.by_submission(@submission)
         @reviews = Review.includes(:reviewer, :criteria_reviews).by_submission(@submission)
       end
 
