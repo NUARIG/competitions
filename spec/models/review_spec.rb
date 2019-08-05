@@ -17,6 +17,10 @@ RSpec.describe Review, type: :model do
                                         submission: grant.submissions.first) }
   let(:invalid_user)   { create(:user) }
 
+  let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.editors.first,
+                                                                                                           submission: grant.submissions.first,
+                                                                                                           reviewer: grant.reviewers.first)}
+
   describe 'validations' do
     context '#new' do
       it 'validates a valid review' do
@@ -71,6 +75,28 @@ RSpec.describe Review, type: :model do
         review.save
         review.update(reviewer: new_reviewer.reviewer)
         expect(review.errors[:reviewer]).to include(I18n.t('activerecord.errors.models.review.attributes.reviewer.may_not_be_reassigned'))
+      end
+    end
+
+    describe '#scored criteria review' do
+      it 'calculates a criterion average score' do
+        scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
+        expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
+      end
+
+      it 'includes non-mandatory scores in criterion average score' do
+        scored_review_with_criteria_reviews.criteria.first.update_attributes(is_mandatory: false)
+        scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
+        expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
+      end
+
+      it 'does not include unscored scores in criterion average score' do
+        review = scored_review_with_criteria_reviews
+        expect do
+          updated_criterion = review.criteria.where(is_mandatory: true).first
+          updated_criterion.update_attribute(:is_mandatory, false)
+          CriteriaReview.find_by(review: review, criterion: updated_criterion).update_attribute(:score, nil)
+        end.to (change{review.composite_score}).and (change{review.scored_criteria_scores.count}.by(-1))
       end
     end
   end

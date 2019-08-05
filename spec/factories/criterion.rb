@@ -12,15 +12,13 @@ FactoryBot.define do
       is_mandatory { true }
     end
 
-    trait :allows_no_score do
-      allow_no_score     { false }
-    end
-
     trait :shows_comment_field do
       show_comment_field { false }
     end
 
-    factory :mandatory_criterion,              traits: %i[mandatory]
-    factory :mandatory_criterion_with_comment, traits: %i[mandatory shows_comment_field]
+    factory :not_mandatory_criterion,              traits: %[]
+    factory :mandatory_criterion,                  traits: %i[mandatory]
+    factory :mandatory_criterion_with_comment,     traits: %i[mandatory shows_comment_field]
+    factory :not_mandatory_criterion_with_comment, traits: %i[shows_comment_field]
   end
 end
