@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :criterion do
     association :grant, factory: :grant
-    name               { Faker::Lorem.sentence(2) }
+    sequence(:name)    { |n| "#{Faker::Lorem.sentence(2)}#{n}" }
     description        { Faker::Lorem.paragraph(2) }
     is_mandatory       { false }
     show_comment_field { false }

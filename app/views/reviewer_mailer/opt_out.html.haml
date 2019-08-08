@@ -1,0 +1,12 @@
+%p
+  For the grant
+  = succeed ',' do
+    = link_to @grant.name, grant_url(@grant)
+  #{full_name(@reviewer)} has chosen to opt out of reviewing the submission
+  = surround '"', '."' do
+    = @submission.title
+
+%p
+  To reassign this submission to another reviewer, please visit the grant's
+  = succeed '.' do
+    = link_to 'Reviewers Page', grant_reviewers_url(@grant)

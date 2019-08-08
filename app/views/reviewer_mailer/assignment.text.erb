@@ -1,0 +1,10 @@
+Dear <%= "#{full_name(@reviewer)}" %>
+
+You have been asked to review the submission:
+"<%= link_to @submission.title, grant_submission_url(@grant, @submission) %>",
+an application for the grant:
+<%= link_to @grant.name, grant_url(@grant)%> in Competitions.
+
+#TODO: Add link to user's reviews page.
+
+Thank you.

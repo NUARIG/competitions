@@ -29,6 +29,10 @@ class ReviewPolicy < GrantPolicy
     user.system_admin? || grant_editor_access?
   end
 
+  def opt_out?
+    current_user_is_reviewer?
+  end
+
   private
 
   def review
