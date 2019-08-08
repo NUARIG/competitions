@@ -71,7 +71,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.subdomain = ''
   config.app_domain = 'localhost'
-  config.action_mailer.default_url_options = { host: config.app_domain, port: 5000 }
+  config.action_mailer.default_url_options = { host: config.app_domain, port: 3000 }
 
   # Bullet
   config.after_initialize do
