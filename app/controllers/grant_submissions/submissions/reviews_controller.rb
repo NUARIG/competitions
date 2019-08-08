@@ -35,7 +35,8 @@ module GrantSubmissions
         authorize @review
         respond_to do |format|
           if @review.save
-            flash[:success] = 'Submission assigned for review.'
+            ReviewerMailer.with(review: @review).assignment.deliver_now
+            flash[:success] = "Submission assigned for review. Notification email sent to #{helpers.full_name(@review.reviewer)}"
             format.json   { head :ok }
           else
             flash[:alert] = @review.errors.full_messages
@@ -67,8 +68,9 @@ module GrantSubmissions
       def destroy
         authorize @review
         @review.destroy
+        ReviewerMailer.with(review: @review).unassignment.deliver_now
         respond_to do |format|
-          flash[:success] = 'Review was successfully deleted.'
+          flash[:success] = 'Review was successfully unassigned.'
           format.json { head :no_content }
         end
       end

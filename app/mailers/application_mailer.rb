@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
+  # TODO: set per environment email
+  default from: 'no-reply@environment-specific-domain.com'
   layout 'mailer'
+  helper :users
 end

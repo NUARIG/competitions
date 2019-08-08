@@ -75,7 +75,6 @@ group :development do
   gem 'bullet'
   gem 'i18n-debug'
   gem 'listen', '>= 3.0.5', '< 3.2'
-  gem 'mailcatcher'
   gem 'rubocop'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

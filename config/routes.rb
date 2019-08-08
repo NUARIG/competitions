@@ -20,7 +20,9 @@ Rails.application.routes.draw do
       end
     end
     resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
-      resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews'
+      resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews' do
+        delete 'opt_out',         to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
+      end
     end
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers'
 
