@@ -12,7 +12,6 @@ module ApplicationHelper
       when 'Array'
         messages = '<p>Please review the following ' + 'error'.pluralize(flash_content.count) + ':</p>'
         messages << simple_format((array_to_html_list flash_content), {}, wrapper_tag: 'ul')
-        messages
       else
         flash_content
       end.html_safe

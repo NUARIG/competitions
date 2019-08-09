@@ -113,6 +113,6 @@ class GrantsController < ApplicationController
   end
 
   def draft_banner
-    flash[:warning] = '<strong>Draft warning</strong>'.html_safe if @grant.draft?
+    flash.now[:warning] = '<strong>Draft warning</strong>'.html_safe if @grant.draft?
   end
 end

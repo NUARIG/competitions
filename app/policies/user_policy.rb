@@ -29,4 +29,14 @@ class UserPolicy < ApplicationPolicy
   def edit?
     update?
   end
+
+  def profile?
+    record == user
+  end
+
+  private
+
+  def current_user
+  end
+
 end

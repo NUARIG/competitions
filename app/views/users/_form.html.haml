@@ -1,27 +1,30 @@
-= form_with model: @user, local: true do |f|
-  - if @user.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(f.object.errors.count, "error")
-        prohibited this field from being saved:
-      %ul
-        - f.object.errors.full_messages.each do |message|
-          %li= message
-  .grid-x
-    .cell
-      .grid-x
-        = f.label :first_name, 'First Name'
-        = f.text_field :first_name, disabled: @user
-      .grid-x
-        = f.label :last_name, 'Last Name'
-        = f.text_field :last_name, disabled: @user
-      .grid-x
-        = f.label :email, 'email'
-        = f.text_field :email, disabled: @user
-      .grid-x
-        = f.label :era_commons, 'eRA Commons'
-        = f.text_field :era_commons
+.grid-x
+  .cell
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :first_name
+      .cell.small-12.medium-10
+        = f.text_field :first_name, disabled: @user, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :last_name
+      .cell.small-12.medium-10
+        = f.text_field :last_name, disabled: @user, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :email
+      .cell.small-12.medium-10
+        = f.text_field :email, disabled: @user, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :upn
+      .cell.small-12.medium-10
+        = f.text_field :upn, disabled: @user, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :era_commons
+      .cell.small-12.medium-10
+        = f.text_field :era_commons, class: 'small-12 medium-4'
 
-  .actions
-    = f.submit 'Update', class: 'button'
-    = link_to 'Cancel', users_path, class: 'button secondary'
+.actions
+  = f.submit 'Update', class: 'button'

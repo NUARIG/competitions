@@ -1,3 +1,25 @@
+header {
+  .top-bar-left {
+    .home {
+      font-weight: bold;
+    }
+  }
+
+  .top-bar-right {
+    ul.dropdown.menu {
+      li.is-dropdown-submenu-parent {
+        background-color: #FFF;
+      }
+      ul#logged-in {
+        background-color: #FFF;
+        li:first-of-type {
+          border-bottom: 1px solid #cacaca;
+        }
+      }
+    }
+  }
+}
+
 main {
   .menu.simple {
     margin: 1rem 0;

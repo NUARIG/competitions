@@ -29,5 +29,5 @@ Rails.application.routes.draw do
     get 'apply', to: 'grant_submissions/submissions#new', as: :apply
   end
 
-  resources :users, only: %i[show index edit update]
+  resource :profile, only: %i[show update]
 end
