@@ -17,6 +17,11 @@
         = f.text_field :email, disabled: @user, class: 'small-12 medium-4'
     .grid-x
       .cell.small-12.medium-2
+        = f.label :upn
+      .cell.small-12.medium-10
+        = f.text_field :upn, disabled: @user, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
         = f.label :era_commons
       .cell.small-12.medium-10
         = f.text_field :era_commons, class: 'small-12 medium-4'
