@@ -39,7 +39,9 @@ class ReviewPolicy < GrantPolicy
     record
   end
 
-  private
+  def grant
+    record.grant
+  end
 
   def current_user_is_reviewer?
     review.reviewer == user
