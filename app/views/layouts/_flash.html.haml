@@ -1,3 +1,3 @@
 - flash.delete(:timedout).each do |message_type, message|
-  = render :layout => 'shared/flash_messages', :locals => { :type => message_type, :dismiss => true, :flash_content => message } do
+  = render :layout => 'shared/flash_messages', locals: { type: message_type, dismiss: true, flash_content: message } do
     = message

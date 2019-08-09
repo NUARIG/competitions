@@ -1,0 +1,7 @@
+- content_for(:page_title, 'Profile')
+
+%h1
+  Your Profile
+
+= form_with(model: @user, url: profile_path, method: :put, local: true) do |f|
+  = render partial: 'users/form', locals: { f: f }
