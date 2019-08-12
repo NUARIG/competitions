@@ -1,0 +1,15 @@
+.grid-x
+  .cell.small-12
+    %hr.small-12.medium-6
+    %h3
+      Review and Approval
+.grid-x
+  .cell.small-12.medium-2
+    = f.label :status
+  .cell.small-12.medium-4
+    = f.select :status, GrantCreatorRequest::STATUSES.collect { |status| [status[1], status[0]] }, class: 'small-12 medium-4'
+.grid-x
+  .cell.small-12.medium-2
+    = f.label :review_comment
+  .cell.small-12.medium-10
+    = f.text_area :review_comment, class: 'small-12 medium-4'

@@ -1,0 +1,15 @@
+- content_for(:page_title, 'Request Grant Creation Access')
+
+%h1
+  Edit Your Grant Creation Access Request
+
+%p
+  Introductory text about creating a grant. Lorem ipsum dolor sum.
+
+= form_with model: @grant_creator_request, url: grant_creator_requests_path(@grant_creator_request), local: true, id: 'grant-request' do |f|
+  = render partial: 'request_attributes', locals: { f: f, request: @grant_creator_request }
+
+  .grid-x
+    .cell.small-12
+      = f.submit 'Re-submit This Grant Creation Access Request', class: 'button'
+      = link_to 'Cancel', profile_path, class: 'button clear secondary'

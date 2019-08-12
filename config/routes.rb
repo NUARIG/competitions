@@ -30,5 +30,7 @@ Rails.application.routes.draw do
   end
 
   resource :profile, only: %i[show update]
-  resources :grant_creator_requests
+  resources :grant_creator_requests do
+    resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
+  end
 end
