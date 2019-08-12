@@ -1,0 +1,35 @@
+- content_for(:page_title, 'Request Grant Creation Access')
+
+%h1
+  Request Grant Creation Access
+
+%p
+  Introductory text about creating a grant. Lorem ipsum dolor sum.
+
+= form_with model: @grant_creator_request, url: grant_creator_requests_path(@grant_request), local: true, id: 'grant-request' do |f|
+  .grid-x
+    .cell
+      .grid-x
+        .cell.small-12.medium-2
+          = f.label :first_name, 'First Name'
+        .cell.small-12.medium-10
+          = f.text_field :first_name, value: current_user.first_name, disabled: true, class: 'small-12 medium-4'
+      .grid-x
+        .cell.small-12.medium-2
+          = f.label :last_name, 'Last Name'
+        .cell.small-12.medium-10
+          = f.text_field :last_name, value: current_user.last_name, disabled: true, class: 'small-12 medium-4'
+      .grid-x
+        .cell.small-12.medium-2
+          = f.label :email, 'Email'
+        .cell.small-12.medium-10
+          = f.text_field :email, value: current_user.email, disabled: true, class: 'small-12 medium-4'
+      .grid-x
+        .cell.small-12.medium-2
+          = f.label :reasoning
+        .cell.small-12.medium-10
+          = f.text_area :reasoning, class: 'small-12 medium-4'
+      .grid-x
+        .cell.small-12
+          = f.submit 'Request Grant Creation Access', class: 'button'
+          = link_to 'Cancel', profile_path, class: 'button clear secondary'

@@ -1,6 +1,8 @@
 en:
- pundit:
-   default: 'You are not authorized to perform this action.'
-   grant_policy:
-     update?: 'You cannot edit this grant!'
-     create?: 'You cannot create grants!'
+  pundit:
+    default: 'You are not authorized to perform this action.'
+    grant_policy:
+      update?: 'You cannot edit this grant.'
+      create?: 'You cannot create a grant.'
+    profile/grant_request_policy:
+      new?: 'You currently have a pending request. Please wait for a response or approval.'

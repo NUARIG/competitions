@@ -30,4 +30,6 @@ Rails.application.routes.draw do
   end
 
   resource :profile, only: %i[show update]
+  resources :grant_creator_requests
+
 end
