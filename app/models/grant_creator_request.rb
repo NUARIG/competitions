@@ -1,4 +1,5 @@
 class GrantCreatorRequest < ApplicationRecord
+  after_save :udpate_user_grant_creator_attribute, if: :saved_change_to_status?
 
   STATUSES  = { pending:  'Pending',
                 approved: 'Approved',
@@ -19,6 +20,7 @@ class GrantCreatorRequest < ApplicationRecord
   validate :requester_has_no_pending_requests, on: :create
   validate :requester_is_not_a_system_admin,   on: :create
   validate :requester_is_not_a_grant_creator,  on: :create
+  validate :reviewer_is_system_admin,          on: :update, if: :reviewer_id_changed?
 
   scope :pending, -> { where(status: STATUSES[:pending]) }
 
@@ -34,5 +36,22 @@ class GrantCreatorRequest < ApplicationRecord
 
   def requester_is_not_a_system_admin
     errors.add(:base, :is_system_admin) if requester.system_admin?
+  end
+
+  def reviewer_is_a_system_admin
+    errors.add(:base, :reviewer_is_not_system_admin) if !reviewer.system_admin?
+  end
+
+  def udpate_user_grant_creator_attribute
+    case status
+    when 'approved'
+      requester.update_attribute(:grant_creator, true)
+      GrantCreatorRequestReviewMailer.with(request: self).approved.deliver_now
+    when 'rejected'
+      requester.update_attribute(:grant_creator, false)
+      GrantCreatorRequestReviewMailer.with(request: self).rejected.deliver_now
+    else
+      requester.update_attribute(:grant_creator, false)
+    end
   end
 end

@@ -11,6 +11,7 @@ en:
               has_grant_creator_access: 'You already may create grants.'
               is_system_admin: 'You already may create grants.'
               pending_request: 'You currently have a request pending. An administrator will review your request shortly.'
+              reviewer_is_not_system_admin: 'Reviewer is not authorized to review this request.'
             request_comment:
               is_blank: 'Please explain how you plan to use Competitions.'
   helpers:

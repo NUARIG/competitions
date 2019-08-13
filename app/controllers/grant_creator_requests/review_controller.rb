@@ -6,16 +6,10 @@ module GrantCreatorRequests
     end
 
     def update
+      @grant_creator_request.reviewer = current_user
       if @grant_creator_request.update(grant_creator_request_review_params)
         flash[:success] = 'Request was successfully reviewed.'
-        if @grant_creator_request.status_approved?
-          @grant_creator_request.requester.update_attribute(:grant_creator, true)
-        elsif
-          @grant_creator_request.status_rejected?
-          @grant_creator_request.requester.update_attribute(:grant_creator, false)
-        end
-        # TODO: redirect to admin requests?
-        render :show
+        redirect_to grant_creator_requests_path
       else
         flash.now[:alert] = @grant_creator_request.errors.full_messages
         render :show
