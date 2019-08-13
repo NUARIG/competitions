@@ -14,6 +14,8 @@ module GrantCreatorRequests
           @grant_creator_request.status_rejected?
           @grant_creator_request.requester.update_attribute(:grant_creator, false)
         end
+        # TODO: redirect to admin requests?
+        render :show
       else
         flash.now[:alert] = @grant_creator_request.errors.full_messages
         render :show
@@ -23,7 +25,7 @@ module GrantCreatorRequests
     private
 
     def grant_creator_request_review_params
-      params.require(:grant_creator_request_id).permit(grant_creator_request: [:status, :review_comment])
+      params.require(:grant_creator_request).permit(:status, :review_comment)
     end
 
     def set_and_authorize_grant_creator_request
