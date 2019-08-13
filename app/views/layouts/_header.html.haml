@@ -1,8 +1,20 @@
 %header.cell
   .top-bar
     .top-bar-left
-      .home
-        = link_to 'CD2H - Competitions', root_path
+      %ul.menu
+        %li
+          .home
+            = link_to 'CD2H - Competitions', root_path
+        - if user_signed_in?
+          - if current_user.editable_grants.not_deleted.any? || current_user.system_admin? || current_user.grant_creator?
+            %li
+              = link_to 'MyGrants', profile_grants_path
+          - if current_user.reviews.any?
+            %li
+              = link_to 'MyReviews', profile_reviews_path
+          - if current_user.submissions.any?
+            %li
+              = link_to 'MySubmissions', profile_submissions_path
     .top-bar-right
       %ul.dropdown.menu{"data-dropdown-menu" => ""}
         %li
