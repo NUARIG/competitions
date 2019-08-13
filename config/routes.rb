@@ -34,4 +34,7 @@ Rails.application.routes.draw do
     resources :reviews,      only: :index, controller: 'profiles/reviews'
     resources :submissions,      only: :index, controller: 'profiles/submissions'
   end
+  resources :grant_creator_requests do
+    resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_27_014151) do
+ActiveRecord::Schema.define(version: 2019_08_11_170628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,17 @@ ActiveRecord::Schema.define(version: 2019_07_27_014151) do
     t.datetime "updated_at", null: false
     t.index ["criterion_id"], name: "index_criteria_reviews_on_criterion_id"
     t.index ["review_id"], name: "index_criteria_reviews_on_review_id"
+  end
+
+  create_table "grant_creator_requests", force: :cascade do |t|
+    t.bigint "requester_id", null: false
+    t.text "request_comment", null: false
+    t.string "status", default: "pending", null: false
+    t.bigint "reviewer_id"
+    t.text "review_comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_grant_creator_requests_on_status"
   end
 
   create_table "grant_permissions", force: :cascade do |t|

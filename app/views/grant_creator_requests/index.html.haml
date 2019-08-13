@@ -1,0 +1,25 @@
+-
+
+%h1
+  Pending Grant Creator Requests
+
+- if @grant_creator_requests.none?
+  %p
+    There are no pending requests at this time.
+- else
+  %table.hover
+    %thead
+      %th
+        Requester
+      %th
+        Date Submitted
+      %th
+    %tbody
+      - @grant_creator_requests.each do |request|
+        %tr
+          %td
+            = full_name(request.requester)
+          %td
+            = request.created_at
+          %td
+            = link_to 'Review and Approve', grant_creator_request_review_path(request)

@@ -1,0 +1,14 @@
+- content_for(:page_title, 'Review Grant Creation Access Request')
+
+%h1
+  Grant Creation Access Request Review
+
+%p
+  Approving and submitting this request will immediately allow
+  = full_name(@grant_creator_request.requester)
+  to create and publish grants.
+  = form_with model: @grant_creator_request, url: grant_creator_request_review_path(@grant_creator_request), local: true, id: 'grant-request' do |f|
+    = render partial: 'request_attributes', locals: { f: f, request: @grant_creator_request }
+    = render partial: 'review_attributes',  locals: { f: f, request: @grant_creator_request }
+    = f.submit 'Review This Access Request', class: 'button'
+    = link_to 'Cancel', profile_path, class: 'button clear secondary'

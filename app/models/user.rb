@@ -24,6 +24,9 @@ class User < ApplicationRecord
   has_many   :reviewable_submissions, through: :reviews,
                                       source: :submission
 
+  has_many   :grant_creator_requests, foreign_key: :requester_id,
+                                      inverse_of: :requester
+
   validates :upn,               presence: true,
                                 uniqueness: true
   validates :email,             presence: true,

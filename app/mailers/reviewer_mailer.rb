@@ -1,5 +1,5 @@
 class ReviewerMailer < ApplicationMailer
-  before_action :set_variables
+  before_action :set_attributes
 
   def assignment
     mail(to: @reviewer.email, subject: I18n.t('mailers.reviewer_mailer.assignment.subject'))
@@ -16,7 +16,7 @@ class ReviewerMailer < ApplicationMailer
 
   private
 
-  def set_variables
+  def set_attributes
     @review     = params[:review]
     @reviewer   = @review.reviewer
     @submission = @review.submission
