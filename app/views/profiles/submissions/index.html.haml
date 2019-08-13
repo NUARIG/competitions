@@ -9,7 +9,7 @@
       %th Submitted On
       %th
   %tbody
-    - @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission|
+    - @submissions.each do |submission|
       %tr
         %td
           = link_to submission.title, grant_submission_path(submission.grant, submission)

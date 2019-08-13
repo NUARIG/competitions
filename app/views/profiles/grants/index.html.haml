@@ -1,6 +1,6 @@
 %h3
   My Grants
-- if current_user.system_admin? | current_user.grant_creator?
+- if current_user.system_admin? || current_user.grant_creator?
   = link_to 'Create New Grant', new_grant_path, class: 'button primary'
 - unless @grants.present?
   %p
