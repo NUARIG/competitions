@@ -1,0 +1,21 @@
+%h3
+  My Submissions
+
+%table.table.table-condensed
+  %thead
+    %tr
+      %th Title
+      %th Grant
+      %th Submitted On
+      %th
+  %tbody
+    - @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission|
+      %tr
+        %td
+          = link_to submission.title, grant_submission_path(submission.grant, submission)
+        %td
+          = link_to submission.grant.name, grant_path(submission.grant)
+        %td
+          = submission.created_at
+
+%br
