@@ -45,7 +45,7 @@ module GrantSubmission
 
     scope :eager_loading,  -> {includes({:responses => [:question]}, :children)}
 
-    scope :by_created_at,  -> { order(created_at: :desc) }
+    scope :order_by_created_at,  -> { order(created_at: :desc) }
     scope :by_grant,       -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned, -> (max) { where(["reviews_count < ?", max]) }
     scope :with_reviews,   -> { includes(reviews: [:reviewer, :criteria_reviews]) }
