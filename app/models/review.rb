@@ -43,6 +43,7 @@ class Review < ApplicationRecord
   scope :with_grant_and_applicant, -> { includes(submission: [:grant, :applicant]) }
   scope :by_grant,                 -> (grant) { with_grant.where(grants: { id: grant.id}) }
 
+  scope :order_by_created_at,            -> { order(created_at: :desc) }
   scope :by_reviewer,              -> (reviewer)   { where(reviewer_id: reviewer.id) }
   scope :by_submission,            -> (submission) { where(grant_submission_submission_id: submission.id) }
   scope :completed,                -> { where.not(overall_impact_score: nil)}

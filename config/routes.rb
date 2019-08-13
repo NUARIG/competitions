@@ -29,7 +29,11 @@ Rails.application.routes.draw do
     get 'apply', to: 'grant_submissions/submissions#new', as: :apply
   end
 
-  resource :profile, only: %i[show update]
+  resource :profile, only: %i[show update] do
+    resources :grants,      only: :index, controller: 'profiles/grants'
+    resources :reviews,      only: :index, controller: 'profiles/reviews'
+    resources :submissions,      only: :index, controller: 'profiles/submissions'
+  end
   resources :grant_creator_requests do
     resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
   end
