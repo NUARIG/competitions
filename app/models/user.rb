@@ -34,6 +34,8 @@ class User < ApplicationRecord
   validates :first_name,        presence: true
   validates :last_name,         presence: true
 
+  scope :alphabetical_order,    -> { order(last_name: :asc) }
+
   def name
     "#{first_name} #{last_name}".strip
   end

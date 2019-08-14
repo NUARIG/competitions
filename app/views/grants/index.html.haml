@@ -1,10 +1,21 @@
-%h1 Grants
+%h3 All Grants
+
+- if current_user.system_admin? || current_user.grant_creator?
+  = link_to 'Create New Grant', new_grant_path, class: 'button primary'
 
 %table
   %thead
     %tr
       %th
-        Name
+        Grant
+      %th
+        State
+      %th
+        Publish Date
+      %th
+        Submission Open Date
+      %th
+        Submission Close Date
       %th
       %th
 
@@ -12,10 +23,11 @@
     - @grants.each do |grant|
       %tr
         %td= link_to grant.name, grant
+        %td= grant.state
+        %td= grant.publish_date
+        %td= grant.submission_open_date
+        %td= grant.submission_close_date
         %td= link_to 'Edit', edit_grant_path(grant) if policy(grant).edit?
         %td=  link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' } if policy(grant).destroy? && grant_can_be_deleted?(grant)
 
 %br
-
--# if policy(Grant).new?
-  =# link_to 'New Grant', new_grant_path

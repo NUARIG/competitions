@@ -11,7 +11,7 @@ class UserPolicy < ApplicationPolicy
 
     def resolve
       if user.system_admin?
-        scope.all
+        scope.all.alphabetical_order
       else
         scope.where(id: user.id)
       end
