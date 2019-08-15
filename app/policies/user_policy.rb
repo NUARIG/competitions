@@ -11,15 +11,11 @@ class UserPolicy < ApplicationPolicy
 
     def resolve
       if user.system_admin?
-        scope.all.alphabetical_order
+        scope.all.order_by_last_name
       else
         scope.where(id: user.id)
       end
     end
-  end
-
-  def show?
-    user.system_admin? || record == user
   end
 
   def update?
