@@ -23,7 +23,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit?
-    update?
+    user.system_admin?
   end
 
   def profile?

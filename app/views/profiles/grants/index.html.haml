@@ -33,5 +33,4 @@
           %td= link_to 'Edit', edit_grant_path(grant) if policy(grant).edit?
           %td=  link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' } if policy(grant).destroy? && grant_can_be_deleted?(grant)
 
-%br
 

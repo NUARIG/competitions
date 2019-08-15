@@ -1,7 +1,7 @@
-- content_for(:page_title, 'User Profile')
+- content_for(:page_title, "Edit #{full_name(@user)}")
 
 %h1
-  User Profile
+  = yield :page_title
 
 = form_with(model: @user, url: profile_path, method: :put, local: true) do |f|
   = render partial: 'users/form', locals: { f: f }
