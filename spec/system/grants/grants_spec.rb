@@ -21,14 +21,14 @@ RSpec.describe 'Grants', type: :system do
       expect(page).not_to have_content(@soft_deleted_grant.name)
     end
 
-    scenario 'displays proper grant admin links' do
+    scenario 'displays only public grants for grant_admins' do
+      expect(page).to have_link('Edit', href: edit_grant_path(@grant))
+
       expect(page).not_to have_link('Edit', href: edit_grant_path(@inaccessible_grant))
       expect(page).not_to have_link('Delete', href: grant_path(@inaccessible_grant))
-      expect(page).to have_link('Edit', href: edit_grant_path(@grant))
       expect(page).not_to have_link('Delete', href: grant_path(@grant))
-
-      expect(page).to have_link('Edit', href: edit_grant_path(@draft_grant))
-      expect(page).to have_link('Delete', href: grant_path(@draft_grant))
+      expect(page).not_to have_link('Edit', href: edit_grant_path(@draft_grant))
+      expect(page).not_to have_link('Delete', href: grant_path(@draft_grant))
     end
   end
 
@@ -98,7 +98,7 @@ RSpec.describe 'Grants', type: :system do
       expect(grant.state).to eql('draft')
       expect(page).to have_content 'Grant saved'
       click_link('Permissions', href: grant_grant_permissions_path(grant).to_s)
-      expect(page).to have_content @user.name
+      expect(page).to have_content full_name(@user)
       expect(grant.editors.count).to eql 1
       expect(@user.grant_permissions.where(grant: grant).first.role).to eql 'admin'
     end

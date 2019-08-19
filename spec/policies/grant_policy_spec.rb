@@ -38,20 +38,20 @@ describe GrantPolicy do
         let(:grant_admin4) { create(:admin_grant_permission, grant: @grant_with_users_with_permission, user: user) }
         let(:grant_admin5) { create(:admin_grant_permission, grant: @completed_grant_with_permission, user: user) }
 
-        it 'allows grant admin subset limited to permitted grants' do
-          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
-
-          expect(scope.to_a).to include(@draft_grant_with_users_with_permission)
+        it 'allows grant admin allowed only public grants for index' do
           expect(scope.to_a).to include(@published_not_yet_open_grant_without_permission)
           expect(scope.to_a).to include(@published_not_yet_open_grant_with_permission)
           expect(scope.to_a).to include(@published_open_grant_without_permission)
           expect(scope.to_a).to include(@published_open_grant_with_permission)
-          expect(scope.to_a).to include(@published_closed_grant_without_permission)
-          expect(scope.to_a).to include(@published_closed_grant_with_permission)
           expect(scope.to_a).to include(@grant_with_users_without_permission)
           expect(scope.to_a).to include(@grant_with_users_with_permission)
-          expect(scope.to_a).to include(@completed_grant_without_permission)
-          expect(scope.to_a).to include(@completed_grant_with_permission)
+
+          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
+          expect(scope.to_a).not_to include(@draft_grant_with_users_with_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_without_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_with_permission)
+          expect(scope.to_a).not_to include(@completed_grant_without_permission)
+          expect(scope.to_a).not_to include(@completed_grant_with_permission)
         end
       end
 
@@ -64,20 +64,20 @@ describe GrantPolicy do
         let(:editor_admin4) { create(:editor_grant_permission, grant: @grant_with_users_with_permission, user: user) }
         let(:editor_admin5) { create(:editor_grant_permission, grant: @completed_grant_with_permission, user: user) }
 
-        it 'allows grant editor subset limited to permitted grants' do
-          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
-
-          expect(scope.to_a).to include(@draft_grant_with_users_with_permission)
+        it 'allows grant editor allowed only public grants for index' do
           expect(scope.to_a).to include(@published_not_yet_open_grant_without_permission)
           expect(scope.to_a).to include(@published_not_yet_open_grant_with_permission)
           expect(scope.to_a).to include(@published_open_grant_without_permission)
           expect(scope.to_a).to include(@published_open_grant_with_permission)
-          expect(scope.to_a).to include(@published_closed_grant_without_permission)
-          expect(scope.to_a).to include(@published_closed_grant_with_permission)
           expect(scope.to_a).to include(@grant_with_users_without_permission)
           expect(scope.to_a).to include(@grant_with_users_with_permission)
-          expect(scope.to_a).to include(@completed_grant_without_permission)
-          expect(scope.to_a).to include(@completed_grant_with_permission)
+
+          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
+          expect(scope.to_a).not_to include(@draft_grant_with_users_with_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_without_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_with_permission)
+          expect(scope.to_a).not_to include(@completed_grant_without_permission)
+          expect(scope.to_a).not_to include(@completed_grant_with_permission)
         end
 
       end
@@ -91,20 +91,20 @@ describe GrantPolicy do
         let(:viewer_admin4) { create(:viewer_grant_permission, grant: @grant_with_users_with_permission, user: user) }
         let(:viewer_admin5) { create(:viewer_grant_permission, grant: @completed_grant_with_permission, user: user) }
 
-        it 'allows grant editor subset limited to permitted grants' do
-          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
-
-          expect(scope.to_a).to include(@draft_grant_with_users_with_permission)
+        it 'allows grant editor allowed only public grants for index' do
           expect(scope.to_a).to include(@published_not_yet_open_grant_without_permission)
           expect(scope.to_a).to include(@published_not_yet_open_grant_with_permission)
           expect(scope.to_a).to include(@published_open_grant_without_permission)
           expect(scope.to_a).to include(@published_open_grant_with_permission)
-          expect(scope.to_a).to include(@published_closed_grant_without_permission)
-          expect(scope.to_a).to include(@published_closed_grant_with_permission)
           expect(scope.to_a).to include(@grant_with_users_without_permission)
           expect(scope.to_a).to include(@grant_with_users_with_permission)
-          expect(scope.to_a).to include(@completed_grant_without_permission)
-          expect(scope.to_a).to include(@completed_grant_with_permission)
+
+          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
+          expect(scope.to_a).not_to include(@draft_grant_with_users_with_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_without_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_with_permission)
+          expect(scope.to_a).not_to include(@completed_grant_without_permission)
+          expect(scope.to_a).not_to include(@completed_grant_with_permission)
         end
       end
     end
@@ -133,20 +133,20 @@ describe GrantPolicy do
       context 'user' do
         let(:user) { create(:user) }
 
-        it 'allows grant editor subset limited to permitted grants' do
-          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
-          expect(scope.to_a).not_to include(@draft_grant_with_users_with_permission)
-
+        it 'grant editor allowed only public grants for index' do
           expect(scope.to_a).to include(@published_not_yet_open_grant_without_permission)
           expect(scope.to_a).to include(@published_not_yet_open_grant_with_permission)
           expect(scope.to_a).to include(@published_open_grant_without_permission)
           expect(scope.to_a).to include(@published_open_grant_with_permission)
-          expect(scope.to_a).to include(@published_closed_grant_without_permission)
-          expect(scope.to_a).to include(@published_closed_grant_with_permission)
           expect(scope.to_a).to include(@grant_with_users_without_permission)
           expect(scope.to_a).to include(@grant_with_users_with_permission)
-          expect(scope.to_a).to include(@completed_grant_without_permission)
-          expect(scope.to_a).to include(@completed_grant_with_permission)
+
+          expect(scope.to_a).not_to include(@draft_grant_with_users_without_permission)
+          expect(scope.to_a).not_to include(@draft_grant_with_users_with_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_without_permission)
+          expect(scope.to_a).not_to include(@published_closed_grant_with_permission)
+          expect(scope.to_a).not_to include(@completed_grant_without_permission)
+          expect(scope.to_a).not_to include(@completed_grant_with_permission)
         end
       end
     end
