@@ -14,9 +14,11 @@
         %th
           State
         %th
+          Publish Date
+        %th
           Submission Open Date
         %th
-          Publish Date
+          Submission Close Date
         %th
         %th
 
@@ -25,10 +27,10 @@
         %tr
           %td= link_to grant.name, grant
           %td= grant.state
-          %td= grant.submission_open_date
           %td= grant.publish_date
+          %td= grant.submission_open_date
+          %td= grant.submission_close_date
           %td= link_to 'Edit', edit_grant_path(grant) if policy(grant).edit?
           %td=  link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' } if policy(grant).destroy? && grant_can_be_deleted?(grant)
 
-%br
 

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+include UsersHelper
 
 RSpec.describe 'GrantPermissions', type: :system do
   describe 'GrantPermission', js: true do
+
     before(:each) do
       @grant        = create(:grant_with_users)
       @invalid_user = create(:user)
@@ -39,7 +41,7 @@ RSpec.describe 'GrantPermissions', type: :system do
           visit edit_grant_grant_permission_path(@grant, @grant_editor_role)
           select('admin', from: 'grant_permission[role]')
           click_button 'Update'
-          expect(page).to have_content "#{@grant_editor.name}'s permission was changed to 'admin' for this grant."
+          expect(page).to have_content "#{full_name(@grant_editor)}'s permission was changed to 'admin' for this grant."
         end
 
         scenario 'last grant_permission_admin cannot be assigned a different role' do
@@ -76,7 +78,7 @@ RSpec.describe 'GrantPermissions', type: :system do
           select("#{@unassigned_user.email}", from: 'grant_permission[user_id]')
           select('editor', from:'grant_permission[role]')
           click_button 'Save'
-          expect(page).to have_content "#{@unassigned_user.name} was granted 'editor'"
+          expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'editor'"
         end
       end
     end
@@ -98,10 +100,10 @@ RSpec.describe 'GrantPermissions', type: :system do
 
         scenario 'can delete a grant_permission' do
           expect do
-            expect(page).to have_content(@grant_viewer.name)
+            expect(page).to have_content(full_name(@grant_viewer))
             click_link('Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role))
             page.driver.browser.switch_to.alert.accept
-            expect(page).to have_content("#{@grant_viewer.name}'s role was removed for this grant.")
+            expect(page).to have_content("#{full_name(@grant_viewer)}'s role was removed for this grant.")
           end.to change{@grant.grant_permissions.count}.by (-1)
         end
       end

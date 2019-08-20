@@ -1,5 +1,6 @@
 class GrantPermissionsController < ApplicationController
   include WithGrantRoles
+  include UsersHelper
 
   before_action :set_grant, except: :index
   before_action :set_grant_and_grant_permissions, only: :index
@@ -31,7 +32,7 @@ class GrantPermissionsController < ApplicationController
     @grant_permission = GrantPermission.new(grant_permission_params)
     respond_to do |format|
       if @grant_permission.save
-        flash[:notice] = @grant_permission.user.name + ' was granted \'' + @grant_permission.role + '\' permissions for this grant.'
+        flash[:notice] = full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role + '\' permissions for this grant.'
         format.html { redirect_to grant_grant_permissions_path(@grant) }
         format.json { render :show, status: :created, location: @grant_permission }
       else
@@ -49,7 +50,7 @@ class GrantPermissionsController < ApplicationController
     respond_to do |format|
       if @grant_permission.update(grant_permission_params)
         # TODO: user may have changed their own permissions. authorize @grant, @grant_permission, :index?
-        flash[:notice] = @grant_permission.user.name + '\'s permission was changed to \'' + @grant_permission.role + '\' for this grant.'
+        flash[:notice] = full_name(@grant_permission.user) + '\'s permission was changed to \'' + @grant_permission.role + '\' for this grant.'
         format.html { redirect_to grant_grant_permissions_path(@grant) }
         format.json { render :show, status: :ok, location: @grant_permission }
       else
@@ -66,7 +67,7 @@ class GrantPermissionsController < ApplicationController
     if @grant_permission.errors.any?
       flash[:alert] = @grant_permission.errors.full_messages
     else
-      flash[:notice] = @grant_permission.user.name + '\'s role was removed for this grant.'
+      flash[:notice] = full_name(@grant_permission.user) + '\'s role was removed for this grant.'
     end
     respond_to do |format|
       format.html { redirect_to grant_grant_permissions_path(@grant) }

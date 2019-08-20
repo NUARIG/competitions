@@ -5,11 +5,8 @@ class GrantPolicy < ApplicationPolicy
     def resolve
       if user.system_admin?
         scope.not_deleted.by_publish_date
-      elsif (user.editable_grants.any?)
-        # TODO: This needs to be ordered.
-        (scope.where(state: ['published', 'completed']).not_deleted + user.editable_grants.not_deleted).uniq
       else
-        scope.where(state: ['published', 'completed']).not_deleted.by_publish_date
+        scope.public_grants.by_publish_date
       end
     end
   end

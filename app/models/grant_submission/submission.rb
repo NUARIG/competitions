@@ -43,12 +43,12 @@ module GrantSubmission
     validates_presence_of :form,    :if => Proc.new { |rs| rs.is_root? }
     validates_presence_of :section, :if => Proc.new { |rs| !rs.is_root? }
 
-    scope :eager_loading,  -> {includes({:responses => [:question]}, :children)}
+    scope :eager_loading,         -> {includes({:responses => [:question]}, :children)}
 
-    scope :order_by_created_at,  -> { order(created_at: :desc) }
-    scope :by_grant,       -> (grant) { where(grant_id: grant.id) }
-    scope :to_be_assigned, -> (max) { where(["reviews_count < ?", max]) }
-    scope :with_reviews,   -> { includes(reviews: [:reviewer, :criteria_reviews]) }
+    scope :order_by_created_at,   -> { order(created_at: :desc) }
+    scope :by_grant,              -> (grant) { where(grant_id: grant.id) }
+    scope :to_be_assigned,        -> (max) { where(["reviews_count < ?", max]) }
+    scope :with_reviews,          -> { includes(reviews: [:reviewer, :criteria_reviews]) }
 
     def form_owner
       user || grant
