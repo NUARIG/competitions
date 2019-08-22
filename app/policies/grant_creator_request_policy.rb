@@ -1,7 +1,4 @@
 class GrantCreatorRequestPolicy < ApplicationPolicy
-  def index
-    user.system_admin?
-  end
 
   def new?
     user.present?
