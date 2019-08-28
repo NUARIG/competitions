@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!
+  before_action :audit_action
 
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index
@@ -20,5 +21,15 @@ class ApplicationController < ActionController::Base
 
     flash[:alert] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
     redirect_to(request.referrer || root_path)
+  end
+
+  def audit_action
+    if current_user
+      AuditAction.create(user:       current_user,
+                         controller: controller_name,
+                         action:     request.path,
+                         browser:    request.env['HTTP_USER_AGENT'],
+                         params:     params.except(:utf8, :_method, :authenticity_token, :controller, :action))
+    end
   end
 end
