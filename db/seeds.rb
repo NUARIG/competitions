@@ -4,4 +4,3 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 Competitions::Setup::Users.load_users
-Competitions::Setup::Grants.load_grants
