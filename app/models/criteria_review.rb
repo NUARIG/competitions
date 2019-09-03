@@ -1,5 +1,7 @@
 class CriteriaReview < ApplicationRecord
   include WithScoring
+  has_paper_trail versions: { class_name: 'PaperTrail::CriteriaReviewVersion' },
+                  meta:     { review_id: :review_id }
 
   belongs_to :criterion
   belongs_to :review

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_28_132345) do
+ActiveRecord::Schema.define(version: 2019_09_03_222953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,19 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["grant_id"], name: "index_criteria_on_grant_id"
   end
 
+  create_table "criteria_review_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "review_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_id"], name: "index_criteria_review_versions_on_item_id"
+    t.index ["review_id"], name: "index_criteria_review_versions_on_review_id"
+    t.index ["whodunnit"], name: "index_criteria_review_versions_on_whodunnit"
+  end
+
   create_table "criteria_reviews", force: :cascade do |t|
     t.bigint "criterion_id"
     t.bigint "review_id"
@@ -69,6 +82,32 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.datetime "updated_at", null: false
     t.index ["criterion_id"], name: "index_criteria_reviews_on_criterion_id"
     t.index ["review_id"], name: "index_criteria_reviews_on_review_id"
+  end
+
+  create_table "criterion_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_criterion_versions_on_grant_id"
+    t.index ["item_id"], name: "index_criterion_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_criterion_versions_on_whodunnit"
+  end
+
+  create_table "grant_creator_request_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "requester_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_id"], name: "index_grant_creator_request_versions_on_item_id"
+    t.index ["requester_id"], name: "index_grant_creator_request_versions_on_requester_id"
+    t.index ["whodunnit"], name: "index_grant_creator_request_versions_on_whodunnit"
   end
 
   create_table "grant_creator_requests", force: :cascade do |t|
@@ -82,6 +121,21 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["status"], name: "index_grant_creator_requests_on_status"
   end
 
+  create_table "grant_permission_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.integer "user_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_grant_permission_versions_on_grant_id"
+    t.index ["item_id"], name: "index_grant_permission_versions_on_item_id"
+    t.index ["user_id"], name: "index_grant_permission_versions_on_user_id"
+    t.index ["whodunnit"], name: "index_grant_permission_versions_on_whodunnit"
+  end
+
   create_table "grant_permissions", force: :cascade do |t|
     t.bigint "grant_id"
     t.bigint "user_id"
@@ -93,11 +147,39 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["user_id"], name: "index_grant_permissions_on_user_id"
   end
 
+  create_table "grant_reviewer_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.integer "reviewer_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_grant_reviewer_versions_on_grant_id"
+    t.index ["item_id"], name: "index_grant_reviewer_versions_on_item_id"
+    t.index ["reviewer_id"], name: "index_grant_reviewer_versions_on_reviewer_id"
+    t.index ["whodunnit"], name: "index_grant_reviewer_versions_on_whodunnit"
+  end
+
   create_table "grant_reviewers", force: :cascade do |t|
     t.bigint "grant_id", null: false
     t.bigint "reviewer_id", null: false
     t.index ["grant_id"], name: "index_grant_reviewers_on_grant_id"
     t.index ["reviewer_id"], name: "index_grant_reviewers_on_reviewer_id"
+  end
+
+  create_table "grant_submission_form_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_grant_submission_form_versions_on_grant_id"
+    t.index ["item_id"], name: "index_grant_submission_form_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_grant_submission_form_versions_on_whodunnit"
   end
 
   create_table "grant_submission_forms", force: :cascade do |t|
@@ -113,6 +195,19 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["title"], name: "index_grant_submission_forms_on_title", unique: true
   end
 
+  create_table "grant_submission_multiple_choice_option_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_submission_question_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_submission_question_id"], name: "i_gsmcov_on_question_id"
+    t.index ["item_id"], name: "i_gsmcov_on_item_id"
+    t.index ["whodunnit"], name: "i_gsmcov_on_whodunnit"
+  end
+
   create_table "grant_submission_multiple_choice_options", force: :cascade do |t|
     t.bigint "grant_submission_question_id", null: false
     t.string "text", null: false
@@ -122,6 +217,19 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["display_order", "grant_submission_question_id"], name: "i_smco_on_display_order_and_submission_question_id", unique: true
     t.index ["grant_submission_question_id"], name: "i_gsmco_on_submission_question_id"
     t.index ["text", "grant_submission_question_id"], name: "i_smco_on_text_and_submission_question_id", unique: true
+  end
+
+  create_table "grant_submission_question_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_submission_section_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_submission_section_id"], name: "index_gsqv_on_section_id"
+    t.index ["item_id"], name: "index_gsqv_on_item_id"
+    t.index ["whodunnit"], name: "index_gsqv_on_whodunnit"
   end
 
   create_table "grant_submission_questions", force: :cascade do |t|
@@ -137,6 +245,19 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["display_order", "grant_submission_section_id"], name: "i_sqs_on_display_order_and_submission_section_id", unique: true
     t.index ["grant_submission_section_id"], name: "index_grant_submission_questions_on_grant_submission_section_id"
     t.index ["text", "grant_submission_section_id"], name: "i_gsq_on_text_and_grant_submission_section_id", unique: true
+  end
+
+  create_table "grant_submission_response_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_submission_question_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_submission_question_id"], name: "index_gsrv_on_question_id"
+    t.index ["item_id"], name: "index_gsrv_on_item_id"
+    t.index ["whodunnit"], name: "index_gsrv_on_whodunnit"
   end
 
   create_table "grant_submission_responses", force: :cascade do |t|
@@ -156,6 +277,19 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["grant_submission_submission_id"], name: "i_gsr_on_grant_submission_submission_id"
   end
 
+  create_table "grant_submission_section_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_submission_form_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_submission_form_id"], name: "index_gssv_on_form_id"
+    t.index ["item_id"], name: "index_gssv_on_item_id"
+    t.index ["whodunnit"], name: "index_gssv_on_whodunnit"
+  end
+
   create_table "grant_submission_sections", force: :cascade do |t|
     t.bigint "grant_submission_form_id", null: false
     t.string "title"
@@ -165,6 +299,21 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.datetime "updated_at", null: false
     t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
     t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
+  end
+
+  create_table "grant_submission_submission_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.integer "applicant_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id", "applicant_id"], name: "index_gs_submission_v_on_grant_id_applicant_it"
+    t.index ["grant_id"], name: "index_gs_submission_v_on_grant_id"
+    t.index ["item_id"], name: "index_gs_submission_v_on_item_id"
+    t.index ["whodunnit"], name: "index_gs_submission_v_on_whodunnit"
   end
 
   create_table "grant_submission_submissions", force: :cascade do |t|
@@ -216,6 +365,20 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.index ["slug"], name: "index_grants_on_slug"
   end
 
+  create_table "review_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.integer "reviewer_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_review_versions_on_grant_id"
+    t.index ["item_id"], name: "index_review_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_review_versions_on_whodunnit"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.bigint "grant_submission_submission_id", null: false
     t.bigint "assigner_id", null: false
@@ -226,6 +389,18 @@ ActiveRecord::Schema.define(version: 2019_08_28_132345) do
     t.datetime "updated_at", null: false
     t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
     t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"
+  end
+
+  create_table "user_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "user_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_id"], name: "index_user_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_user_versions_on_whodunnit"
   end
 
   create_table "users", force: :cascade do |t|

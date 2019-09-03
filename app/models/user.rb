@@ -4,6 +4,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :omniauthable, :database_authenticatable, :registerable, :recoverable, :validatable:rememberable
   devise :saml_authenticatable, :trackable, :timeoutable
+  has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
+                  meta:     { user_id: :id } # added for convenience
 
   has_many   :grant_permissions
   has_many   :editable_grants,        through: :grant_permissions,

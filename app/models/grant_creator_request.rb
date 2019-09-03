@@ -1,9 +1,11 @@
 class GrantCreatorRequest < ApplicationRecord
   after_save :udpate_user_grant_creator_attribute, if: :saved_change_to_status?
+  has_paper_trail versions: { class_name: 'PaperTrail::GrantCreatorRequestVersion' },
+                  meta:     { requester_id: :requester_id }
 
   STATUSES  = { pending:  'Pending',
                 approved: 'Approved',
-                rejected:  'Rejected'}.freeze
+                rejected: 'Rejected'}.freeze
 
   enum status: STATUSES, _prefix: true
 
@@ -20,7 +22,7 @@ class GrantCreatorRequest < ApplicationRecord
   validate :requester_has_no_pending_requests, on: :create
   validate :requester_is_not_a_system_admin,   on: :create
   validate :requester_is_not_a_grant_creator,  on: :create
-  validate :reviewer_is_a_system_admin,          on: :update, if: :reviewer_id_changed?
+  validate :reviewer_is_a_system_admin,        on: :update, if: :reviewer_id_changed?
 
   scope :pending, -> { where(status: STATUSES[:pending]) }
 

@@ -1,4 +1,7 @@
 class Criterion < ApplicationRecord
+  has_paper_trail versions: { class_name: 'PaperTrail::CriterionVersion' },
+                  meta:     { grant_id: :grant_id }
+
   DEFAULT_CRITERIA = %w[Significance
                         Investigator(s)
                         Innovation
