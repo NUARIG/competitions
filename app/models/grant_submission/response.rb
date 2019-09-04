@@ -1,8 +1,9 @@
 module GrantSubmission
   class Response < ApplicationRecord
     self.table_name = 'grant_submission_responses'
-    # TODO: Add _versions table
-    # has_paper_trail
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::ResponseVersion' },
+                    meta:     { grant_submission_question_id: :grant_submission_question_id }
+
 
     MAXIMUM_DOCUMENT_MEGABYTES          = 15
     MAXIMUM_DOCUMENT_FILE_SIZE          = MAXIMUM_DOCUMENT_MEGABYTES.megabytes

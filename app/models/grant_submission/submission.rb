@@ -3,9 +3,8 @@ module GrantSubmission
     include WithScoring
 
     self.table_name = 'grant_submission_submissions'
-
-    # TODO: Add versions table
-    #has_paper_trail
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
+                    meta: { grant_id: :grant_id, applicant_id: :created_id }
 
     belongs_to :grant,          inverse_of: :submissions
     belongs_to :form,           class_name: 'GrantSubmission::Form',

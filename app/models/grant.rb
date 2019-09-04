@@ -4,14 +4,13 @@ class Grant < ApplicationRecord
   include ActiveModel::Validations::Callbacks
   include SoftDeletable
   extend FriendlyId
+  has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
   friendly_id :slug
 
   attr_accessor :duplicate
 
   attribute :max_reviewers_per_proposal, :integer, default: 2
   attribute :max_proposals_per_reviewer, :integer, default: 2
-
-  has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
 
   has_one_attached :document
 

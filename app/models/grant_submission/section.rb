@@ -2,8 +2,9 @@ module GrantSubmission
   class Section < ApplicationRecord
     self.table_name = 'grant_submission_sections'
 
-    # TODO: Add _version table
-    #has_paper_trail ignore: [:display_order]
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SectionVersion' },
+                    meta: { grant_submission_form_id: :grant_submission_form_id },
+                    ignore: [:display_order]
 
     belongs_to :form,    class_name: 'GrantSubmission::Form',
                          foreign_key: 'grant_submission_form_id',

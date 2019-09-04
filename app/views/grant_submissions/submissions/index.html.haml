@@ -21,7 +21,7 @@
         - @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission|
           %tr
             %td
-              = link_to submission.applicant.name, grant_submission_path(@grant, submission)
+              = link_to full_name(submission.applicant), grant_submission_path(@grant, submission)
             %td
               = link_to submission.title, grant_submission_path(@grant, submission)
             %td

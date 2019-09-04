@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class GrantPermission < ApplicationRecord
+  has_paper_trail versions: { class_name: 'PaperTrail::GrantPermissionVersion' },
+                  meta:     { grant_id: :grant_id, user_id: :user_id }
+
   belongs_to :grant
   belongs_to :user
 

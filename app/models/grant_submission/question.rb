@@ -1,7 +1,9 @@
 module GrantSubmission
   class Question < ApplicationRecord
     self.table_name = 'grant_submission_questions'
-    #has_paper_trail ignore: [:display_order]
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::QuestionVersion' },
+                    meta:     { grant_submission_section_id: :grant_submission_section_id }
+
     belongs_to :section,               class_name: 'GrantSubmission::Section',
                                        foreign_key: 'grant_submission_section_id',
                                        inverse_of: :questions

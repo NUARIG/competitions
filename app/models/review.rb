@@ -1,5 +1,7 @@
 class Review < ApplicationRecord
   include WithScoring
+  has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
+                  meta:     { grant_id: :get_grant_id, reviewer_id: :reviewer_id }
 
   belongs_to :assigner,       class_name: 'User',
                               foreign_key: 'assigner_id'
@@ -63,6 +65,10 @@ class Review < ApplicationRecord
 
   private
 
+  def get_grant_id
+    grant.id
+  end
+
   def reviewer_is_a_grant_reviewer
     errors.add(:reviewer, :is_not_a_reviewer) unless grant.reviewers.include?(reviewer)
   end
@@ -94,5 +100,3 @@ class Review < ApplicationRecord
   #   end
   # end
 end
-
-

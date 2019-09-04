@@ -1,9 +1,8 @@
 class GrantSubmission::Form < ApplicationRecord
 
     self.table_name = 'grant_submission_forms'
-
-    # TODO: Add _versions table
-    # has_paper_trail
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::FormVersion' },
+                    meta:     { grant_id: :grant_id }
 
     belongs_to :grant,                 class_name: 'Grant',
                                        inverse_of: :form

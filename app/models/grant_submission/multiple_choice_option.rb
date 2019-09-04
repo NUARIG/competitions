@@ -1,6 +1,8 @@
 module GrantSubmission
   class MultipleChoiceOption < ApplicationRecord
     self.table_name = 'grant_submission_multiple_choice_options'
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::MultipleChoiceOptionVersion' },
+                    meta:     { grant_submission_question_id: :grant_submission_question_id }
 
     # has_paper_trail ignore: [:display_order]
 
