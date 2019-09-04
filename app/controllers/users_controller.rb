@@ -22,9 +22,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        # format.html { redirect_to user_path(@user), notice: 'User was successfully created.' }
-        #  format.json { render :show, status: :created, location: @user }
-        format.html { redirect_to users_path(@user), notice: 'User was successfully updated.' }
+        format.html { redirect_to users_path(@user), notice: "#{helpers.full_name(@user)}'s profile has been updated." }
         format.json { render :index, status: :ok }
       else
         format.html { render :edit }
