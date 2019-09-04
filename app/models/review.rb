@@ -66,7 +66,6 @@ class Review < ApplicationRecord
   private
 
   def get_grant_id
-    byebug
     grant.id
   end
 
@@ -101,5 +100,3 @@ class Review < ApplicationRecord
   #   end
   # end
 end
-
-
