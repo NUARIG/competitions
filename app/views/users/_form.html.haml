@@ -39,7 +39,7 @@
         - else
           User
           %br
-          = link_to 'Request Grant Creation Permission', new_grant_creator_request_path
+          = link_to 'Request Grant Creation Permission', new_grant_creator_request_path if current_user == @user
 
 
 .actions
