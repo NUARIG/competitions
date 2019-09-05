@@ -5,11 +5,9 @@ module GrantSubmissions
     def index
       @grant         = GrantDecorator.new(@grant)
       @form          = @grant.form
-      @submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
-      @submissions   = policy_scope(GrantSubmission::Submission,
-                                    policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
-
-      render 'index'
+      #@submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
+      # @submissions   = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
+      @pagy, @submissions = pagy(policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope), items: 30)
     end
 
     def show

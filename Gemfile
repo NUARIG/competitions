@@ -44,6 +44,7 @@ gem 'friendly_id', '~> 5.2.4'
 gem 'haml-rails', '~> 1.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'pagy', '~> 3.5'
 gem 'sprockets-es6'
 gem 'trix'
 
