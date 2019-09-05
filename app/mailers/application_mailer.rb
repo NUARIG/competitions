@@ -2,7 +2,7 @@
 
 class ApplicationMailer < ActionMailer::Base
   # TODO: set per environment email
-  default from: 'no-reply@environment-specific-domain.com'
+  default from: "no-reply-competitions@#{Rails.application.credentials.dig(Rails.env.to_sym, :app_domain)}"
   layout 'mailer'
   helper :users
 end
