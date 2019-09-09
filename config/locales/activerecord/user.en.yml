@@ -12,6 +12,10 @@ en:
       models:
         user:
           <<: *user
+    models:
+      user:
+        one: user
+        other: users
   helpers:
     label:
       user:

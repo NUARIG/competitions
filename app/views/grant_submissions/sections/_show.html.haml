@@ -2,7 +2,7 @@
   %legend
     %span
       = section.title
-  %table.section_table.table.table-condensed
+  %table.section_table
     - responses = section.questions.sort_by(&:display_order).map do |question|
       - submission.responses.detect { |r| r.question == question }
     - responses.each do |response|

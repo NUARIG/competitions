@@ -7,6 +7,10 @@ en:
       models:
         grant_submission/submission:
           attributes:
+    models:
+      submission:
+        one: submission
+        other: submissions
   helpers:
     label:
       grant_submission/submission:

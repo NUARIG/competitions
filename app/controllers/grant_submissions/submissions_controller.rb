@@ -7,7 +7,7 @@ module GrantSubmissions
       @form          = @grant.form
       #@submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
       # @submissions   = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
-      @pagy, @submissions = pagy(policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope), items: 30)
+      @pagy, @submissions = pagy(policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope), i18n_key: 'activerecord.models.submission')
     end
 
     def show

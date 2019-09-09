@@ -80,9 +80,9 @@ require 'pagy/extras/foundation'
 
 # Items extra: Allow the client to request a custom number of items per page with an optional selector UI
 # See https://ddnexus.github.io/pagy/extras/items
-# require 'pagy/extras/items'
-# Pagy::VARS[:items_param] = :items    # default
-# Pagy::VARS[:max_items]   = 100       # default
+require 'pagy/extras/items'
+Pagy::VARS[:items_param] = :custom_params # :items    # default
+Pagy::VARS[:max_items]   = nil            # 100       # default
 
 # Overflow extra: Allow for easy handling of overflowing pages
 # See https://ddnexus.github.io/pagy/extras/overflow
@@ -164,7 +164,7 @@ Rails.application.config.assets.paths << Pagy.root.join('javascripts')
 # I18n extra: uses the standard i18n gem which is ~18x slower using ~10x more memory
 # than the default pagy internal i18n (see above)
 # See https://ddnexus.github.io/pagy/extras/i18n
-# require 'pagy/extras/i18n'
+require 'pagy/extras/i18n'
 
 # Default i18n key
-# Pagy::VARS[:i18n_key] = 'pagy.item_name'   # default
+Pagy::VARS[:i18n_key] = 'pagy.item_name'   # default

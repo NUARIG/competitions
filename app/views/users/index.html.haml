@@ -1,5 +1,7 @@
 %h3 All Users
 
+= render partial: 'shared/pagy_header', locals: { pagy: @pagy }
+
 %table
   %thead
     %tr
@@ -13,3 +15,5 @@
       %tr
         %td= link_to sortable_full_name(user), edit_user_path(user)
         %td= user.email
+
+!= pagy_foundation_nav(@pagy)

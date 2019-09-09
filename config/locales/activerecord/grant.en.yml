@@ -8,3 +8,7 @@ en:
       models:
         grant:
           <<: *grant
+    models:
+      grant:
+        one: grant
+        other: grants
