@@ -4,7 +4,7 @@ development:
   database: <%= Rails.application.credentials.development[:database] %>
   username: <%= Rails.application.credentials.development[:username] %>
   password: <%= Rails.application.credentials.development[:password] %>
-fsm:
+alpha:
   host:     <%= Rails.application.credentials.fsm[:host] %>
   adapter:  <%= Rails.application.credentials.fsm[:adapter] %>
   database: <%= Rails.application.credentials.fsm[:database] %>

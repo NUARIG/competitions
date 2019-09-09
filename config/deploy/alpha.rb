@@ -1,4 +1,4 @@
-set :stage, :fsm
+set :stage, :alpha
 
 server DEPLOY_CONFIG[fetch(:stage).to_s]['server_name'],
         user: DEPLOY_CONFIG['deployer'],
