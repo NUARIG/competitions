@@ -8,7 +8,7 @@ class GrantsController < ApplicationController
   # GET /grants
   # GET /grants.json
   def index
-    @grants = policy_scope(Grant)
+    @pagy, @grants = pagy(policy_scope(Grant), i18n_key: 'activerecord.models.grant')
   end
 
   # GET /grants/1

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  include Pagy::Frontend
+
   # CALLOUTS
   def foundation_alert_class_for(flash_type)
     flash_type.to_s == 'notice' ? 'success' : flash_type

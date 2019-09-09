@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    @pagy, @users = pagy(User.all, i18n_key: 'activerecord.models.user' )
     @users = policy_scope(User)
   end
 
