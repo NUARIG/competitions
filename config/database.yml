@@ -4,6 +4,12 @@ development:
   database: <%= Rails.application.credentials.development[:database] %>
   username: <%= Rails.application.credentials.development[:username] %>
   password: <%= Rails.application.credentials.development[:password] %>
+alpha:
+  host:     <%= Rails.application.credentials.alpha[:host] %>
+  adapter:  <%= Rails.application.credentials.alpha[:adapter] %>
+  database: <%= Rails.application.credentials.alpha[:database] %>
+  username: <%= Rails.application.credentials.alpha[:username] %>
+  password: <%= Rails.application.credentials.alpha[:password] %>
 staging:
   host:     <%= Rails.application.credentials.staging[:host] %>
   adapter:  <%= Rails.application.credentials.staging[:adapter] %>
