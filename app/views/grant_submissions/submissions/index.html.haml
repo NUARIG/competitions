@@ -6,11 +6,14 @@
   %h3
     Submissions
 
-  - unless @submissions.present?
+  - if @submissions.none?
     %p
       There are no submissions to this grant.
   - else
-    %table.table.table-condensed
+
+    != pagy_info(@pagy)
+
+    %table
       %thead
         %tr
           %th Applicant
@@ -30,3 +33,6 @@
               = link_to 'Reviews', grant_submission_reviews_path(@grant, submission), class: 'button clear'
               = link_to 'Edit', edit_grant_submission_path(@grant, submission), class: 'button clear'
               = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'button clear alert', confirm: 'Are you sure?'
+
+    != pagy_foundation_nav(@pagy)
+

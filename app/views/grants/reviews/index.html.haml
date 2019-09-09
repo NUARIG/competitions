@@ -6,29 +6,29 @@
   %h2 Reviews
   .grid-x
     .cell
-    - if @reviews.empty?
-      %p
-        There are no assigned reviews for this grant.
-      %p
-        %strong
-          #{link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)}.
-    - else
-      %table.hover
-        %thead
-          %tr
-            %th Applicant
-            %th Submission
-            %th Reviewer
-            %th Review
-            %th Overall impact score
-            %th Composite Score
-
-        %tbody
-          - @reviews.each do |review|
+      - if @reviews.empty?
+        %p
+          There are no assigned reviews for this grant.
+        %p
+          %strong
+            = link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)
+      - else
+        %table.hover
+          %thead
             %tr
-              %td= sortable_full_name(review.submission.applicant)
-              %td= link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
-              %td= full_name(review.reviewer)
-              %td= link_to 'Full Review', grant_submission_review_path(review.grant, review.submission, review)
-              %td= (review.overall_impact_score || 0)
-              %td= review.composite_score
+              %th Applicant
+              %th Submission
+              %th Reviewer
+              %th Review
+              %th Overall impact score
+              %th Composite Score
+
+          %tbody
+            - @reviews.each do |review|
+              %tr
+                %td= sortable_full_name(review.submission.applicant)
+                %td= link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
+                %td= full_name(review.reviewer)
+                %td= link_to 'Full Review', grant_submission_review_path(review.grant, review.submission, review)
+                %td= (review.overall_impact_score || 0)
+                %td= review.composite_score

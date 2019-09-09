@@ -15,3 +15,7 @@ en:
               may_not_review_own_submission: 'may not review their own submission.'
               is_not_a_reviewer: 'is not a reviewer on this grant.'
               taken: 'has already been assigned this submission.'
+    models:
+      review:
+        one: review
+        other: reviews

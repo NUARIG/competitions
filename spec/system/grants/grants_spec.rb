@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+include UsersHelper
 
 RSpec.describe 'Grants', type: :system do
   describe 'Index', js: true do
