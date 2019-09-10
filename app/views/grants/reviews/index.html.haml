@@ -8,9 +8,21 @@
 
   .grid-x
     .cell
+
+      = search_form_for @q, url: grant_reviews_path(@grant) do |f|
+        .grid-x.grid-margin-x.medium-margin-collapse
+          .small-12.medium-2.cell
+            %label.text-left.middle
+              Search Applicant or Reviewer:
+          .small-12.medium-2.cell
+            = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont
+          .small-12.medium-3.cell
+            = f.submit 'Search', class: 'button'
+            = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
+
       - if @reviews.empty?
         %p
-          There are no assigned reviews for this grant.
+          There were no assigned reviews found.
         %p
           %strong
             = link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)
