@@ -1,5 +1,7 @@
+- content_for(:page_title, 'My Grants')
+
 %h3
-  My Grants
+  = yield(:page_title)
 
 - if current_user.system_admin? || current_user.grant_creator?
   = link_to 'Create New Grant', new_grant_path, class: 'button primary'
@@ -11,32 +13,7 @@
 
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
-  %table
-    %thead
-      %tr
-        %th
-          Grant
-        %th
-          State
-        %th
-          Publish Date
-        %th
-          Submission Open Date
-        %th
-          Submission Close Date
-        %th
-        %th
-
-    %tbody
-      - @grants.each do |grant|
-        %tr
-          %td= link_to grant.name, grant
-          %td= grant.state.titleize
-          %td= grant.publish_date
-          %td= grant.submission_open_date
-          %td= grant.submission_close_date
-          %td= link_to 'Edit', edit_grant_path(grant) if policy(grant).edit?
-          %td= link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' } if policy(grant).destroy? && grant_can_be_deleted?(grant)
+  = render partial: 'grants/sortable_table', locals: { q: @q, grants: @grants }
 
   != pagy_foundation_nav(@pagy)
 

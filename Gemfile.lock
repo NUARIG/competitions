@@ -1,4 +1,17 @@
 GIT
+  remote: https://github.com/activerecord-hackery/ransack.git
+  revision: 2c0df02091819d58c52539ca962ed8070f2d2e47
+  specs:
+    polyamorous (2.3.0)
+      activerecord (>= 5.0)
+    ransack (2.3.0)
+      actionpack (>= 5.0)
+      activerecord (>= 5.0)
+      activesupport (>= 5.0)
+      i18n
+      polyamorous (= 2.3.0)
+
+GIT
   remote: https://github.com/stympy/faker.git
   revision: 5c369a379326211bd281c671598e203f5be5a0d0
   branch: master
@@ -427,6 +440,7 @@ DEPENDENCIES
   pundit
   pundit-matchers (~> 1.6.0)
   rails (~> 5.2.2)
+  ransack!
   redis (~> 4.0)
   rspec
   rspec-rails

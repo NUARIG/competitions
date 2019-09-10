@@ -2,12 +2,15 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update]
+  skip_after_action :verify_policy_scoped, only: %i[index]
 
   # GET /users
   # GET /users.json
   def index
-    @pagy, @users = pagy(User.all, i18n_key: 'activerecord.models.user' )
-    @users = policy_scope(User)
+    authorize User, :index?
+    @q = User.all.ransack(params[:q])
+    @q.sorts = 'last_name asc' if @q.sorts.empty?
+    @pagy, @users = pagy(@q.result, i18n_key: 'activerecord.models.user')
   end
 
   # GET /users/1

@@ -1,5 +1,7 @@
+- content_for(:page_title, 'My Submissions')
+
 %h3
-  My Submissions
+  = yield(:page_title)
 
 - if @submissions.empty?
   %p
@@ -11,9 +13,12 @@
   %table
     %thead
       %tr
-        %th Title
-        %th Grant
-        %th Submitted On
+        %th
+          = sort_link(@q, :title, 'Project Title')
+        %th
+          = sort_link(@q, :grant_name, 'Grant')
+        %th
+          = sort_link(@q, :created_at, 'Submitted On')
         %th
     %tbody
       - @submissions.each do |submission|

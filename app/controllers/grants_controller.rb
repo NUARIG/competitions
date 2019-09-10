@@ -8,7 +8,9 @@ class GrantsController < ApplicationController
   # GET /grants
   # GET /grants.json
   def index
-    @pagy, @grants = pagy(policy_scope(Grant), i18n_key: 'activerecord.models.grant')
+    @q = policy_scope(Grant).ransack(params[:q])
+    @q.sorts = 'created_at desc' if @q.sorts.empty?
+    @pagy, @grants = pagy(@q.result, i18n_key: 'activerecord.models.grant')
   end
 
   # GET /grants/1

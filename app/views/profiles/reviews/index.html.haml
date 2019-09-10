@@ -11,14 +11,21 @@
   %table
     %thead
       %tr
-        %th Submission Title
-        %th Applicant
-        %th Grant
-        %th Due Date
+        %th
+          = sort_link(@q, :overall_impact_score, 'Completed')
+        %th
+          = sort_link(@q, :submission_title, 'Submission Title')
+        %th
+          = sort_link(@q, :applicant_last_name, 'Applicant')
+        %th
+          = sort_link(@q, :grant_name, 'Grant')
+        %th
+          = sort_link(@q, :grant_review_close_date, 'Due Date')
 
     %tbody
       - @reviews.each do |review|
         %tr
+          %td= review.is_complete? ? 'Completed' : 'Incomplete'
           %td= link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
           %td= sortable_full_name(review.submission.applicant)
           %td= review.grant.name

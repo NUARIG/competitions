@@ -64,7 +64,7 @@ RSpec.describe 'Grants', type: :system do
     scenario 'invalid submission', versioning: true do
       page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
       click_button 'Update'
-      expect(page).to have_content 'Submission close date must be after the opening date for submissions.'
+      expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
     end
   end
 
@@ -109,7 +109,7 @@ RSpec.describe 'Grants', type: :system do
 
       page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
       click_button 'Save as Draft'
-      expect(page).to have_content 'Submission close date must be after the opening date for submissions.'
+      expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       expect(GrantPermission.all.count).to eql(grant_permission_count)
     end
   end

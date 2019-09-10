@@ -9,10 +9,11 @@ module GrantSubmissions
       def index
         @grant = Grant.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :edit?
-        @submission = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
-        @reviews = Review.includes(:reviewer, :criteria_reviews).by_submission(@submission)
+        @submission     = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
+        @q              = Review.includes(:reviewer, :criteria_reviews).by_submission(@submission).ransack(params[:q])
+        @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
+        @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
       end
-
 
       # GET /reviews/1
       # GET /reviews/1.json

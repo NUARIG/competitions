@@ -11,20 +11,23 @@
       There are no submissions to this grant.
   - else
 
-    != pagy_info(@pagy)
+    = render 'shared/pagy_header', locals: { pagy: @pagy }
 
     %table
       %thead
         %tr
-          %th Applicant
-          %th Title
-          %th Submitted On
+          %th
+            = sort_link(@q, :applicant_last_name, 'Applicant')
+          %th
+            = sort_link(@q, :title, 'Title')
+          %th
+            = sort_link(@q, :created_at, 'Submitted On')
           %th
       %tbody
-        - @submissions.sort_by(&:id).sort_by(&:date_order).each do |submission|
+        - @submissions.each do |submission|
           %tr
             %td
-              = link_to full_name(submission.applicant), grant_submission_path(@grant, submission)
+              = link_to sortable_full_name(submission.applicant), grant_submission_path(@grant, submission)
             %td
               = link_to submission.title, grant_submission_path(@grant, submission)
             %td

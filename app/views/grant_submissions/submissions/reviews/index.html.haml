@@ -3,7 +3,7 @@
 
 .tabs-panel.is-active
   %h3
-    Reviews:
+    = "Reviews of #{@submission.title}:"
   #reviews-overview.grid-container-x
     .grid-x
       .cell.small-12.medium-2
@@ -19,20 +19,23 @@
         = full_name(@submission.applicant)
     .grid-x
       .cell.small-12
-        - if @reviews.empty?
+        - if @reviews.empty? && params[:q].empty?
           %p
             There are no reviews for this submission.
             = link_to 'Assign it to a reviewer', grant_reviewers_path(@grant)
         -else
+
+          = render 'shared/pagy_header', locals: { pagy: @pagy }
+
           %table.hover
             %thead
               %tr
                 %th
-                  Reviewer
+                  = sort_link(@q, :review_reviwer, 'Reviewer')
                 %th
-                  Review
+                  = sort_link(@q, :overall_impact, 'Review')
                 %th
-                  Overall Impact
+                  = sort_link(@q, :overall_impact)
                 %th
                   Composite
                 - @grant.criteria.each do |criterion|
@@ -40,11 +43,14 @@
             %tbody
             - @reviews.each do |review|
               %tr
-                %td= full_name(review.reviewer)
+                %td
+                  = sortable_full_name(review.reviewer)
                 %td
                   = review.is_complete? ? link_to('Full Review', grant_submission_review_path(@grant, @submission, review)) : 'Incomplete'
-                %td= (review.overall_impact_score || 0)
-                %td= review.composite_score
+                %td
+                  = (review.overall_impact_score || 0)
+                %td
+                  = review.composite_score
                 - @grant.criteria.each do |criterion|
                   %td
                     - criterion_score = review.criteria_reviews.detect { |cr| cr.criterion_id == criterion.id }

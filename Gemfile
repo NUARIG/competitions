@@ -45,6 +45,7 @@ gem 'haml-rails', '~> 1.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'pagy', '~> 3.5'
+gem 'ransack', github: 'activerecord-hackery/ransack'
 gem 'sprockets-es6'
 gem 'trix'
 

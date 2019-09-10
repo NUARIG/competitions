@@ -1,4 +1,18 @@
-%h3 All Users
+- content_for(:page_title, 'All Users')
+
+%h3
+  = yield(:page_title)
+
+= search_form_for @q, url: users_path do |f|
+  .grid-x.grid-padding-x
+    .small-12.medium-2.cell
+      %label.text-left.middle
+        Search User or Email
+    .small-12.medium-2.cell
+      = f.search_field :first_name_or_last_name_or_email_cont
+    .small-12.medium-3.cell
+      = f.submit 'Search', class: 'button'
+      = link_to 'Reset', users_path, class: 'button clear secondary'
 
 = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
@@ -6,9 +20,9 @@
   %thead
     %tr
       %th
-        Name
+        = sort_link(@q, :last_name, 'Name')
       %th
-        Email
+        = sort_link(@q, :email)
 
   %tbody
     - @users.each do |user|
