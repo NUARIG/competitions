@@ -32,19 +32,17 @@
       %p
         Each submission may be assessed by up to #{@grant.max_reviewers_per_proposal} reviewers
   .grid-x
-    .cell.small-5
+    .cell.small-5#assigned-reviewers
       - if @grant_reviewers.none?
         There are no reviewers. Use the form above to define reviewers by their email address.
       - else
         = render partial: 'reviewers', locals: { grant: @grant, grant_reviewers: @grant_reviewers }
 
-    .gridx.small-5.small-offset-2
-      #unassigned_submissions
-        .unassigned_submission_list
-          - if @unassigned_submissions.none?
-            There are no submissions that need to be assigned.
-          - else
-            = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
+    .gridx.small-5.small-offset-2(data-sticky-container)
+      - if @unassigned_submissions.none?
+        There are no submissions that need to be assigned.
+      - else
+        = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
 
 :javascript
   $(function() {

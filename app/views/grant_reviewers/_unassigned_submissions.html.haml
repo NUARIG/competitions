@@ -1,8 +1,8 @@
-#unassigned_submissions
+#unassigned_submissions.sticky(data-sticky data-top-anchor="assigned-reviewers")
   .unassigned_submission_list
-  - unassigned_submissions.each do |submission|
-    .cell.small-10.large-offset-1
-      .unassigned_submission{id: "submission_#{submission.id}", data: { destination_url: grant_submission_reviews_path(grant.id, submission.id) }}
-        %span
-          #{submission.applicant.last_name}, #{submission.applicant.first_name}: #{truncate(submission.title, length: 40)}
-          (#{@grant.max_reviewers_per_proposal  - submission.reviews_count})
+    - unassigned_submissions.each do |submission|
+      .cell.small-10.large-offset-1
+        .unassigned_submission{id: "submission_#{submission.id}", data: { destination_url: grant_submission_reviews_path(grant.id, submission.id) }}
+          %span
+            #{submission.applicant.last_name}, #{submission.applicant.first_name}: #{truncate(submission.title, length: 40)}
+            (#{@grant.max_reviewers_per_proposal  - submission.reviews_count})
