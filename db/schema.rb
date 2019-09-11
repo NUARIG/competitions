@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_222953) do
+ActiveRecord::Schema.define(version: 2019_09_10_221838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -353,8 +353,8 @@ ActiveRecord::Schema.define(version: 2019_09_03_222953) do
     t.text "rfa"
     t.integer "applications_per_user"
     t.text "review_guidance"
-    t.integer "max_reviewers_per_proposal"
-    t.integer "max_proposals_per_reviewer"
+    t.integer "max_reviewers_per_submission"
+    t.integer "max_submissions_per_reviewer"
     t.date "review_open_date"
     t.date "review_close_date"
     t.date "panel_date"

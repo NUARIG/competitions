@@ -82,7 +82,7 @@ class Review < ApplicationRecord
   end
 
   def reviewer_may_be_assigned
-    errors.add(:reviewer, :has_reached_review_limit) unless reviewer.reviewable_submissions.by_grant(grant).count < grant.max_proposals_per_reviewer
+    errors.add(:reviewer, :has_reached_review_limit) unless reviewer.reviewable_submissions.by_grant(grant).count < grant.max_submissions_per_reviewer
   end
 
   def reviewer_may_not_be_reassigned

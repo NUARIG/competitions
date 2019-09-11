@@ -96,8 +96,8 @@ class GrantsController < ApplicationController
       :review_open_date,
       :review_close_date,
       :review_guidance,
-      :max_reviewers_per_proposal,
-      :max_proposals_per_reviewer,
+      :max_reviewers_per_submission,
+      :max_submissions_per_reviewer,
       :panel_date,
       :panel_location,
       criteria_attributes: [

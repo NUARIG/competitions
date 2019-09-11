@@ -13,8 +13,8 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:rfa) }
   it { is_expected.to respond_to(:applications_per_user) }
   it { is_expected.to respond_to(:review_guidance) }
-  it { is_expected.to respond_to(:max_reviewers_per_proposal) }
-  it { is_expected.to respond_to(:max_proposals_per_reviewer) }
+  it { is_expected.to respond_to(:max_reviewers_per_submission) }
+  it { is_expected.to respond_to(:max_submissions_per_reviewer) }
   it { is_expected.to respond_to(:review_open_date) }
   it { is_expected.to respond_to(:review_close_date) }
   it { is_expected.to respond_to(:panel_date) }

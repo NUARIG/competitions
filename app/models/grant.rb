@@ -9,8 +9,8 @@ class Grant < ApplicationRecord
 
   attr_accessor :duplicate
 
-  attribute :max_reviewers_per_proposal, :integer, default: 2
-  attribute :max_proposals_per_reviewer, :integer, default: 2
+  attribute :max_reviewers_per_submission, :integer, default: 2
+  attribute :max_submissions_per_reviewer, :integer, default: 2
 
   has_one_attached :document
 
@@ -76,11 +76,11 @@ class Grant < ApplicationRecord
 
   validates_length_of :slug, in: Grant::SLUG_MIN_LENGTH..Grant::SLUG_MAX_LENGTH
 
-  validates_numericality_of :max_reviewers_per_proposal,
+  validates_numericality_of :max_reviewers_per_submission,
                             only_integer: true,
                             greater_than_or_equal_to: 1
 
-  validates_numericality_of :max_proposals_per_reviewer,
+  validates_numericality_of :max_submissions_per_reviewer,
                             only_integer: true,
                             greater_than_or_equal_to: 1
 
