@@ -1,9 +1,22 @@
+- content_for(:page_title, 'My Submissions')
+
 %h3
-  My Submissions
+  = yield(:page_title)
+
+= search_form_for @q, url: profile_submissions_path do |f|
+  .grid-x.grid-margin-x.medium-margin-collapse
+    .small-12.medium-2.cell
+      %label.text-left.middle
+        Search Grant or Project
+    .small-12.medium-2.cell
+      = f.search_field :title_or_grant_name_cont
+    .small-12.medium-3.cell
+      = f.submit 'Search', class: 'button'
+      = link_to 'Reset', profile_submissions_path, class: 'button clear secondary'
 
 - if @submissions.empty?
   %p
-    You have no submissions.
+    No submissions were found.
 - else
 
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
@@ -11,9 +24,12 @@
   %table
     %thead
       %tr
-        %th Title
-        %th Grant
-        %th Submitted On
+        %th
+          = sort_link(@q, :title, 'Project Title')
+        %th
+          = sort_link(@q, :grant_name, 'Grant')
+        %th
+          = sort_link(@q, :created_at, 'Submitted On')
         %th
     %tbody
       - @submissions.each do |submission|

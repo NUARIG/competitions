@@ -6,6 +6,7 @@
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
     = render partial: 'grants/dates_card', locals: { grant: @grant }
+
   .small-12.medium-9.cell#rfa
     %h4
       Application:
@@ -19,10 +20,9 @@
       %p
         = link_to 'Review this Submission', edit_grant_submission_review_path(@grant, @submission, review), class: 'button'
         = link_to 'Opt Out of Review', opt_out_grant_submission_review_path(@grant, @submission, review), method: :delete, data: { confirm: 'You will no longer be able to view or review this submission.'}, class: 'button clear secondary'
-    - if policy(@submission).edit?
+    - if @grant.editors.include?(current_user)
       %p
         = link_to 'See Reviews of this Submission', grant_submission_reviews_path(@submission.grant, @submission)
 
-    .cell
-      - @submission.form.sections.sort_by(&:display_order).each do |section|
-        = render partial: 'grant_submissions/sections/show', locals: { submission:  @submission, form: @submission.form, section: section }
+    - @submission.form.sections.sort_by(&:display_order).each do |section|
+      = render partial: 'grant_submissions/sections/show', locals: { submission:  @submission, form: @submission.form, section: section }

@@ -5,9 +5,9 @@ module GrantSubmissions
     def index
       @grant         = GrantDecorator.new(@grant)
       @form          = @grant.form
-      #@submissions   = @grant.submissions.eager_loading.where(grant_submission_form_id: @form.id)
-      # @submissions   = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
-      @pagy, @submissions = pagy(policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope), i18n_key: 'activerecord.models.submission')
+      @q = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+      @q.sorts = 'created_at desc' if @q.sorts.empty?
+      @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
     end
 
     def show

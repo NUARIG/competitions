@@ -1,19 +1,37 @@
-%h3 All Users
+- content_for(:page_title, 'All Users')
 
-= render partial: 'shared/pagy_header', locals: { pagy: @pagy }
+%h3
+  = yield(:page_title)
 
-%table
-  %thead
-    %tr
-      %th
-        Name
-      %th
-        Email
+= search_form_for @q, url: users_path do |f|
+  .grid-x.grid-margin-x.medium-margin-collapse
+    .small-12.medium-2.cell
+      %label.text-left.middle
+        Search User or Email
+    .small-12.medium-2.cell
+      = f.search_field :first_name_or_last_name_or_email_cont
+    .small-12.medium-3.cell
+      = f.submit 'Search', class: 'button'
+      = link_to 'Reset', users_path, class: 'button clear secondary'
 
-  %tbody
-    - @users.each do |user|
+- if @users.empty?
+  %p
+    No users were found.
+- else
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
+
+  %table
+    %thead
       %tr
-        %td= link_to sortable_full_name(user), edit_user_path(user)
-        %td= user.email
+        %th
+          = sort_link(@q, :last_name, 'Name')
+        %th
+          = sort_link(@q, :email)
 
-!= pagy_foundation_nav(@pagy)
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td= link_to sortable_full_name(user), edit_user_path(user)
+          %td= user.email
+
+  != pagy_foundation_nav(@pagy)
