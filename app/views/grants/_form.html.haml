@@ -51,14 +51,14 @@
     %trix-editor(input='grant_review_guidance')
 .grid-x
   .cell.small-12.medium-3
-    = f.label :max_reviewers_per_proposal, 'Maximum Reviewers / Submission', class: 'middle'
+    = f.label :max_reviewers_per_submission, 'Maximum Reviewers / Submission', class: 'middle'
   .cell.small-12.medium-9
-    = f.number_field :max_reviewers_per_proposal, min: 1, class: 'middle small-12 medium-4', required: true
+    = f.number_field :max_reviewers_per_submission, min: 1, class: 'middle small-12 medium-4', required: true
 .grid-x
   .cell.small-12.medium-3
-    = f.label :max_proposals_per_reviewer, 'Maximum Submissions / Reviewer', class: 'middle'
+    = f.label :max_submissions_per_reviewer, 'Maximum Submissions / Reviewer', class: 'middle'
   .cell.small-12.medium-9
-    = f.number_field :max_proposals_per_reviewer, min: 1, class: 'middle small-12 medium-4', required: true
+    = f.number_field :max_submissions_per_reviewer, min: 1, class: 'middle small-12 medium-4', required: true
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_open_date, 'Review Open Date', class: 'middle'

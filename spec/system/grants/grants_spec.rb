@@ -84,8 +84,8 @@ RSpec.describe 'Grants', type: :system do
       page.fill_in 'Publish Date', with: @grant.publish_date
       page.fill_in 'Open Date', with: @grant.submission_open_date
       page.fill_in 'Close Date', with: @grant.submission_close_date
-      page.fill_in 'Maximum Reviewers / Submission', with: @grant.max_reviewers_per_proposal
-      page.fill_in 'Maximum Submissions / Reviewer', with: @grant.max_proposals_per_reviewer
+      page.fill_in 'Maximum Reviewers / Submission', with: @grant.max_reviewers_per_submission
+      page.fill_in 'Maximum Submissions / Reviewer', with: @grant.max_submissions_per_reviewer
       page.fill_in 'Review Open Date', with: @grant.review_open_date
       page.fill_in 'Review Close Date', with: @grant.review_close_date
       page.fill_in 'Panel Location', with: @grant.panel_location

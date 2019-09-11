@@ -11,7 +11,7 @@
         %span.name
           #{reviewer.first_name} #{reviewer.last_name}
         %span.remaining-count{title: 'Remaining assignable reviews'}
-          ( #{grant.max_proposals_per_reviewer - reviewer.reviewable_submissions.by_grant(grant).count} )
+          ( #{grant.max_submissions_per_reviewer - reviewer.reviewable_submissions.by_grant(grant).count} )
       %td
         = link_to('Remove', grant_reviewer_path(grant, grant_reviewer), method: :delete,          |
                                         title: 'Remove this reviewer',         |

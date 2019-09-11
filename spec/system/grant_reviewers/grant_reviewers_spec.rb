@@ -4,8 +4,8 @@ RSpec.describe 'GrantReviewers', type: :system do
   describe '#index', js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                             max_proposals_per_reviewer: Faker::Number.between(1, 10),
-                             max_reviewers_per_proposal: Faker::Number.between(1, 10))
+                             max_submissions_per_reviewer: Faker::Number.between(1, 10),
+                             max_reviewers_per_submission: Faker::Number.between(1, 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
       @user         = create(:user)
@@ -15,20 +15,20 @@ RSpec.describe 'GrantReviewers', type: :system do
       visit grant_reviewers_path(@grant)
     end
 
-    scenario 'max_reviewers_per_proposal is displayed' do
-      expect(page).to have_content("Each reviewer may assess up to #{@grant.max_proposals_per_reviewer} #{'submission'.pluralize(@grant.max_proposals_per_reviewer)}.")
+    scenario 'max_reviewers_per_submission is displayed' do
+      expect(page).to have_content("Each reviewer may assess up to #{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}.")
     end
 
     scenario 'displays reviewer name and number of available reviews' do
-      expect(page).to have_content("#{@reviewer.first_name} #{@reviewer.last_name} ( #{@grant.max_proposals_per_reviewer} )")
+      expect(page).to have_content("#{@reviewer.first_name} #{@reviewer.last_name} ( #{@grant.max_submissions_per_reviewer} )")
     end
   end
 
   describe '#create', js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                             max_proposals_per_reviewer: Faker::Number.between(1, 10),
-                             max_reviewers_per_proposal: Faker::Number.between(1, 10))
+                             max_submissions_per_reviewer: Faker::Number.between(1, 10),
+                             max_reviewers_per_submission: Faker::Number.between(1, 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
       @user         = create(:user)
@@ -56,8 +56,8 @@ RSpec.describe 'GrantReviewers', type: :system do
   describe '#destroy', js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                             max_proposals_per_reviewer: Faker::Number.between(1, 10),
-                             max_reviewers_per_proposal: Faker::Number.between(1, 10))
+                             max_submissions_per_reviewer: Faker::Number.between(1, 10),
+                             max_reviewers_per_submission: Faker::Number.between(1, 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
       @review       = create(:review, assigner: @grant_admin,
