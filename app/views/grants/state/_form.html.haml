@@ -2,7 +2,7 @@
   |
   - if grant.published?
     = f.hidden_field :state, value: 'draft'
-    = f.submit 'Switch to Draft', class: 'hollow button secondary tiny'
+    = f.submit 'Switch to Draft', class: 'hollow button secondary'
   - else
     = f.hidden_field :state, value: 'published'
-    = f.submit 'Publish this Grant', class: 'hollow button secondary tiny'
+    = f.submit 'Publish this Grant', class: 'hollow button secondary'
