@@ -57,7 +57,7 @@
         Comment:
     .cell.small-12.medium-10
       - if @review.overall_impact_comment?
-        @review.overall_impact_comment
+        = @review.overall_impact_comment
       - else
         %em
           No comment provided.
