@@ -29,19 +29,15 @@
       .cell.small-12.medium-2
         = f.label :user_type
       .cell.small-12.medium-10
-        - if @user.grant_creator?
-          Grant Creator
-        - elsif @user.system_admin?
-          System Administrator
+        - if current_user.system_admin?
+          = render partial: 'users/admin_checkboxes', locals: { f: f, user: @user } if current_user.system_admin?
         - elsif @user.grant_creator_requests.pending.any?
           .button.holow.disabled
             Pending Grant Creation Request
+        - elsif @user.grant_creator?
+          Grant Creator
         - else
-          User
-          %br
           = link_to 'Request Grant Creation Permission', new_grant_creator_request_path if current_user == @user
-
-
 .actions
   = f.submit 'Update', class: 'button'
 

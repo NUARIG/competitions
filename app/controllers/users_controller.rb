@@ -42,6 +42,9 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:era_commons)
+    user_params = [:era_commons]
+    user_params << %i[system_admin grant_creator] if current_user.system_admin?
+
+    params.require(:user).permit(user_params)
   end
 end

@@ -1,0 +1,11 @@
+.grid-x
+  .cell.small-12
+    - if user.grant_creator_requests.pending.any?
+      = link_to 'Pending Grant Creator Request', grant_creator_requests_path
+    - else
+      = f.check_box :grant_creator
+      = f.label :grant_creator, 'Grant Creator'
+.grid-x
+  .cell.small-12
+    = f.check_box :system_admin
+    = f.label :system_admin, 'System Administator'
