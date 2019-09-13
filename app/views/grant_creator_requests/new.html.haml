@@ -4,7 +4,7 @@
   Request Grant Creation Access
 
 %p
-  Introductory text about creating a grant. Lorem ipsum dolor sum.
+  Please submit this form to request the ability to create Grants.
 
 = form_with model: @grant_creator_request, url: grant_creator_requests_path(@grant_request), local: true, id: 'grant-request' do |f|
   = render partial: 'request_attributes', locals: { f: f, request: @grant_creator_request }

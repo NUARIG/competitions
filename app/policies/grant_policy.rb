@@ -12,7 +12,7 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def show?
-    case grant.published? && grant.is_open?
+    case grant.published?
     when true
       user.present?
     else

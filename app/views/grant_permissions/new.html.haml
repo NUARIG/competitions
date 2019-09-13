@@ -8,8 +8,6 @@
   %p
     - unless @current_user_role == 'viewer'
       = link_to 'Back to Permissions', grant_grant_permissions_path
-      = ' | '
-    = link_to 'View all Grants', grants_path
 
 .grid-x
   .cell
