@@ -211,15 +211,6 @@ RSpec.describe 'Grants', type: :system do
       expect(page).to have_content 'Grant was successfully deleted.'
     end
 
-    pending scenario 'demo grant can be soft deleted' do
-      fail "demo to be deleted"
-      # @grant.update_attributes!(state: 'demo')
-      # visit edit_grant_path(@grant.id)
-      # click_link 'Delete'
-      # page.driver.browser.switch_to.alert.accept
-      # expect(page).to have_content 'Grant was successfully deleted.'
-    end
-
     scenario 'completed grant cannot be soft deleted' do
       @grant.update_attributes!(state: 'completed')
       visit edit_grant_path(@grant.id)

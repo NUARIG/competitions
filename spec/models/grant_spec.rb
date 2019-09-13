@@ -228,20 +228,4 @@ RSpec.describe Grant, type: :model do
       expect(completed_grant.accepting_submissions?).to be false
     end
   end
-
-  context 'demo grant' do
-    let (:demo_grant) { create(:grant, :demo) }
-
-    it 'can be soft deleted' do
-      expect(demo_grant.deleted?).to be false
-      expect{demo_grant.is_soft_deletable?}.not_to raise_error
-      expect{demo_grant.soft_delete!}.not_to raise_error
-      expect(demo_grant.deleted?).to be true
-    end
-
-    it 'is not accepting_submissions?' do
-      expect(demo_grant.accepting_submissions?).to be false
-    end
-  end
 end
-
