@@ -17,7 +17,17 @@ module GrantSubmissionFormServices
             # loop through the questions
             original_section.questions.each do |question|
               new_question = question.dup
-              new_question.update_attributes!(grant_submission_section_id: new_section.id)
+              new_question.grant_submission_section_id = new_section.id
+              # loop through the multiple_choice_options
+              if new_question.response_type == 'pick_one'
+                new_question.save!(:validate => false)
+                question.multiple_choice_options.each do |option|
+                  new_option = option.dup
+                  new_option.update_attributes!(grant_submission_question_id: new_question.id)
+                end
+              else
+                new_question.save!
+              end
             end
           end
         end
