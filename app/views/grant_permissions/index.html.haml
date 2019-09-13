@@ -9,8 +9,6 @@
   %p
     - unless @current_user_role == 'viewer'
       = link_to 'Add new permission', new_grant_grant_permission_path
-      = ' | '
-    = link_to 'View all Grants', grants_path
 
   - unless @grant_permissions.present?
     %p

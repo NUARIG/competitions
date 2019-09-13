@@ -3,8 +3,6 @@
 
 - if policy(@grant).edit?
   = link_to 'Add new permission', new_grant_grant_permission_path
-  = ' | '
-= link_to 'View all Grants', grants_path
 
 - unless @current_user_role == 'viewer'
   %div
