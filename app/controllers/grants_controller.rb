@@ -115,6 +115,6 @@ class GrantsController < ApplicationController
   end
 
   def draft_banner
-    flash.now[:warning] = '<strong>Draft warning</strong>'.html_safe if @grant.draft?
+    flash.now[:warning] = '<strong>Draft Mode</strong> You must publish this grant to make it available to the public.'.html_safe if @grant.draft?
   end
 end
