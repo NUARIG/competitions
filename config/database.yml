@@ -4,6 +4,12 @@ development:
   database: <%= Rails.application.credentials.development[:database] %>
   username: <%= Rails.application.credentials.development[:username] %>
   password: <%= Rails.application.credentials.development[:password] %>
+test: &TEST
+  host:     <%= Rails.application.credentials.test[:host] %>
+  adapter:  <%= Rails.application.credentials.test[:adapter] %>
+  database: <%= Rails.application.credentials.test[:database] %>
+  username: <%= Rails.application.credentials.test[:username] %>
+  password: <%= Rails.application.credentials.test[:password] %>
 alpha:
   host:     <%= Rails.application.credentials.alpha[:host] %>
   adapter:  <%= Rails.application.credentials.alpha[:adapter] %>
@@ -16,9 +22,10 @@ staging:
   database: <%= Rails.application.credentials.staging[:database] %>
   username: <%= Rails.application.credentials.staging[:username] %>
   password: <%= Rails.application.credentials.staging[:password] %>
-test: &TEST
-  host:     <%= Rails.application.credentials.test[:host] %>
-  adapter:  <%= Rails.application.credentials.test[:adapter] %>
-  database: <%= Rails.application.credentials.test[:database] %>
-  username: <%= Rails.application.credentials.test[:username] %>
-  password: <%= Rails.application.credentials.test[:password] %>
+production:
+  host:     <%= Rails.application.credentials.production[:host] %>
+  adapter:  <%= Rails.application.credentials.production[:adapter] %>
+  database: <%= Rails.application.credentials.production[:database] %>
+  username: <%= Rails.application.credentials.production[:username] %>
+  password: <%= Rails.application.credentials.production[:password] %>
+
