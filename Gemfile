@@ -65,9 +65,12 @@ gem "select2-rails"
 # s3
 gem "aws-sdk-s3", require: false
 
-group :development, :test do
-  gem 'awesome_print'
+group :development, :test, :alpha do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'awesome_print'
+end
+
+group :development, :test do
   gem 'puma', '~> 3.11'
   gem 'rspec-rails'
 end
