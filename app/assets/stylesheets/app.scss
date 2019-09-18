@@ -1,54 +1,70 @@
-header {
-  .top-bar-left {
-    .home {
-      font-weight: bold;
+.grid-container {
+  header {
+    .top-bar-left {
+      .home {
+        font-weight: bold;
+      }
     }
-  }
 
-  .top-bar-right {
-    ul.dropdown.menu {
-      li.is-dropdown-submenu-parent {
-        background-color: #FFF;
-        ul.is-dropdown-submenu {
+    .top-bar-right {
+      ul.dropdown.menu {
+        li.is-dropdown-submenu-parent {
           background-color: #FFF;
-          li {
-            border-bottom: 1px solid #cacaca;
-            &:hover {
-              background-color: #F8F8F8;
-            }
-            &:last-of-type {
-              border-bottom: 0px;
+          ul.is-dropdown-submenu {
+            background-color: #FFF;
+            li {
+              border-bottom: 1px solid #cacaca;
+              &:hover {
+                background-color: #F8F8F8;
+              }
+              &:last-of-type {
+                border-bottom: 0px;
+              }
             }
           }
         }
       }
     }
   }
-}
 
-main {
-  .menu.simple {
-    margin: 1rem 0;
-  }
+  main {
+    .menu.simple {
+      margin: 1rem 0;
+    }
 
-  // Edit
-  #grant-state,
-  #grant-state form {
-    font-size: 1.15em;
-    margin: 1rem 0;
-    form.grant-state {
-      display: inline-block;
-      .button {
-        margin: 0;
+    // Edit
+    #grant-state,
+    #grant-state form {
+      font-size: 1.15em;
+      margin: 1rem 0;
+      form.grant-state {
+        display: inline-block;
+        .button {
+          margin: 0;
+        }
+      }
+    }
+    #grant-info .tabs-title {
+      &.is-active {
+        background-color: #e6e6e6;
+      }
+      a {
+        font-size: .95em;
       }
     }
   }
-  #grant-info .tabs-title {
-    &.is-active {
-      background-color: #e6e6e6;
-    }
-    a {
-      font-size: .95em;
+
+  footer {
+    background-color: #E6E6E6;
+    color: #555;
+    font-size: .85em;
+    margin-top: 1.5em;
+    padding: 1em;
+    width: 100%;
+    #logos {
+      .cell {
+        padding: 1em 2em;
+      }
     }
   }
 }
