@@ -15,7 +15,7 @@
       %li
         = link_to 'Edit Your Profile', profile_path
       %li
-        = link_to 'Log Out', idp_sign_out_user_session_path
+        = link_to 'Log Out', destroy_user_session_path, method: :delete
 - else
   %li.menu-text.login
     = link_to 'Login', new_user_session_path
