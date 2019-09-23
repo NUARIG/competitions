@@ -36,7 +36,7 @@ module DeviseSamlAuthenticatable
           #   settings: Devise.saml_config,
           #   allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
           # ).issuer
-          Devise.sign_out_and_redirect(current_user)
+          redirect_to root_path
 
           # redirect_to Devise.saml_sign_out_success_url
 
