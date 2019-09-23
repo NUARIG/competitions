@@ -325,7 +325,7 @@ Devise.setup do |config|
 
   # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
   # by setting this to a custom reader class, or use the default.
-  # config.idp_entity_id_reader = DeviseSamlAuthenticatable::DefaultIdpEntityIdReader
+  config.idp_entity_id_reader = DeviseSamlAuthenticatable::CompetitionsIdpEntityIdReader
 
   # You can set a handler object that takes the response for a failed SAML request and the strategy,
   # and implements a #handle method. This method can then redirect the user, return error messages, etc.
