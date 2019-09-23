@@ -5,7 +5,7 @@ class HomeController < ApplicationController
 
   def index
     if params[:SAMLResponse]
-      redirect_to idp_sign_out_user_session_path
+      redirect_to idp_sign_out_user_session_path(request.parameters)
     else
       @grants = Grants::PublicDecorator.decorate_collection(Grant.public_grants)
       skip_policy_scope

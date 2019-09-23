@@ -31,16 +31,12 @@ module DeviseSamlAuthenticatable
             allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
           ).issuers.first
         rescue
-          # OneLogin::RubySaml::SloLogoutresponse.new(
-          #   params[:SAMLRequest],
-          #   settings: Devise.saml_config,
-          #   allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
-          # ).issuer
-          redirect_to root_path
-
-          # redirect_to Devise.saml_sign_out_success_url
-
-
+          OneLogin::RubySaml::SloLogoutresponse.new(
+            params[:SAMLResponse],
+            settings: Devise.saml_config,
+            allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
+          ).issuer
+          # redirect_to root_path
         end
 
 
