@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Pagy::Backend
 
+  before_action :print_params
+
   before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!
   before_action :audit_action
@@ -32,5 +34,11 @@ class ApplicationController < ActionController::Base
                          browser:    request.env['HTTP_USER_AGENT'],
                          params:     params.except(:utf8, :_method, :authenticity_token, :controller, :action))
     end
+  end
+
+  def print_params
+    Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    Rails.logger.info("#{params.inspect}")
+    Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   end
 end
