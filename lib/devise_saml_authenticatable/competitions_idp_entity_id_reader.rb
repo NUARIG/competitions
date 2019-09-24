@@ -2,7 +2,7 @@ module DeviseSamlAuthenticatable
   class CompetitionsIdpEntityIdReader
     def self.entity_id(params)
       if params[:SAMLRequest]
-        Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         Rails.logger.info("I am in the first if")
         OneLogin::RubySaml::SloLogoutrequest.new(
           params[:SAMLRequest],
@@ -10,7 +10,7 @@ module DeviseSamlAuthenticatable
           allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
         ).issuer
       elsif params[:SAMLResponse]
-        Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         Rails.logger.info("I am in the first elsif")
         # r = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
         # Rails.logger.info("Message: #{r.document.inspect}~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -28,7 +28,7 @@ module DeviseSamlAuthenticatable
         #   ).issuers.first
         # end
         begin
-          Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
           Rails.logger.info("I am in the first begin")
           OneLogin::RubySaml::Response.new(
             params[:SAMLResponse],
@@ -36,7 +36,7 @@ module DeviseSamlAuthenticatable
             allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
           ).issuers.first
         rescue
-          Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
           Rails.logger.info("I am in the first rescue")
           OneLogin::RubySaml::SloLogoutresponse.new(
             params[:SAMLRequest],
