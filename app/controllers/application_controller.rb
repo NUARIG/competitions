@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Pagy::Backend
 
-  before_action :print_params
-
   before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!
   before_action :audit_action
