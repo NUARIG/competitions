@@ -340,7 +340,7 @@ Devise.setup do |config|
   # You can add allowance for clock drift between servers.
   # See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
   # This should be a time in seconds.
-  config.allowed_clock_drift_in_seconds = 1
+  config.allowed_clock_drift_in_seconds = 5
 
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
