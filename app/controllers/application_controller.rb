@@ -35,10 +35,4 @@ class ApplicationController < ActionController::Base
                          params:     params.except(:utf8, :_method, :authenticity_token, :controller, :action))
     end
   end
-
-  def print_params
-    Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    Rails.logger.info("#{params.inspect}")
-    Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-  end
 end
