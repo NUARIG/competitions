@@ -20,7 +20,9 @@ module DeviseSamlAuthenticatable
           Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~I AM IN THE ELSE~~~~~~~~~~~~~~~~~~~~~~~~~~~")
           Rails.logger.info("#{response}")
           lo = OneLogin::RubySaml::SloLogoutresponse.new(params[:SAMLReponse]).
+          Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~MADE IT PAST CREATE~~~~~~~~~~~~~~~~~~~~~~~~~~~")
           Rails.logger.info("#{lo.issuer}")
+          return lo.issuer
         end
       end
     end
