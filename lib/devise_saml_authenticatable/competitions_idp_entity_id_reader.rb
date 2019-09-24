@@ -17,11 +17,10 @@ module DeviseSamlAuthenticatable
             allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
           ).issuers.first
         else
-          OneLogin::RubySaml::SloLogoutresponse.new(
-            params[:SAMLReponse],
-            settings: Devise.saml_config,
-            allowed_clock_drift: Devise.allowed_clock_drift_in_seconds,
-          ).issuer
+          Rails.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~I AM IN THE ELSE~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+          Rails.logger.info("#{response}")
+          lo = OneLogin::RubySaml::SloLogoutresponse.new(params[:SAMLReponse]).
+          Rails.logger.info("#{lo.issuer}")
         end
       end
     end
