@@ -1,0 +1,47 @@
+set:
+  nih_research:
+    name: 'NIH Research Grant'
+    questions:
+      question:
+        grant_id: 1
+        question_type: 'text'
+        name: 'Abstract'
+        help_text: ''
+        required: true
+      question:
+        grant_id: 1
+        question_type: 'string'
+        name: 'Institutional Review Board (IRB) Number'
+        help_text: Provide a Study Number
+        required: true
+  # nih_education:
+  #   name: 'NIH Education Grant'
+  #     questions:
+  #       question1:
+  #         grant_id: 1
+  #         question_type: 'string'
+  #         name: 'The Title of Your Project'
+  #         help_text: 'The project name'
+  #         placeholder_text: ''
+  #         required: true
+  #       question2:
+  #         grant_id: 1
+  #         question_type: 'string'
+  #         name: 'Institutional Review Board (IRB) Number'
+  #         help_text: Provide a Study Number
+  #         placeholder_text: 'STU00000000'
+  #         required: true
+  #       question3:
+  #         grant_id: 1
+  #         question_type: 'float'
+  #         name: 'Budget Requested'
+  #         help_text: 'Must match attached budget'
+  #         placeholder_text:
+  #         required: true
+  #       question4:
+  #         grant_id: 1
+  #         question_type: 'integer'
+  #         name: 'Team Size'
+  #         help_text: 'How many people will be working on this project?'
+  #         placeholder_text:  'Including yourself'
+  #         required: false

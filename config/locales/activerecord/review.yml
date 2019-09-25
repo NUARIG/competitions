@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    attributes:
+      review:
+        reviewer: Reviewer
+    errors:
+      models:
+        review:
+          attributes:
+            assigner:
+              may_not_add_review: 'may not assign submissions reviews on this grant.'
+            reviewer:
+              has_reached_review_limit: 'has been assigned the maximum number of submissions.'
+              may_not_be_reassigned: 'may not be reassigned.'
+              may_not_review_own_submission: 'may not review their own submission.'
+              is_not_a_reviewer: 'is not a reviewer on this grant.'
+              taken: 'has already been assigned this submission.'
+    models:
+      review:
+        one: review
+        other: reviews

@@ -1,0 +1,66 @@
+- content_for(:page_title, "Review of #{@submission.title} by #{full_name(@review.reviewer)}")
+
+
+%h1 Submission Review
+
+= render 'review_header', locals: { grant: @grant, submission: @submission, review: @review }
+
+= link_to 'Edit', edit_grant_submission_review_path(@review.grant, @review.submission, @review)
+
+#criteria
+  %h4 Criteria Scores
+  - if @review.criteria_reviews.none?
+    .grid-x
+      .cell.small-12
+        %strong
+          This review has not yet been scored.
+  - else
+    - @review.criteria_reviews.each do |reviewed_criterion|
+      .grid-x-container.grid-padding-y
+        .criterion
+          %h5= reviewed_criterion.criterion.name
+          .grid-x
+            .cell.small-12.medium-2
+              Score:
+            .cell.small-12.medium-10
+              = reviewed_criterion.score || '-'
+          - if reviewed_criterion.criterion.show_comment_field?
+            .grid-x
+              .cell.small-12.medium-2
+                Comments:
+              .cell.small-12.medium-10
+                - if reviewed_criterion.comment?
+                  = reviewed_criterion.comment
+                - else
+                  %em
+                    No comment provided.
+
+%h5
+  Composite Score
+#composite-score
+  .grid-x
+    .cell.small-12
+      Average of all scored criteria:
+      = @review.composite_score
+
+%h4
+  Overall Impact
+#overall
+  .grid-x
+    .cell.small-12.medium-2
+      %strong Score:
+    .cell.small-12.medium-10
+      = @review.overall_impact_score
+  .grid-x
+    .cell.small-12.medium-2
+      %strong
+        Comment:
+    .cell.small-12.medium-10
+      - if @review.overall_impact_comment?
+        = @review.overall_impact_comment
+      - else
+        %em
+          No comment provided.
+
+
+= link_to 'Edit', edit_grant_submission_review_path(@review.grant, @review.submission, @review)

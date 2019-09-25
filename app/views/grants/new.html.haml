@@ -1,0 +1,8 @@
+- content_for(:page_title, 'Create a New Grant')
+
+%h1 Create a New Grant
+
+= form_with model: @grant, local: true do |f|
+  = render 'form', f: f, grant: @grant
+
+= link_to 'Back', grants_path

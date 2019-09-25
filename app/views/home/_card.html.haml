@@ -1,0 +1,21 @@
+.card{id: "grant_#{grant.id}"}
+  .card-section.grant-name
+    %h4.name{class: grant.name_length_class}
+      = link_to grant.name, grant_path(grant)
+  .card-section.grant-dates
+    .dates
+      .date
+        %strong
+          Announced:
+        .publish-date
+          = grant.publish_date
+      .date
+        %strong
+          Submission Period:
+        .submission-period
+          = grant.submission_period
+  .card-divider.grant-links
+    %ul.menu
+      = grant.show_menu_link
+      =# grant.apply_menu_link
+      = grant.edit_menu_link

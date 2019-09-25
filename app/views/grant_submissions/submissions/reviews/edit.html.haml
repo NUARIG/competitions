@@ -1,0 +1,18 @@
+- content_for(:page_title, "Reviewing #{@submission.title}")
+
+%h1 Reviewer Form
+
+= render 'review_header', locals: { grant: @grant, submission: @submission, review: @review }
+
+- if @grant.review_guidance?
+  #review-guidance
+    %h3
+      Reviewer Guidance:
+    = @review.grant.review_guidance.html_safe
+
+= render partial: 'form', locals: { grant: @grant, submission: @submission, review: @review }
+
+:javascript
+  $('.comment').on( 'change keyup keydown paste cut', 'textarea', function (){
+      $(this).height(0).height(this.scrollHeight);
+  }).find( 'textarea' ).change();

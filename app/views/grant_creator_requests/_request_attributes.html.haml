@@ -1,0 +1,28 @@
+.grid-x
+  .cell
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :first_name, 'First Name'
+      .cell.small-12.medium-10
+        = f.text_field :first_name, value: request.requester.first_name, disabled: true, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :last_name, 'Last Name'
+      .cell.small-12.medium-10
+        = f.text_field :last_name, value: request.requester.last_name, disabled: true, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :email, 'Email'
+      .cell.small-12.medium-10
+        = f.text_field :email, value: request.requester.email, disabled: true, class: 'small-12 medium-4'
+    .grid-x
+      .cell.small-12.medium-2
+        = f.label :request_comment
+      .cell.small-12.medium-10
+        = f.text_area :request_comment, class: 'small-12 medium-4', disabled: request.requester != current_user
+    - if request.persisted?
+      .grid-x
+        .cell.small-12.medium-2
+          = f.label :status, 'Review Status'
+        .cell.small-12.medium-10
+          = GrantCreatorRequest::STATUSES[request.status.to_sym]

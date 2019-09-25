@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    attributes:
+      grant_submission/submission: &submission
+        title: Your Project's Title
+    errors:
+      models:
+        grant_submission/submission:
+          attributes:
+    models:
+      submission:
+        one: submission
+        other: submissions
+  helpers:
+    label:
+      grant_submission/submission:
+        <<: *submission

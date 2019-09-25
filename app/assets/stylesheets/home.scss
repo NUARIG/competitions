@@ -1,0 +1,69 @@
+@import 'settings';
+
+main.home {
+  #section-intro {
+    padding: 2rem;
+  }
+  @include breakpoint(small only) {
+    hr {
+      display: none;
+    }
+  }
+  #public-grants {
+    padding-top: 1rem;
+    .card {
+      @include breakpoint(medium) {
+        height: 20rem;
+      }
+      margin-bottom: 2rem;
+      .card-section {
+        &.grant-name {
+          height: 20%;
+          .name {
+            @include breakpoint(medium) {
+              &.long {
+                font-size: 1.3125rem;
+              }
+            }
+          }
+        }
+        &.grant-dates {
+          display: table;
+          height: 20%;
+          .dates {
+            margin-top: .5rem;
+            .date {
+              margin-top: .25rem;
+              strong {
+                display: block;
+                font-size: .875rem;
+                line-height: 1rem;
+                @include breakpoint(large) {
+                  display: inline-block;
+                  width: 35%;
+                }
+              }
+              .publish-date,
+              .submission-period {
+                @include breakpoint(large) {
+                  font-size: .875em;
+                  display: inline;
+                  width: 65%;
+                }
+              }
+            }
+          }
+        }
+      }
+      .card-divider {
+        &.grant-links {
+          display: table-cell;
+          vertical-align: bottom;
+          a {
+            padding: 0.7rem .65rem;
+          }
+        }
+      }
+    }
+  }
+}

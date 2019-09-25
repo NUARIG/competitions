@@ -1,0 +1,14 @@
+= form_for (review), url: grant_submission_review_url(grant, submission, review) do |f|
+  - if review.criteria_reviews.any?
+    %h3
+      Review Criteria
+    %p
+      Please score this submission using the following criteria:
+    - review.criteria_reviews.each do |criterion_review|
+      = f.fields_for :criteria_reviews, criterion_review do |criterion_review_fields|
+        = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review }
+
+  = render partial: 'overall_impact', locals: { f: f }
+
+  .actions
+    = f.submit 'Submit Your Review', class: 'button'

@@ -1,0 +1,11 @@
+- content_for(:page_title, 'Duplicate Grant')
+%h1
+  Create a grant based on
+  = @grant.name
+
+%p
+  Once you update and save, it will copy all roles from
+  = link_to "#{@grant.name}", grant_path(params[:grant_id])
+
+= form_with model: @grant, url: grant_duplicate_path, local: true do |f|
+  = render 'grants/form', f: f, grant: @grant

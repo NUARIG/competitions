@@ -1,0 +1,38 @@
+<script>
+  $(function(){Grant.FormBuilderSurvey.init();});
+</script>
+
+<% unless @form.new_record? %>
+  <%= hidden_field_tag :form_update_fields_url, update_fields_grant_form_url(@grant, @form), id: 'survey_update_fields_url' %>
+<% end %>
+
+<% has_edit_permission = policy(@grant).update? %>
+<%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
+  <table class="table">
+    <tr>
+      <td><%= f.label :description %></td>
+      <td>
+          <%= text_area_tag 'grant_submission_form[description]', f.object.description, rows: 2, cols: 80, aria: { 'described-by': 'submissionInstructionsHelp' } %>
+          <p id="#submissionInstructionsHelp" class="help-text">
+              This optional text will be included on the application form.
+            </p>
+      </td>
+  </table>
+
+  <hr/>
+
+  <%= render 'title_placeholder_field' %>
+
+  <%#= f.fields_for :sections, @form.sections.sort_by {|section| section.display_order || 0 } do |ff| %>
+  <%= f.fields_for :sections, @form.sections do |ff| %>
+    <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: has_edit_permission} %>
+    <% end %>
+
+    <% if has_edit_permission %>
+      <%= f.link_to_add 'Add a Section', :sections, class: 'button btn-pill small' %>
+      <div class="actions">
+        <hr/>
+        <%= f.submit 'Save', class: 'button' %>
+      </div>
+  <% end %>
+<% end %>

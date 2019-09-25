@@ -1,0 +1,9 @@
+- content_for(:page_title, "Edit #{full_name(@user)}")
+
+%h1
+  = yield :page_title
+
+= form_with(model: @user, url: user_path, method: :put, local: true) do |f|
+  = render partial: 'users/form', locals: { f: f }
+
+= link_to 'Back to all Users', users_path

@@ -1,0 +1,17 @@
+- content_for(:page_title, "Apply to #{@grant.name}")
+
+.grid-x.grid-margin-x
+  .small-12.cell#title
+    %h1.name{class: @grant.name_length_class}
+      = @grant.name
+
+.grid-x.grid-margin-x
+  %aside.small-12.medium-3.cell
+    = render partial: 'grants/dates_card', locals: { grant: @grant }
+  .small-12.medium-9.cell#rfa
+    %h4
+      Apply
+    = @submission.form.description
+    %hr
+    = grant_form_for [@grant, @submission], url: grant_submissions_url, html: {multipart: true} do |f|
+      = render partial: 'form', locals: { f: f }

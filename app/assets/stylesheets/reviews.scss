@@ -1,0 +1,75 @@
+$base-color: gray;
+$contrast-color: white;
+
+main {
+  &.reviews {
+    #review-header,
+    #review-guidance,
+    #overall, {
+      margin: 2em 0em;
+    }
+    #overall,
+    #composite-score,
+    .criterion {
+      margin: .5em 0em;
+      padding: 1em;
+      &:first-of-type {
+        border-top: 1px solid #CCC;
+      }
+    }
+    #overall {
+      border-top: 1px solid #CCC;
+    }
+    form {
+      textarea.comment {
+        overflow: hidden;
+      }
+      #overall,
+      .criterion {
+        border-bottom: 1px solid #CCC;
+        margin: 1em 0em;
+        padding: 1em;
+        .description {
+          margin-bottom: 1em;
+        }
+      }
+      #overall {
+        border-bottom: none;
+      }
+      .button-group {
+        .scoring-guidance {
+          color: $base-color;
+          padding: 0.5em 1em;
+        }
+        .score_value,{
+          display: inline-block;
+          margin-right: .5em;
+          &:last-of-type {
+            margin-right: none;
+          }
+          label {
+            border: 1px solid $base-color;
+            background-color: $contrast-color;
+            color: $base-color;
+            &:hover {
+              background-color: $base-color;
+              color: $contrast-color;
+            }
+          }
+          .field_with_errors,
+          input {
+            display: none;
+            + label.button {
+              border-radius: 1000px;
+            }
+            &:checked + label,
+            &:checked + label:active {
+              background-color: $base-color;
+              color: $contrast-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}

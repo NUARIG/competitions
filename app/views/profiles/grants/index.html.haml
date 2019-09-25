@@ -1,0 +1,29 @@
+- content_for(:page_title, 'My Grants')
+
+%h3
+  = yield(:page_title)
+
+- if current_user.system_admin? || current_user.grant_creator?
+  = link_to 'Create New Grant', new_grant_path, class: 'button primary'
+
+= search_form_for @q, url: profile_grants_path do |f|
+  .grid-x.grid-margin-x.medium-margin-collapse
+    .small-12.medium-2.cell
+      %label.text-left.middle
+        Search Grant Name
+    .small-12.medium-2.cell
+      = f.search_field :name_cont
+    .small-12.medium-3.cell
+      = f.submit 'Search', class: 'button'
+      = link_to 'Reset', profile_grants_path, class: 'button clear secondary'
+
+- if @grants.none?
+  %p
+    No grants were found.
+-else
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
+
+  = render partial: 'grants/sortable_table', locals: { q: @q, grants: @grants }
+
+  != pagy_foundation_nav(@pagy)
+

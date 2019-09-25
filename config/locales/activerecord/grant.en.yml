@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    attributes:
+      grant: &grant
+        slug: Short Name
+        friendly_id: Short Name
+        publish_date: Publish Date
+        submission_open_date: Submission Open Date
+        submission_close_date: Submission Close Date
+    errors:
+      models:
+        grant:
+          <<: *grant
+    models:
+      grant:
+        one: grant
+        other: grants

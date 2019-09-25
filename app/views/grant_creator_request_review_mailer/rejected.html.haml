@@ -1,0 +1,13 @@
+%p
+  Dear #{full_name(@requester)},
+
+%p
+  You request for Grant Creator rights has been rejected.
+
+%p
+  You may resubmit a
+  = succeed '.' do
+    = link_to 'new request with additional information', new_grant_creator_request_url
+
+%p
+  Thank you.

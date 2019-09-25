@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    attributes:
+      criteria_reviews:
+        base: ''
+        score:
+    errors:
+      models:
+        criteria_review:
+          attributes:
+            base:
+              required_score: "'%{criterion}' must be scored."

@@ -1,0 +1,46 @@
+// Place all the styles related to the grants controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+main.grants {
+  // Show
+  #title {
+    padding: 1rem 0 2rem 0;
+    h1 {
+      .name {
+        &.long {
+          font-size: 2.75rem;
+          line-height: 2.5rem;
+        }
+        small {
+          margin-top: 1em;
+          display: block;
+        }
+      }
+    }
+  }
+  #grant-dates {
+    .card-divider {
+      padding: .25rem 1rem;
+    }
+    dl {
+      dt {
+        font-size: .85rem;
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+      dd {
+        margin-top: 0;
+      }
+    }
+  }
+  // Shared
+  #rfa,
+  trix-editor {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+  #grant-status {
+    margin: 1rem 0;
+  }
+}

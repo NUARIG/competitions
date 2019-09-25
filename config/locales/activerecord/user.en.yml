@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    attributes:
+      user: &user
+        first_name: First Name
+        last_name: Last Name
+        email: Email
+        upn: Unique ID
+        era_commons: 'eRA Commons'
+        user_type: User Type
+    errors:
+      models:
+        user:
+          <<: *user
+    models:
+      user:
+        one: user
+        other: users
+  helpers:
+    label:
+      user:
+        <<: *user

@@ -1,0 +1,24 @@
+.nested-fields
+  .field
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :name
+      .cell.small-12.medium-9
+        = f.text_field :name, width: 50, required: true
+  .field
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :description
+      .cell.small-12.medium-9
+        = f.text_area :description, width:50
+  .field
+    .grid-x
+      .cell.small-12.medium-4
+        = f.label :is_mandatory
+        = f.check_box :is_mandatory
+      .cell.small-12.medium-4
+        = f.label :show_comment_field
+        = f.check_box :show_comment_field
+
+  = link_to_remove_association 'Remove', f, class: 'button tiny hollow alert'
+  %hr

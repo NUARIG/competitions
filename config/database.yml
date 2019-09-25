@@ -1,25 +1,30 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
-default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
 development:
-  <<: *default
-  database: db/development.sqlite3
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: db/test.sqlite3
-
+  host:     <%= Rails.application.credentials.development[:host] %>
+  adapter:  <%= Rails.application.credentials.development[:adapter] %>
+  database: <%= Rails.application.credentials.development[:database] %>
+  username: <%= Rails.application.credentials.development[:username] %>
+  password: <%= Rails.application.credentials.development[:password] %>
+alpha:
+  host:     <%= Rails.application.credentials.alpha[:host] %>
+  adapter:  <%= Rails.application.credentials.alpha[:adapter] %>
+  database: <%= Rails.application.credentials.alpha[:database] %>
+  username: <%= Rails.application.credentials.alpha[:username] %>
+  password: <%= Rails.application.credentials.alpha[:password] %>
+staging:
+  host:     <%= Rails.application.credentials.staging[:host] %>
+  adapter:  <%= Rails.application.credentials.staging[:adapter] %>
+  database: <%= Rails.application.credentials.staging[:database] %>
+  username: <%= Rails.application.credentials.staging[:username] %>
+  password: <%= Rails.application.credentials.staging[:password] %>
 production:
-  <<: *default
-  database: db/production.sqlite3
+  host:     <%= Rails.application.credentials.production[:host] %>
+  adapter:  <%= Rails.application.credentials.production[:adapter] %>
+  database: <%= Rails.application.credentials.production[:database] %>
+  username: <%= Rails.application.credentials.production[:username] %>
+  password: <%= Rails.application.credentials.production[:password] %>
+test: &TEST
+  host:     <%= Rails.application.credentials.test[:host] %>
+  adapter:  <%= Rails.application.credentials.test[:adapter] %>
+  database: <%= Rails.application.credentials.test[:database] %>
+  username: <%= Rails.application.credentials.test[:username] %>
+  password: <%= Rails.application.credentials.test[:password] %>
