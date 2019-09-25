@@ -29,3 +29,12 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore configuration yml files
+/config/attribute-map.yml
+/config/deploy_config.yml
+
+# Rspec
+/spec/examples.txt
+/coverage
+/coverage/*
