@@ -31,7 +31,9 @@ gem 'redis', '~> 4.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'devise'
-gem 'devise_saml_authenticatable'
+# gem 'devise_saml_authenticatable'
+gem 'devise_saml_authenticatable', :git => "git://github.com/Yu-Chieh-Henry-Yang/devise_saml_authenticatable.git", :branch => "sp-initiated-logout-for-non-transient-name-id-format"
+
 gem 'draper'
 gem 'pundit'
 gem 'rubyzip'

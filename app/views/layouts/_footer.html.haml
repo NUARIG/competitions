@@ -1,0 +1,20 @@
+%footer
+  .grid-x.grid-padding-x#logos
+    .cell.small-12.medium-6.small-text-center.medium-text-right
+      = link_to 'http://cd2h.org/' do
+        = image_tag 'CD2H_logo.png', class: 'logo'
+    .cell.small-12.medium-6.small-text-center.medium-text-left
+      = link_to 'http://nucats.northwestern.edu/' do
+        = image_tag 'CATS-gradient.png', class: 'logo'
+  .grid-x.grid-padding-x.text-center
+    .cell.small-12
+      %p
+        Competitions is powered by the Northwestern University Clinical and Translational Sciences Institute
+        = surround '(', ')' do
+          = link_to 'NUCATS', 'http://nucats.northwestern.edu/'
+        and is supported in part by the National Institutes of Health
+        <br/>
+        (NCATS UL1TR001422 and U24TR002306)
+      %p
+        = precede 'v' do
+          = Competitions::Application::VERSION

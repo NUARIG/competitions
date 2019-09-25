@@ -297,6 +297,9 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
+
+  config.saml_sign_out_success_url = Rails.application.credentials.dig(Rails.env.to_sym, :sign_out_url)
+
   # ==> Configuration for :saml_authenticatable
   # Create user if the user does not exist. (Default is false)
   config.saml_create_user = true
@@ -306,7 +309,7 @@ Devise.setup do |config|
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = :upn
+  config.saml_default_user_key = :email
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
@@ -322,7 +325,7 @@ Devise.setup do |config|
 
   # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
   # by setting this to a custom reader class, or use the default.
-  # config.idp_entity_id_reader = DeviseSamlAuthenticatable::DefaultIdpEntityIdReader
+  config.idp_entity_id_reader = DeviseSamlAuthenticatable::CompetitionsIdpEntityIdReader
 
   # You can set a handler object that takes the response for a failed SAML request and the strategy,
   # and implements a #handle method. This method can then redirect the user, return error messages, etc.
@@ -337,7 +340,7 @@ Devise.setup do |config|
   # You can add allowance for clock drift between servers.
   # See devise_saml_authenticatable/lib/devise_saml_authenticatable/strategy.rb:40.
   # This should be a time in seconds.
-  config.allowed_clock_drift_in_seconds = 10
+  config.allowed_clock_drift_in_seconds = 20
 
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
