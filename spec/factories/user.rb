@@ -8,6 +8,7 @@ FactoryBot.define do
     upn                         { email }
     system_admin                { false }
     grant_creator               { false }
+    session_index               { Faker::Lorem.characters }
 
     trait :system_admin do
       system_admin { true }
