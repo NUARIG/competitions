@@ -74,6 +74,14 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  config.action_mailer.default_url_options = Rails.application.credentials.dig(Rails.env.to_sym, :default_url_options)
+
+  config.subdomain = Rails.application.credentials.dig(Rails.env.to_sym, :subdomain)
+  config.app_domain = Rails.application.credentials.dig(Rails.env.to_sym, :app_domain)
+  config.action_mailer.delivery_method = Rails.application.credentials.dig(Rails.env.to_sym, :delivery_method).to_sym
+  config.action_mailer.perform_deliveries = Rails.application.credentials.dig(Rails.env.to_sym, :perform_deliveries)
+  config.action_mailer.smtp_settings = Rails.application.credentials.dig(Rails.env.to_sym, :smtp_settings)
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
