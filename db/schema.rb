@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_18_194132) do
+ActiveRecord::Schema.define(version: 2019_09_26_192519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -419,7 +419,7 @@ ActiveRecord::Schema.define(version: 2019_09_18_194132) do
     t.inet "last_sign_in_ip"
     t.boolean "grant_creator", default: false, null: false
     t.string "upn", default: "", null: false
-    t.string "session_index", null: false
+    t.string "session_index"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
