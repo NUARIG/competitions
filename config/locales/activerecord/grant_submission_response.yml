@@ -4,9 +4,9 @@ en:
       grant_submission/submission/responses:
         decimal_val: Response
         document: File
-        text_val: Response
         grant_submission_multiple_choice_option_id: A selection
         datetime_val_date_optional_time_magik: Response
+        string_val: Response
     errors:
       models:
         grant_submission/response:
@@ -22,4 +22,5 @@ en:
             grant_submission_multiple_choice_option_id:
               blank: for '%{question}' is required.
             datetime_val_date_optional_time_magik:
-
+            string_val:
+              string_too_long: to '%{question}' must be 255 characters or shorter.'
