@@ -1,0 +1,8 @@
+%li#help
+  = link_to 'Help', '#'
+  %ul.menu
+    %li
+      = link_to 'Overview', 'https://data2health.github.io/competitions-project/'
+    - if !user_signed_in?
+      %li
+        = link_to 'Logging In', 'https://data2health.github.io/competitions-project/howto_login.html'
