@@ -17,5 +17,5 @@
               = link_to 'MySubmissions', profile_submissions_path
     .top-bar-right
       %ul.dropdown.menu{"data-dropdown-menu" => ""}
-        %li
-          = render 'devise/menu/login_items'
+        = render 'layouts/header_help_links'
+        = render 'devise/menu/login_items'
