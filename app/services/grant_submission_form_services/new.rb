@@ -9,10 +9,7 @@ module GrantSubmissionFormServices
         ActiveRecord::Base.transaction(requires_new: true) do
         # Create a form, give it a stock title
           new_form = GrantSubmission::Form.create(grant: grant,
-                                                  # TODO: Delete title
-                                                  title: "Grant #{grant.id}: #{grant.name} Submission Form",
-                                                  # TODO: change to help_text/instruction
-                                                  description: '',
+                                                  submission_instructions: '',
                                                   created_id: user.id,
                                                   updated_id: user.id)
 
