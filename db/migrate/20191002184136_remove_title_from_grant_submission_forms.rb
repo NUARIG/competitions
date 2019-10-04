@@ -5,7 +5,7 @@ class RemoveTitleFromGrantSubmissionForms < ActiveRecord::Migration[5.2]
   end
 
   def down
-    add_column :grant_submission_forms, :title, :string, null: false
+    add_column :grant_submission_forms, :title, :string
     add_index :grant_submission_forms, :title, unique: true
   end
 end
