@@ -11,7 +11,11 @@ class ApplicationController < ActionController::Base
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index
 
+  # after_action :add_attrs_to_current_user
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  # protect_from_forgery with: :exception
 
   def user_for_paper_trail
     user_signed_in? ? current_user.id : 'Unauthenticated user'
@@ -33,4 +37,9 @@ class ApplicationController < ActionController::Base
                          params:     params.except(:utf8, :_method, :authenticity_token, :controller, :action))
     end
   end
+
+  # def add_attrs_to_current_user
+  #   byebug
+  #   current_user.session_index = session["warden.user.user.key"].last
+  # end
 end

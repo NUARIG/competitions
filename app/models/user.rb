@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  # attr_accessor :session_index
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :omniauthable, :database_authenticatable, :registerable, :recoverable, :validatable:rememberable
   devise :saml_authenticatable, :trackable, :timeoutable
@@ -37,4 +39,9 @@ class User < ApplicationRecord
   validates :last_name,         presence: true
 
   scope :order_by_last_name,    -> { order(last_name: :asc) }
+
+  # def initialize
+  #   @session_index = ''
+  # end
+
 end
