@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_26_192519) do
+ActiveRecord::Schema.define(version: 2019_10_02_194723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,15 +184,12 @@ ActiveRecord::Schema.define(version: 2019_09_26_192519) do
 
   create_table "grant_submission_forms", force: :cascade do |t|
     t.bigint "grant_id"
-    t.string "description", limit: 3000
-    t.boolean "disabled"
+    t.string "submission_instructions", limit: 3000
     t.bigint "created_id"
     t.bigint "updated_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "title"
     t.index ["grant_id"], name: "index_grant_submission_forms_on_grant_id", unique: true
-    t.index ["title"], name: "index_grant_submission_forms_on_title", unique: true
   end
 
   create_table "grant_submission_multiple_choice_option_versions", force: :cascade do |t|

@@ -38,39 +38,35 @@ class GrantSubmission::Form < ApplicationRecord
     # available? && grant_forms.empty? # && mb_messages.empty? && instructions.empty?
   end
 
-  # First, re-number sections/questions/multiple_choice_options from an offset
-  # while respecting the assigned order.
-  # Then, to clean things up, re-number again from 1.
-  # Allows for display order uniqueness database constraints. The offset must be
-  # large enough to account for existing display orders in the db and new records
-  # being created. e.g. Add questions and reorder at the same time.
+  # This method first re-numbers sections/questions/answers from an offset
+  # while still respecting the created_at order.
+  #   The offset must be large enough to account for existing display orders
+  #   in the db and new records to be created.
+  # It then re-orders from 1 to clean things up. This allows database
+  # constraints on uniqueness of display order.
   def update_attributes_safe_display_order(params)
+
     reorder = ->(relation, offset) do
-                  return if relation.size == 0
-                  start = offset ? [relation.size, *relation.pluck(:display_order), *relation.map(&:display_order)].compact.max.to_i + 1 : 1
-                  relation.each_with_index {|el, i| el.display_order = start + i }
-                end
+      return if relation.size == 0
+      start = offset ? [relation.size, *relation.pluck(:display_order), *relation.map(&:display_order)].compact.max.to_i + 1 : 1
+      relation.each { |item| item.created_at = DateTime.now if item.created_at.nil? }
+      relation.sort_by(&:created_at).each_with_index {|el, i| el.display_order = start + i}
+    end
 
     assign_attributes(params)
 
     if valid?
       reorder.(sections, true)
-      sections.each { |section| reorder.(section.questions, true) }
-      sections.flat_map(&:questions).each do |question|
-        reorder.(question.multiple_choice_options, true) if question.multiple_choice_options.present?
-      end
-
+      sections.each {|s| reorder.(s.questions, true)}
+      sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_options, true)}
       offset_saved = save
 
       reorder.(sections, false)
-      sections.each { |section| reorder.(section.questions, false) }
-      sections.flat_map(&:questions).each do |question|
-        reorder.(question.multiple_choice_options, false) if question.multiple_choice_options.present?
-      end
+      sections.each {|s| reorder.(s.questions, false)}
+      sections.flat_map(&:questions).each {|q| reorder.(q.multiple_choice_options, false)}
+      ordered_save = save
 
-      saved = save
-
-      return (offset_saved && saved)
+      return (offset_saved && ordered_save)
     else
       return false
     end

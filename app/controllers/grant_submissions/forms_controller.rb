@@ -10,7 +10,8 @@ module GrantSubmissions
     end
 
     def update
-      @form = GrantSubmission::Form.includes(sections: { questions: :multiple_choice_options }).find(params[:id])
+      @form = GrantSubmission::Form.find(params[:id])
+
       authorize @form
       if @form.available? && @form.update_attributes_safe_display_order(form_params)
         @form.updated_id = current_user.id
