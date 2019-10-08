@@ -2,7 +2,7 @@ en:
   activerecord:
     attributes:
       grant_submission/form: &form
-        description: Submission Instructions
+        submission_instructions: Submission Instructions
     errors:
       models:
         grant_submission/form:

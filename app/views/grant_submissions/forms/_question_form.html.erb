@@ -1,7 +1,7 @@
 <fieldset class="fieldset form_builder_question_fieldset">
   <legend>
     <span>Question</span>
-    <%= question.link_to_remove 'Delete', class: 'button tiny btn-pill hollow alert' if has_edit_permission %>
+    <%= question.link_to_remove 'Delete', id: "delete-question-#{get_question_id(question.object)}", class: 'delete-question button tiny btn-pill hollow alert' if has_edit_permission %>
   </legend>
 
   <table class="question_table table unstriped" style="width: auto;">

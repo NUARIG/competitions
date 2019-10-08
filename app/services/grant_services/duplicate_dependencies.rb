@@ -20,7 +20,7 @@ module GrantServices
         end
         OpenStruct.new(success?: true)
       rescue
-        errors = new_grant.errors.any? ? new_grant.errors.full_messages : 'An error occurred while saving. Please try again.'
+        errors = new_grant.errors.any? ? new_grant.errors.full_messages : 'An error occurred while duplicating this grant. Please try again.'
         OpenStruct.new(success?: false,
                        messages: errors)
       end
