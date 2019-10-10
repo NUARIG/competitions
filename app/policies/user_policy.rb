@@ -16,4 +16,10 @@ class UserPolicy < ApplicationPolicy
   def profile?
     record == user
   end
+
+  private
+
+  def current_user
+  end
+
 end
