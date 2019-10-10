@@ -14,8 +14,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def user_for_paper_trail
-    puts current_user.inspect
-    puts user_signed_in?
     user_signed_in? ? current_user.id : 'Unauthenticated user'
   end
 
