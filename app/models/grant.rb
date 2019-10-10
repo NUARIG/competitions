@@ -133,12 +133,12 @@ class Grant < ApplicationRecord
   end
 
   def is_open?
-    DateTime.now >= submission_open_date.beginning_of_day
+    DateTime.now.between?(submission_open_date.beginning_of_day,
+                          submission_close_date.end_of_day)
   end
 
   def accepting_submissions?
-    published? && DateTime.now.between?(submission_open_date.beginning_of_day,
-                                        submission_close_date.end_of_day)
+    published? && is_open?
   end
 
   def requires_one_criteria

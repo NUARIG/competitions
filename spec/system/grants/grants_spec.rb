@@ -4,6 +4,10 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Grants', type: :system do
+  def authorization_error_text
+    I18n.t('pundit.default')
+  end
+
   describe 'Index', js: true do
     before(:each) do
       @grant                  = create(:grant_with_users)
@@ -222,14 +226,43 @@ RSpec.describe 'Grants', type: :system do
 
   describe 'Policy', js: true do
     before(:each) do
-      @grant        = create(:grant_with_users)
-      @invalid_user = create(:user)
-      @grant_viewer = @grant.grant_permissions.role_viewer.first.user
-      @grant_editor = @grant.grant_permissions.role_editor.first.user
-      @grant_admin  = @grant.grant_permissions.role_admin.first.user
+      @grant          = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
+      @invalid_user   = create(:user)
+      @grant_viewer   = @grant.grant_permissions.role_viewer.first.user
+      @grant_editor   = @grant.grant_permissions.role_editor.first.user
+      @grant_admin    = @grant.grant_permissions.role_admin.first.user
+      @grant_reviewer = @grant.reviewers.first
       @system_admin = create(:system_admin_user)
 
       @grant_permission   = @grant.grant_permissions.role_editor.first
+    end
+
+    context 'anoymous user' do
+      scenario 'can view publisehed open grant' do
+        visit grant_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+        expect(page).to have_link 'Apply Now'
+      end
+
+      scenario 'can view published not yet open grant' do
+        @grant.update_attribute(:submission_open_date, DateTime.tomorrow)
+        visit grant_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+        expect(page).to have_text 'This Grant is Not Currently Accepting Submissions'
+      end
+
+      scenario 'cannot view draft grant' do
+        @grant.update_attribute(:state, 'draft')
+        visit grant_path(@grant)
+        expect(page).to have_content authorization_error_text
+      end
+
+      scenario 'cannot view closed grant' do
+        @grant.update_attribute(:submission_close_date, DateTime.yesterday)
+        visit grant_path(@grant)
+        expect(page).to have_content authorization_error_text
+      end
+
     end
 
     context 'system admin' do
@@ -239,20 +272,20 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can access edit pages' do
         visit new_grant_path
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
         visit edit_grant_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
         visit grant_grant_permissions_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
         visit edit_grant_grant_permission_path(@grant, @grant_permission)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
         visit new_grant_duplicate_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
       end
 
       scenario 'can duplicate a grant' do
         visit new_grant_duplicate_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
       end
     end
 
@@ -263,15 +296,15 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'user without access cannot access edit pages' do
         visit new_grant_path
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
         visit edit_grant_path(@grant)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
         visit grant_grant_permissions_path(@grant)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
         visit edit_grant_grant_permission_path(@grant, @grant_permission)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
         visit new_grant_duplicate_path(@grant)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
       end
     end
 
@@ -280,19 +313,24 @@ RSpec.describe 'Grants', type: :system do
         login_as @grant_editor
       end
 
+      scenario 'can access show page' do
+        visit grant_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+      end
+
       scenario 'can access edit page' do
         visit edit_grant_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
       end
 
       scenario 'cannot duplicate a grant' do
         visit new_grant_duplicate_path(@grant)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
       end
 
       scenario 'can access grant_permissions page' do
         visit grant_grant_permissions_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
       end
     end
 
@@ -304,7 +342,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can duplicate a grant' do
         visit new_grant_duplicate_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
       end
     end
 
@@ -313,25 +351,59 @@ RSpec.describe 'Grants', type: :system do
         login_as @grant_viewer
       end
 
+      scenario 'can access show page' do
+        visit grant_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+      end
+
       scenario 'cannot access edit page' do
         visit edit_grant_path(@grant)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
       end
 
       scenario 'cannot duplicate a grant' do
         visit new_grant_duplicate_path(@grant)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
       end
 
       pending 'can access grant_permissions page' do
         fail 'grant_viewer to be deleted'
         visit grant_grant_permissions_path(@grant)
-        expect(page).not_to have_content 'You are not authorized to perform this action.'
+        expect(page).not_to have_content authorization_error_text
       end
 
       scenario 'cannot edit a grant_permission' do
         visit edit_grant_grant_permission_path(@grant, @grant_permission)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content authorization_error_text
+      end
+    end
+
+    context 'grant reviewer' do
+      before(:each) do
+        login_as @grant_reviewer
+      end
+
+      scenario 'can view grant in draft mode' do
+        @grant.update_attribute(:state, 'draft')
+        visit grant_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+      end
+
+      scenario 'can view closed grant' do
+        @grant.update_attribute(:submission_close_date, DateTime.yesterday)
+        visit grant_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+      end
+
+      scenario 'cannot access edit pages' do
+        visit edit_grant_path(@grant)
+        expect(page).to have_content authorization_error_text
+        visit grant_grant_permissions_path(@grant)
+        expect(page).to have_content authorization_error_text
+        visit edit_grant_grant_permission_path(@grant, @grant_permission)
+        expect(page).to have_content authorization_error_text
+        visit new_grant_duplicate_path(@grant)
+        expect(page).to have_content authorization_error_text
       end
     end
   end
