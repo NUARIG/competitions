@@ -4,20 +4,18 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Pagy::Backend
 
-  before_action :set_paper_trail_whodunnit
-  before_action :authenticate_user!
-  before_action :audit_action
+  before_action :authenticate_user!, :set_paper_trail_whodunnit, :audit_action
 
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index
 
-  # after_action :add_attrs_to_current_user
-
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  # protect_from_forgery with: :exception
+  protect_from_forgery with: :exception
 
   def user_for_paper_trail
+    puts current_user.inspect
+    puts user_signed_in?
     user_signed_in? ? current_user.id : 'Unauthenticated user'
   end
 
@@ -37,9 +35,4 @@ class ApplicationController < ActionController::Base
                          params:     params.except(:utf8, :_method, :authenticity_token, :controller, :action))
     end
   end
-
-  # def add_attrs_to_current_user
-  #   byebug
-  #   current_user.session_index = session["warden.user.user.key"].last
-  # end
 end

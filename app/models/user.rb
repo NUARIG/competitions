@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  # attr_accessor :session_index
+  attr_accessor :session_index
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :omniauthable, :database_authenticatable, :registerable, :recoverable, :validatable:rememberable
@@ -40,8 +40,13 @@ class User < ApplicationRecord
 
   scope :order_by_last_name,    -> { order(last_name: :asc) }
 
-  # def initialize
-  #   @session_index = ''
-  # end
+  # https://github.com/apokalipto/devise_saml_authenticatable/issues/151
+  def authenticatable_salt
+    if self.session_index.present?
+      self.read_attribute(session_index)
+    else
+      super
+    end
+  end
 
 end
