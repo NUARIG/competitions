@@ -42,11 +42,7 @@ class User < ApplicationRecord
 
   # https://github.com/apokalipto/devise_saml_authenticatable/issues/151
   def authenticatable_salt
-    if self.session_index.present?
-      self.read_attribute(session_index)
-    else
-      super
-    end
+    self.read_attribute(session_index) if self.session_index.present?
   end
 
 end
