@@ -10,9 +10,9 @@
 <%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
   <table class="table">
     <tr>
-      <td><%= f.label :description %></td>
+      <td><%= f.label :submission_instructions %></td>
       <td>
-          <%= text_area_tag 'grant_submission_form[description]', f.object.description, rows: 2, cols: 80, aria: { 'described-by': 'submissionInstructionsHelp' } %>
+          <%= text_area_tag 'grant_submission_form[submission_instructions]', f.object.submission_instructions, rows: 2, cols: 80, aria: { 'described-by': 'submissionInstructionsHelp' } %>
           <p id="#submissionInstructionsHelp" class="help-text">
               This optional text will be included on the application form.
             </p>

@@ -1,0 +1,6 @@
+#apply
+  - if @grant.accepting_submissions? || (current_user.present? && policy(@grant).grant_viewer_access?)
+    = link_to 'Apply Now', grant_apply_path(@grant), class: 'button expanded'
+  - else
+    .button.hollow.expanded{disabled: true}
+      This Grant is Not Currently Accepting Submissions

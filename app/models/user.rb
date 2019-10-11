@@ -13,7 +13,8 @@ class User < ApplicationRecord
   has_many   :editable_grants,        through: :grant_permissions,
                                       source: :grant
 
-  has_many   :grant_reviewers
+  has_many   :grant_reviewers,        foreign_key: :reviewer_id,
+                                      inverse_of: :reviewer
   has_many   :reviewable_grants,      through: :grant_reviewers,
                                       source: :grant
 

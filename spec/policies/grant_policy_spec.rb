@@ -154,7 +154,7 @@ describe GrantPolicy do
 
   context 'policy tests on restful actions besides index' do
     subject { described_class.new(user, grant)}
-    let(:grant) { create(:open_grant_with_users) }
+    let(:grant) { create(:published_open_grant_with_users) }
 
     context 'with user having a role on the grant' do
       context 'grant admin user on the grant' do
