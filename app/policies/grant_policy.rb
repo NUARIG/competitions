@@ -12,11 +12,10 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def show?
-    case grant.published?
-    when true
-      user.present?
+    if grant.published? && DateTime.now.between?(grant.publish_date, grant.submission_close_date)
+      true
     else
-      grant_viewer_access?
+      user.present? && grant_viewer_access? || user_is_grant_reviewer?
     end
   end
 
@@ -70,5 +69,9 @@ class GrantPolicy < ApplicationPolicy
 
   def user
     @user
+  end
+
+  def user_is_grant_reviewer?
+    grant.reviewers.include?(user)
   end
 end

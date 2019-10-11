@@ -13,15 +13,14 @@
       RFA
     = @grant.rfa.html_safe
 
-    = link_to 'Apply Now', grant_apply_path(@grant), class: 'button expanded' if @grant.accepting_submissions? || policy(@grant).grant_viewer_access?
+    = render 'apply_button', grant: @grant
+
     %hr
 
     %ul.menu.simple#user-links
-      =# @grant.apply_menu_link
       %li
         = link_to 'View Open Grants', root_path
 
     %ul.menu.simple#admin-links
-      = @grant.edit_menu_link
-      =# @grant.view_submissions_menu_link
+      = @grant.edit_menu_link if current_user.present?
 

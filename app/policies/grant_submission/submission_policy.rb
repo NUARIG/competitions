@@ -39,7 +39,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def create?
-    user.system_admin? || (user.present? && @grant.accepting_submissions?)
+    (user.present? && @grant.accepting_submissions?) || grant_editor_access? || user.system_admin?
   end
 
   def new?
@@ -55,7 +55,6 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def destroy?
-    # TODO: Admin and g.unpublished
     !grant.published? && (user.system_admin? || grant_editor_access?)
   end
 
