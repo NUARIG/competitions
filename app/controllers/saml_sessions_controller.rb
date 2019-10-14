@@ -17,6 +17,7 @@ class SamlSessionsController < Devise::SamlSessionsController
   end
 
   # THESE TWO METHODS WERE TAKEN FROM THE BRANCH OF DEVISE_SAML_AUTHENTICATABLE IN PR #149.
+  # https://github.com/apokalipto/devise_saml_authenticatable/pull/149
   # For non transient name ID, save info to identify user for logout purpose
   # before that user's session got destroyed. These info are used in the
   # `after_sign_out_path_for` method below.
