@@ -9,7 +9,7 @@ class SamlSessionsController < Devise::SamlSessionsController
   protected
 
   def set_saml_session_index_on_session
-    session[Devise.saml_session_index_key] = current_user.read_attribute(Devise.saml_session_index_key) if user_signed_in?
+    session[Devise.saml_session_index_key] = current_user.send(Devise.saml_session_index_key) if user_signed_in?
   end
 
   def set_saml_session_index_on_current_user
