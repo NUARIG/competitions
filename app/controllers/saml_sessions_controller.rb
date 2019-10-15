@@ -13,7 +13,7 @@ class SamlSessionsController < Devise::SamlSessionsController
   end
 
   def get_saml_session_index
-    current_user.session_index = session[Devise.saml_session_index_key]
+    current_user.send(Devise.saml_session_index_key) = session[Devise.saml_session_index_key]
   end
 
   # THESE FOLLOWING TWO METHODS WERE TAKEN FROM THE BRANCH OF DEVISE_SAML_AUTHENTICATABLE IN PR #149.
@@ -28,6 +28,8 @@ class SamlSessionsController < Devise::SamlSessionsController
   end
 
   # Override devise to send user to IdP logout for SLO
+  # PREVIOUS VERSION CAN BE FOUND HERE:
+  # https://github.com/apokalipto/devise_saml_authenticatable/blob/4760cd3e72b5f4bacd9746a8fd33b2a3c447a9ec/app/controllers/devise/saml_sessions_controller.rb
   def after_sign_out_path_for(_)
     idp_entity_id = get_idp_entity_id(params)
     request = OneLogin::RubySaml::Logoutrequest.new
