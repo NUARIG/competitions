@@ -1,18 +1,18 @@
 # require "ruby-saml"
 
 class SamlSessionsController < Devise::SamlSessionsController
-  after_action :set_user_session_index, only: :create
+  after_action :set_saml_session_index, only: :create
   skip_before_action :verify_authenticity_token, raise: false
   prepend_before_action :store_info_for_sp_initiated_logout, only: :destroy # FROM BRANCH FOR PR #149
-  prepend_before_action :get_user_session_index, only: :destroy
+  prepend_before_action :get_saml_session_index, only: :destroy
 
   protected
 
-  def set_user_session_index
+  def set_saml_session_index
     session[Devise.saml_session_index_key] = current_user.send(Devise.saml_session_index_key) if user_signed_in?
   end
 
-  def get_user_session_index
+  def get_saml_session_index
     current_user.session_index = session[Devise.saml_session_index_key]
   end
 
