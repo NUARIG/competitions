@@ -9,14 +9,14 @@ class SamlSessionsController < Devise::SamlSessionsController
   protected
 
   def set_user_session_index
-    session[:saml_session_index] = current_user.session_index if user_signed_in?
+    session[Devise.saml_session_index_key] = current_user.send(Devise.saml_session_index_key) if user_signed_in?
   end
 
   def get_user_session_index
-    current_user.session_index = session[:saml_session_index]
+    current_user.session_index = session[Devise.saml_session_index_key]
   end
 
-  # THESE TWO METHODS WERE TAKEN FROM THE BRANCH OF DEVISE_SAML_AUTHENTICATABLE IN PR #149.
+  # THESE FOLLOWING TWO METHODS WERE TAKEN FROM THE BRANCH OF DEVISE_SAML_AUTHENTICATABLE IN PR #149.
   # https://github.com/apokalipto/devise_saml_authenticatable/pull/149
   # For non transient name ID, save info to identify user for logout purpose
   # before that user's session got destroyed. These info are used in the
@@ -44,14 +44,4 @@ class SamlSessionsController < Devise::SamlSessionsController
 
     request.create(saml_settings)
   end
-
-  # ORIGINAL FROM THE MASTER DEVISE_SAML_AUTHENTICATABLE GEM.
-  # Override devise to send user to IdP logout for SLO
-  # def after_sign_out_path_for(_)
-  #   idp_entity_id = get_idp_entity_id(params)
-  #   request = OneLogin::RubySaml::Logoutrequest.new
-  #   request.create(saml_config(idp_entity_id))
-  # end
-
-
 end
