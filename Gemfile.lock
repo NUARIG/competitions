@@ -417,7 +417,7 @@ DEPENDENCIES
   capistrano-service
   capybara (>= 2.15)
   cocoon
-  devise (~> 4.7.1)
+  devise (>= 4.7.1)
   devise_saml_authenticatable
   draper
   factory_bot_rails
