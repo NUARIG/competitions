@@ -2,11 +2,6 @@
 
 Rails.application.routes.draw do
   devise_for :users, controllers: { saml_sessions: 'saml_sessions' }
-                    # tell it where session_controller is
-                    # copy devise_saml_session controller
-                    # add new after action to set session_index in session
-                    # add new prepend action to get session_index fom session
-                    # THEN call whatever of their dumb methods
 
   resources :users,               only: %i[index edit update]
 
