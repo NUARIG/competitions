@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_03_201916) do
+ActiveRecord::Schema.define(version: 2019_10_15_145255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -291,7 +291,6 @@ ActiveRecord::Schema.define(version: 2019_10_03_201916) do
     t.bigint "grant_submission_form_id", null: false
     t.string "title"
     t.integer "display_order", null: false
-    t.boolean "repeatable"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
