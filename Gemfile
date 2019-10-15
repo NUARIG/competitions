@@ -30,7 +30,7 @@ gem 'redis', '~> 4.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'devise'
+gem 'devise', '~> 4.7.1'
 gem 'devise_saml_authenticatable'
 
 gem 'draper'
