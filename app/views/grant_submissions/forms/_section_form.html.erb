@@ -1,7 +1,7 @@
 <fieldset class="fieldset form_builder_section_fieldset">
   <legend>
     <span>Section</span>
-    <%= section.link_to_remove 'Delete', { class: 'delete-section button tiny btn-pill alert hollow', title: 'Delete this section and its questions'} if has_edit_permission %>
+    <%= section.link_to_remove 'Delete', { id: "delete-section-#{section.object.id}", class: 'delete-section button tiny btn-pill alert hollow', title: 'Delete this section and its questions'} if has_edit_permission %>
   </legend>
 
   <table class="section_table table unstriped">

@@ -32,7 +32,7 @@ RSpec.describe 'GrantSubmissiion::Forms', type: :system do
         expect(page).to have_text 'Submission Form successfully updated'
       end
 
-      scenario 'display_order is updated' do
+      scenario 'display_order is updated on delete' do
         original_section = @draft_grant.form.sections.first
         expect(original_section.display_order).to be 1
         find('.delete-section').click
@@ -42,6 +42,22 @@ RSpec.describe 'GrantSubmissiion::Forms', type: :system do
         click_button 'Save'
         expect(@draft_grant.form.sections.first.display_order).not_to be 2
         expect(@draft_grant.form.sections.first.display_order).to be 1
+      end
+
+      scenario 'display_order is updated when section in middle of form is deleted' do
+        original_first_section = @draft_grant.form.sections.first
+        click_link add_section_text
+        find_field('Title', with: '').set('Section to be deleted')
+        click_link add_section_text
+        find_field('Title', with: '').set('Section Last')
+        click_button 'Save'
+        original_section_section = @draft_grant.form.sections.second
+        original_last_section    = @draft_grant.form.sections.last
+        page.find("#delete-section-#{original_section_section.id}").click
+        click_button 'Save'
+        expect(@draft_grant.form.sections.count).to be 2
+        expect(GrantSubmission::Section.find(original_first_section.id).display_order).to be 1
+        expect(GrantSubmission::Section.find(original_last_section.id).display_order).to be 2
       end
     end
 
