@@ -1,11 +1,16 @@
 en:
   activerecord:
     attributes:
-      grant_submission:
-        sections:
+      sections:
+        title: Section Title
     errors:
       models:
-        grant_submission/form/sections:
+        grant_submission/section:
+          attributes:
+            title:
+              taken: must be unique to this competition.
+    models:
+      grant_submission/section: Section
   helpers:
     label:
       grant_submission_form:

@@ -30,9 +30,8 @@ gem 'redis', '~> 4.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'devise'
-# gem 'devise_saml_authenticatable'
-gem 'devise_saml_authenticatable', :git => "git://github.com/Yu-Chieh-Henry-Yang/devise_saml_authenticatable.git", :branch => "sp-initiated-logout-for-non-transient-name-id-format"
+gem 'devise', '>= 4.7.1'
+gem 'devise_saml_authenticatable'
 
 gem 'draper'
 gem 'pundit'

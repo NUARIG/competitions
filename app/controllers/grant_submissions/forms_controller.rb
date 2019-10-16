@@ -33,21 +33,17 @@ module GrantSubmissions
     def form_params
       params.require(:grant_submission_form).permit(
           :submission_instructions,
-          :has_alerts,
           sections_attributes: [
             :id,
             :_destroy,
             :title,
             :display_order,
-            :repeatable,
-            :allow_follow_up,
             :grant_submission_form_id,
             questions_attributes: [
               :id,
               :_destroy,
               :text,
               :display_order,
-              :export_code,
               :is_mandatory,
               :response_type,
               :instruction,
@@ -56,7 +52,6 @@ module GrantSubmissions
                 :id,
                 :grant_submission_question_id,
                 :text,
-                :export_code,
                 :display_order,
                 :_destroy
               ]

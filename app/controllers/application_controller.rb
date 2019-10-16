@@ -4,14 +4,14 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Pagy::Backend
 
-  before_action :set_paper_trail_whodunnit
-  before_action :authenticate_user!
-  before_action :audit_action
+  before_action :authenticate_user!, :set_paper_trail_whodunnit, :audit_action
 
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  protect_from_forgery with: :exception
 
   def user_for_paper_trail
     user_signed_in? ? current_user.id : 'Unauthenticated user'

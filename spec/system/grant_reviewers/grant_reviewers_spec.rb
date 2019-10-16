@@ -78,7 +78,7 @@ RSpec.describe 'GrantReviewers', type: :system do
 
     scenario 'reviewer and reveiwer submissions can be deleted' do
       reviewer = @grant.grant_reviewers.first.reviewer
-      expect(reviewer.reviews.by_grant(Grant.last).count).to eq(1)
+      expect(reviewer.reviews.by_grant(@grant).count).to eq(1)
       click_link('Remove', href: grant_reviewer_path(@grant, @grant.grant_reviewers.first))
       page.driver.browser.switch_to.alert.accept
       expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
