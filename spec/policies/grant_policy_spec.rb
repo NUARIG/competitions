@@ -110,7 +110,6 @@ describe GrantPolicy do
     end
 
     context 'with user not having a role on the grant' do
-
       context 'system_admin user' do
         let(:user) { create(:system_admin_user) }
 
@@ -196,7 +195,6 @@ describe GrantPolicy do
     end
 
     context 'with user not having a role on the grant' do
-
       context 'system_admin user' do
         let(:user) { create(:system_admin_user) }
 
@@ -218,6 +216,67 @@ describe GrantPolicy do
         it { is_expected.to forbid_action(:create) }
         it { is_expected.to forbid_action(:update) }
         it { is_expected.to forbid_action(:destroy) }
+      end
+    end
+  end
+
+  context 'time-sensitive show policy' do
+    subject { described_class.new(user, grant)}
+
+    context 'logged in user' do
+      let(:user) { create(:user) }
+
+      context 'grant closing today' do
+        let(:grant) { create(:published_open_grant, submission_close_date: Date.today) }
+        it { is_expected.to permit_action(:show) }
+      end
+
+      context 'grant opening today' do
+        let(:grant) { create(:published_open_grant, submission_open_date: Date.today) }
+        it { is_expected.to permit_action(:show) }
+      end
+
+      context 'grant published today' do
+        let(:grant) { create(:published_open_grant, publish_date: Date.today) }
+        it { is_expected.to permit_action(:show) }
+      end
+
+      context 'closed grant' do
+        let(:grant) { create(:published_closed_grant)}
+        it { is_expected.to forbid_action(:show) }
+      end
+    end
+
+    context 'anonymous user' do
+      let(:user) { nil }
+
+      context 'grant closing today' do
+        let(:grant) { create(:published_open_grant, submission_close_date: Date.today) }
+        it { is_expected.to permit_action(:show) }
+      end
+
+      context 'grant opening today' do
+        let(:grant) { create(:published_open_grant, submission_open_date: Date.today) }
+        it { is_expected.to permit_action(:show) }
+      end
+
+      context 'grant published today' do
+        let(:grant) { create(:published_open_grant, publish_date: Date.today) }
+        it { is_expected.to permit_action(:show) }
+      end
+
+      context 'closed grant' do
+        let(:grant) { create(:published_closed_grant)}
+        it { is_expected.to forbid_action(:show) }
+      end
+    end
+
+    context 'grant reviewer' do
+      context 'closed grant' do
+        let(:grant) { create(:open_grant_with_users_and_form_and_submission_and_reviewer, submission_close_date: Date.yesterday) }
+        let(:user) { User.find(grant.grant_reviewers.first.reviewer_id)}
+
+        it { is_expected.to permit_action(:show) }
       end
     end
   end

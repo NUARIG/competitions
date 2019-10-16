@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'GrantSubmissiion::Forms', type: :system do
+RSpec.describe 'GrantSubmission::Forms', type: :system do
   add_question_text = 'Add a Question to this Section'
   add_section_text  = 'Add a Section'
 

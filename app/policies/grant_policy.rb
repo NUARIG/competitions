@@ -12,10 +12,10 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def show?
-    if grant.published? && DateTime.now.between?(grant.publish_date, grant.submission_close_date)
+    if grant.published? && DateTime.now.between?(grant.publish_date.beginning_of_day, grant.submission_close_date.end_of_day)
       true
     else
-      user.present? && grant_viewer_access? || user_is_grant_reviewer?
+      user.present? && (grant_viewer_access? || user_is_grant_reviewer?)
     end
   end
 
@@ -65,10 +65,6 @@ class GrantPolicy < ApplicationPolicy
 
   def grant
     record
-  end
-
-  def user
-    @user
   end
 
   def user_is_grant_reviewer?
