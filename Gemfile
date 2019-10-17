@@ -35,7 +35,7 @@ gem 'devise_saml_authenticatable'
 
 gem 'draper'
 gem 'pundit'
-gem 'rubyzip'
+gem 'rubyzip', '~> 1.3.0'
 
 # frontend
 gem 'font-awesome-rails'
