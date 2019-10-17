@@ -62,27 +62,6 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
     end
 
     context 'question' do
-      scenario 'cannot be added when invalid' do
-        expect do
-          click_link add_question_text
-          click_button 'Save'
-        end.not_to (change{@draft_grant.questions.count})
-
-        expect(page).to have_text 'Question Text is required'
-        expect(page).to have_text 'Question Response Type must be selected'
-      end
-
-      scenario 'can be added to an existing section' do
-        expect do
-          new_question_text = Faker::Lorem.sentence
-          click_link add_question_text
-          find_field('Question Text', with: '').set(new_question_text)
-          find_field('Type of Response', with: '').select('Number')
-          click_button 'Save'
-        end.to (change{@draft_grant.questions.count}).by 1
-        expect(page).to have_text 'Submission Form successfully updated'
-      end
-
       scenario 'display_order is updated on delete' do
         page.find("#delete-question-#{@original_first_question.id}").click
         click_button 'Save'

@@ -35,7 +35,7 @@ class GrantSubmission::Form < ApplicationRecord
 
   def destroyable?
     false
-    # available? && grant_forms.empty? # && mb_messages.empty? && instructions.empty?
+    # available? && grant_forms.empty? && instructions.empty?
   end
 
   # This method first re-numbers sections/questions/answers from an offset
