@@ -4,8 +4,6 @@ module GrantSubmission
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::MultipleChoiceOptionVersion' },
                     meta:     { grant_submission_question_id: :grant_submission_question_id }
 
-    # has_paper_trail ignore: [:display_order]
-
     belongs_to :question,  class_name: 'GrantSubmission::Question',
                            foreign_key: 'grant_submission_question_id',
                            inverse_of: :multiple_choice_options
@@ -13,18 +11,9 @@ module GrantSubmission
                            foreign_key: 'grant_submission_multiple_choice_option_id',
                            inverse_of: :multiple_choice_option
 
-    validates_presence_of :question, :text
+    validates_presence_of   :question, :text
     validates_uniqueness_of :text, scope: :grant_submission_question_id
-    validates_length_of :text, maximum: 255
-
-    def self.human_readable_attribute(attr)
-      {}[attr] || attr.to_s.humanize
-    end
-
-    def to_formatted_s(format = nil)
-      # TODO: was export code dependent
-      text
-    end
+    validates_length_of     :text, maximum: 255
 
     def available?
       new_record? || question.section.form.available?

@@ -28,4 +28,10 @@ RSpec.describe GrantSubmission::Form, type: :model do
       expect(form.errors).not_to include(:submission_instructions)
     end
   end
+
+  describe '#methods' do
+    it 'is not destroyable?' do
+      expect(form.destroyable?).to be false
+    end
+  end
 end

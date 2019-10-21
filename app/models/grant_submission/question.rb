@@ -20,85 +20,29 @@ module GrantSubmission
 
     accepts_nested_attributes_for :multiple_choice_options, allow_destroy: true
 
-    VIEW_RESPONSE_TYPE_TRANSLATION = {
-      pick_one:      'Multiple Choice - Pick One',
-      number:        'Number',
-      short_text:    'Short Text (255 max)',
-      long_text:     'Long Text (unlimited)',
-      date_opt_time: 'Date',
-      file_upload:   'File Upload (15 MB max)'
-    }.freeze
+    VIEW_RESPONSE_TYPE_TRANSLATION = { pick_one:      'Multiple Choice - Pick One',
+                                       number:        'Number',
+                                       short_text:    'Short Text (255 chars max)',
+                                       long_text:     'Long Text (4000 chars max)',
+                                       date_opt_time: 'Date',
+                                       file_upload:   'File Upload (15 MB max)'
+                                     }.freeze
 
-    validates_presence_of   :section, :text, :response_type #, :display_order
-    validates_inclusion_of  :response_type, in: VIEW_RESPONSE_TYPE_TRANSLATION.keys.map(&:to_s)
-    validates_uniqueness_of :text, scope: :grant_submission_section_id
-    validates_inclusion_of  :is_mandatory, in: [true, false]
-
-    # validates_numericality_of :display_order, only_integer: true, greater_than: 0
-    validates_length_of :text, maximum: 4000
-    validates_length_of :export_code, maximum: 255
-    validates_length_of :instruction, maximum: 4000
+    validates_presence_of     :response_type, :section, :text
+    validates_inclusion_of    :response_type, in: VIEW_RESPONSE_TYPE_TRANSLATION.keys.map(&:to_s)
+    validates_uniqueness_of   :text, scope: :section
+    validates_uniqueness_of   :display_order, scope: :section
+    validates_inclusion_of    :is_mandatory, in: [true, false]
+    validates_length_of       :text, maximum: 4000
+    validates_length_of       :instruction, maximum: 4000
+    validates_numericality_of :display_order, only_integer: true,
+                                              greater_than: 0,
+                                              if: -> { display_order.present? }
 
     validate :validate_has_at_least_one_option, if: -> { response_type == 'pick_one' }
 
-    def self.human_readable_attribute(attr)
-      {}[attr] || attr.to_s.humanize
-    end
-
-    def to_export_hash
-      {
-        text:               text,
-        instruction:        instruction,
-        display_order:      display_order,
-        export_code:        export_code,
-        is_mandatory:       is_mandatory,
-        response_type:      response_type,
-        answers_attributes: answers.map(&:to_export_hash)
-      }
-    end
-
-    def to_identifiable_hash
-      {
-          section_display_order: section.display_order,
-          display_order: self.display_order,
-          text: self.text
-      }
-    end
-
-    def self.by_identifiable_hash(form, hash)
-      section = form.sections.where(display_order: hash['section_display_order']).first
-      section.questions.where(display_order: hash['display_order'], text: hash['text']).first
-    end
-
     def available?
       new_record? || section.form.available?
-    end
-
-    def form
-      section.form
-    end
-
-    def human_readable_description
-      "Question #{section.title} - #{display_order}. #{text}"
-    end
-
-    def global_report_display_name
-      "#{form.title}: #{human_readable_description}"
-    end
-
-    def operator_types
-      case response_type.to_sym
-      when :pick_one
-        ['list', 'comparable']
-      when :short_text, :long_text
-        ['text', 'comparable']
-      when :number
-        ['comparable']
-      when :date_opt_time
-        ['comparable', 'duration']
-      else
-        []
-      end
     end
 
     private
@@ -106,17 +50,5 @@ module GrantSubmission
     def validate_has_at_least_one_option
       errors.add(:response_type, :requires_option) unless multiple_choice_options.present?
     end
-
-    # def has_export_code_in_answers?
-    #   false
-    #   # case response_type.to_sym
-    #   # when :pick_one
-    #   #   answers.any? {|answer| answer.export_code.present?}
-    #   # when :standard_answer
-    #   #   standard_answer_set.standard_answers.any? {|standard_answer| standard_answer.export_code.present?}
-    #   # else
-    #   #   false
-    #   # end
-    # end
   end
 end

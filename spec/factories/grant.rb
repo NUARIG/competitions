@@ -124,7 +124,7 @@ FactoryBot.define do
     factory :published_not_yet_open_grant,                  traits: %i[published not_yet_open]
     factory :published_not_yet_open_grant_with_users,       traits: %i[published not_yet_open with_users]
     factory :completed_grant,                               traits: %i[completed closed]
-    factory :draft_open_grant,                              traits: %i[draft open]
+    factory :draft_open_grant,                              traits: %i[draft open with_users_and_submission_form]
     factory :draft_closed_grant,                            traits: %i[draft closed]
     factory :grant_with_users,                              traits: %i[published with_users_and_submission_form]
     factory :demo_grant_with_users,                         traits: %i[demo with_users]
