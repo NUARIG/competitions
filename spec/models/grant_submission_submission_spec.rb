@@ -5,8 +5,12 @@ RSpec.describe GrantSubmission::Submission, type: :model do
   it { is_expected.to respond_to(:form) }
   it { is_expected.to respond_to(:applicant) }
   it { is_expected.to respond_to(:title) }
+  it { is_expected.to respond_to(:reviews) }
+  it { is_expected.to respond_to(:reviewers) }
+  it { is_expected.to respond_to(:criteria_reviews) }
+  it { is_expected.to respond_to(:reviews_count) }
 
-  let(:submission) { create(:grant_submission_submission) }
+  let(:submission) { build(:submission_with_responses) }
 
   describe '#validations' do
     it 'validates a valid submission' do

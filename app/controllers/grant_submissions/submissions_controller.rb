@@ -3,9 +3,8 @@ module GrantSubmissions
     before_action :set_grant, except: :new
 
     def index
-      @grant         = GrantDecorator.new(@grant)
-      @form          = @grant.form
-      @q = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+      @grant   = GrantDecorator.new(@grant)
+      @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
       @q.sorts = 'created_at desc' if @q.sorts.empty?
       @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
     end
@@ -41,7 +40,7 @@ module GrantSubmissions
       submission
       authorize @submission
       if @submission.save
-        flash[:notice] = 'successfully applied'
+        flash[:notice] = 'You successfully applied'
         redirect_to grant_path(@grant)
       else
         @grant = GrantDecorator.new(@grant)
@@ -75,11 +74,6 @@ module GrantSubmissions
       end
     end
 
-    # def download_document
-    #   response = FormBuilder::Response.find(params[:form_builder_response_id])
-    #   send_file response.document.path
-    # end
-
     private
 
     def set_grant
@@ -89,7 +83,7 @@ module GrantSubmissions
     def submission
       @submission ||= case action_name
                       when 'new'
-                        form   = @grant.form # .includes(sections: { questions: :multiple_choice_options }).first
+                        form   = @grant.form
                         @grant.submissions.build(form: form)
                       when 'edit', 'show'
                         @grant.submissions.find(params[:id])
@@ -107,51 +101,19 @@ module GrantSubmissions
                        :grant_submission_form_id,
                        :parent_id,
                        :grant_submission_section_id,
-                       :baseline_id,
                        responses_attributes: [
                          :id,
                          :grant_submission_submission_id,
                          :grant_submission_question_id,
                          :grant_submission_multiple_choice_option_id,
                          :datetime_val_date_optional_time_magik,
-                         :grant_submission_std_answer_id,
                          :string_val,
                          :text_val,
                          :decimal_val,
                          :datetime_val,
-                         :boolean_val,
                          :document,
-                         :'partial_date_val_virtual(1i)',
-                         :'partial_date_val_virtual(2i)',
-                         :'partial_date_val_virtual(3i)',
-                         :partial_date_val,
                          :_destroy
-                       ],
-                       children_attributes: [
-                         :id,
-                         :grant_submission_section_id,
-                         :_destroy,
-                         responses_attributes: [
-                           :id,
-                           :grant_submission_submission_id,
-                           :grant_submission_question_id,
-                           :grant_submission_multiple_choice_option_id,
-                           :datetime_val_date_optional_time_magik,
-                           :grant_submission_std_answer_id,
-                           :string_val,
-                           :text_val,
-                           :decimal_val,
-                           :datetime_val,
-                           :boolean_val,
-                           :document,
-                           :'partial_date_val_virtual(1i)',
-                           :'partial_date_val_virtual(2i)',
-                           :'partial_date_val_virtual(3i)',
-                           :partial_date_val,
-                           :_destroy
-                         ]
-                       ]
-      )
+                       ])
     end
   end
 end

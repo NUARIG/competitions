@@ -58,18 +58,18 @@ RSpec.describe Grant, type: :model do
       end
 
       it "requires a slug to be at least #{Grant::SLUG_MIN_LENGTH} characters long" do
-        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MIN_LENGTH - 1)
+        grant.slug = Faker::Alphanumeric.alpha(number: Grant::SLUG_MIN_LENGTH - 1)
         expect(grant).not_to be_valid
         expect(grant.errors).to include :slug
-        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MIN_LENGTH)
+        grant.slug = Faker::Alphanumeric.alpha(number: Grant::SLUG_MIN_LENGTH)
         expect(grant).to be_valid
       end
 
       it "requires a slug to be at no more than #{Grant::SLUG_MAX_LENGTH} characters long" do
-        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MAX_LENGTH + 1)
+        grant.slug = Faker::Alphanumeric.alpha(number: Grant::SLUG_MAX_LENGTH + 1)
         expect(grant).not_to be_valid
         expect(grant.errors).to include :slug
-        grant.slug = Faker::Alphanumeric.alpha(Grant::SLUG_MAX_LENGTH)
+        grant.slug = Faker::Alphanumeric.alpha(number: Grant::SLUG_MAX_LENGTH)
         expect(grant).to be_valid
       end
 

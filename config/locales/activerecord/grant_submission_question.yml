@@ -27,5 +27,3 @@ en:
     label:
       grant_submission/question:
         <<: *question
-
-
