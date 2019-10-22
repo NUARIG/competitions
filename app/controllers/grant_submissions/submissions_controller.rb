@@ -38,20 +38,15 @@ module GrantSubmissions
     end
 
     def create
-      if @grant.form.disabled
-        flash[:error] = 'unable to create, this form is disabled'
-        redirect_to index_page
+      submission
+      authorize @submission
+      if @submission.save
+        flash[:notice] = 'successfully applied'
+        redirect_to grant_path(@grant)
       else
-        submission
-        authorize @submission
-        if @submission.save
-          flash[:notice] = 'successfully applied'
-          redirect_to grant_path(@grant)
-        else
-          @grant = GrantDecorator.new(@grant)
-          flash.now[:alert] = @submission.errors.to_a
-          render 'new'
-        end
+        @grant = GrantDecorator.new(@grant)
+        flash.now[:alert] = @submission.errors.to_a
+        render 'new'
       end
     end
 

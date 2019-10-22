@@ -3,6 +3,7 @@
 class GrantsController < ApplicationController
   include WithGrantRoles
 
+  skip_before_action :authenticate_user!, only: :show
   before_action :set_grant,    except: %i[index new create]
 
   # GET /grants

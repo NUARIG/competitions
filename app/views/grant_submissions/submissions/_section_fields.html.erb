@@ -1,18 +1,4 @@
-<% if section.repeatable %>
-    <% f.object.section ||= section %>
-    <fieldset class="nested-fields">
-      <legend>
-        <%# if section.allow_follow_up %>
-            <%# TODO: baseline/follow-up can prob be removed %>
-            <%# = f.object.is_baseline? ? 'Baseline' : 'Follow-up' %>
-        <%# end %>
-      </legend>
-<% end %>
 <table class="unstriped">
-  <% if section.repeatable %>
-    <% f.object.grant_submission_section_id = section.id %>
-    <%= f.hidden_field :grant_submission_section_id %>
-  <% end %>
   <% responses = section.questions.sort_by(&:display_order).map do |q| %>
       <% f.object.responses.detect { |r| r.question == q } || f.object.responses.build(question: q) %>
   <% end %>
@@ -70,18 +56,7 @@
         </td>
       </tr>
   <% end %>
-  <% if (!f.grant_disable_input? && section.repeatable) %>
-      <tr>
-        <td colspan="2">
-          <%= link_to_remove_association("Remove #{section.title.singularize}", f, class: 'button btn-pill small warning') %>
-        </td>
-      </tr>
-  <% end %>
 </table>
-
-<% if section.repeatable? %>
-    </fieldset>
-<% end %>
 
 <style>
  .select2-container{

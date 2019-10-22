@@ -164,6 +164,10 @@ RSpec.describe Grant, type: :model do
       expect(published_open_grant.deleted?).to be false
     end
 
+    it 'is_open?' do
+      expect(published_open_grant.is_open?).to be true
+    end
+
     it 'is accepting_submissions?' do
       expect(published_open_grant.accepting_submissions?).to be true
     end
@@ -179,12 +183,16 @@ RSpec.describe Grant, type: :model do
       expect(published_closed_grant.deleted?).to be false
     end
 
-    it 'is accepting_submissions?' do
+    it 'not is_open?' do
+      expect(published_closed_grant.is_open?).to be false
+    end
+
+    it 'is not accepting_submissions?' do
       expect(published_closed_grant.accepting_submissions?).to be false
     end
   end
 
-  context 'published not yet  open' do
+  context 'published not yet open' do
     let(:published_not_yet_open) { create(:published_not_yet_open_grant) }
 
     it 'cannot soft deleted' do
@@ -194,7 +202,11 @@ RSpec.describe Grant, type: :model do
       expect(published_not_yet_open.deleted?).to be false
     end
 
-    it 'is accepting_submissions?' do
+    it 'not is_open?' do
+      expect(published_not_yet_open.is_open?).to be false
+    end
+
+    it 'is not accepting_submissions?' do
       expect(published_not_yet_open.accepting_submissions?).to be false
     end
   end
@@ -222,6 +234,10 @@ RSpec.describe Grant, type: :model do
       expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Completed grant may not be deleted')
       expect{completed_grant.soft_delete!}.to raise_error('Completed grant may not be deleted')
       expect(completed_grant.deleted?).to be false
+    end
+
+    it 'not is_open?' do
+      expect(completed_grant.is_open?).to be false
     end
 
     it 'is not accepting_submissions?' do

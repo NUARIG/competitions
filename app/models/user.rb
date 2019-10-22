@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  attr_accessor Devise.saml_session_index_key.to_sym
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :omniauthable, :database_authenticatable, :registerable, :recoverable, :validatable:rememberable
   devise :saml_authenticatable, :trackable, :timeoutable
@@ -11,7 +13,8 @@ class User < ApplicationRecord
   has_many   :editable_grants,        through: :grant_permissions,
                                       source: :grant
 
-  has_many   :grant_reviewers
+  has_many   :grant_reviewers,        foreign_key: :reviewer_id,
+                                      inverse_of: :reviewer
   has_many   :reviewable_grants,      through: :grant_reviewers,
                                       source: :grant
 
@@ -37,4 +40,10 @@ class User < ApplicationRecord
   validates :last_name,         presence: true
 
   scope :order_by_last_name,    -> { order(last_name: :asc) }
+
+  # https://github.com/apokalipto/devise_saml_authenticatable/issues/151
+  def authenticatable_salt
+    self.read_attribute(Devise.saml_session_index_key.to_sym) if self.read_attribute(Devise.saml_session_index_key.to_sym).present?
+  end
+
 end

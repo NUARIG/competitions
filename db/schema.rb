@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_26_192519) do
+ActiveRecord::Schema.define(version: 2019_10_15_145255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,15 +184,12 @@ ActiveRecord::Schema.define(version: 2019_09_26_192519) do
 
   create_table "grant_submission_forms", force: :cascade do |t|
     t.bigint "grant_id"
-    t.string "title", null: false
-    t.string "description", limit: 3000
-    t.boolean "disabled"
+    t.string "submission_instructions", limit: 3000
     t.bigint "created_id"
     t.bigint "updated_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["grant_id"], name: "index_grant_submission_forms_on_grant_id", unique: true
-    t.index ["title"], name: "index_grant_submission_forms_on_title", unique: true
   end
 
   create_table "grant_submission_multiple_choice_option_versions", force: :cascade do |t|
@@ -294,7 +291,6 @@ ActiveRecord::Schema.define(version: 2019_09_26_192519) do
     t.bigint "grant_submission_form_id", null: false
     t.string "title"
     t.integer "display_order", null: false
-    t.boolean "repeatable"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
@@ -419,7 +415,6 @@ ActiveRecord::Schema.define(version: 2019_09_26_192519) do
     t.inet "last_sign_in_ip"
     t.boolean "grant_creator", default: false, null: false
     t.string "upn", default: "", null: false
-    t.string "session_index"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

@@ -7,8 +7,7 @@ module GrantSubmissionFormServices
           # copy the original form to new form
           original_form = original_grant.form
           new_form      = original_form.dup
-          new_form.update_attributes!(grant_id: new_grant.id,
-                                      title: "Grant #{original_grant.id}: #{original_form.title} Section - Duplicated")
+          new_form.update_attributes!(grant_id: new_grant.id)
           # loop through the sections
           original_form.sections.each do |original_section|
             new_section = original_section.dup

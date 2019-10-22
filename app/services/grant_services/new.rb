@@ -18,7 +18,7 @@ module GrantServices
       rescue
         #TODO: Log errors
         OpenStruct.new(success?: false,
-                       messages: grant.errors.any? ? grant.errors.full_messages : 'An error occurred while saving. Please try again.')
+                       messages: grant.errors.any? ? grant.errors.full_messages : 'An error occurred while saving this grant. Please try again.')
       end
     end
   end
