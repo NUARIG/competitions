@@ -10,19 +10,19 @@ RSpec.describe GrantDecorator do
 
     describe '#name_length_class' do
       it 'returns "long" for a name over 50 characters' do
-        @open_grant.name      = Faker::Lorem.characters(rand(51..255))
+        @open_grant.name      = Faker::Lorem.characters(number: rand(51..255))
         @decorated_open_grant = GrantDecorator.decorate(@open_grant)
         expect(@decorated_open_grant.name_length_class).to eql('long')
       end
 
       it 'returns "medium" for a name over 35 and under 50 characters' do
-        @open_grant.name      = Faker::Lorem.characters(rand(36..50))
+        @open_grant.name      = Faker::Lorem.characters(number: rand(36..50))
         @decorated_open_grant = GrantDecorator.decorate(@open_grant)
         expect(@decorated_open_grant.name_length_class).to eql('medium')
       end
 
       it 'returns nil for a name over 35 and under 50 characters' do
-        @open_grant.name      = Faker::Lorem.characters(rand(10..35))
+        @open_grant.name      = Faker::Lorem.characters(number: rand(10..35))
         @decorated_open_grant = GrantDecorator.decorate(@open_grant)
         expect(@decorated_open_grant.name_length_class).to be_nil
       end

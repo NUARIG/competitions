@@ -41,10 +41,10 @@ RSpec.describe GrantSubmission::Question, type: :model do
       end
 
       it 'requires instruction to be 4000 characters or less' do
-        question.instruction = Faker::Lorem.characters(4001)
+        question.instruction = Faker::Lorem.characters(number: 4001)
         expect(question).not_to be_valid
         expect(question.errors).to include(:instruction)
-        question.instruction = Faker::Lorem.characters(4000)
+        question.instruction = Faker::Lorem.characters(number: 4000)
         expect(question).to be_valid
       end
 
@@ -55,10 +55,10 @@ RSpec.describe GrantSubmission::Question, type: :model do
       end
 
       it 'requires text to be 4000 characters or less' do
-        question.text = Faker::Lorem.characters(4001)
+        question.text = Faker::Lorem.characters(number: 4001)
         expect(question).not_to be_valid
         expect(question.errors).to include(:text)
-        question.text = Faker::Lorem.characters(4000)
+        question.text = Faker::Lorem.characters(number: 4000)
         expect(question).to be_valid
       end
 

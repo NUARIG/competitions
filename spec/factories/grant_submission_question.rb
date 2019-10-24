@@ -42,6 +42,7 @@ FactoryBot.define do
     end
 
     factory :short_text_question,                   traits: %i[short_text]
+    factory :required_short_text_question,          traits: %i[short_text required]
     factory :long_text_question,                    traits: %i[long_text]
     factory :number_question,                       traits: %i[number]
     factory :date_question,                         traits: %i[date]

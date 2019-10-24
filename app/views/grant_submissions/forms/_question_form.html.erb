@@ -34,7 +34,7 @@
         <th colspan=4>
           Multiple Choice Options
           <% if has_edit_permission %>
-            <%= question.link_to_add 'Add an Option', :multiple_choice_options, data: { location: 'parent', target: '.submission_multiple_choice_options_table'}, class: 'button btn-pill small hollow primary' %>
+            <%= question.link_to_add 'Add an Option', :multiple_choice_options, data: { location: 'parent', target: '.submission_multiple_choice_options_table'}, class: 'add-option button btn-pill small hollow primary' %>
           <% end %>
         </th>
       </tr>

@@ -18,10 +18,10 @@ RSpec.describe GrantSubmission::Section, type: :model do
     end
 
     it 'does not allow a title longer than 255 characters' do
-      section.title = Faker::Lorem.characters(256)
+      section.title = Faker::Lorem.characters(number: 256)
       expect(section).not_to be_valid
       expect(section.errors).to include(:title)
-      section.title = Faker::Lorem.characters(255)
+      section.title = Faker::Lorem.characters(number: 255)
       expect(section).to be_valid
     end
   end

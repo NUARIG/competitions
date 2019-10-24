@@ -7,10 +7,9 @@ FactoryBot.define do
     text_val     { nil }
     decimal_val  { nil }
     datetime_val { nil }
-    boolean_val  { nil }
 
     trait :string_val do
-      string_val { Faker::Lorem.words }
+      string_val { Faker::Lorem.sentence }
     end
 
     trait :text_val do
@@ -18,15 +17,12 @@ FactoryBot.define do
     end
 
     trait :number do
-      decimal_val { Faker::Lorem.number(5) }
+      association :question, factory: :number_question
+      decimal_val { Faker::Lorem.number(digits: 5) }
     end
 
-    # trait :date do
-    #   datetime_val {  }
-    # end
-
     factory :string_val_response, traits: %i[string_val]
-    factory :text_val_reponse,    traits: %i[text_val]
-    factory :number_reponse,      traits: %i[number]
+    factory :text_val_response,    traits: %i[text_val]
+    factory :number_response,      traits: %i[number]
   end
 end

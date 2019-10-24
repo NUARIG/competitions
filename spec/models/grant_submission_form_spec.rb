@@ -20,10 +20,10 @@ RSpec.describe GrantSubmission::Form, type: :model do
     end
 
     it 'requires submission_instructions to be no longer than 3000 characters' do
-      form.submission_instructions = Faker::Lorem.characters(3001)
+      form.submission_instructions = Faker::Lorem.characters(number: 3001)
       expect(form).not_to be_valid
       expect(form.errors).to include(:submission_instructions)
-      form.submission_instructions = Faker::Lorem.characters(3000)
+      form.submission_instructions = Faker::Lorem.characters(number: 3000)
       expect(form).to be_valid
       expect(form.errors).not_to include(:submission_instructions)
     end

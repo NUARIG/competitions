@@ -2,11 +2,12 @@ en:
   activerecord:
     attributes:
       grant_submission/submission/responses:
-        decimal_val: Response
         document: File
         grant_submission_multiple_choice_option_id: A selection
         datetime_val_date_optional_time_magik: Response
+        decimal_val: Response
         string_val: Response
+        text_val: Response
     errors:
       models:
         grant_submission/response:

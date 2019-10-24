@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    attributes:
+      grant_submission/form/sections/questions/multiple_choice_options:
+        text: Multiple Choice Option text
+    errors:
+      models:
+        grant_submission/form/sections/questions/multiple_choice_options:
+        grant_submission/multiple_choice_option:
+          attributes:
+            text:
+              blank: cannot be empty.
