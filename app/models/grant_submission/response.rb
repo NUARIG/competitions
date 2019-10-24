@@ -71,8 +71,7 @@ module GrantSubmission
       when :long_text
         text_val
       when :date_opt_time
-        # get_date_opt_time(:datetime_val, :boolean_val)
-        get_date_opt_time(:datetime_val, false)
+        get_date_opt_time(:datetime_val, :boolean_val)
       when :file_upload
         self.document.attached? ? self.document.filename : nil
       end
