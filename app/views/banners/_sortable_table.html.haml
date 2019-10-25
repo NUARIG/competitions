@@ -1,0 +1,23 @@
+%table
+  %thead
+    %tr
+      %th
+        = sort_link(q, :id)
+      %th
+        = sort_link(q, :body)
+      %th
+        = sort_link(q, :visible)
+      %th
+        = sort_link(q, :created_at)
+      %th
+      %th
+
+  %tbody
+    - @banners.each do |banner|
+      %tr
+        %td= banner.id
+        %td= banner.body&.html_safe
+        %td= banner.visible
+        %td= banner.created_at
+        %td= link_to 'Edit', edit_banner_path(banner) if policy(banner).edit?
+        %td= link_to 'Delete', banner, method: :delete, data: { confirm: 'Are you sure?' } if policy(banner).destroy?

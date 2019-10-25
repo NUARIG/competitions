@@ -15,6 +15,9 @@
       %div.grid-x.grid-margin-x.grid-margin-y
         = render 'layouts/header'
 
+      %div
+        = render 'banners/public_banner'
+
       %div.grid-x.grid-margin-x.grid-margin-y
         %main.cell{class: "#{controller_name}"}
           = render 'layouts/flash'

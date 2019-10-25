@@ -1,0 +1,6 @@
+- if visible_banners.any?
+  %div.callout.warning
+    %ul
+      - visible_banners.each do |banner|
+        %li
+          = banner.body&.html_safe
