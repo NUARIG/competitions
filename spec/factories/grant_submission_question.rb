@@ -36,7 +36,7 @@ FactoryBot.define do
     trait :with_options do
       before(:create) do |question|
         2.times do |i|
-          question.multiple_choice_options << build(:multiple_choice_option, display_order: (i+1))
+          question.multiple_choice_options << build(:multiple_choice_option, question: question, display_order: (i+1))
         end
       end
     end

@@ -9,17 +9,18 @@ FactoryBot.define do
 
     trait :with_section do
       after(:create) do |form|
-        section = create(:grant_submission_section, grant_submission_form_id: form.id)
-        create(:short_text_question, grant_submission_section_id: section.id,
+        section = create(:grant_submission_section, form: form)
+
+        create(:short_text_question, section: section,
                                      text: 'Short Text Question',
                                      display_order: 1)
-        create(:number_question,     grant_submission_section_id: section.id,
+        create(:number_question,     section: section,
                                      text: 'Number Question',
                                      display_order: 2)
-        create(:long_text_question,  grant_submission_section_id: section.id,
+        create(:long_text_question,  section: section,
                                      text: 'Long Text Question',
                                      display_order: 3)
-        create(:multiple_choice_question_with_options, grant_submission_section_id: section.id,
+        create(:multiple_choice_question_with_options, section: section,
                                      text: 'Multiple Choice Question',
                                      display_order: 4)
       end
