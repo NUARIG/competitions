@@ -7,6 +7,12 @@ FactoryBot.define do
       visible      { false }
     end
 
+    trait :long do
+      body          { Faker::Lorem.paragraph }
+    end
+
     factory :invisible_banner,            traits: %i[invisible]
+    factory :long_banner,                 traits: %i[long]
+    factory :invisible_long_banner,       traits: %i[long invisible]
   end
 end
