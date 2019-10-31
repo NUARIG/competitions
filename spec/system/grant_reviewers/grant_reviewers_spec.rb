@@ -4,8 +4,8 @@ RSpec.describe 'GrantReviewers', type: :system do
   describe '#index', js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                             max_submissions_per_reviewer: Faker::Number.between(1, 10),
-                             max_reviewers_per_submission: Faker::Number.between(1, 10))
+                             max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
+                             max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
       @user         = create(:user)
@@ -27,8 +27,8 @@ RSpec.describe 'GrantReviewers', type: :system do
   describe '#create', js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                             max_submissions_per_reviewer: Faker::Number.between(1, 10),
-                             max_reviewers_per_submission: Faker::Number.between(1, 10))
+                             max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
+                             max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
       @user         = create(:user)
@@ -56,8 +56,8 @@ RSpec.describe 'GrantReviewers', type: :system do
   describe '#destroy', js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                             max_submissions_per_reviewer: Faker::Number.between(1, 10),
-                             max_reviewers_per_submission: Faker::Number.between(1, 10))
+                             max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
+                             max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
       @grant_admin  = @grant.editors.first
       @reviewer     = @grant.reviewers.first
       @review       = create(:review, assigner: @grant_admin,

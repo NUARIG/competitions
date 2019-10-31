@@ -38,7 +38,7 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
       find_field('Question Text', with: "#{@grant.questions.second.text}").set("#{@grant.questions.first.text}")
       click_button 'Save'
       expect(page).not_to have_text 'Submission Form successfully updated'
-      expect(page).to have_text I18n.t('activerecord.errors.models..grant_submission/question.attributes.text.taken')
+      expect(page).to have_text I18n.t('activerecord.errors.models.grant_submission/question.attributes.text.taken')
     end
 
     scenario 'it allows duplicate question text between sections' do

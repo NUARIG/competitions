@@ -96,7 +96,7 @@ RSpec.describe Review, type: :model do
           updated_criterion = review.criteria.where(is_mandatory: true).first
           updated_criterion.update_attribute(:is_mandatory, false)
           CriteriaReview.find_by(review: review, criterion: updated_criterion).update_attribute(:score, nil)
-        end.to (change{review.composite_score}).and (change{review.scored_criteria_scores.count}.by(-1))
+        end.to (change{review.scored_criteria_scores.count}.by(-1))
       end
     end
   end

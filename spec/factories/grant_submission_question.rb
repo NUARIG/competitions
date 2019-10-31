@@ -36,12 +36,13 @@ FactoryBot.define do
     trait :with_options do
       before(:create) do |question|
         2.times do |i|
-          question.multiple_choice_options << build(:multiple_choice_option, display_order: (i+1))
+          question.multiple_choice_options << build(:multiple_choice_option, question: question, display_order: (i+1))
         end
       end
     end
 
     factory :short_text_question,                   traits: %i[short_text]
+    factory :required_short_text_question,          traits: %i[short_text required]
     factory :long_text_question,                    traits: %i[long_text]
     factory :number_question,                       traits: %i[number]
     factory :date_question,                         traits: %i[date]

@@ -324,8 +324,6 @@ ActiveRecord::Schema.define(version: 2019_10_24_142557) do
     t.bigint "grant_submission_form_id", null: false
     t.bigint "created_id", null: false
     t.string "title", null: false
-    t.bigint "grant_submission_section_id"
-    t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "reviews_count", default: 0

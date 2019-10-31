@@ -32,7 +32,8 @@ module GrantSubmission
 
     validates_presence_of   :submission, :question
     validates_inclusion_of  :grant_submission_question_id,
-                            in: -> (it) { it.submission.responded_to.questions.pluck(:id) }
+                            in: -> (it) { it.submission.form.questions.pluck(:id) }
+                            #in: -> (it) { it.submission.responded_to.questions.pluck(:id) }
     validates_inclusion_of  :grant_submission_multiple_choice_option_id,
                             in: -> (it) { it.question.multiple_choice_options.pluck(:id) },
                             allow_nil: true
@@ -51,34 +52,13 @@ module GrantSubmission
     include PartialDate
     has_partial_date(:partial_date_val)
 
-    def remove_document=(val)
-      @remove_document = val # allows clearing file inputs to persist across validation errors
-      if val == 1 || val == "1"
-        self.document = nil
-      end
-    end
-    def remove_document
-      @remove_document ||= nil
-    end
-
     def add_date_optional_time_error(datetime_comp)
-      errors.add(self.class.date_optional_time_attribute(:datetime_val), "^#{question.text} must be a valid Date/Time in the format MM/DD/YYYY or MM/DD/YYYY HH:MM")
+      errors.add(self.class.date_optional_time_attribute(:datetime_val), "^#{question.text} must be a valid Date in the format MM/DD/YYYY")
     end
 
     def date_optional_time_errors?(datetime_comp)
       errors[self.class.date_optional_time_attribute(:datetime_val)].blank?
     end
-
-    # returns a pair of Time object for cycle date comparison and a string for display
-    # def to_form_date_pair
-    #   case question.response_type.to_sym
-    #   when :date_opt_time
-    #     [datetime_val, response_value]
-    #   when :partial_date
-    #     time = get_partial_date(:partial_date_val).try(:to_time)
-    #     time ? [time, time.strftime('%m/%d/%Y')] : [nil, nil]
-    #   end
-    # end
 
     def response_value
       case question.response_type.to_sym
@@ -92,8 +72,6 @@ module GrantSubmission
         text_val
       when :date_opt_time
         get_date_opt_time(:datetime_val, :boolean_val)
-      when :partial_date
-        get_partial_date(:partial_date_val)
       when :file_upload
         self.document.attached? ? self.document.filename : nil
       end
@@ -102,15 +80,7 @@ module GrantSubmission
     def formatted_response_value(format = nil)
       case question.response_type.to_sym
       when :pick_one
-        if multiple_choice_option
-          multiple_choice_option.to_formatted_s(format)
-        else
-          format == :export_multi_cols ? [nil, nil] : nil
-        end
-      when :partial_date
-        # when exporting to Excel, add an extra blank space at the end to force the cell style to be text
-        # instead of the potential numeric if only year is present
-        format == :export ? "#{response_value.to_s} " : response_value.to_s
+        multiple_choice_option.text
       else
         response_value.to_s
       end
@@ -128,8 +98,6 @@ module GrantSubmission
         :text_val
       when :date_opt_time
         self.class.date_optional_time_attribute(:datetime_val)
-      when :partial_date
-        self.class.partial_date_virtual_attribute(:partial_date_val)
       when :file_upload
         :document
       end

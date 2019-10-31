@@ -24,10 +24,10 @@ RSpec.describe GrantSubmission::MultipleChoiceOption, type: :model do
     end
 
     it 'requires text to be less than 255 characters' do
-      multiple_choice_option.text = Faker::Lorem.characters(256)
+      multiple_choice_option.text = Faker::Lorem.characters(number: 256)
       expect(multiple_choice_option).not_to be_valid
       expect(multiple_choice_option.errors).to include(:text)
-      multiple_choice_option.text = Faker::Lorem.characters(255)
+      multiple_choice_option.text = Faker::Lorem.characters(number: 255)
       expect(multiple_choice_option).to be_valid
     end
   end

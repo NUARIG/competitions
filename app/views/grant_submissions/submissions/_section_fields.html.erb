@@ -19,7 +19,7 @@
             <% if ff.object.submission == f.object %>
                 <% case ff.object.question.response_type.to_sym
                    when :pick_one %>
-                    <%= ff.select ffn, options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.to_formatted_s, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id), { include_blank: true }, data: { question_id: ff.object.question.id } %>
+                    <%= ff.select ffn, options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.text, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id), { include_blank: true }, data: { question_id: ff.object.question.id } %>
                 <% when :number %>
                     <%= ff.text_field ffn, data: { question_id: ff.object.question.id } %>
                 <% when :short_text %>
@@ -28,15 +28,6 @@
                     <%= ff.text_area ffn, rows: 5, cols: 31, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } %>
                 <% when :date_opt_time %>
                     <%= ff.date_opt_time_field :datetime_val, :boolean_val, data: { question_id: ff.object.question.id } %>
-                <% when :partial_date %>
-                    <%= ff.date_select ffn,
-                                       {:prompt => {:year => 'Year', :month => 'Month', :day => 'Day'},
-                                        :use_two_digit_numbers => true,
-                                        :date_separator =>'-',
-                                        :start_year => Date.today.year + 5,
-                                        :end_year => Date.today.year - 100},
-                                       {:data => {:behavior => 'select2', question_id: ff.object.question.id}, style: 'min-width:120px'}
-                    %>
                 <% when :file_upload %>
                     <%= ff.file_upload_field(
                           has_saved_file: (ff.object.document && ff.object.document.attached?),

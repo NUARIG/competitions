@@ -19,11 +19,6 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
     super(method, choices, options, html_options)
   end
 
-  def check_box(method, options = {})
-    options.reverse_merge!(disabled: grant_disable_input?)
-    super(method, options)
-  end
-
   # dynamically generates thse methods
   #   def submit def link_to_remove def link_to_add
   %i[submit link_to_remove link_to_add].each do |method|
@@ -55,11 +50,6 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
 
   def date_field(attr)
     text_field attr, size: 10, maxsize: 10, value: @object.send(attr), :data => {:behavior => 'datepicker'}, disabled: grant_disable_input?
-  end
-
-  def partial_date_field(attr, options = {})
-    @template.render(partial: 'partial_date_field', locals:
-           {f: self, attr: attr, disabled: grant_disable_input?, options: options})
   end
 
   def file_upload_field(has_saved_file:, file_field:, document:, remove_document:)

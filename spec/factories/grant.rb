@@ -84,7 +84,6 @@ FactoryBot.define do
         admin  = create(:admin_grant_permission, grant: grant)
         editor = create(:editor_grant_permission, grant: grant)
         viewer = create(:viewer_grant_permission, grant: grant)
-
         create(:grant_submission_form_with_section, grant: grant,
                                                     form_created_by: admin.user,
                                                     form_updated_by: admin.user)
@@ -94,9 +93,9 @@ FactoryBot.define do
     trait :with_submission do
       after(:create) do |grant|
         applicant = create(:user)
-        create(:submission_with_response, grant: grant,
-                                          form: grant.form,
-                                          applicant: applicant)
+        create(:submission_with_responses, grant: grant,
+                                           form: grant.form,
+                                           applicant: applicant)
 
       end
     end
@@ -113,7 +112,7 @@ FactoryBot.define do
 
     factory :new_grant,                                     traits: %i[new]
     factory :new_grant_with_users,                          traits: %i[new with_users]
-    factory :draft_grant,                                   traits: %i[draft with_users_and_submission_form]
+    factory :draft_grant,                                   traits: %i[draft with_users_and_submission_form with_reviewer]
     factory :published_grant,                               traits: %i[published]
     factory :open_grant_with_users,                         traits: %i[published open with_users]
     factory :closed_grant_with_users,                       traits: %i[closed with_users]
