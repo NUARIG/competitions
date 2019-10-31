@@ -75,7 +75,7 @@ RSpec.describe 'Banners', type: :system do
 
             click_link 'Create New Banner'
             expect(current_path).to eq("/banners/new")
-            find('trix-editor').click.set(@body)
+            fill_in_trix_editor('banner_body', with: @body)
             click_button 'Save'
             expect(current_path).to eq("/banners")
             expect(page).to have_content('Banner was created and will continue to be visible until that setting is changed or it is deleted.')
