@@ -3,11 +3,12 @@ class BannersController < ApplicationController
 
   def index
     @q = policy_scope(Banner)
-    if @q.present?
+    if current_user.system_admin?
       @q = @q.ransack(params[:q])
       @q.sorts = 'created_at desc' if @q.sorts.empty?
       @pagy, @banners = pagy(@q.result, i18n_key: 'activerecord.models.banner')
     else
+      flash[:alert] = 'You are not authorized to perform this action.'
       redirect_to root_path
     end
   end
@@ -22,8 +23,7 @@ class BannersController < ApplicationController
     authorize @banner
     if @banner.save
       # TODO: Confirm messages the user should see
-      flash[:notice]  = 'Banner saved.'
-      flash[:warning] = 'This banner will continue to be visible until that setting is changed or it is deleted.'
+      flash[:warning] = 'Banner was created and will continue to be visible until that setting is changed or it is deleted.'
       redirect_to banners_path
     else
       flash.now[:alert] = @banner.errors.full_messages

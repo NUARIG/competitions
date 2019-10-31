@@ -2,8 +2,6 @@
   %thead
     %tr
       %th
-        = sort_link(q, :id)
-      %th
         = sort_link(q, :body)
       %th
         = sort_link(q, :visible)
@@ -15,8 +13,7 @@
   %tbody
     - @banners.each do |banner|
       %tr
-        %td= banner.id
-        %td= banner.body&.html_safe
+        %td= truncate(strip_tags(banner.body), length: 64, separator: ' ')
         %td= banner.visible
         %td= banner.created_at
         %td= link_to 'Edit', edit_banner_path(banner) if policy(banner).edit?
