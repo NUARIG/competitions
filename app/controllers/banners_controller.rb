@@ -1,14 +1,14 @@
 class BannersController < ApplicationController
   before_action :set_banner,    except: %i[index new create]
+  skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    @q = policy_scope(Banner)
     if current_user.system_admin?
-      @q = @q.ransack(params[:q])
+      @q = Banner.all.ransack(params[:q])
       @q.sorts = 'created_at desc' if @q.sorts.empty?
       @pagy, @banners = pagy(@q.result, i18n_key: 'activerecord.models.banner')
     else
-      flash[:alert] = 'You are not authorized to perform this action.'
+      flash[:alert] = I18n.t('pundit.default')
       redirect_to root_path
     end
   end

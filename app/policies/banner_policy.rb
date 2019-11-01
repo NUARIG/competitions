@@ -2,14 +2,6 @@
 
 class BannerPolicy < ApplicationPolicy
 
-  class Scope < Scope
-    def resolve
-      if user.system_admin?
-        scope.all
-      end
-    end
-  end
-
   def new?
     user.system_admin?
   end

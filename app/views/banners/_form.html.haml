@@ -3,7 +3,7 @@
 .grid-x.grid-padding-y
   .cell.small-12.medium-6
     = f.label :visible, 'Visible'
-    = f.check_box :visible, value: banner.visible
+    = f.check_box :visible
 .grid-x.grid-padding-y
   .cell
     = f.label :body, 'Body'
@@ -12,10 +12,10 @@
 .grid-x.grid-padding-y
   .cell.small-12.medium-6
     = f.label :created_at, 'Created At'
-    = f.text_field :created_at, value: banner.created_at, disabled: true, class: 'small-12 medium-4'
+    = f.text_field :created_at, disabled: true, class: 'small-12 medium-4'
   .cell.small-12.medium-6
     = f.label :updated_at, 'Updated At'
-    = f.text_field :updated_at, value: banner.updated_at, disabled: true, class: 'small-12 medium-4'
+    = f.text_field :updated_at, disabled: true, class: 'small-12 medium-4'
 
 .grid-x
   .actions
