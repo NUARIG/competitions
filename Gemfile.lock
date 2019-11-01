@@ -12,6 +12,15 @@ GIT
       polyamorous (= 2.3.0)
 
 GIT
+  remote: https://github.com/apokalipto/devise_saml_authenticatable
+  revision: 2105b89e2117ce6e0761c577ea6a810931295b31
+  branch: master
+  specs:
+    devise_saml_authenticatable (1.5.0)
+      devise (> 2.0.0)
+      ruby-saml (~> 1.7)
+
+GIT
   remote: https://github.com/stympy/faker.git
   revision: 4ba30fb28072e942420ebf2d58da73969ae6159b
   branch: master
@@ -143,7 +152,7 @@ GEM
     cocoon (1.2.12)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
-    crass (1.0.4)
+    crass (1.0.5)
     debug_inspector (0.0.3)
     devise (4.7.1)
       bcrypt (~> 3.0)
@@ -151,9 +160,6 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise_saml_authenticatable (1.5.0)
-      devise (> 2.0.0)
-      ruby-saml (~> 1.7)
     diff-lcs (1.3)
     docile (1.3.1)
     draper (3.0.1)
@@ -213,7 +219,7 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    loofah (2.3.0)
+    loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -224,7 +230,7 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.12.2)
+    minitest (5.13.0)
     msgpack (1.2.6)
     multi_json (1.13.1)
     nested_form (0.3.2)
@@ -232,7 +238,7 @@ GEM
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
     nio4r (2.3.1)
-    nokogiri (1.10.4)
+    nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
     pagy (3.5.1)
@@ -418,7 +424,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   cocoon
   devise (>= 4.7.1)
-  devise_saml_authenticatable
+  devise_saml_authenticatable!
   draper
   factory_bot_rails
   faker!
