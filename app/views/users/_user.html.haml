@@ -1,0 +1,6 @@
+%tr{id: "user-#{user.id}", class: 'user'}
+  %td= link_to sortable_full_name(user), edit_user_path(user)
+  %td= user.email
+  %td= date_mmddyyyy(user.created_at)
+  %td= time_ago_in_words(user.current_sign_in_at)
+  %td= link_to 'Edit', edit_user_path(user)
