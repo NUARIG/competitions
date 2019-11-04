@@ -1,0 +1,13 @@
+%tr
+  %td
+    = sortable_full_name(review.reviewer)
+  %td
+    = review.is_complete? ? link_to('Full Review', grant_submission_review_path(@grant, @submission, review)) : 'Incomplete'
+  %td
+    = (review.overall_impact_score || 0)
+  %td
+    = review.composite_score
+  - @grant.criteria.each do |criterion|
+    %td
+      - criterion_score = review.criteria_reviews.detect { |cr| cr.criterion_id == criterion.id }
+      = (criterion_score.nil? || criterion_score.score.nil?)? '-' : criterion_score.score
