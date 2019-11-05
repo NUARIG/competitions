@@ -1,0 +1,3 @@
+%div.callout.warning
+  - visible_banners.each do |banner|
+    = banner.body&.html_safe

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_21_143217) do
+ActiveRecord::Schema.define(version: 2019_11_05_221438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,24 @@ ActiveRecord::Schema.define(version: 2019_10_21_143217) do
     t.index ["controller", "action"], name: "index_audit_actions_on_controller_and_action"
     t.index ["user_id", "action"], name: "index_audit_actions_on_user_id_and_action"
     t.index ["user_id", "controller"], name: "index_audit_actions_on_user_id_and_controller"
+  end
+
+  create_table "banner_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["item_id"], name: "index_banner_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_banner_versions_on_whodunnit"
+  end
+
+  create_table "banners", force: :cascade do |t|
+    t.text "body"
+    t.boolean "visible", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "criteria", force: :cascade do |t|

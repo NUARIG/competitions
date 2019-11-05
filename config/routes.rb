@@ -7,6 +7,12 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
+  resources :banners,             except: %i[show]
+
+  resources :grant_creator_requests do
+    resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
+  end
+
   resources :grants do
     resources :grant_permissions, except: :show,        controller: 'grant_permissions'
     resource  :duplicate,         only: %i[new create], controller: 'grants/duplicate'
@@ -35,8 +41,5 @@ Rails.application.routes.draw do
     resources :grants,      only: :index, controller: 'profiles/grants'
     resources :reviews,      only: :index, controller: 'profiles/reviews'
     resources :submissions,      only: :index, controller: 'profiles/submissions'
-  end
-  resources :grant_creator_requests do
-    resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
   end
 end

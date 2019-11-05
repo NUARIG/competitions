@@ -1,0 +1,8 @@
+- content_for(:page_title, "Edit - #{@banner.id}")
+
+= form_with model: @banner, local: true, id: 'banner-edit' do |f|
+  = render 'form', f: f, banner: @banner
+
+= link_to 'Show', @banner, id: "banner-#{@banner.id}"
+|
+= link_to 'Back', banners_path

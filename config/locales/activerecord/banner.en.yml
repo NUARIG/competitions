@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    attributes:
+      banner: &banner
+        id: ID
+        body: Body
+        visible: Visible
+        created_at: Created At
+        updated_at: Updated At
+    errors:
+      models:
+        banner:
+          <<: *banner
+    models:
+      banner:
+        one: banner
+        other: banners
+  helpers:
+    label:
+      banner:
+        <<: *banner
