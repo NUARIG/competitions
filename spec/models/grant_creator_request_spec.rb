@@ -25,7 +25,7 @@ RSpec.describe GrantCreatorRequest, type: :model do
       expect(request.errors[:base]).to include I18n.t('activerecord.errors.models.grant_creator_request.attributes.base.is_system_admin')
     end
 
-    it 'disallows request from system_admin' do
+    it 'disallows request from grant_creator' do
       request.requester.update_attribute(:grant_creator, true)
       expect(request).not_to be_valid
       expect(request.errors[:base]).to include I18n.t('activerecord.errors.models.grant_creator_request.attributes.base.has_grant_creator_access')
