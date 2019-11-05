@@ -97,6 +97,7 @@ group :test do
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'pundit-matchers', '~> 1.6.0'
   gem 'rspec'
+  gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
 end
