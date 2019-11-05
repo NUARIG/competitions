@@ -66,5 +66,4 @@ class GrantCreatorRequestsController < ApplicationController
   def set_grant_creator_request
     @grant = GrantCreatorRequest.find(params[:id])
   end
-
 end
