@@ -14,10 +14,12 @@
       = f.submit 'Search', class: 'button'
       = link_to 'Reset', users_path, class: 'button clear secondary'
 
-- if @users.empty?
+- unless @users.present?
   %p
     No users were found.
+
 - else
+
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
   %table
@@ -27,11 +29,12 @@
           = sort_link(@q, :last_name, 'Name')
         %th
           = sort_link(@q, :email)
+        %th
+          = sort_link(@q, :created_at, 'Joined')
+        %th
+          = sort_link(@q, :current_sign_in_at, 'Last Access')
+        %th
 
-    %tbody
-      - @users.each do |user|
-        %tr
-          %td= link_to sortable_full_name(user), edit_user_path(user)
-          %td= user.email
+    = render @users
 
   != pagy_foundation_nav(@pagy)

@@ -238,7 +238,7 @@ RSpec.describe 'Grants', type: :system do
     end
 
     context 'anoymous user' do
-      scenario 'can view publisehed open grant' do
+      scenario 'can view published open grant' do
         visit grant_path(@grant)
         expect(page).not_to have_content authorization_error_text
         expect(page).to have_link 'Apply Now'
