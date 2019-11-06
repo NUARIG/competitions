@@ -19,6 +19,6 @@ FactoryBot.define do
     factory :rejected_grant_creator_request, traits: %i[rejected]
 
     factory :reviewed_approved_grant_creator_request, traits: %i[approved reviewed_by_system_admin]
-    factory :rejected_rejected_grant_creator_request, traits: %i[rejected reviewed_by_system_admin]
+    factory :reviewed_rejected_grant_creator_request, traits: %i[rejected reviewed_by_system_admin]
   end
 end

@@ -18,14 +18,14 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
       expect(mailer.body).to have_link 'http://localhost:3000/profile/grants', href: profile_grants_url
     end
 
-    it 'address the requester by their full name' do
+    it 'addresses the requester by their full name' do
       requester = approved_request.requester
       expect(mailer.body).to include "Dear #{requester.first_name} #{requester.last_name}"
     end
   end
 
-  describe 'approved request' do
-    let(:rejected_request) { create(:rejected_rejected_grant_creator_request) }
+  describe 'rejected request' do
+    let(:rejected_request) { create(:reviewed_rejected_grant_creator_request) }
     let(:mailer) { described_class.rejected(request: rejected_request) }
 
     it 'uses the requester\'s email address' do
@@ -41,7 +41,7 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
     end
 
 
-    it 'address the requester by their full name' do
+    it 'addressed the requester by their full name' do
       requester = rejected_request.requester
       expect(mailer.body).to include "Dear #{requester.first_name} #{requester.last_name}"
     end

@@ -37,9 +37,9 @@ RSpec.describe GrantCreatorRequest, type: :model do
     end
 
     it 'allows request from user with an exisiting rejected request' do
-      request.update_attribute(:status, 'Approved')
+      request.update_attribute(:status, 'rejected')
       request.save
-      expect(FactoryBot.build(:grant_creator_request, requester: request.requester)).not_to be_valid
+      expect(FactoryBot.build(:grant_creator_request, requester: request.requester)).to be_valid
     end
   end
 
