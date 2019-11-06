@@ -1,5 +1,5 @@
 class GrantCreatorRequest < ApplicationRecord
-  after_save :udpate_user_grant_creator_attribute, if: :saved_change_to_status?
+  after_save :update_user_grant_creator_attribute, if: :saved_change_to_status?
   has_paper_trail versions: { class_name: 'PaperTrail::GrantCreatorRequestVersion' },
                   meta:     { requester_id: :requester_id }
 
@@ -45,17 +45,13 @@ class GrantCreatorRequest < ApplicationRecord
   end
 
   def reviewer_is_a_system_admin
-    errors.add(:base, :reviewer_is_not_system_admin) if !reviewer.system_admin?
+    errors.add(:base, :reviewer_is_not_system_admin) unless reviewer.system_admin?
   end
 
-  def udpate_user_grant_creator_attribute
+  def update_user_grant_creator_attribute
     case status
     when 'approved'
       requester.update_attribute(:grant_creator, true)
-      GrantCreatorRequestReviewMailer.with(request: self).approved.deliver_now
-    when 'rejected'
-      requester.update_attribute(:grant_creator, false)
-      GrantCreatorRequestReviewMailer.with(request: self).rejected.deliver_now
     else
       requester.update_attribute(:grant_creator, false)
     end
