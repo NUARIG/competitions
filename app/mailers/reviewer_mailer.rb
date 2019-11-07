@@ -1,29 +1,32 @@
 class ReviewerMailer < ApplicationMailer
-  before_action :set_attributes
+  def assignment(review:)
+    set_attributes(review)
 
-  def assignment
     mail(to: @reviewer.email, subject: I18n.t('mailers.reviewer_mailer.assignment.subject'))
   end
 
-  def unassignment
+  def unassignment(review:)
+    set_attributes(review)
+
     mail(to: @reviewer.email, subject: I18n.t('mailers.reviewer_mailer.unassignment.subject'))
   end
 
-  def opt_out
-    @recipient_emails = define_opt_out_recipients
-    mail(to:@recipient_emails, subject: I18n.t('mailers.reviewer_mailer.opt_out.subject'))
+  def opt_out(review:)
+    set_attributes(review)
+
+    mail(to: get_opt_out_recipients, subject: I18n.t('mailers.reviewer_mailer.opt_out.subject'))
   end
 
   private
 
-  def set_attributes
-    @review     = params[:review]
+  def set_attributes(review)
+    @review     = review
     @reviewer   = @review.reviewer
     @submission = @review.submission
     @grant      = @review.grant
   end
 
-  def define_opt_out_recipients
+  def get_opt_out_recipients
     if @review.assigner.editable_grants.include?(@grant)
       @review.assigner.email
     else
