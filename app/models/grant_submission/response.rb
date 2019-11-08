@@ -1,5 +1,7 @@
 module GrantSubmission
   class Response < ApplicationRecord
+    attr_accessor :remove_document
+
     self.table_name = 'grant_submission_responses'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::ResponseVersion' },
                     meta:     { grant_submission_question_id: :grant_submission_question_id }
@@ -52,6 +54,17 @@ module GrantSubmission
 
     include PartialDate
     has_partial_date(:partial_date_val)
+
+    def remove_document=(val)
+      remove_document = val # allows clearing file inputs to persist across validation errors
+      if val == 1 || val == "1"
+        document.purge
+      end
+    end
+
+    def remove_document
+      remove_document ||= nil
+    end
 
     def add_date_optional_time_error(datetime_comp)
       errors.add(self.class.date_optional_time_attribute(:datetime_val), "^#{question.text} must be a valid Date in the format MM/DD/YYYY")
