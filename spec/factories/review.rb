@@ -7,8 +7,11 @@ FactoryBot.define do
     association :submission, factory: :grant_submission_submission
     association :assigner,   factory: :user
     association :reviewer,   factory: :user
-    overall_impact_score   {}
-    overall_impact_comment {}
+
+    trait :incomplete do
+      overall_impact_score   {}
+      overall_impact_comment {}
+    end
 
     trait :with_score do
       overall_impact_score { rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE) }
@@ -26,6 +29,7 @@ FactoryBot.define do
       end
     end
 
+    factory :incomplete_review,                                   traits: %i[incomplete]
     factory :review_with_score,                                   traits: %i[with_score]
     factory :review_with_comment,                                 traits: %i[with_comment]
     factory :review_with_score_and_comment,                       traits: %i[with_score with_comment]
