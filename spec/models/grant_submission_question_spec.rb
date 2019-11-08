@@ -100,7 +100,7 @@ RSpec.describe GrantSubmission::Question, type: :model do
     end
   end
 
-  context 'multiple_choice_question' do
+  context 'pick_one question' do
     describe '#validations' do
       let(:multiple_choice_question) { create(:multiple_choice_question_with_options) }
 
@@ -112,6 +112,16 @@ RSpec.describe GrantSubmission::Question, type: :model do
         multiple_choice_question.multiple_choice_options.delete_all
         expect(multiple_choice_question).not_to be_valid
         expect(multiple_choice_question.errors.messages[:response_type].to_s).to include('requires at least one option')
+      end
+    end
+  end
+
+  describe 'file_upload question' do
+    describe '#validations' do
+      let(:file_upload_question) { build(:file_upload_question) }
+
+      it 'validates a valid question' do
+        expect(file_upload_question).to be_valid
       end
     end
   end

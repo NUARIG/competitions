@@ -1,5 +1,7 @@
 module GrantSubmission
   class Response < ApplicationRecord
+    attr_accessor :remove_document
+
     self.table_name = 'grant_submission_responses'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::ResponseVersion' },
                     meta:     { grant_submission_question_id: :grant_submission_question_id }
@@ -45,12 +47,24 @@ module GrantSubmission
 
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
+    validate :attachment_is_valid,   if: -> { document.attached? }
 
     include DateOptionalTime
     has_date_optional_time(:datetime_val, :boolean_val)
 
     include PartialDate
     has_partial_date(:partial_date_val)
+
+    def remove_document=(val)
+      remove_document = val # allows clearing file inputs to persist across validation errors
+      if val == 1 || val == "1"
+        document.purge
+      end
+    end
+
+    def remove_document
+      remove_document ||= nil
+    end
 
     def add_date_optional_time_error(datetime_comp)
       errors.add(self.class.date_optional_time_attribute(:datetime_val), "^#{question.text} must be a valid Date in the format MM/DD/YYYY")
@@ -184,6 +198,10 @@ module GrantSubmission
           nil
         end
       end
+    end
+
+    def attachment_is_valid
+      errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
   end
 end

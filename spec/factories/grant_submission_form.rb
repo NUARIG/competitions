@@ -23,6 +23,9 @@ FactoryBot.define do
         create(:multiple_choice_question_with_options, section: section,
                                      text: 'Multiple Choice Question',
                                      display_order: 4)
+        create(:file_upload_question, section: section,
+                                     text: 'File Upload Question',
+                                     display_order: 5)
       end
     end
 
