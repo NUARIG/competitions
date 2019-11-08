@@ -13,6 +13,7 @@ FactoryBot.define do
     end
 
     trait :text_val do
+      association :question,   factory: :long_text_question
       text_val { Faker::Lorem.paragraphs }
     end
 
@@ -21,8 +22,20 @@ FactoryBot.define do
       decimal_val { Faker::Lorem.number(digits: 5) }
     end
 
-    factory :string_val_response, traits: %i[string_val]
-    factory :text_val_response,    traits: %i[text_val]
-    factory :number_response,      traits: %i[number]
+    trait :with_pdf do
+      association :question, factory: :file_upload_question
+      document { fixture_file_upload(Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'), filename: 'text_file.txt', mime_type: 'application/pdf') }
+    end
+
+    trait :with_invalid_file do
+      association :question, factory: :file_upload_question
+      document { fixture_file_upload(Rails.root.join('spec', 'support', 'file_upload', 'text_file.txt'), filename: 'text_file.txt', mime_type: 'text/plain') }
+    end
+
+    factory :string_val_response,          traits: %i[string_val]
+    factory :text_val_response,            traits: %i[text_val]
+    factory :number_response,              traits: %i[number]
+    factory :valid_file_upload_response,   traits: %i[with_pdf]
+    factory :invalid_file_upload_response, traits: %i[with_invalid_file]
   end
 end

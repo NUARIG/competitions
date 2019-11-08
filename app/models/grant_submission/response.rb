@@ -45,6 +45,7 @@ module GrantSubmission
 
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
+    validate :attachment_is_valid,   if: -> { document.attached? }
 
     include DateOptionalTime
     has_date_optional_time(:datetime_val, :boolean_val)
@@ -184,6 +185,10 @@ module GrantSubmission
           nil
         end
       end
+    end
+
+    def attachment_is_valid
+      errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
   end
 end

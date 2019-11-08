@@ -33,6 +33,10 @@ FactoryBot.define do
       response_type { 'pick_one' }
     end
 
+    trait :file_upload do
+      response_type { 'file_upload' }
+    end
+
     trait :with_options do
       before(:create) do |question|
         2.times do |i|
@@ -48,6 +52,7 @@ FactoryBot.define do
     factory :date_question,                         traits: %i[date]
     factory :multiple_choice_question,              traits: %i[multiple_choice_option]
     factory :multiple_choice_question_with_options, traits: %i[multiple_choice_option with_options]
+    factory :file_upload_question,                  traits: %i[file_upload]
   end
 end
 
