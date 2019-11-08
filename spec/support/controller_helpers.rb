@@ -7,11 +7,11 @@ RSpec.configure do |config|
     user
   end
 
-  def login_user(user)
-      @request.env["devise.mapping"] = Devise.mappings[:user]
-      user = FactoryGirl.create(:user)
-      sign_in user
-      user
+  def login_user
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    user = FactoryBot.create(:user)
+    sign_in user
+    user
   end
 
   def login_as_user(user)
