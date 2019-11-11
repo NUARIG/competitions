@@ -31,9 +31,9 @@ module GrantCreatorRequests
     def send_notification
       case @grant_creator_request.status
       when 'approved'
-        GrantCreatorRequestReviewMailer.with(request: @grant_creator_request).approved.deliver_now
+        GrantCreatorRequestReviewMailer.approved(request: @grant_creator_request).deliver_now
       when 'rejected'
-        GrantCreatorRequestReviewMailer.with(request: @grant_creator_request).rejected.deliver_now
+        GrantCreatorRequestReviewMailer.rejected(request: @grant_creator_request).deliver_now
       end
     end
   end
