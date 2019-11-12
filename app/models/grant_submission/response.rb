@@ -19,6 +19,8 @@ module GrantSubmission
                                                     two_words_connector: ' or ',
                                                     last_word_connector: ' or ').freeze
 
+    MAXIMUM_TEXT_VAL_LENGTH = 4000
+
     belongs_to :submission,             class_name: 'GrantSubmission::Submission',
                                         foreign_key: 'grant_submission_submission_id',
                                         inverse_of: :responses
@@ -91,7 +93,7 @@ module GrantSubmission
       end
     end
 
-    def formatted_response_value(format = nil)
+    def formatted_response_value
       case question.response_type.to_sym
       when :pick_one
         multiple_choice_option.text
@@ -117,25 +119,6 @@ module GrantSubmission
       end
     end
 
-    def response_value_raw
-      case question.response_type.to_sym
-      when :pick_one
-       grant_submission_multiple_choice_option_id
-      when :number
-        decimal_val
-      when :short_text
-        string_val
-      when :long_text
-        text_val
-      when :date_opt_time
-        get_date_opt_time(:datetime_val, :boolean_val)
-      when :partial_date
-        partial_date_val
-      when :file_upload
-        document.filename
-      end
-    end
-
     private
 
     def validate_by_response_type
@@ -144,6 +127,8 @@ module GrantSubmission
         validate_number_if_number_response
       when 'short_text'
         validate_length_if_short_text_response
+      when 'long_text'
+        validate_length_if_long_text_response
       when 'file_upload'
         if document.attached?
           validate_attachment_size_if_file_upload_response
@@ -165,7 +150,14 @@ module GrantSubmission
 
     def validate_length_if_short_text_response
       if string_val.length > 255
-        errors.add(:string_val, :string_too_long, question: question.text)
+        errors.add(:string_val, :too_long, question: question.text)
+      end
+    end
+
+    def validate_length_if_long_text_response
+      if text_val.length > MAXIMUM_TEXT_VAL_LENGTH
+        errors.add(:text_val, :too_long, question: question.text,
+                                         length: ActiveSupport::NumberHelper.number_to_delimited(MAXIMUM_TEXT_VAL_LENGTH))
       end
     end
 

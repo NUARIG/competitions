@@ -13,13 +13,22 @@ FactoryBot.define do
     end
 
     trait :text_val do
-      association :question,   factory: :long_text_question
+      association :question, factory: :long_text_question
       text_val { Faker::Lorem.paragraphs }
     end
 
     trait :number do
       association :question, factory: :number_question
-      decimal_val { Faker::Lorem.number(digits: 5) }
+      decimal_val { Faker::Number.decimal(l_digits: 5, r_digits: 2) }
+    end
+
+    trait :datetime do
+      association :question, factory: :date_question
+      datetime_val { DateTime.now.to_s }
+    end
+
+    trait :pick_one do
+      association :question, factory: :pick_one_question
     end
 
     trait :with_pdf do
@@ -37,5 +46,7 @@ FactoryBot.define do
     factory :number_response,              traits: %i[number]
     factory :valid_file_upload_response,   traits: %i[with_pdf]
     factory :invalid_file_upload_response, traits: %i[with_invalid_file]
+    factory :pick_one_response,            traits: %i[pick_one]
+    factory :date_opt_time_response,       traits: %i[datetime]
   end
 end
