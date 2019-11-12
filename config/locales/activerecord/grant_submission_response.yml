@@ -24,5 +24,7 @@ en:
             grant_submission_multiple_choice_option_id:
               blank: for '%{question}' is required.
             datetime_val_date_optional_time_magik:
-            string_val:
-              string_too_long: to '%{question}' must be 255 characters or shorter.'
+            short_text:
+              too_long: to '%{question}' must be 255 characters or shorter.'
+            long_text:
+              too_long: to '%{question}' must be %{length} characters or shorter.'

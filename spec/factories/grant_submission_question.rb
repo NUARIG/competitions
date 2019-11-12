@@ -29,7 +29,7 @@ FactoryBot.define do
       response_type { 'date_opt_time' }
     end
 
-    trait :multiple_choice_option do
+    trait :pick_one do
       response_type { 'pick_one' }
     end
 
@@ -38,21 +38,21 @@ FactoryBot.define do
     end
 
     trait :with_options do
-      before(:create) do |question|
+      after(:build) do |question|
         2.times do |i|
           question.multiple_choice_options << build(:multiple_choice_option, question: question, display_order: (i+1))
         end
       end
     end
 
-    factory :short_text_question,                   traits: %i[short_text]
-    factory :required_short_text_question,          traits: %i[short_text required]
-    factory :long_text_question,                    traits: %i[long_text]
-    factory :number_question,                       traits: %i[number]
-    factory :date_question,                         traits: %i[date]
-    factory :multiple_choice_question,              traits: %i[multiple_choice_option]
-    factory :multiple_choice_question_with_options, traits: %i[multiple_choice_option with_options]
-    factory :file_upload_question,                  traits: %i[file_upload]
+    factory :short_text_question,            traits: %i[short_text]
+    factory :required_short_text_question,   traits: %i[short_text required]
+    factory :long_text_question,             traits: %i[long_text]
+    factory :number_question,                traits: %i[number]
+    factory :date_question,                  traits: %i[date]
+    factory :pick_one_question,              traits: %i[pick_one]
+    factory :pick_one_question_with_options, traits: %i[pick_one with_options]
+    factory :file_upload_question,           traits: %i[file_upload]
   end
 end
 
