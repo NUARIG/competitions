@@ -91,5 +91,15 @@ RSpec.describe 'GrantReviewers', type: :system do
       page.driver.browser.switch_to.alert.accept
       expect(page).to have_content('Reviewer could not be found.')
     end
+
+    context 'paper_trail', versioning: true do
+      scenario 'it tracks whodunnit' do
+        @grant_reviewer = GrantReviewer.find_by(grant: @grant, reviewer: @reviewer)
+        click_link('Remove', href: grant_reviewer_path(@grant, @grant_reviewer))
+        page.driver.browser.switch_to.alert.accept
+        expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
+        expect(@grant_reviewer.versions.last.whodunnit).to be @grant_admin.id
+      end
+    end
   end
 end

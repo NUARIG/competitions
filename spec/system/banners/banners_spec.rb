@@ -10,8 +10,6 @@ RSpec.describe 'Banners', type: :system do
       visit root_path
     end
 
-
-
     describe 'user should not have access' do
       before(:each) do
         @user  = create(:user)
@@ -168,6 +166,21 @@ RSpec.describe 'Banners', type: :system do
         expect(page).to have_content @banner.body
         expect(page).not_to have_content @invisible_banner.body
       end
+    end
+  end
+
+  describe 'PaperTrail', js: true, versioning: true do
+    before(:each) do
+      @banner = create(:banner)
+      @system_admin_user  = create(:system_admin_user)
+      login_as @system_admin_user
+      visit edit_banner_path(@banner)
+    end
+
+    it 'tracks whodunnit' do
+      fill_in_trix_editor('banner_body', with: Faker::Lorem.sentence(word_count: 10))
+      click_button 'Update'
+      expect(@banner.versions.last.whodunnit).to eql(@system_admin_user.id)
     end
   end
 end
