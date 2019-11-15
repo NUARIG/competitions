@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class GrantPolicy < ApplicationPolicy
+  GRANT_ACCESS = { 'viewer' =>  1,
+                   'editor' =>  2,
+                   'admin'  =>  3 }
+  GRANT_ACCESS.default = -1
+  GRANT_ACCESS.freeze
+
   class Scope < Scope
     def resolve
       if user.system_admin?
@@ -44,21 +50,19 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def grant_admin_access?
-    check_grant_access(%w[admin])
+    user.system_admin? || GRANT_ACCESS['admin'] == GRANT_ACCESS[user_grant_permission_role]
   end
 
   def grant_editor_access?
-    check_grant_access(%w[admin editor])
+    user.system_admin? || GRANT_ACCESS['editor'] <= GRANT_ACCESS[user_grant_permission_role]
   end
 
   def grant_viewer_access?
-    user.system_admin? || check_grant_access(%w[admin editor viewer])
+    user.system_admin? || GRANT_ACCESS['viewer'] <= GRANT_ACCESS[user_grant_permission_role]
   end
 
-  def check_grant_access(role_list)
-    user.id.in?(GrantPermission.where(role: role_list)
-                               .where(grant: grant)
-                               .pluck(:user_id))
+  def user_grant_permission_role
+    GrantPermission.find_by(grant: grant, user: user).try(:role)
   end
 
   private
