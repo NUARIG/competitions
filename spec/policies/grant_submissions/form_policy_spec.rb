@@ -30,9 +30,8 @@ describe GrantSubmission::FormPolicy, type: :policy do
     context 'grant viewer user on the grant' do
       let(:user) { grant.grant_permissions.role_viewer.first.user }
 
-
       it { is_expected.not_to permit_action(:update) }
-      it { is_expected.not_to permit_action(:edit) }
+      it { is_expected.to permit_action(:edit) } # fields disabled for viewer
       it { is_expected.not_to permit_action(:update_fields) }
       it { is_expected.not_to permit_action(:export) }
       it { is_expected.not_to permit_action(:import) }

@@ -9,7 +9,9 @@ class GrantPermission < ApplicationRecord
 
   ROLES = { admin: 'admin',
             editor: 'editor',
-            viewer: 'viewer' }.freeze
+            viewer: 'viewer' }
+  ROLES.default = 'none'
+  ROLES.freeze
 
   enum role: ROLES, _prefix: true
 

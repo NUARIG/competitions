@@ -1,5 +1,10 @@
 - content_for(:page_title, "Edit - #{@grant.name}")
 
+%h1
+  = @grant.name
+
+= render 'shared/grant_state', { grant: @grant }
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
@@ -7,7 +12,7 @@
     Permissions
 
   %p
-    - unless @current_user_role == 'viewer'
+    - if policy(@grant).edit?
       = link_to 'Add new permission', new_grant_grant_permission_path
 
   - unless @grant_permissions.present?
@@ -29,6 +34,6 @@
             %td
               = full_name(grant_permission.user)
             %td
-              = grant_permission.role
+              = grant_permission.role.capitalize
             %td
-              = render partial: "#{@current_user_role}_links", locals: { grant_permission: grant_permission, grant: @grant }
+              = render partial: "#{current_user.grant_permission_role}_links", locals: { grant_permission: grant_permission, grant: @grant }

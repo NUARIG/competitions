@@ -1,18 +1,15 @@
 class GrantPermissionsController < ApplicationController
-  include WithGrantRoles
-  include UsersHelper
+  # include UsersHelper
 
-  before_action :set_grant, except: :index
   before_action :set_grant_and_grant_permissions, only: :index
+  before_action :set_grant, except: :index
   before_action :set_grant_permission, only: %i[edit update destroy]
-  before_action :authorize_grant_edit
+  before_action :authorize_grant_editor, except: %[index]
 
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    @grant_permissions = GrantPermission.where(grant: @grant)
-
-    @current_user_role = current_user_grant_permission
+    authorize_grant_viewer
   end
 
   # GET /grants/:id/grant_permission/new
@@ -82,7 +79,7 @@ class GrantPermissionsController < ApplicationController
   end
 
   def set_grant_and_grant_permissions
-    @grant       = Grant.includes(:grant_permissions).friendly.find(params[:grant_id])
+    @grant = Grant.includes(:grant_permissions).friendly.find(params[:grant_id])
     @grant_permissions = @grant.grant_permissions
   end
 
@@ -90,8 +87,13 @@ class GrantPermissionsController < ApplicationController
     @grant_permission = GrantPermission.find(params[:id])
   end
 
-  def authorize_grant_edit
-    authorize @grant, :edit?
+  def authorize_grant_viewer
+    authorize @grant, :grant_viewer_access?
+  end
+
+
+  def authorize_grant_editor
+    authorize @grant, :grant_editor_access?
   end
 
   def unassigned_users_by_grant

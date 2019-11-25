@@ -193,7 +193,7 @@ describe GrantPolicy do
 
         it { is_expected.to forbid_action(:new) }
         it { is_expected.to forbid_action(:create) }
-        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.not_to forbid_action(:edit) }
         it { is_expected.to forbid_action(:update) }
         it { is_expected.to forbid_action(:destroy) }
 

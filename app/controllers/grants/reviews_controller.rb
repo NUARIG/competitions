@@ -3,6 +3,7 @@ module Grants
     skip_after_action :verify_policy_scoped, only: %i[index]
 
     def index
+      # set_user_grant_permission_role
       @grant = Grant.friendly.find(params[:grant_id])
       authorize @grant, :grant_viewer_access?
       @q              = Review.by_grant(@grant).ransack(params[:q])

@@ -2,14 +2,12 @@
   Permissions
 
 - if policy(@grant).edit?
-  = link_to 'Add new permission', new_grant_grant_permission_path
+  = link_to 'Add new permission', new_grant_grant_permission_path(@grant)
 
-- unless @current_user_role == 'viewer'
-  %div
-    = link_to 'Add New User Permissions', new_grant_grant_permission_path(@grant)
 - unless @grant.grant_permissions.present?
   %p
     No roles have been assigned on this grant.
+
 - else
   %table
     %thead
@@ -28,4 +26,4 @@
           %td
             = grant_permission.role
           %td
-            = render partial: "grant_permissions/#{@current_user_role}_links", locals: { grant_permission: grant_permission, grant: @grant }
+            = render partial: "grant_permissions/#{current_user.grant_permission_role}_links", locals: { grant_permission: grant_permission, grant: @grant }

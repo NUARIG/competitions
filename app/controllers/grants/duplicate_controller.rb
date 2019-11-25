@@ -6,7 +6,6 @@ module Grants
     skip_before_action :set_grant
 
     def new
-
       authorize @original_grant, :duplicate?
       @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
