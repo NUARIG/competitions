@@ -27,6 +27,8 @@ class GrantPermission < ApplicationRecord
 
   scope :with_users, -> { (includes :users) }
 
+  private
+
   def prevent_last_admin_edit
     errors.add(:base, 'There must be at least one admin on the grant')
   end
