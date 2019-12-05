@@ -10,3 +10,9 @@ en:
           attributes:
             base:
               required_score: "'%{criterion}' must be scored."
+  helpers:
+    label:
+      review:
+        criteria_reviews:
+          score: Score
+          comments: Comments
