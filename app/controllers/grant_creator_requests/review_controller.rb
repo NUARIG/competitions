@@ -2,8 +2,7 @@ module GrantCreatorRequests
   class ReviewController < GrantCreatorRequestsController
     before_action :set_and_authorize_grant_creator_request
 
-    def show
-    end
+    def show; end
 
     def update
       @grant_creator_request.reviewer = current_user

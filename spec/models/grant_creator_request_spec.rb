@@ -56,38 +56,47 @@ RSpec.describe GrantCreatorRequest, type: :model do
   end
 
   describe 'reviews' do
-    let(:request)          { build(:approved_grant_creator_request) }
+    let(:request)          { build(:grant_creator_request) }
     let(:valid_reviewer)   { create(:system_admin_user) }
     let(:invalid_reviewer) { create(:user) }
 
-    it 'allows reviewer who is a system_admin' do
-      request.reviewer_id = valid_reviewer.id
-      expect(request).to be_valid
+    context 'valid reviews' do
+      before(:each) do
+        request.reviewer = valid_reviewer
+      end
+
+      it 'allows reviewer who is a system_admin' do
+        request.reviewer_id = valid_reviewer.id
+        expect(request).to be_valid
+      end
+
+      it 'sets requester grant_creator boolean to false when rejected' do
+        expect(request.requester.grant_creator).to be false
+        request.update_attribute(:status, 'rejected')
+        expect(request.requester.grant_creator).to be false
+      end
+
+      it 'sets requester grant_creator boolean to true when approved' do
+        expect(request.requester.grant_creator).to be false
+        request.status = 'approved'
+        request.save
+        expect(request.requester.grant_creator).to be true
+      end
+
+      it 'sets requester grant_creator boolean to false when pending' do
+        expect(request.requester.grant_creator).to be false
+        request.update_attribute(:status, 'pending')
+        expect(request.requester.grant_creator).to be false
+      end
     end
 
-    it 'disallows reviewer who is not a system_admin' do
-      request.save
-      request.reviewer = invalid_reviewer
-      expect(request).not_to be_valid
-      expect(request.errors.messages[:base]).to include  I18n.t('activerecord.errors.models.grant_creator_request.attributes.base.reviewer_is_not_system_admin')
-    end
-
-    it 'sets requester grant_creator boolean to true when approved' do
-      expect(request.requester.grant_creator).to be false
-      request.save
-      expect(request.requester.grant_creator).to be true
-    end
-
-    it 'sets requester grant_creator boolean to false when rejected' do
-      expect(request.requester.grant_creator).to be false
-      request.update_attribute(:status, 'rejected')
-      expect(request.requester.grant_creator).to be false
-    end
-
-    it 'sets requester grant_creator boolean to false when pending' do
-      expect(request.requester.grant_creator).to be false
-      request.update_attribute(:status, 'pending')
-      expect(request.requester.grant_creator).to be false
+    context 'invalid reviews' do
+      it 'disallows reviewer who is not a system_admin' do
+        request.save
+        request.reviewer = invalid_reviewer
+        expect(request).not_to be_valid
+        expect(request.errors.messages[:base]).to include  I18n.t('activerecord.errors.models.grant_creator_request.attributes.base.reviewer_is_not_system_admin')
+      end
     end
   end
 end
