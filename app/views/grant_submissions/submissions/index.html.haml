@@ -39,6 +39,6 @@
               = submission.created_at
             %td
               #ul.menu.simple
-                = render partial: "#{current_user.grant_permission_role}_links", locals: { submission: submission, grant: @grant }
+                = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { submission: submission, grant: @grant }
 
     != pagy_foundation_nav(@pagy)

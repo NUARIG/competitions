@@ -1,6 +1,6 @@
 
 %ul.tabs#grant-info{ class: "grant-edit grant-#{grant.id}-edit" }
-  - populate_grant_tabs(grant_permission_role: current_user.grant_permission_role, grant: grant).each do |tab, path|
+  - populate_grant_tabs(grant_permission_role: current_user.get_role_by_grant(grant: grant), grant: grant).each do |tab, path|
     %li.tabs-title{ class: [request.path == path && 'is-active'] }
       = link_to tab, path
 

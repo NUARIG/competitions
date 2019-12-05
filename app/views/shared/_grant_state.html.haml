@@ -2,4 +2,4 @@
   %strong
     Current Publish Status:
   = grant.state.capitalize
-  = render 'grants/state/form', { grant: grant } unless current_user.grant_permission_role == 'viewer'
+  = render 'grants/state/form', { grant: grant } unless current_user.get_role_by_grant(grant: grant) == 'viewer'

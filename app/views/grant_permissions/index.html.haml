@@ -36,4 +36,4 @@
             %td
               = grant_permission.role.capitalize
             %td
-              = render partial: "#{current_user.grant_permission_role}_links", locals: { grant_permission: grant_permission, grant: @grant }
+              = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { grant_permission: grant_permission, grant: @grant }
