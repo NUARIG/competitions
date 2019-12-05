@@ -1,5 +1,11 @@
 <script>
   $(function(){Grant.FormBuilderSurvey.init();});
+  document.addEventListener("trix-initialize", function(event) {
+    var elementButtons = event.target.toolbarElement.querySelectorAll("button")
+    for (i=0; i<elementButtons.length; i++) {
+      elementButtons[i].tabIndex = -1 ;
+    }
+  });
 </script>
 
 <% unless @form.new_record? %>
@@ -8,22 +14,27 @@
 
 <% has_edit_permission = policy(@grant).update? %>
 <%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
-  <table class="table">
+  <table class="unstriped">
     <tr>
-      <td><%= f.label :submission_instructions %></td>
       <td>
-          <%= text_area_tag 'grant_submission_form[submission_instructions]', f.object.submission_instructions, rows: 2, cols: 80, aria: { 'described-by': 'submissionInstructionsHelp' } %>
-          <p id="#submissionInstructionsHelp" class="help-text">
-              This optional text will be included on the application form.
-            </p>
+        <%= f.label :submission_instructions, class: 'bold' %>
       </td>
+    </tr>
+    <tr>
+      <td>
+        <%= f.hidden_field :submission_instructions, id: 'submission_instructions' %>
+        <trix-editor input="submission_instructions" aria-describedby="submissionInstructionsHelp"></trix-editor>
+        <p id="submissionInstructionsHelp" class="help-text">
+          This optional text will be included on the application form.
+        </p>
+      </td>
+    </tr>
   </table>
 
   <hr/>
 
   <%= render 'title_placeholder_field' %>
 
-  <%#= f.fields_for :sections, @form.sections.sort_by {|section| section.display_order || 0 } do |ff| %>
   <%= f.fields_for :sections, @form.sections do |ff| %>
     <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: has_edit_permission} %>
     <% end %>
