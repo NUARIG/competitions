@@ -85,9 +85,10 @@ label.required-true:after {
     box-shadow: 0 0 2px #cc4b37;
   }
 }
-// .tabs-title.is-active {
-//   background-color: #e6e6e6;
-// }
+
+trix-editor + p.help-text {
+  margin: .25em;
+}
 
 .pagy-header {
   margin: .75em 0em;
