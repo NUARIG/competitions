@@ -10,15 +10,15 @@ class ReviewPolicy < GrantPolicy
   end
 
   def create?
-    user.system_admin? || grant_editor_access?
+    grant_editor_access?
   end
 
   def edit?
-    current_user_is_reviewer? || user.system_admin? || grant_editor_access?
+    current_user_is_reviewer? || grant_editor_access?
   end
 
   def show?
-    edit?
+    current_user_is_reviewer? || grant_viewer_access?
   end
 
   def update?
@@ -26,7 +26,7 @@ class ReviewPolicy < GrantPolicy
   end
 
   def destroy?
-    user.system_admin? || grant_editor_access?
+    grant_editor_access?
   end
 
   def opt_out?

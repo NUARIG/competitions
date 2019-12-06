@@ -10,8 +10,6 @@ RSpec.describe 'Banners', type: :system do
       visit root_path
     end
 
-
-
     describe 'user should not have access' do
       before(:each) do
         @user  = create(:user)
@@ -42,7 +40,8 @@ RSpec.describe 'Banners', type: :system do
           end
 
           scenario 'displays the Banners link for admins' do
-            click_link 'Admin'
+            page.find('#admin').hover
+            expect(page).to have_link 'Banners', href: banners_path
             click_link 'Banners'
             expect(current_path).to eq("/banners")
           end
@@ -71,7 +70,7 @@ RSpec.describe 'Banners', type: :system do
 
           scenario 'create a banner' do
             @body = Faker::Lorem.sentence
-            @body_list_name = @body.split.first
+            truncated_body = @body.truncate_words(2, omission: '')
 
             click_link 'Create New Banner'
             expect(current_path).to eq("/banners/new")
@@ -79,7 +78,7 @@ RSpec.describe 'Banners', type: :system do
             click_button 'Save'
             expect(current_path).to eq("/banners")
             expect(page).to have_content('Banner was created and will continue to be visible until that setting is changed or it is deleted.')
-            expect(page).to have_content(@body_list_name)
+            expect(page).to have_content(truncated_body)
 
             visit root_path
             expect(page).to have_content(@body)
@@ -87,44 +86,41 @@ RSpec.describe 'Banners', type: :system do
         end
 
         context '#delete' do
-          scenario ' delete a banner success' do
-            expect(page).to have_content(@banner.body.split.first)
-            click_link 'Delete'
+          scenario 'delete a banner success' do
+            truncated_body = @banner.body.truncate_words(2, omission: '')
+            expect(page).to have_content(truncated_body)
+            click_link 'Delete', href: banner_path(@banner)
             page.driver.browser.switch_to.alert.accept
-            expect(page).not_to have_content(@banner.body.split.first)
+            expect(page).not_to have_content(truncated_body)
           end
         end
 
         context '#edit' do
           before(:each) do
-            @body = Faker::Lorem.sentence
-            @body_list_name = @body.split.first
+            @new_body = Faker::Lorem.sentence
+            @truncated_body = @new_body.truncate_words(2, omission: '')
           end
 
           scenario 'edit a banner' do
-            expect(page).to have_content(@banner.body.split.first)
-            click_link 'Edit'
+            expect(page).to have_content(@banner.body.truncate_words(2, omission: ''))
+            click_link 'Edit', href: edit_banner_path(@banner)
             expect(current_path).to eq("/banners/#{@banner.id}/edit")
-            fill_in_trix_editor('banner_body', with: @body)
+            fill_in_trix_editor('banner_body', with: @new_body)
             click_button 'Update'
             expect(current_path).to eq("/banners")
-            expect(page).to have_content(@body_list_name)
-
-
+            expect(page).to have_content(@truncated_body)
           end
 
           scenario 'unsuccessful edit of a banner' do
-            # TODO: This doesn't want to reset the body text to nil or ''.
-
-            # @empty = ''
-            # expect(page).to have_content(@banner.body.split.first)
-            # click_link 'Edit'
-            # expect(current_path).to eq("/banners/#{@banner.id}/edit")
-            # fill_in_trix_editor('banner_body', with: @empty)
-            # click_button 'Update'
-            # expect(page).to have_content('Please review the following error')
+            expect(page).to have_content(@banner.body.split.first)
+            click_link 'Edit'
+            expect(current_path).to eq("/banners/#{@banner.id}/edit")
+            @banner.body.length.times do
+              find(:xpath, "//trix-editor[@input='banner_body']").send_keys(:backspace)
+            end
+            click_button 'Update'
+            expect(page).to have_content('Please review the following error')
           end
-
         end
       end
     end
@@ -168,6 +164,21 @@ RSpec.describe 'Banners', type: :system do
         expect(page).to have_content @banner.body
         expect(page).not_to have_content @invisible_banner.body
       end
+    end
+  end
+
+  describe 'PaperTrail', js: true, versioning: true do
+    before(:each) do
+      @banner = create(:banner)
+      @system_admin_user  = create(:system_admin_user)
+      login_as @system_admin_user
+      visit edit_banner_path(@banner)
+    end
+
+    it 'tracks whodunnit' do
+      fill_in_trix_editor('banner_body', with: Faker::Lorem.sentence(word_count: 10))
+      click_button 'Update'
+      expect(@banner.versions.last.whodunnit).to eql(@system_admin_user.id)
     end
   end
 end

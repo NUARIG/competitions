@@ -11,7 +11,10 @@
   .small-12.medium-9.cell#rfa
     %h4
       Apply
-    = @submission.form.submission_instructions
-    %hr
+    - unless @submission.form.submission_instructions.empty?
+      = @submission.form.submission_instructions.html_safe
+
+      %hr
+
     = grant_form_for [@grant, @submission], url: grant_submissions_url, html: {multipart: true} do |f|
       = render partial: 'form', locals: { f: f }

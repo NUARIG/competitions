@@ -8,7 +8,7 @@ module GrantSubmissions
       # GET /reviews.json
       def index
         @grant = Grant.with_criteria.friendly.find(params[:grant_id])
-        authorize @grant, :edit?
+        authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
         @q              = Review.includes(:reviewer, :criteria_reviews).by_submission(@submission).ransack(params[:q])
         @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
@@ -24,6 +24,7 @@ module GrantSubmissions
       # GET /reviews/1/edit
       def edit
         authorize @review
+        @reviewer = @review.reviewer
         build_criteria_reviews
       end
 
@@ -36,7 +37,7 @@ module GrantSubmissions
         authorize @review
         respond_to do |format|
           if @review.save
-            ReviewerMailer.with(review: @review).assignment.deliver_now
+            ReviewerMailer.assignment(review: @review).deliver_now
             flash[:success] = "Submission assigned for review. Notification email sent to #{helpers.full_name(@review.reviewer)}"
             format.json   { head :ok }
           else
@@ -69,7 +70,7 @@ module GrantSubmissions
       def destroy
         authorize @review
         @review.destroy
-        ReviewerMailer.with(review: @review).unassignment.deliver_now
+        ReviewerMailer.unassignment(review: @review).deliver_now
         respond_to do |format|
           flash[:success] = 'Review was successfully unassigned.'
           format.json { head :no_content }

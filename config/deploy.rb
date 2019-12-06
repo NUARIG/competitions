@@ -7,7 +7,7 @@ set :application, DEPLOY_CONFIG['application']
 set :repo_url,    DEPLOY_CONFIG['repository']
 
 set :rvm_type, :system
-set :rvm_ruby_version, 'ruby-2.6.3'
+set :rvm_ruby_version, 'ruby-2.6.5'
 
 set :passenger_restart_with_touch, true
 
@@ -51,16 +51,3 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
-
-
-namespace :deploy do
-  desc 'Restart application'
-  task :restart do
-    on roles(:web), in: :sequence, wait: 5 do
-      execute :mkdir, '-p', release_path.join('tmp')
-      execute :touch, release_path.join('tmp/restart.txt')
-    end
-  end
-end
-
-after "deploy:finished", "deploy:restart"

@@ -10,9 +10,10 @@ FactoryBot.define do
     trait :with_responses do
       after(:create) do |submission|
         submission.grant.questions.each do |question|
-          case question.response_type
+          case question.response_type.to_sym
           when :short_text
-            create(:string_val_response, submission: submission, question:   question)
+            create(:string_val_response, submission: submission,
+                                         question: question)
           when :number
             create(:number_response, submission: submission,
                                      question: question)

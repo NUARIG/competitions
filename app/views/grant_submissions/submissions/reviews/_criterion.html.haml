@@ -10,7 +10,7 @@
           = criterion.description
   .grid-x
     .cell.small-12.medium-3
-      = ff.label 'Score', class: "required-#{criterion_review.criterion.is_mandatory}"
+      = ff.label :score, class: "required-#{criterion_review.criterion.is_mandatory}"
     .cell.small-12.medium-9
       .button-group
         %label.scoring-guidance
@@ -25,6 +25,6 @@
   - if criterion_review.criterion.show_comment_field
     .comment.grid-x
       .cell.small-12.medium-3
-        = ff.label "Comments"
+        = ff.label :comments
       .cell.small-12.medium-9
         = ff.text_area :comment, { id: "#{criterion_id}-comment", class: 'comment'}
