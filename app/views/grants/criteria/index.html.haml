@@ -1,5 +1,12 @@
 - content_for(:page_title, "Edit Review Criteria")
 
+- disable_fields = !policy(@grant).edit?
+
+%h1
+  = @grant.name
+
+= render 'shared/grant_state', { grant: @grant }
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 = form_for @grant, url: update_criteria_grant_path(@grant) do |f|
@@ -7,7 +14,7 @@
   #criteria.grid-x
     .cell
       = f.fields_for :criteria, @criteria do |criterion|
-        = render 'criterion_fields', f: criterion
+        = render partial:'criterion_fields', locals: { f: criterion }
       .links
-        = link_to_add_association 'Add a New Review Criteria', f, :criteria, class: 'button hollow small warning'
-    = f.submit 'Save Changes', class: 'button'
+        = link_to_add_association 'Add a New Review Criteria', f, :criteria, class: 'button hollow small warning' unless disable_fields
+    = f.submit 'Save Changes', class: 'button' unless disable_fields

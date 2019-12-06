@@ -3,12 +3,8 @@
 require 'rails_helper'
 include UsersHelper
 
-RSpec.describe 'Grants', type: :system do
-  def authorization_error_text
-    I18n.t('pundit.default')
-  end
-
-  describe 'Index', js: true do
+RSpec.describe 'Grants', type: :system, js: true do
+  describe 'Index' do
     before(:each) do
       @grant                  = create(:grant_with_users)
       @inaccessible_grant     = create(:grant_with_users)
@@ -37,42 +33,106 @@ RSpec.describe 'Grants', type: :system do
     end
   end
 
-  describe 'Edit', js: true do
-    before(:each) do
-      @grant          = create(:grant_with_users)
-      @admin_user     = @grant.grant_permissions.role_admin.first.user
+  describe 'Edit' do
+    context 'admin' do
+      before(:each) do
+        @grant          = create(:grant_with_users)
+        @admin_user     = @grant.grant_permissions.role_admin.first.user
 
-      login_as(@admin_user)
-      visit edit_grant_path(@grant)
+        login_as(@admin_user)
+        visit edit_grant_path(@grant)
+      end
+
+      scenario 'date fields edited with datepicker are properly formatted' do
+        tomorrow = (Date.current + 1.day).to_s
+
+        expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
+        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
+        click_button 'Update'
+
+        expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
+      end
+
+      scenario 'versioning tracks whodunnit', versioning: true do
+        expect(PaperTrail).to be_enabled
+        fill_in 'grant_name', with: 'New_Name'
+        click_button 'Update'
+
+        expect(page).to have_content 'Grant was successfully updated.'
+        expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
+      end
+
+      scenario 'invalid submission', versioning: true do
+        page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
+        click_button 'Update'
+        expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
+      end
     end
 
-    scenario 'date fields edited with datepicker are properly formatted' do
-      tomorrow = (Date.current + 1.day).to_s
+    context 'editor' do
+      before(:each) do
+        @grant          = create(:grant_with_users)
+        @editor_user     = @grant.grant_permissions.role_editor.first.user
 
-      expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
-      page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
-      click_button 'Update'
+        login_as(@editor_user)
+        visit edit_grant_path(@grant)
+      end
 
-      expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
+      scenario 'date fields edited with datepicker are properly formatted' do
+        tomorrow = (Date.current + 1.day).to_s
+
+        expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
+        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
+        click_button 'Update'
+
+        expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
+      end
+
+      scenario 'versioning tracks whodunnit', versioning: true do
+        expect(PaperTrail).to be_enabled
+        fill_in 'grant_name', with: 'New_Name'
+        click_button 'Update'
+
+        expect(page).to have_content 'Grant was successfully updated.'
+        expect(@grant.versions.last.whodunnit).to eql(@editor_user.id)
+      end
+
+      scenario 'invalid submission', versioning: true do
+        page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
+        click_button 'Update'
+        expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
+      end
     end
 
-    scenario 'versioning tracks whodunnit', versioning: true do
-      expect(PaperTrail).to be_enabled
-      fill_in 'grant_name', with: 'New_Name'
-      click_button 'Update'
+    context 'viewer' do
+      before(:each) do
+        @grant          = create(:grant_with_users)
+        @viewer_user     = @grant.grant_permissions.role_viewer.first.user
 
-      expect(page).to have_content 'Grant was successfully updated.'
-      expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
-    end
+        login_as(@viewer_user)
+        visit edit_grant_path(@grant)
+      end
 
-    scenario 'invalid submission', versioning: true do
-      page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
-      click_button 'Update'
-      expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
+      scenario 'can access edit page' do
+        expect(page).not_to have_content 'You are not authorized to perform this action'
+      end
+
+      scenario 'cannot update fields' do
+        expect(page).to have_field 'Name', disabled: true
+        expect(page).to have_field 'Short Name', disabled: true
+        expect(page).to have_field 'Publish Date', disabled: true
+        expect(page).to have_field 'Open Date', disabled: true
+        expect(page).to have_field 'Close Date', disabled: true
+        expect(page).to have_field 'Maximum Reviewers / Submission', disabled: true
+        expect(page).to have_field 'Maximum Submissions / Reviewer', disabled: true
+        expect(page).to have_field 'Review Open Date', disabled: true
+        expect(page).to have_field 'Review Close Date', disabled: true
+        expect(page).to have_field 'Panel Location', disabled: true
+      end
     end
   end
 
-  describe 'New', js: true do
+  describe 'New' do
     before(:each) do
       @grant        = build(:new_grant)
       @user         = create(:user, system_admin: true)
@@ -82,9 +142,7 @@ RSpec.describe 'Grants', type: :system do
 
       page.fill_in 'Name', with: @grant.name
       page.fill_in 'Short Name', with: @grant.slug
-      # TODO: Figure out rspec / trix
-      #   page.find('grant_rfa').click.set(@grant.grant_rfa)
-      #   page.find('review_guidance').click.set(@grant.review_guidance)
+      fill_in_trix_editor('grant_rfa', with: Faker::Lorem.paragraph)
       page.fill_in 'Publish Date', with: @grant.publish_date
       page.fill_in 'Open Date', with: @grant.submission_open_date
       page.fill_in 'Close Date', with: @grant.submission_close_date
@@ -118,76 +176,7 @@ RSpec.describe 'Grants', type: :system do
     end
   end
 
-  describe 'Duplicate', js: true do
-    before(:each) do
-      @grant          = create(:grant_with_users)
-      @admin_user     = @grant.grant_permissions.role_admin.first.user
-
-      login_as(@admin_user)
-    end
-
-    scenario 'new_grant_duplicate does not create a new grant' do
-      visit edit_grant_path(@grant)
-      expect do
-        click_link('Duplicate', href: new_grant_duplicate_path(@grant))
-        expect(page).to have_content "Information from #{@grant.name} has been copied below."
-      end.not_to change{Grant.count}
-    end
-
-    scenario 'clears dates' do
-      visit edit_grant_path(@grant)
-      click_link('Duplicate', href: new_grant_duplicate_path(@grant))
-      expect(page.find_field('grant_publish_date').value).to eql ''
-      expect(page.find_field('grant_submission_open_date').value).to eql ''
-      expect(page.find_field('grant_submission_close_date').value).to eql ''
-      expect(page.find_field('grant_review_open_date').value).to eql ''
-      expect(page.find_field('grant_review_close_date').value).to eql ''
-    end
-
-    scenario 'duplicated grant requires a new title and short name' do
-      visit edit_grant_path(@grant)
-      click_link('Duplicate', href: new_grant_duplicate_path(@grant))
-
-      page.fill_in 'Short Name', with: @grant.slug
-      page.fill_in 'Publish Date', with: @grant.publish_date + 1.day
-      page.fill_in 'Open Date', with: @grant.submission_open_date + 1.day
-      page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
-      page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
-      page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
-      expect do
-        click_button('Save as Draft')
-      end.not_to change{ Grant.count }
-
-      expect(page).to have_content('Name has already been taken')
-      expect(page).to have_content('Short Name has already been taken')
-    end
-
-    scenario 'valid duplicate submission creates new grant' do
-      visit edit_grant_path(@grant)
-      click_link('Duplicate', href: new_grant_duplicate_path(@grant))
-
-      page.fill_in 'Name', with: "Updated #{@grant.name}"
-      page.fill_in 'Short Name', with: "#{@grant.slug}1"
-      page.fill_in 'Publish Date', with: @grant.publish_date + 1.day
-      page.fill_in 'Open Date', with: @grant.submission_open_date + 1.day
-      page.fill_in 'Close Date', with: @grant.submission_close_date + 1.day
-      page.fill_in 'Review Open Date', with: @grant.review_open_date + 1.day
-      page.fill_in 'Review Close Date', with: @grant.review_close_date + 1.day
-
-      expect do
-        click_button('Save as Draft')
-      end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
-      expect(page).to have_content('Current Publish Status: Draft')
-    end
-
-    scenario 'invalid grant.id redirects to home' do
-      visit new_grant_duplicate_path(Grant.last.id + 1)
-      expect(page).to have_content('Grant not found')
-      assert_equal grants_path, current_path
-    end
-  end
-
-  describe 'SoftDelete', js: true do
+  describe 'SoftDelete' do
     before(:each) do
       @grant          = create(:grant_with_users)
       @admin_user     = @grant.grant_permissions.role_admin.first.user
@@ -224,7 +213,7 @@ RSpec.describe 'Grants', type: :system do
     end
   end
 
-  describe 'Policy', js: true do
+  describe 'Policy' do
     before(:each) do
       @grant          = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
       @invalid_user   = create(:user)
@@ -280,6 +269,7 @@ RSpec.describe 'Grants', type: :system do
         visit edit_grant_grant_permission_path(@grant, @grant_permission)
         expect(page).not_to have_content authorization_error_text
         visit new_grant_duplicate_path(@grant)
+
         expect(page).not_to have_content authorization_error_text
       end
 
@@ -356,9 +346,9 @@ RSpec.describe 'Grants', type: :system do
         expect(page).not_to have_content authorization_error_text
       end
 
-      scenario 'cannot access edit page' do
+      scenario 'can access edit page' do
         visit edit_grant_path(@grant)
-        expect(page).to have_content authorization_error_text
+        expect(page).not_to have_content authorization_error_text
       end
 
       scenario 'cannot duplicate a grant' do
@@ -366,8 +356,7 @@ RSpec.describe 'Grants', type: :system do
         expect(page).to have_content authorization_error_text
       end
 
-      pending 'can access grant_permissions page' do
-        fail 'grant_viewer to be deleted'
+      scenario 'can access grant_permissions page' do
         visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content authorization_error_text
       end

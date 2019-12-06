@@ -1,3 +1,6 @@
+<%- current_user_may_edit = policy(@grant).update? %>
+<%- disable_fields = !(@form.available? && current_user_may_edit) %>
+
 <script>
   $(function(){Grant.FormBuilderSurvey.init();});
   document.addEventListener("trix-initialize", function(event) {
@@ -12,7 +15,6 @@
   <%= hidden_field_tag :form_update_fields_url, update_fields_grant_form_url(@grant, @form), id: 'survey_update_fields_url' %>
 <% end %>
 
-<% has_edit_permission = policy(@grant).update? %>
 <%= grant_form_for([@grant, @form], url: grant_form_path) do |f| %>
   <table class="unstriped">
     <tr>
@@ -36,14 +38,13 @@
   <%= render 'title_placeholder_field' %>
 
   <%= f.fields_for :sections, @form.sections do |ff| %>
-    <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: has_edit_permission} %>
-    <% end %>
+    <%= render partial: 'section_form', locals: { section: ff, has_edit_permission: current_user_may_edit} %>
+  <% end %>
 
-    <% if has_edit_permission %>
-      <%= f.link_to_add 'Add a Section', :sections, class: 'button btn-pill small' %>
-      <div class="actions">
-        <hr/>
-        <%= f.submit 'Save', class: 'button' %>
-      </div>
+  <% if current_user_may_edit %>
+    <%= f.link_to_add 'Add a Section', :sections, class: 'button btn-pill small' %>
+    <div class="actions"><hr/>
+      <%= f.submit 'Save', class: 'button' unless disable_fields %>
+    </div>
   <% end %>
 <% end %>

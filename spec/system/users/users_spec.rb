@@ -4,10 +4,6 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Users', type: :system do
-  def authorization_error_text
-    I18n.t('pundit.default')
-  end
-
   describe 'Index', js: true do
     before(:each) do
       @user1         = create(:user, last_name: 'BBBB',

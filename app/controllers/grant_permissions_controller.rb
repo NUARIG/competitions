@@ -1,18 +1,14 @@
 class GrantPermissionsController < ApplicationController
-  include WithGrantRoles
-  include UsersHelper
 
-  before_action :set_grant, except: :index
   before_action :set_grant_and_grant_permissions, only: :index
+  before_action :set_grant, except: :index
   before_action :set_grant_permission, only: %i[edit update destroy]
-  before_action :authorize_grant_edit
+  before_action :authorize_grant_editor, except: %[index]
 
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    @grant_permissions = GrantPermission.where(grant: @grant)
-
-    @current_user_role = current_user_grant_permission
+    authorize_grant_viewer
   end
 
   # GET /grants/:id/grant_permission/new
@@ -32,7 +28,7 @@ class GrantPermissionsController < ApplicationController
     @grant_permission = GrantPermission.new(grant_permission_params)
     respond_to do |format|
       if @grant_permission.save
-        flash[:notice] = full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role + '\' permissions for this grant.'
+        flash[:notice] = helpers.full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role + '\' permissions for this grant.'
         format.html { redirect_to grant_grant_permissions_path(@grant) }
         format.json { render :show, status: :created, location: @grant_permission }
       else
@@ -50,7 +46,7 @@ class GrantPermissionsController < ApplicationController
     respond_to do |format|
       if @grant_permission.update(grant_permission_params)
         # TODO: user may have changed their own permissions. authorize @grant, @grant_permission, :index?
-        flash[:notice] = full_name(@grant_permission.user) + '\'s permission was changed to \'' + @grant_permission.role + '\' for this grant.'
+        flash[:notice] = helpers.full_name(@grant_permission.user) + '\'s permission was changed to \'' + @grant_permission.role + '\' for this grant.'
         format.html { redirect_to grant_grant_permissions_path(@grant) }
         format.json { render :show, status: :ok, location: @grant_permission }
       else
@@ -67,7 +63,7 @@ class GrantPermissionsController < ApplicationController
     if @grant_permission.errors.any?
       flash[:alert] = @grant_permission.errors.full_messages
     else
-      flash[:notice] = full_name(@grant_permission.user) + '\'s role was removed for this grant.'
+      flash[:notice] = helpers.full_name(@grant_permission.user) + '\'s role was removed for this grant.'
     end
     respond_to do |format|
       format.html { redirect_to grant_grant_permissions_path(@grant) }
@@ -82,7 +78,7 @@ class GrantPermissionsController < ApplicationController
   end
 
   def set_grant_and_grant_permissions
-    @grant       = Grant.includes(:grant_permissions).friendly.find(params[:grant_id])
+    @grant = Grant.includes(:grant_permissions).friendly.find(params[:grant_id])
     @grant_permissions = @grant.grant_permissions
   end
 
@@ -90,8 +86,13 @@ class GrantPermissionsController < ApplicationController
     @grant_permission = GrantPermission.find(params[:id])
   end
 
-  def authorize_grant_edit
-    authorize @grant, :edit?
+  def authorize_grant_viewer
+    authorize @grant, :grant_viewer_access?
+  end
+
+
+  def authorize_grant_editor
+    authorize @grant, :grant_editor_access?
   end
 
   def unassigned_users_by_grant

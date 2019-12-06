@@ -8,7 +8,7 @@ module GrantSubmissions
       # GET /reviews.json
       def index
         @grant = Grant.with_criteria.friendly.find(params[:grant_id])
-        authorize @grant, :edit?
+        authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
         @q              = Review.includes(:reviewer, :criteria_reviews).by_submission(@submission).ransack(params[:q])
         @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
@@ -24,6 +24,7 @@ module GrantSubmissions
       # GET /reviews/1/edit
       def edit
         authorize @review
+        @reviewer = @review.reviewer
         build_criteria_reviews
       end
 

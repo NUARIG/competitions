@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class GrantPolicy < ApplicationPolicy
+  GRANT_ACCESS = { 'viewer' =>  1,
+                   'editor' =>  2,
+                   'admin'  =>  3 }
+  GRANT_ACCESS.default = -1
+  GRANT_ACCESS.freeze
+
+  SYSTEM_ADMIN_GRANT_ROLE = 'admin'
+
   class Scope < Scope
     def resolve
       if user.system_admin?
@@ -28,15 +36,15 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def update?
-    user.system_admin? || grant_editor_access?
+    grant_editor_access?
   end
 
   def edit?
-    update?
+    grant_viewer_access?
   end
 
   def destroy?
-    user.system_admin? || grant_admin_access?
+    grant_admin_access?
   end
 
   def duplicate?
@@ -44,21 +52,15 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def grant_admin_access?
-    check_grant_access(%w[admin])
+    GRANT_ACCESS['admin'] <= GRANT_ACCESS[user.get_role_by_grant(grant: grant)]
   end
 
   def grant_editor_access?
-    check_grant_access(%w[admin editor])
+    GRANT_ACCESS['editor'] <= GRANT_ACCESS[user.get_role_by_grant(grant: grant)]
   end
 
   def grant_viewer_access?
-    user.system_admin? || check_grant_access(%w[admin editor viewer])
-  end
-
-  def check_grant_access(role_list)
-    user.id.in?(GrantPermission.where(role: role_list)
-                               .where(grant: grant)
-                               .pluck(:user_id))
+    GRANT_ACCESS['viewer'] <= GRANT_ACCESS[user.get_role_by_grant(grant: grant)]
   end
 
   private
@@ -68,6 +70,6 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def user_is_grant_reviewer?
-    grant.reviewers.include?(user)
+    GrantReviewer.find_by(reviewer: user, grant: grant).present?
   end
 end
