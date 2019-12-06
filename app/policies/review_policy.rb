@@ -26,7 +26,7 @@ class ReviewPolicy < GrantPolicy
   end
 
   def destroy?
-    grant_admin_access?
+    grant_editor_access?
   end
 
   def opt_out?
