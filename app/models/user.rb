@@ -49,7 +49,6 @@ class User < ApplicationRecord
 
   def get_role_by_grant(grant:)
     self.grant_permission_role ||= {}
-    self.grant_permission_role[grant] ||= self.system_admin? ? SYSTEM_ADMIN_GRANT_ROLE : grant.grant_permissions.find_by(user: self).try(:role)
-    return self.grant_permission_role[grant]
+    self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
   end
 end

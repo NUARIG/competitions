@@ -27,6 +27,11 @@ class GrantPermission < ApplicationRecord
 
   scope :with_users, -> { (includes :users) }
 
+  def self.role_by_user_and_grant(user:, grant:)
+    return GrantPermission::ROLES[:admin] if user.system_admin?
+    GrantPermission.find_by(grant: grant, user: user)&.role
+  end
+
   private
 
   def prevent_last_admin_edit
