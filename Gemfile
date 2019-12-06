@@ -67,7 +67,7 @@ gem "aws-sdk-s3", require: false
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'puma', '~> 3.11'
+  gem 'puma', '~> 3.12'
   gem 'rspec-rails'
 end
 
