@@ -72,5 +72,4 @@ class BannersController < ApplicationController
   def set_banner
     @banner = Banner.find(params[:id])
   end
-
 end
