@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe GrantServices do
   describe 'DuplicateDependencies' do
     before(:each) do
-      # @original_grant = create(:grant, :with_users)
       @original_grant = create(:grant_with_users)
       @new_grant      = create(:grant, duplicate: true,
                                              name: 'New Name',
