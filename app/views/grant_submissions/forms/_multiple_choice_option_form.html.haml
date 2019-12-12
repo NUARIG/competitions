@@ -1,2 +1,2 @@
-%td= multiple_choice_option.text_field :text
-%td= multiple_choice_option.link_to_remove 'Delete', class: 'delete-option button hollow tiny btn-pill warning'
+%td= multiple_choice_option.text_field(attribute: :text, options: { disabled: disabled})
+%td= multiple_choice_option.link_to_remove 'Delete', class: 'delete-option button hollow tiny btn-pill warning' unless disabled
