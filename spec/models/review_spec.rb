@@ -15,6 +15,7 @@ RSpec.describe Review, type: :model do
   let(:invalid_review) { build(:review, assigner: grant.editors.first,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: grant.submissions.first) }
+  let(:system_admin)   { create(:system_admin_user) }
   let(:invalid_user)   { create(:user) }
 
   let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.editors.first,
@@ -32,9 +33,19 @@ RSpec.describe Review, type: :model do
         expect(review).not_to be_valid
       end
 
-      it 'requires assigner to be a grant editor' do
+      it 'requires assigner to have grant permission' do
         review.assigner = invalid_user
         expect(review).not_to be_valid
+      end
+
+      it 'disallows viewer to assign a review' do
+        review.assigner = grant.grant_permissions.role_viewer.first.user
+        expect(review).not_to be_valid
+      end
+
+      it 'allows system_admin to assign a review' do
+        review.assigner = system_admin
+        expect(review).to be_valid
       end
 
       it 'requires reviewer to not be the applicant' do
