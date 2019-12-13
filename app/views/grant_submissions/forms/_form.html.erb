@@ -48,3 +48,10 @@
     </div>
   <% end %>
 <% end %>
+<% if disable_fields %>
+  <script>
+    document.addEventListener("trix-initialize", function(event) {
+      event.target.contentEditable = false;
+    });
+  </script>
+<% end %>
