@@ -1,5 +1,6 @@
 class Review < ApplicationRecord
   include WithScoring
+
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
                   meta:     { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
 
@@ -70,7 +71,7 @@ class Review < ApplicationRecord
   end
 
   def assigner_is_a_grant_editor
-    errors.add(:assigner, :may_not_add_review) unless grant.editors.include?(assigner)
+    errors.add(:assigner, :may_not_add_review) unless Pundit.policy(assigner, grant).grant_editor_access?
   end
 
   def reviewer_is_not_applicant
