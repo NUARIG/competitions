@@ -27,6 +27,13 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
         expect(page).to have_button 'Save'
       end
 
+      scenario 'has enabled inputs' do
+        expect(page).not_to have_field 'Section Title', disabled: true
+        expect(page).not_to have_field 'Question Text', disabled: true
+        expect(page).not_to have_field 'Required', disabled: true
+        expect(page).not_to have_field 'Help Text', disabled: true
+      end
+
       context 'section' do
         scenario 'can be added to a form' do
           expect do
@@ -108,6 +115,13 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
       scenario 'has edit links' do
         expect(page).not_to have_link add_section_text
         expect(page).not_to have_button 'Save'
+      end
+
+      scenario 'has disabled inputs' do
+        expect(page).to have_field 'Section Title', disabled: true
+        expect(page).to have_field 'Question Text', disabled: true
+        expect(page).to have_field 'Required', disabled: true
+        expect(page).to have_field 'Help Text', disabled: true
       end
     end
   end

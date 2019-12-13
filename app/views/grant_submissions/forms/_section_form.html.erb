@@ -7,7 +7,7 @@
   <table class="section_table table unstriped">
     <tr>
       <td><%= section.label :title %></td>
-      <td><%= section.text_field(attribute: :title) %></td>
+      <td><%= section.text_field(attribute: :title, options: { disabled: !(has_edit_permission) }) %></td>
     </tr>
   </table>
 

@@ -5,17 +5,17 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
   attr_accessor :read_only
 
   def text_field(attribute:, options: {})
-    options.reverse_merge!(readonly: grant_disable_input?)
+    options.reverse_merge!(readonly: grant_disable_input?) unless options[:disabled]
     super(attribute, options)
   end
 
   def text_area(attribute:, options: {})
-    options.reverse_merge!(readonly: grant_disable_input?)
+    options.reverse_merge!(readonly: grant_disable_input?) unless options[:disabled]
     super(attribute, options)
   end
 
   def select(method:, choices:, options: {}, html_options: {})
-    html_options.reverse_merge!(disabled: grant_disable_input?)
+    html_options[:disabled] = grant_disable_input? unless html_options[:disabled]
     super(method, choices, options, html_options)
   end
 
