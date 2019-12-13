@@ -98,6 +98,7 @@ class GrantPermissionsController < ApplicationController
   def unassigned_users_by_grant
     User.left_outer_joins(:grant_permissions)
         .where.not(id: @grant.grant_permissions.map(&:user_id))
+        .distinct
   end
 
   def grant_permission_params
