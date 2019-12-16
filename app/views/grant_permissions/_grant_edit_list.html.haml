@@ -1,7 +1,7 @@
 %h2
   Permissions
 
-- if policy(@grant).edit?
+- unless policy(@grant).grant_editor_access?
   = link_to 'Add new permission', new_grant_grant_permission_path(@grant)
 
 - unless @grant.grant_permissions.present?
