@@ -85,6 +85,7 @@ RSpec.configure do |config|
   # DEVISE
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :system
+  config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Warden::Test::Helpers
 
   config.append_after(:each) do

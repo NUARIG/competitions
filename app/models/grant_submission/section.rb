@@ -3,8 +3,7 @@ module GrantSubmission
     self.table_name = 'grant_submission_sections'
 
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SectionVersion' },
-                    meta: { grant_submission_form_id: :grant_submission_form_id },
-                    ignore: [:display_order]
+                    meta: { grant_submission_form_id: :grant_submission_form_id }
 
     belongs_to :form,    class_name: 'GrantSubmission::Form',
                          foreign_key: 'grant_submission_form_id',

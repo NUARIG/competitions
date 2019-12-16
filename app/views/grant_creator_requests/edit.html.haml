@@ -3,9 +3,6 @@
 %h1
   Edit Your Grant Creation Access Request
 
-%p
-  Introductory text about creating a grant. Lorem ipsum dolor sum.
-
 = form_with model: @grant_creator_request, url: grant_creator_request_path(@grant_creator_request), local: true, id: 'grant-request' do |f|
   = render partial: 'request_attributes', locals: { f: f, request: @grant_creator_request }
   - if current_user == @grant_creator_request.requester
@@ -16,4 +13,4 @@
   - elsif current_user.system_admin?
     .grid-x
       .cell.small-12
-        = link_to 'Review This Grant', grant_creator_request_review_path(@grant_creator_request), class: 'button'
+        = link_to 'Review This Grant Creation Access Request', grant_creator_request_review_path(@grant_creator_request), class: 'button'

@@ -35,11 +35,11 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def show?
-    user.system_admin? || grant_editor_access? || current_user_is_applicant? || current_user_is_reviewer?
+    grant_viewer_access? || current_user_is_applicant? || current_user_is_reviewer?
   end
 
   def create?
-    (user.present? && @grant.accepting_submissions?) || grant_editor_access? || user.system_admin?
+    (user.present? && @grant.accepting_submissions?) || grant_viewer_access?
   end
 
   def new?
@@ -47,7 +47,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def update?
-    user.system_admin? || grant_editor_access? || current_user_is_applicant?
+    grant_editor_access? || current_user_is_applicant?
   end
 
   def edit?
@@ -55,7 +55,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def destroy?
-    !grant.published? && (user.system_admin? || grant_editor_access?)
+    !grant.published? && (grant_admin_access?)
   end
 
   private

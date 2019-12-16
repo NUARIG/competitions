@@ -12,6 +12,7 @@ RSpec.describe 'Home', type: :system do
       @draft_grant        = create(:draft_open_grant)
       @soft_deleted_grant = create(:grant_with_users, deleted_at: 1.hour.ago)
       @user               = create(:user)
+      @admin_user         = @open_grant.editors.first
       visit root_path
     end
 
@@ -70,6 +71,19 @@ RSpec.describe 'Home', type: :system do
 
       scenario 'does not display a soft_deleted grant' do
         expect(page).not_to have_content @soft_deleted_grant.name
+      end
+    end
+
+    describe 'edit grant link logic' do
+      before(:each) do
+        @second_open_grant = create(:grant_with_users)
+        login_as @admin_user
+        visit root_path
+      end
+
+      scenario 'it does not display edit grant link when user has no permission' do
+        expect(page).to have_link 'Edit', href: edit_grant_path(@open_grant)
+        expect(page).not_to have_link 'Edit', href: edit_grant_path(@second_open_grant)
       end
     end
   end

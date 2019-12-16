@@ -1,6 +1,5 @@
 module GrantSubmissions
   class FormsController < ApplicationController
-
     before_action :set_grant
     helper_method :sort_column, :sort_direction
 

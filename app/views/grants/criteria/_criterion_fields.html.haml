@@ -1,24 +1,27 @@
+- disable_fields = !policy(@grant).update?
+
 .nested-fields
   .field
     .grid-x
       .cell.small-12.medium-3
         = f.label :name
       .cell.small-12.medium-9
-        = f.text_field :name, width: 50, required: true
+        = f.text_field :name, width: 50, required: true, disabled: disable_fields
   .field
     .grid-x
       .cell.small-12.medium-3
         = f.label :description
       .cell.small-12.medium-9
-        = f.text_area :description, width:50
+        = f.text_area :description, width:50, disabled: disable_fields
   .field
     .grid-x
       .cell.small-12.medium-4
         = f.label :is_mandatory
-        = f.check_box :is_mandatory
+        = f.check_box :is_mandatory, disabled: disable_fields
       .cell.small-12.medium-4
         = f.label :show_comment_field
-        = f.check_box :show_comment_field
+        = f.check_box :show_comment_field, disabled: disable_fields
 
-  = link_to_remove_association 'Remove', f, class: 'button tiny hollow alert'
+  = link_to_remove_association 'Remove', f, class: 'button tiny hollow alert' unless disable_fields
+
   %hr

@@ -1,5 +1,10 @@
 - content_for(:page_title, "Reviews - #{@grant.name}")
 
+%h1
+  = @grant.name
+
+= render 'shared/grant_state', { grant: @grant }
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
@@ -20,14 +25,15 @@
             = f.submit 'Search', class: 'button'
             = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
 
-      - if @reviews.empty?
-        %p
-          There were no assigned reviews found.
+      - if policy(@grant).grant_editor_access?
         %p
           %strong
             = link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)
-      - else
 
+      - if @reviews.empty?
+        %p
+          There were no assigned reviews found.
+      - else
         = render 'shared/pagy_header', locals: { pagy: @pagy }
 
         %table.hover

@@ -2,9 +2,10 @@
 
 class User < ApplicationRecord
   attr_accessor Devise.saml_session_index_key.to_sym
+  attr_accessor :grant_permission_role
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :omniauthable, :database_authenticatable, :registerable, :recoverable, :validatable:rememberable
+  SYSTEM_ADMIN_GRANT_ROLE = 'admin'
+
   devise :saml_authenticatable, :trackable, :timeoutable
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
                   meta:     { user_id: :id } # added for convenience
@@ -46,4 +47,8 @@ class User < ApplicationRecord
     self.read_attribute(Devise.saml_session_index_key.to_sym) if self.read_attribute(Devise.saml_session_index_key.to_sym).present?
   end
 
+  def get_role_by_grant(grant:)
+    self.grant_permission_role ||= {}
+    self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
+  end
 end

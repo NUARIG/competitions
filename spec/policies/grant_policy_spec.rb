@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 describe GrantPolicy do
+  context 'GRANT_ACCESS hash' do
+    it 'accounts for possible GrantPermission::ROLES' do
+      expect(GrantPolicy::GRANT_ACCESS.keys.sort == GrantPermission::ROLES.values.sort).to be true
+    end
+  end
+
   # This file only tests the permissions based on role in pundit.
   # Permissions based on state changes are handled in system specs.
   # TODO: implement the system specs to test state changes.
@@ -187,7 +193,7 @@ describe GrantPolicy do
 
         it { is_expected.to forbid_action(:new) }
         it { is_expected.to forbid_action(:create) }
-        it { is_expected.to forbid_action(:edit) }
+        it { is_expected.not_to forbid_action(:edit) }
         it { is_expected.to forbid_action(:update) }
         it { is_expected.to forbid_action(:destroy) }
 

@@ -1,5 +1,10 @@
 - content_for(:page_title, "Submissions - #{@grant.name}")
 
+%h1
+  = @grant.name
+
+= render 'shared/grant_state', { grant: @grant }
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
@@ -33,8 +38,7 @@
             %td
               = submission.created_at
             %td
-              = link_to 'Reviews', grant_submission_reviews_path(@grant, submission), class: 'button clear'
-              = link_to 'Edit', edit_grant_submission_path(@grant, submission), class: 'button clear'
-              = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'button clear alert', confirm: 'Are you sure?' if !@grant.published?
+              #ul.menu.simple
+                = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { submission: submission, grant: @grant }
 
     != pagy_foundation_nav(@pagy)

@@ -13,9 +13,15 @@
       </tr>
     </thead>
     <tr>
-      <td><%= question.text_area :text, rows: 1 %></td>
-      <td><%= question.select :is_mandatory, options_for_select([['Yes', true], ['No', false]], question.object.is_mandatory || false), { include_blank: 'Select One' } %></td>
-      <td><%= question.select :response_type, GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, { include_blank: 'Select a Response Type' }, class: 'form_builder_question_response_type' %></td>
+      <td><%= question.text_area(attribute: :text, options: { rows: 1, disabled: !(has_edit_permission) }) %></td>
+      <td><%= question.select(method: :is_mandatory,
+                              choices: options_for_select([['Yes', true], ['No', false]], question.object.is_mandatory || false),
+                              options: { include_blank: 'Select One' },
+                              html_options: { disabled: !(has_edit_permission) }) %></td>
+      <td><%= question.select(method: :response_type,
+                              choices: GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a,
+                              options: {include_blank: 'Select a Response Type'},
+                              html_options: { class: 'form_builder_question_response_type', disabled: !(has_edit_permission) } )%></td>
     </tr>
 
     <thead>
@@ -24,7 +30,8 @@
       </tr>
     </thead>
     <tr>
-      <td colspan="8"><%= question.text_area :instruction, rows: 1, cols: 100 %></td>
+      <td colspan="8"><%= question.text_area(attribute: :instruction,
+                                             options: { rows: 1, cols: 100, disabled: !(has_edit_permission) } ) %></td>
     </tr>
   </table>
 
@@ -45,7 +52,7 @@
     </tr>
     <%= question.fields_for :multiple_choice_options, question.object.multiple_choice_options.sort_by{ |option| option.display_order || 0}, wrapper: false do |option| %>
     <tr class="fields">
-      <%= render partial: 'multiple_choice_option_form', locals: { multiple_choice_option: option } %>
+      <%= render partial: 'multiple_choice_option_form', locals: { multiple_choice_option: option, disabled: !(has_edit_permission) } %>
     </tr>
     <% end %>
   </table>

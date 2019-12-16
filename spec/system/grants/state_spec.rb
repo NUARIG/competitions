@@ -8,6 +8,7 @@ RSpec.describe 'Grants', type: :system do
       @published_grant = create(:grant_with_users)
       @admin_user      = @published_grant.grant_permissions.role_admin.first.user
       @editor_user     = @published_grant.grant_permissions.role_editor.first.user
+      @viewer_user     = @published_grant.grant_permissions.role_viewer.first.user
     end
 
     context 'grant admin user' do
@@ -55,6 +56,18 @@ RSpec.describe 'Grants', type: :system do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
         click_button 'Switch to Draft'
         expect(page).to have_content 'Status change failed. This grant is still in published mode.'
+      end
+    end
+
+    context 'grant viewer user' do
+      before(:each) do
+        login_as(@viewer_user)
+        visit edit_grant_path(@published_grant)
+      end
+
+      scenario 'current status and change status button are shown' do
+        expect(page).to have_content 'Current Publish Status: Published'
+        expect(page).not_to have_selector(:link_or_button, 'Switch to Draft')
       end
     end
   end

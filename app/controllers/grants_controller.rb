@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class GrantsController < ApplicationController
-  include WithGrantRoles
-
   skip_before_action :authenticate_user!, only: :show
-  before_action :set_grant,    except: %i[index new create]
+  before_action :set_grant, except: %i[index new create]
 
   # GET /grants
   # GET /grants.json
@@ -31,7 +29,6 @@ class GrantsController < ApplicationController
 
   # GET /grants/1/edit
   def edit
-    @current_user_role = current_user_grant_permission
     if authorize @grant
       draft_banner
     end

@@ -251,7 +251,7 @@ GEM
     pg (1.1.4)
     powerpack (0.1.2)
     public_suffix (3.1.1)
-    puma (3.12.0)
+    puma (3.12.2)
     pundit (2.0.0)
       activesupport (>= 3.0.0)
     pundit-matchers (1.6.0)
@@ -446,7 +446,7 @@ DEPENDENCIES
   pagy (~> 3.5)
   paper_trail
   pg
-  puma (~> 3.11)
+  puma (~> 3.12)
   pundit
   pundit-matchers (~> 1.6.0)
   rails (~> 5.2.3)

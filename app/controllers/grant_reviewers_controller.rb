@@ -6,7 +6,7 @@ class GrantReviewersController < ApplicationController
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    authorize @grant, :grant_viewer_access?
+    authorize @grant, :grant_editor_access?
 
     @grant_reviewers        = @grant.grant_reviewers.includes(:reviewer).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
     @unassigned_submissions = @grant.submissions.to_be_assigned(@grant.max_reviewers_per_submission).includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name")

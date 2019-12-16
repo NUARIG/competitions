@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PaperTrail::ReviewVersion, type: :model do
+RSpec.describe PaperTrail::ReviewVersion, type: :model, versioning: true  do
   before(:each) do
     @grant          = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
     @reviewer       = @grant.reviewers.first
@@ -9,15 +9,13 @@ RSpec.describe PaperTrail::ReviewVersion, type: :model do
                                       reviewer:   @reviewer)
   end
 
-  describe 'review' do
-    context 'metadata' do
-      it 'tracks grant_id', versioning: true do
-        expect(PaperTrail::ReviewVersion.last.grant_id).to eql @grant.id
-      end
+  context 'metadata' do
+    it 'tracks grant_id' do
+      expect(PaperTrail::ReviewVersion.last.grant_id).to eql @grant.id
+    end
 
-      it 'tracks reviewer_id', versioning: true do
-        expect(PaperTrail::ReviewVersion.last.reviewer_id).to eql @reviewer.id
-      end
+    it 'tracks reviewer_id', versioning: true do
+      expect(PaperTrail::ReviewVersion.last.reviewer_id).to eql @reviewer.id
     end
   end
 end

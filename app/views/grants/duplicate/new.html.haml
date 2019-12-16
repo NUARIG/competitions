@@ -8,4 +8,4 @@
   = link_to "#{@grant.name}", grant_path(params[:grant_id])
 
 = form_with model: @grant, url: grant_duplicate_path, local: true do |f|
-  = render 'grants/form', f: f, grant: @grant
+  = render 'grants/form', f: f, grant: @grant, disable_fields: false
