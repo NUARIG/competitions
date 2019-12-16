@@ -5,7 +5,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe 'Index', js: true do
     before(:each) do
       @grant      = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-      @admin      = @grant.editors.first
+      @admin      = @grant.grant_permissions.role_admin.first.user
       @submission = @grant.submissions.first
       @reviewer   = @grant.reviewers.first
       @submission_review = create(:review, submission: @submission,

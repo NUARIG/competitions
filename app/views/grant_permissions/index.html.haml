@@ -12,8 +12,8 @@
     Permissions
 
   %p
-    - if policy(@grant).edit?
-      = link_to 'Add new permission', new_grant_grant_permission_path
+    - if policy(@grant).grant_editor_access?
+      = link_to 'Add new permission', new_grant_grant_permission_path(@grant)
 
   - unless @grant_permissions.present?
     %p

@@ -25,6 +25,11 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     end
 
     context '#index' do
+      scenario 'includes link to add permission' do
+        visit grant_grant_permissions_path(@grant)
+        expect(page).to have_link 'Add new permission', href: new_grant_grant_permission_path(@grant)
+      end
+
       scenario 'includes edit link, excludes delete link' do
         visit grant_grant_permissions_path(@grant)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
@@ -98,6 +103,13 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       visit grant_grant_permissions_path(@grant)
     end
 
+    context '#index' do
+      scenario 'includes link to add permission' do
+        visit grant_grant_permissions_path(@grant)
+        expect(page).to have_link 'Add new permission', href: new_grant_grant_permission_path(@grant)
+      end
+    end
+
     context '#edit' do
       scenario 'can visit the permissions index' do
         visit grant_grant_permissions_path(@grant)
@@ -139,7 +151,12 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       login_as @grant_viewer
     end
 
-    context '#edit' do
+    context '#index' do
+      scenario 'does not include link to add permission' do
+        visit grant_grant_permissions_path(@grant)
+        expect(page).not_to have_link 'Add new permission', href: new_grant_grant_permission_path(@grant)
+      end
+
       scenario 'can visit the permissions index' do
         visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content authorization_error_text
@@ -154,7 +171,9 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect(page).not_to have_link edit_grant_grant_permission_path(@grant, @grant_viewer_role)
         expect(page).not_to have_link grant_grant_permission_path(@grant, @grant_viewer_role)
       end
+    end
 
+    context '#edit' do
       scenario 'cannot access the edit page' do
         visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).to have_content authorization_error_text

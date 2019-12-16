@@ -25,14 +25,15 @@
             = f.submit 'Search', class: 'button'
             = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
 
-      - if @reviews.empty?
-        %p
-          There were no assigned reviews found.
+      - if policy(@grant).grant_editor_access?
         %p
           %strong
             = link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)
-      - else
 
+      - if @reviews.empty?
+        %p
+          There were no assigned reviews found.
+      - else
         = render 'shared/pagy_header', locals: { pagy: @pagy }
 
         %table.hover
