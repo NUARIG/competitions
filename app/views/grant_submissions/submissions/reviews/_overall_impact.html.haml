@@ -5,16 +5,17 @@
     .cell.small-12.medium-3
       = f.label :overall_impact_score, class: 'required-true'
     .cell.small-12.medium-9
+      %div.form-error{ data: {form: {error: {for: 'overall-1'}}} }
+        * Overall Impact score is required
       .button-group
         %label.scoring-guidance
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           .score_value
-            = f.radio_button('overall_impact_score', value, { id: "overall-#{value}" })
+            = f.radio_button('overall_impact_score', value, { id: "overall-#{value}", required: true } )
             = f.label "#{value}", { class: 'button', for: "overall-#{value}" }
         %label.scoring-guidance
           Poor
-
   #overall_comment.comment.grid-x
     .cell.small-12.medium-3
       = f.label :overall_impact_comment

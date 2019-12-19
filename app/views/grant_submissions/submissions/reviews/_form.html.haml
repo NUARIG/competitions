@@ -1,4 +1,4 @@
-= form_for (review), url: grant_submission_review_url(grant, submission, review) do |f|
+= form_for (review), url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } } do |f|
   - if review.criteria_reviews.any?
     %h3
       Review Criteria
@@ -9,6 +9,10 @@
         = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review }
 
   = render partial: 'overall_impact', locals: { f: f }
+
+  .alert.callout{style: 'display: none', data: {abide: { error: true }}}
+    %p
+      Please check the required scores.
 
   .actions
     = f.submit 'Submit Your Review', class: 'button'
