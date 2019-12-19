@@ -10,15 +10,17 @@
           = criterion.description
   .grid-x
     .cell.small-12.medium-3
-      = ff.label :score, class: "required-#{criterion_review.criterion.is_mandatory}"
+      = ff.label :score, class: "required-#{criterion.is_mandatory}"
     .cell.small-12.medium-9
+      %div.form-error{ data: {form: {error: {for: "#{criterion_id}-1"}}} }
+        = "* #{criterion.name} Score is required"
       .button-group
         %label.scoring-guidance
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           = ff.hidden_field :criterion_id
           .score_value
-            = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}" })
+            = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}", required:criterion.is_mandatory })
             = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}" }
         %label.scoring-guidance
           Poor
