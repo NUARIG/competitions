@@ -10,6 +10,8 @@ en:
           attributes:
             base:
               required_score: "'%{criterion}' must be scored."
+              comment_not_shown: "Comments are not allowed on '%{criterion}'."
+              criteria_not_from_grant: "'%{criterion} (ID: %{criterion_id}) is not a valid criterion for this grant."
   helpers:
     label:
       review:
