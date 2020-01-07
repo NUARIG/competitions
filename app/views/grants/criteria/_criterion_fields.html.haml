@@ -21,7 +21,8 @@
       .cell.small-12.medium-4
         = f.label :show_comment_field
         = f.check_box :show_comment_field, disabled: disable_fields
-
-  = link_to_remove_association 'Remove', f, class: 'button tiny hollow alert' unless disable_fields
+  .field
+    .grid-x
+      = link_to_remove_association 'Remove', f, class: "button tiny hollow alert remove" unless disable_fields
 
   %hr
