@@ -7,6 +7,9 @@ class CriteriaReview < ApplicationRecord
   belongs_to :review
 
   has_one :submission, through: :review
+  has_one :grant,      through: :review
+
+  validates_uniqueness_of   :criterion_id, scope: :review
 
   validates_numericality_of :score, only_integer: true,
                                     unless: -> { score.blank? }
@@ -15,7 +18,10 @@ class CriteriaReview < ApplicationRecord
   validates_numericality_of :score, less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                     unless: -> { score.blank? }
 
+  validate :criteria_is_from_grant
+
   validate :score_if_mandatory,   if: -> { criterion.is_mandatory? }
+
   validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? }
 
   scope :by_criterion,  -> (criterion)  { where(criterion: criterion.id) }
@@ -23,6 +29,10 @@ class CriteriaReview < ApplicationRecord
   scope :scored,        -> { where.not(score: nil) }
 
   private
+
+  def criteria_is_from_grant
+    errors.add(:base, :criteria_not_from_grant, criterion: criterion.name, criterion_id: criterion.id) if grant.criteria.exclude?(criterion)
+  end
 
   def score_if_mandatory
     errors.add(:base, :required_score, criterion: criterion.name) if score.blank?

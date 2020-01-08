@@ -17,5 +17,5 @@
         = render partial:'criterion_fields', locals: { f: criterion }
       - if disable_fields != true
         .links
-          = link_to_add_association 'Add a New Review Criteria', f, :criteria, class: 'button hollow small warning'
+          = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small warning'
         = f.submit 'Save Changes', class: 'button'
