@@ -1,5 +1,5 @@
 - if response.text_val.present?
-  = response.text_val
+  = simple_format(response.text_val
 - else
   .no-response
     No response
