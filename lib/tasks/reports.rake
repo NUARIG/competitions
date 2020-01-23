@@ -7,13 +7,15 @@ namespace :reports do
     grant = Grant.where(name: args[:grant]).first
     submissions = grant.submissions
 
-    csv_file = "#{Rails.root}/tmp/#{grant}_submissions_#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.csv"
+    csv_file = "#{Rails.root}/tmp/#{grant.name.parameterize}_submissions_#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.csv"
     puts "Writing submissions to file: #{csv_file}"
 
+    questions = grant.questions
+    question_ids = questions.map(&:id)
+    questions_texts = questions.map(&:text)
+
     column_headers = [ "applicant last name", "applicant first name", "applicant email", "project title"]
-    questions = []
-    submissions.first.responses.each { |response| questions << response.question.text }
-    column_headers.concat questions
+    column_headers.concat questions_texts
 
     CSV.open(csv_file, "w") do |csv|
       csv << column_headers
@@ -22,7 +24,9 @@ namespace :reports do
         applicant = submission.applicant
 
         submission_fields = [applicant.last_name, applicant.first_name, applicant.email, submission.title]
-        submission_fields.concat submission.responses.map(&:response_value)
+
+        ordered_responses = submission.responses.sort_by { |response| question_ids.index response.grant_submission_question_id}
+        submission_fields.concat ordered_responses.map(&:response_value)
 
         csv << submission_fields
         STDOUT.flush
