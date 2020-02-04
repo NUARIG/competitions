@@ -91,6 +91,10 @@ RSpec.configure do |config|
   config.append_after(:each) do
     Warden.test_reset!
   end
+
+  # Pause for AJAX actions to complete
+  # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara
+  config.include WaitForAjax, type: :system
 end
 
 def scroll_to_bottom_of_the_page
