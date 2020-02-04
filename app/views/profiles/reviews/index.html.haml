@@ -4,22 +4,25 @@
 = search_form_for @q, url: profile_reviews_path do |f|
   .grid-x.grid-margin-x.medium-margin-collapse
     .small-12.medium-2.cell
-      %label.text-left.middle
-        Search Grant Name
+      = f.label :grant_name_cont, 'Search by Grant Name', class: 'text-left middle'
     .small-12.medium-2.cell
       = f.search_field :grant_name_cont
     .small-12.medium-3.cell
       = f.submit 'Search', class: 'button'
       = link_to 'Reset', profile_reviews_path, class: 'button clear secondary'
 
-- if @reviews.none?
+- if @reviews.empty?
   %p
-    No reviews were found.
+    - if params[:q][:grant_name_cont].blank?
+      You have no assigned reviews.
+    - else
+      You have no Reviews for Grants matching "#{params[:q][:grant_name_cont]}"
+
 - else
 
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
-  %table
+  %table.hover
     %thead
       %tr
         %th
@@ -31,15 +34,24 @@
         %th
           = sort_link(@q, :submission_title, 'Submission Title')
         %th
-          = sort_link(@q, :grant_review_close_date, 'Due Date')
+          = sort_link(@q, :created_at, 'Assigned On')
+        %th
+          = sort_link(@q, :grant_review_close_date, 'Due by Date')
 
     %tbody
       - @reviews.each do |review|
         %tr
-          %td= review.is_complete? ? 'Completed' : 'Incomplete'
-          %td= review.grant.name
-          %td= sortable_full_name(review.submission.applicant)
-          %td= link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
-          %td= review.grant.review_close_date
+          %td
+            = link_to (review.is_complete? ? 'Completed' : 'Incomplete'), grant_submission_review_path(review.grant, review.submission, review)
+          %td
+            = review.grant.name
+          %td
+            = sortable_full_name(review.submission.applicant)
+          %td
+            = link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
+          %td
+            = date_mmddyyyy(review.created_at)
+          %td
+            = review.grant.review_close_date
 
   != pagy_foundation_nav(@pagy)
