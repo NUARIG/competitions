@@ -4,8 +4,6 @@ class User < ApplicationRecord
   attr_accessor Devise.saml_session_index_key.to_sym
   attr_accessor :grant_permission_role
 
-  SYSTEM_ADMIN_GRANT_ROLE = 'admin'
-
   devise :saml_authenticatable, :trackable, :timeoutable
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
                   meta:     { user_id: :id } # added for convenience
