@@ -10,7 +10,7 @@ module GrantSubmissions
         @grant = Grant.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
-        @q              = Review.includes(:reviewer, :criteria_reviews).by_submission(@submission).ransack(params[:q])
+        @q              = Review.with_reviewer.with_criteria_reviews.by_submission(@submission).ransack(params[:q])
         @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
       end
@@ -38,7 +38,7 @@ module GrantSubmissions
         respond_to do |format|
           if @review.save
             ReviewerMailer.assignment(review: @review).deliver_now
-            flash[:success] = "Submission assigned for review. Notification email sent to #{helpers.full_name(@review.reviewer)}"
+            flash[:success] = "Submission assigned for review. Notification email was sent to #{helpers.full_name(@review.reviewer)}."
             format.json   { head :ok }
           else
             flash[:alert] = @review.errors.full_messages

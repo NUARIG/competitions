@@ -37,7 +37,8 @@ module GrantSubmission
     scope :by_grant,            -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned,      -> (max) { where(["reviews_count < ?", max]) }
     scope :with_reviews,        -> { includes( reviews: [:reviewer, :criteria_reviews]) }
-
+    scope :with_reviewers,      -> { includes( :reviewers ) }
+    scope :with_applicant,      -> { includes( :applicant ) }
 
     # TODO: available? to...edit? delete?
     def available?
