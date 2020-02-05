@@ -12,7 +12,7 @@
       .cell.small-12.medium-3
         = f.label :description
       .cell.small-12.medium-9
-        = f.text_area :description, width:50, disabled: disable_fields
+        = f.text_area :description, width: 50, disabled: disable_fields
   .field
     .grid-x
       .cell.small-12.medium-4
@@ -23,6 +23,6 @@
         = f.check_box :show_comment_field, disabled: disable_fields
   .field
     .grid-x
-      = link_to_remove_association 'Remove', f, class: "button tiny hollow alert remove" unless disable_fields
+      = link_to_remove_association 'Remove', f, class: 'button tiny hollow alert remove' unless disable_fields
 
   %hr

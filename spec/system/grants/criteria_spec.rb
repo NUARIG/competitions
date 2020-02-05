@@ -59,6 +59,16 @@ RSpec.describe 'Criteria', type: :system, js: true do
         expect(page).to have_content 'Criteria name has already been taken'
       end
 
+      scenario 'requires one criteria' do
+        page.all(:link, 'Remove').each do |remove_button|
+          remove_button.click
+        end
+        expect do
+          click_button 'Save'
+        end.not_to change{grant.criteria.count}
+        expect(page).to have_content 'Must have at least one review criteria.'
+      end
+
       context 'paper_trail', versioning: true do
         scenario 'it tracks whodunnit' do
           find_field('Criterion Name', with: grant.criteria.last.name).set(Faker::Lorem.sentence)
