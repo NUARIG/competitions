@@ -58,7 +58,7 @@ module GrantSubmission
     end
 
     def overall_impact_scores
-      reviews.pluck(:overal_impact_score)
+      reviews.pluck(:overall_impact_score)
     end
   end
 end
