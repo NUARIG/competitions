@@ -1,51 +1,94 @@
 require 'rails_helper'
 
 RSpec.describe 'grant_submission review requests', type: :request do
-  before(:example) do
-    ActionMailer::Base.deliveries.clear
+  let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+  let(:grant_editor) { grant.grant_permissions.role_editor.first.user }
+  let(:grant_viewer) { grant.grant_permissions.role_viewer.first.user }
+  let(:submission)   { grant.submissions.first }
+  let(:reviewer)     { grant.reviewers.first }
+  let(:review)       { create(:review, submission: submission,
+                                       assigner: grant.grant_permissions.role_admin.first.user,
+                                       reviewer: reviewer) }
+  let(:invalid_user) { create(:user) }
 
-    @grant      = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-    @editor     = @grant.grant_permissions.find_by(role: 'editor').user
-    @reviewer   = @grant.reviewers.first
-    @submission = @grant.submissions.first
+  context 'mailers' do
+    before(:example) do
+      ActionMailer::Base.deliveries.clear
+    end
+
+    context '#create' do
+      before(:each) do
+        login_as grant_editor
+      end
+
+      it 'mails the reviewer' do
+        post(grant_submission_reviews_path(grant_id: grant.id,
+                                           submission_id: submission.id,
+                                           params: {
+                                            reviewer_id: reviewer.id
+                                           },
+                                           format: :json))
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
+        email = (ActionMailer::Base.deliveries).first
+        expect(email.to).to eq([reviewer.email])
+        expect(email.subject).to eq('CD2H Competitions: Submission Review Assignment')
+      end
+    end
+
+    context '#destroy' do
+      before(:each) do
+        login_as grant_editor
+      end
+
+      it 'mails the reviewer' do
+        delete(grant_submission_review_path(grant_id: grant.id,
+                                            submission_id: submission.id,
+                                            id: review.id,
+                                            format: :json))
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
+        email = (ActionMailer::Base.deliveries).first
+        expect(email.to).to eq([reviewer.email])
+        expect(email.subject).to eq('CD2H Competitions: Unassigned Submission Review')
+      end
+    end
   end
 
-  context '#create' do
-    before(:each) do
-      login_as @editor
+  context '#show' do
+    it 'sucessfully renders to reviewer' do
+      sign_in(review.reviewer)
+      get grant_submission_review_path(grant, submission, review)
+
+      expect(response).to have_http_status(:success)
     end
 
-    it 'mails the reviewer' do
-      post(grant_submission_reviews_path(grant_id: @grant.id,
-                                         submission_id: @submission.id,
-                                         params: {
-                                          reviewer_id: @reviewer.id
-                                         },
-                                         format: :json))
-      expect(ActionMailer::Base.deliveries.size).to eq(1)
-      email = (ActionMailer::Base.deliveries).first
-      expect(email.to).to eq([@reviewer.email])
-      expect(email.subject).to eq('CD2H Competitions: Submission Review Assignment')
+    it 'redirects the applicant' do
+      sign_in(review.submission.applicant)
+      get grant_submission_review_path(grant, submission, review)
+
+      expect(response).to have_http_status(:redirect)
+    end
+
+    it 'redirects an invalid user' do
+      sign_in(invalid_user)
+      get grant_submission_review_path(grant, submission, review)
+
+      expect(response).to have_http_status(:redirect)
     end
   end
 
-  context '#destroy' do
-    before(:each) do
-      @review     = create(:review, submission: @grant.submissions.first,
-                                    assigner: @editor,
-                                    reviewer: @reviewer)
-      login_as @editor
+  context '#edit' do
+    it 'redirects the applicant' do
+      sign_in(review.submission.applicant)
+      get edit_grant_submission_review_path(grant, submission, review)
+
+      expect(response).to have_http_status(:redirect)
     end
 
-    it 'mails the reviewer' do
-      delete(grant_submission_review_path(grant_id: @grant.id,
-                                          submission_id: @submission.id,
-                                          id: @review.id,
-                                          format: :json))
-      expect(ActionMailer::Base.deliveries.size).to eq(1)
-      email = (ActionMailer::Base.deliveries).first
-      expect(email.to).to eq([@reviewer.email])
-      expect(email.subject).to eq('CD2H Competitions: Unassigned Submission Review')
+    it 'redirects a grant viewer' do
+      sign_in(grant_viewer)
+      get edit_grant_submission_review_path(grant, submission, review)
+
+      expect(response).to have_http_status(:redirect)
     end
   end
 end

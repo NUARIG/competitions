@@ -5,6 +5,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     before(:each) do
       @grant        = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
       @submission   = @grant.submissions.first
+      @applicant    = @submission.applicant
       @system_admin = create(:system_admin_user)
       @grant_admin  = @grant.editors.first
       @grant_editor = @grant.editors.second
@@ -59,6 +60,29 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+        end
+      end
+
+      context 'applicant' do
+        before(:each) do
+          @submission_by_other_applicant = create(:grant_submission_submission, grant: @grant)
+          login_as(@applicant)
+
+          visit grant_submissions_path(@grant)
+        end
+
+        scenario 'includes link to own submission' do
+          expect(page).to have_content @submission.title
+        end
+
+        scenario 'does not have admin links' do
+          expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
+          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+        end
+
+        scenario 'does not include other applicant submission' do
+          expect(page).not_to have_content @submission_by_other_applicant.title
         end
       end
     end
