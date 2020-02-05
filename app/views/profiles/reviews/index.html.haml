@@ -13,10 +13,10 @@
 
 - if @reviews.empty?
   %p
-    - if params[:q][:grant_name_cont].blank?
-      You have no assigned reviews.
-    - else
+    - if params[:q].present? && params[:q][:grant_name_cont]
       You have no Reviews for Grants matching "#{params[:q][:grant_name_cont]}"
+    - else
+      You have no assigned reviews.
 
 - else
 
