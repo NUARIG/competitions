@@ -3,11 +3,11 @@
 .criterion{id: criterion_id}
   %h4
     = criterion_review.criterion.name
-  .grid-x
-    - if criterion.description.present?
+  - if criterion.description.present?
+    .grid-x
       .cell.small-12
         .description
-          = criterion.description
+          = simple_format(criterion.description)
   .grid-x
     .cell.small-12.medium-3
       = ff.label :score, class: "required-#{criterion.is_mandatory}"

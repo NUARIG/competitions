@@ -31,7 +31,7 @@
                 Comments:
               .cell.small-12.medium-10
                 - if reviewed_criterion.comment?
-                  = reviewed_criterion.comment
+                  = simple_format(reviewed_criterion.comment)
                 - else
                   %em
                     No comment provided.
@@ -58,7 +58,7 @@
         Comment:
     .cell.small-12.medium-10
       - if @review.overall_impact_comment?
-        = @review.overall_impact_comment
+        = simple_format(@review.overall_impact_comment)
       - else
         %em
           No comment provided.
