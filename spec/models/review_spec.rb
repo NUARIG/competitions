@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Review, type: :model do
+
+  it_should_behave_like "WithScoring"
+
   it { is_expected.to respond_to(:submission) }
   it { is_expected.to respond_to(:assigner) }
   it { is_expected.to respond_to(:reviewer) }
