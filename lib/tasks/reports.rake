@@ -1,10 +1,11 @@
 require 'csv'
 require 'date'
 
+# e.g. rake reports:grant_submissions["New Rose"]
 namespace :reports do
   desc 'creates a csv of all submissions for a grant'
   task :grant_submissions, [:grant] => [:environment] do |t, args|
-    grant = Grant.where(name: args[:grant]).first
+    grant = Grant.find(args[:grant])
     submissions = grant.submissions
 
     csv_file = "#{Rails.root}/tmp/#{grant.name.parameterize}_submissions_#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.csv"
