@@ -47,6 +47,13 @@ module GrantSubmission
                             scope: :grant_submission_submission_id,
                             allow_nil: true
 
+    # TODO: The code below is currently not working.
+    # Validations should only run on submitted submission and not draft.
+    # validate :validate_by_response_type, if: -> { submission.submitted? }
+    # validate :response_if_mandatory, if: -> { submission.submitted?  && question.is_mandatory? }
+    # validate :attachment_is_valid,   if: -> { submission.submitted? && document.attached? }
+
+
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
     validate :attachment_is_valid,   if: -> { document.attached? }
@@ -195,5 +202,10 @@ module GrantSubmission
     def attachment_is_valid
       errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
+
+    # TODO: This will be needed in Rails 6.
+    # def changed_for_autosave?
+    #   super || file.changed_for_autosave?
+    # end
   end
 end

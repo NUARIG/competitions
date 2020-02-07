@@ -14,7 +14,13 @@
 .grid-x
   .cell.small-12
   .actions
-    = f.submit 'Submit', data: { disable_with: "Please wait..." }, class: 'button'
+    - if @submission.submitted?
+      = f.submit 'Save as Draft', class: 'secondary button', disabled: true
+      = f.submit 'Submit', class: 'success button', disabled: true
+    - else
+      = f.submit 'Save as Draft', data: { disable_with: "Please wait..." }, class: 'secondary button'
+      = f.submit 'Submit', data: { disable_with: "Please wait..." }, class: 'success button'
+    = link_to 'Cancel', @grant, class: 'button secondary clear'
 :javascript
   $(function () {
     Grant.FormBuilderUploadSetup();

@@ -1,6 +1,7 @@
 %li
   = link_to 'Reviews', grant_submission_reviews_path(grant, submission), class: 'button clear'
 %li
-  = link_to 'Edit', edit_grant_submission_path(grant, submission), class: 'button clear'
+  - if submission.draft?
+    = link_to 'Edit', edit_grant_submission_path(grant, submission), class: 'button clear'
 %li
   = link_to 'Delete', grant_submission_path(grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'button clear alert', confirm: 'Are you sure?' if !grant.published?

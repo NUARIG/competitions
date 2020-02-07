@@ -52,12 +52,12 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
     text_field attr, size: 10, maxsize: 10, value: @object.send(attr), :data => {:behavior => 'datepicker'}, disabled: grant_disable_input?
   end
 
-  def file_upload_field(has_saved_file:, file_field:, document:, remove_document:)
+  def file_upload_field(has_saved_file:, file_field:, remove_document:, document:)
     @template.render(partial: 'file_upload_field',
                      locals: { f: self,
                                has_saved_file: has_saved_file,
-                               document: document,
                                remove_document: remove_document,
+                               document: document,
                                disabled: grant_disable_input? } )
   end
 
