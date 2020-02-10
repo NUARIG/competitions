@@ -32,8 +32,6 @@ module GrantSubmission
 
     SUBMISSION_STATES     = { draft:     'draft',
                               submitted: 'submitted'
-                              # reviewed ?
-                              # funded ?
                             }.freeze
 
     enum state: SUBMISSION_STATES

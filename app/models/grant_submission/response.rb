@@ -47,13 +47,6 @@ module GrantSubmission
                             scope: :grant_submission_submission_id,
                             allow_nil: true
 
-    # TODO: The code below is currently not working.
-    # Validations should only run on submitted submission and not draft.
-    # validate :validate_by_response_type, if: -> { submission.submitted? }
-    # validate :response_if_mandatory, if: -> { submission.submitted?  && question.is_mandatory? }
-    # validate :attachment_is_valid,   if: -> { submission.submitted? && document.attached? }
-
-
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? }
     validate :attachment_is_valid,   if: -> { document.attached? }
