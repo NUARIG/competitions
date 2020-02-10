@@ -47,13 +47,6 @@ RSpec.describe GrantReviewerServices do
         end.not_to change{Review.count}
       end
 
-      it "does not delete reviews on failure" do
-        allow_any_instance_of(GrantReviewer).to receive(:destroy!).and_raise(StandardError)
-        expect do
-          GrantReviewerServices::DeleteReviewer.call(grant_reviewer: @grant_reviewer)
-        end.not_to change{Review.count}
-      end
-
       it "does not delete grant_reviewer on failure" do
         allow_any_instance_of(GrantReviewer).to receive(:destroy!).and_raise(StandardError)
         expect do
