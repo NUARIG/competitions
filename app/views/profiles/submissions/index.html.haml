@@ -29,6 +29,8 @@
         %th
           = sort_link(@q, :grant_name, 'Grant')
         %th
+          = sort_link(@q, :state, 'State')
+        %th
           = sort_link(@q, :created_at, 'Submitted On')
         %th
     %tbody
@@ -39,6 +41,11 @@
           %td
             = link_to submission.grant.name, grant_path(submission.grant)
           %td
+            = submission.state
+          %td
             = submission.created_at
+          %td
+            - unless submission.submitted?
+              = link_to 'Edit', edit_grant_submission_path(submission.grant, submission), class: 'button clear'
 
   != pagy_foundation_nav(@pagy)

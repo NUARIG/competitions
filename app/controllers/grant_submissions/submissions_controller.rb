@@ -10,7 +10,7 @@ module GrantSubmissions
     end
 
     def show
-      submission
+      set_submission
       authorize @submission
       @grant = GrantDecorator.new(@grant)
       render 'show'
@@ -24,24 +24,25 @@ module GrantSubmissions
                               )
                     .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
-      submission
+      set_submission
       authorize @submission
       render 'new'
     end
 
     def edit
       @grant = GrantDecorator.new(@grant)
-      submission
+      set_submission
       authorize @submission
       render 'edit'
     end
 
     def create
-      submission
+      set_submission
       authorize @submission
-      if @submission.save
+      set_state(@submission)
+      if @submission.save(context: @submission.state.to_sym)
         flash[:notice] = 'You successfully applied'
-        redirect_to grant_path(@grant)
+        submission_redirect(@grant, @submission)
       else
         @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
@@ -50,20 +51,23 @@ module GrantSubmissions
     end
 
     def update
-      submission
+      set_submission
       authorize @submission
-      if @submission.update(submission_params)
+      set_state(@submission)
+      @submission.assign_attributes(submission_params)
+      if @submission.save(context: @submission.state.to_sym)
         flash[:notice] = 'Submission was successfully updated'
-        #TODO: redirect based on user permissions
-        redirect_to grant_submissions_path(@grant)
+        submission_redirect(@grant, @submission)
       else
+        @submission.state = 'draft'
+        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
-        render 'grants/submissions/edit'
+        render 'edit'
       end
     end
 
     def destroy
-      submission
+      set_submission
       authorize @submission
       if @submission.destroy
         flash[:notice] = 'Submission was deleted.'
@@ -80,12 +84,27 @@ module GrantSubmissions
       @grant = Grant.friendly.find(params[:grant_id])
     end
 
-    def submission
+    def set_state(submission)
+      submission.state = params[:state]
+      submission.submitted_at = Time.now if submission.submitted?
+    end
+
+    def submission_redirect(grant, submission)
+      if current_user == submission.applicant
+        redirect_to profile_submissions_path
+      elsif current_user.get_role_by_grant(grant: grant)
+        redirect_to grant_submissions_path(grant)
+      else
+        redirect_to root_path
+      end
+    end
+
+    def set_submission
       @submission ||= case action_name
                       when 'new'
                         form   = @grant.form
                         @grant.submissions.build(form: form)
-                      when 'edit'
+                      when 'edit', 'update'
                         GrantSubmission::Submission.find(params[:id])
                       when 'show'
                         GrantSubmission::Submission.with_reviewers.find(params[:id])
@@ -103,6 +122,7 @@ module GrantSubmissions
                        :grant_submission_form_id,
                        :parent_id,
                        :grant_submission_section_id,
+                       :state,
                        responses_attributes: [
                          :id,
                          :grant_submission_submission_id,
@@ -114,6 +134,7 @@ module GrantSubmissions
                          :decimal_val,
                          :datetime_val,
                          :document,
+                         :remove_document,
                          :_destroy
                        ])
     end

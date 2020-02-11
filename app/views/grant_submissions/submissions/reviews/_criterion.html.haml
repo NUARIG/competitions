@@ -8,7 +8,7 @@
       .grid-x
         .cell.small-12
           .description
-            = criterion.description
+            = simple_format(criterion.description)
   .grid-x
     .cell.small-12.medium-3
       = ff.label :score, class: "required-#{criterion.is_mandatory}"

@@ -1,11 +1,11 @@
 Grant.FormBuilderUploadSetup = function(){
   $('[data-form_builder_upload]').each(function(){
     var clear_link        = $(this).find('[data-form_builder_upload_clear]');
-    var file_input        = $(this).find('input[type=file]');
+    var file_input        = $(this).find(".document_file_input");
     var file_link         = $(this).find('[data-form_builder_upload_file_link]');
     var remove_file_input = $(this).find('[data-form_builder_remove_document]');
     //hide the upload input if there is currently a file_link
-    if(file_link.size() != 0){
+    if(file_link.length != 0){
       file_input.hide();
     }
     clear_link.on( "click", function(){
@@ -27,7 +27,7 @@ Grant.FormBuilderUploadSetup = function(){
    the cleanest cross-browser workaround I know of.
 */
 Grant.ClearUpload = function (e){
-  if(e.size() !=0){
+  if(e.length !=0){
     e.wrap('<form>').closest('form').get(0).reset();
     e.unwrap();
   }

@@ -127,14 +127,14 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field('Number Question', with:'').set('Number')
               page.attach_file(file_upload_question.text, Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'))
               click_button 'Submit'
+            end
+
+            scenario 'do not receive success message on field with wrong type of response' do
               expect(page).not_to have_content successful_application_message
               expect(page).to have_link 'text_file.pdf'
             end
 
             scenario 'submits file successfully when file when validation error is corrected' do
-              find_field('Number Question').set('Number')
-              page.attach_file(file_upload_question.text, Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'))
-              click_button 'Submit'
               find_field('Number Question', with: 'Number').set(10)
               click_button 'Submit'
               expect(page).to have_content successful_application_message

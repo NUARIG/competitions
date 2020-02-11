@@ -6,6 +6,11 @@ FactoryBot.define do
     association   :form,  factory: :grant_submission_form
     association   :applicant, factory: :user
     title         { Faker::Lorem.sentence }
+    state         :submitted
+
+    trait :draft do
+      state       :draft
+    end
 
     trait :with_responses do
       after(:create) do |submission|
@@ -25,6 +30,7 @@ FactoryBot.define do
       end
     end
 
-    factory :submission_with_responses, traits: %i[with_responses]
+    factory :submission_with_responses,       traits: %i[with_responses]
+    factory :draft_submitted_with_responses,  traits: %i[draft with_responses]
   end
 end

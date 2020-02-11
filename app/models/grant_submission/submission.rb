@@ -28,10 +28,18 @@ module GrantSubmission
 
     accepts_nested_attributes_for :responses, allow_destroy: true
 
-    validates_presence_of :title
-    validates_presence_of :form
 
-    # scope :eager_loading,         -> {includes({:responses => [:question]}, :children)}
+
+    SUBMISSION_STATES     = { draft:     'draft',
+                              submitted: 'submitted'
+                            }.freeze
+
+    enum state: SUBMISSION_STATES
+
+    validates :title, presence: true
+    validates :form, presence: true
+
+    scope :eager_loading,       -> {includes({:responses => [:question]}, :children)}
 
     scope :order_by_created_at, -> { order(created_at: :desc) }
     scope :by_grant,            -> (grant) { where(grant_id: grant.id) }
