@@ -14,18 +14,10 @@
 .grid-x
   .cell.small-12
   .actions
-    - if @submission.submitted?
-      = f.button 'Save as Draft', type: 'submit', name: 'state', value: GrantSubmission::Submission::SUBMISSION_STATES[:draft], data: { disable_with: "Please wait..." }, class: 'secondary button'
-      = f.button 'Submit', type: 'submit', name: 'state', value: GrantSubmission::Submission::SUBMISSION_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
+    - disable_submission = (@submission.submitted? && @submission.persisted?)
+    = f.button 'Save as Draft', type: 'submit', disabled: disable_submission, name: 'state', value: GrantSubmission::Submission::SUBMISSION_STATES[:draft], data: { disable_with: "Please wait..." }, class: 'secondary button'
+    = f.button 'Submit', type: 'submit', disabled: disable_submission, name: 'state', value: GrantSubmission::Submission::SUBMISSION_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
 
-      / = f.submit 'Save as Draft', class: 'secondary button', disabled: true
-      / = f.submit 'Submit', class: 'success button', disabled: true
-    - else
-      = f.button 'Save as Draft', type: 'submit', name: 'state', value: GrantSubmission::Submission::SUBMISSION_STATES[:draft], data: { disable_with: "Please wait..." }, class: 'secondary button'
-      = f.button 'Submit', type: 'submit', name: 'state', value: GrantSubmission::Submission::SUBMISSION_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
-
-      / = f.submit 'Save as Draft', data: { disable_with: "Please wait..." }, class: 'secondary button'
-      / = f.submit 'Submit', data: { disable_with: "Please wait..." }, class: 'success button'
     = link_to 'Cancel', @grant, class: 'button secondary clear'
 :javascript
   $(function () {
