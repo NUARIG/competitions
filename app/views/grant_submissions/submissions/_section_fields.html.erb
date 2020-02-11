@@ -21,24 +21,25 @@
                    when :pick_one %>
                     <%= ff.select(method: ffn,
                                   choices: options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.text, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id),
-                                  options: { include_blank: true },
+                                  options: { include_blank: true, required: ff.object.question.is_mandatory },
                                   html_options: { data: { question_id: ff.object.question.id } }) %>
                 <% when :number %>
                     <%= ff.text_field(attribute: ffn,
-                                      options: { data: { question_id: ff.object.question.id }}) %>
+                                      options: { required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id }}) %>
                 <% when :short_text %>
                     <%= ff.text_area(attribute: ffn,
-                                     options: { rows: 1, cols: 30, data: { question_id: ff.object.question.id } }) %>
+                                     options: { rows: 1, cols: 30, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } }) %>
                 <% when :long_text %>
                     <%= ff.text_area(attribute: ffn,
                                      options: { rows: 5, cols: 31, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } }) %>
                 <% when :date_opt_time %>
-                    <%= ff.date_opt_time_field :datetime_val, :boolean_val, data: { question_id: ff.object.question.id } %>
+                    <%= ff.date_opt_time_field :datetime_val, :boolean_val, options: { required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } } %>
                 <% when :file_upload %>
                     <%= ff.file_upload_field(has_saved_file: (ff.object.document && ff.object.document.attached?),
                                              file_field: ffn,
                                              remove_document: :remove_document,
-                                             document: ff.object.document) %>
+                                             document: ff.object.document,
+                                             required: ff.object.question.is_mandatory) %>
                 <% end %>
             <% else %>
                 <%= ff.object.formatted_response_value %>

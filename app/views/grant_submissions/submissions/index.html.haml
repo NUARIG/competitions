@@ -26,6 +26,8 @@
           %th
             = sort_link(@q, :title, 'Title')
           %th
+            = sort_link(@q, :state, 'State')
+          %th
             = sort_link(@q, :created_at, 'Submitted On')
           %th
       %tbody
@@ -35,6 +37,8 @@
               = link_to sortable_full_name(submission.applicant), grant_submission_path(@grant, submission)
             %td
               = link_to submission.title, grant_submission_path(@grant, submission)
+            %td
+              = submission.state
             %td
               = submission.created_at
             %td

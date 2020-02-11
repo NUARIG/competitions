@@ -12,29 +12,31 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     end
 
     context 'published grant' do
-      context 'system_admin' do
-        before(:each) do
-          login_as(@system_admin)
+      context 'with submitted submission' do
+        context 'system_admin' do
+          before(:each) do
+            login_as(@system_admin)
+          end
+
+          scenario 'can visit the submissions index page' do
+            visit grant_submissions_path(@grant)
+            expect(page).to have_content @submission.title
+            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+          end
         end
 
-        scenario 'can visit the submissions index page' do
-          visit grant_submissions_path(@grant)
-          expect(page).to have_content @submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
-          expect(page).to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
-          expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
-        end
-      end
+        context 'grant_admin' do
+          scenario 'can visit the submissions index page' do
+            login_as(@grant_admin)
 
-      context 'grant_admin' do
-        scenario 'can visit the submissions index page' do
-          login_as(@grant_admin)
-
-          visit grant_submissions_path(@grant)
-          expect(page).to have_content @submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
-          expect(page).to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
-          expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+            visit grant_submissions_path(@grant)
+            expect(page).to have_content @submission.title
+            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+          end
         end
       end
 
@@ -68,27 +70,29 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         @grant.update_attributes(state: 'draft')
       end
 
-      context 'system_admin' do
-        scenario 'can visit the submissions index page' do
-          login_as(@system_admin)
+      context 'with submitted submission' do
+        context 'system_admin' do
+          scenario 'can visit the submissions index page' do
+            login_as(@system_admin)
 
-          visit grant_submissions_path(@grant)
-          expect(page).to have_content @submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
-          expect(page).to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
-          expect(page).to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+            visit grant_submissions_path(@grant)
+            expect(page).to have_content @submission.title
+            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+          end
         end
-      end
 
-      context 'grant_admin' do
-        scenario 'can visit the submissions index page' do
-          login_as(@grant_admin)
+        context 'grant_admin' do
+          scenario 'can visit the submissions index page' do
+            login_as(@grant_admin)
 
-          visit grant_submissions_path(@grant)
-          expect(page).to have_content @submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
-          expect(page).to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
-          expect(page).to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+            visit grant_submissions_path(@grant)
+            expect(page).to have_content @submission.title
+            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(@grant, @submission)
+          end
         end
       end
 
