@@ -11,7 +11,7 @@
             <% if ff.object.submission == f.object %>
                 <%= ff.hidden_field :grant_submission_question_id %>
             <% end %>
-            <%= ff.label(ffn, ff.object.question.text, class: "required-#{is_mandatory}") %>
+            <%= ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}") %>
           </div>
         </td>
         <td>
@@ -44,16 +44,10 @@
                 <%= ff.object.formatted_response_value %>
             <% end %>
             <% if ff.object.question.instruction.present? %>
-              <p class="helper-text">Instruction: <%= ff.object.question.instruction %></p>
+              <p class="helper-text">Instruction: <%= simple_format(ff.object.question.instruction, {}, wrapper_tag: 'span') %></p>
           <% end %>
           </div>
         </td>
       </tr>
   <% end %>
 </table>
-
-<style>
- .select2-container{
-   max-width: 700px;
- }
-</style>
