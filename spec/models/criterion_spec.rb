@@ -16,6 +16,13 @@ RSpec.describe Criterion, type: :model do
       expect(criterion).to be_valid
     end
 
+    context '#grant' do
+      it 'requires a grant' do
+        criterion.grant = nil
+        expect(criterion).not_to be_valid
+      end
+    end
+
     context '#name' do
       it 'requires a name' do
         criterion.name = nil

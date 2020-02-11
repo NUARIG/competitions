@@ -1,13 +1,14 @@
 - criterion    = criterion_review.criterion
-- criterion_id = criterion.name.downcase
+- criterion_id = criterion.name.parameterize(separator: '_')
+
 .criterion{id: criterion_id}
   %h4
     = criterion_review.criterion.name
-  - if criterion.description.present?
-    .grid-x
-      .cell.small-12
-        .description
-          = simple_format(criterion.description)
+    - if criterion.description.present?
+      .grid-x
+        .cell.small-12
+          .description
+            = simple_format(criterion.description)
   .grid-x
     .cell.small-12.medium-3
       = ff.label :score, class: "required-#{criterion.is_mandatory}"
@@ -19,7 +20,7 @@
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           = ff.hidden_field :criterion_id
-          .score_value
+          .score_value{class: "score_value_#{value}"}
             = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}", required:criterion.is_mandatory })
             = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}" }
         %label.scoring-guidance

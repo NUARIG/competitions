@@ -7,8 +7,6 @@ class GrantPolicy < ApplicationPolicy
   GRANT_ACCESS.default = -1
   GRANT_ACCESS.freeze
 
-  SYSTEM_ADMIN_GRANT_ROLE = 'admin'
-
   class Scope < Scope
     def resolve
       if user.system_admin?

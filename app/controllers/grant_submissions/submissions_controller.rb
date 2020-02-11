@@ -104,8 +104,10 @@ module GrantSubmissions
                       when 'new'
                         form   = @grant.form
                         @grant.submissions.build(form: form)
-                      when 'edit', 'show', 'update'
-                        @grant.submissions.find(params[:id])
+                      when 'edit', 'update'
+                        GrantSubmission::Submission.find(params[:id])
+                      when 'show'
+                        GrantSubmission::Submission.with_reviewers.find(params[:id])
                       when 'create'
                         @grant.submissions.build(submission_params.merge(created_id: current_user.id))
                       else

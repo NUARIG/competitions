@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe CriteriaReview, type: :model do
+
+  it_should_behave_like "WithScoring"
+
   it { is_expected.to respond_to(:criterion) }
   it { is_expected.to respond_to(:review) }
   it { is_expected.to respond_to(:score) }

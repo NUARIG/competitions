@@ -42,7 +42,7 @@ RSpec.describe GrantReviewer, type: :model do
       @gr2 = FactoryBot.build(:grant_reviewer, grant: @gr.grant, reviewer: @gr.reviewer)
     end
 
-    it 'validate grant and reviewer scope' do
+    it 'validates grant and reviewer scope' do
       expect(@gr2).not_to be_valid
       expect(@gr2.errors).to include(:reviewer)
     end

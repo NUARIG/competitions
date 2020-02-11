@@ -12,8 +12,12 @@
     Submissions
 
   - if @submissions.none?
-    %p
-      There are no submissions to this grant.
+    - if current_user.get_role_by_grant(grant: @grant)
+      %p
+        There are no submissions to this grant.
+    - else
+      %p
+        You have no submissions to this grant.
   - else
 
     = render 'shared/pagy_header', locals: { pagy: @pagy }
@@ -42,7 +46,8 @@
             %td
               = submission.created_at
             %td
-              #ul.menu.simple
-                = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { submission: submission, grant: @grant }
+              - if current_user.get_role_by_grant(grant: @grant)
+                #ul.menu.simple
+                  = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { submission: submission, grant: @grant }
 
     != pagy_foundation_nav(@pagy)
