@@ -28,6 +28,7 @@ class UsersController < ApplicationController
         format.html { redirect_to users_path(@user), notice: "#{helpers.full_name(@user)}'s profile has been updated." }
         format.json { render :index, status: :ok }
       else
+        flash[:alert] = @user.errors.full_messages
         format.html { render :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
