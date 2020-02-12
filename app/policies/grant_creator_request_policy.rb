@@ -20,10 +20,6 @@ class GrantCreatorRequestPolicy < ApplicationPolicy
     user_is_requester?
   end
 
-  def destroy?
-    user_is_requester?
-  end
-
   def review?
     user.system_admin?
   end
