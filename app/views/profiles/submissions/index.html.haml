@@ -6,8 +6,8 @@
 = search_form_for @q, url: profile_submissions_path do |f|
   .grid-x.grid-margin-x.medium-margin-collapse
     .small-12.medium-2.cell
-      %label.text-left.middle
-        Search Grant or Project
+      .text-left.middle
+        = f.label :title_or_grant_name_cont, 'Search Grant or Project', class: 'text-left middle'
     .small-12.medium-2.cell
       = f.search_field :title_or_grant_name_cont
     .small-12.medium-3.cell
