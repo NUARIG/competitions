@@ -1,6 +1,4 @@
-$base-color: gray;
-$contrast-color: white;
-
+@import 'settings';
 main {
   &.reviews {
     #review-header,
@@ -13,12 +11,12 @@ main {
     .criterion {
       margin: .5em 0em;
       padding: 1em;
-      &:first-of-type {
-        border-top: 1px solid #CCC;
-      }
     }
-    #overall {
-      border-top: 1px solid #CCC;
+    #composite-score,
+    .criterion {
+      &:first-of-type {
+        border-top: 1px solid $medium-gray;
+      }
     }
     form {
       textarea.comment {
@@ -26,7 +24,7 @@ main {
       }
       #overall,
       .criterion {
-        border-bottom: 1px solid #CCC;
+        border-bottom: 1px solid $medium-gray;
         margin: 1em 0em;
         padding: 1em;
         .description {
@@ -38,7 +36,7 @@ main {
       }
       .button-group {
         .scoring-guidance {
-          color: $base-color;
+          color: $dark-gray;
           padding: 0.5em 1em;
         }
         .score_value,{
@@ -48,12 +46,12 @@ main {
             margin-right: none;
           }
           label {
-            border: 1px solid $base-color;
-            background-color: $contrast-color;
-            color: $base-color;
+            border: 1px solid $dark-gray;
+            background-color: $white;
+            color: $dark-gray;
             &:hover {
-              background-color: $base-color;
-              color: $contrast-color;
+              background-color: $dark-gray;
+              color: $white;
             }
           }
           .field_with_errors,
@@ -64,8 +62,8 @@ main {
             }
             &:checked + label,
             &:checked + label:active {
-              background-color: $base-color;
-              color: $contrast-color;
+              background-color: $dark-gray;
+              color: $white;
             }
           }
         }
