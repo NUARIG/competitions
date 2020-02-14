@@ -1,0 +1,24 @@
+<tr class="question question-<%= ff.object.question.id %>">
+  <% ffn = ff.object.form_field_name %>
+  <% is_mandatory = ff.object.question.is_mandatory %>
+  <td colspan="2">
+    <span>
+      <% if ff.object.submission == f.object %>
+          <%= ff.hidden_field :grant_submission_question_id %>
+      <% end %>
+      <%= ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}") %>
+    </span>
+
+    <div>
+      <% if ff.object.submission == f.object %>
+        <%= ff.text_area(attribute: ffn,
+                         options: { rows: 5, cols: 31, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } }) %>
+      <% else %>
+          <%= ff.object.formatted_response_value %>
+      <% end %>
+      <% if ff.object.question.instruction.present? %>
+        <p class="helper-text">Instruction: <%= simple_format(ff.object.question.instruction, {}, wrapper_tag: 'span') %></p>
+    <% end %>
+    </div>
+  </td>
+</tr>
