@@ -24,9 +24,6 @@
           <% when :short_text %>
               <%= ff.text_area(attribute: ffn,
                                options: { rows: 1, cols: 30, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } }) %>
-          <% when :long_text %>
-              <%= ff.text_area(attribute: ffn,
-                               options: { rows: 5, cols: 31, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } }) %>
           <% when :date_opt_time %>
               <%= ff.date_opt_time_field :datetime_val, :boolean_val, options: { required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } } %>
           <% when :file_upload %>
