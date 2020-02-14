@@ -1,4 +1,9 @@
 main.submissions {
+  label.required-true p:last-of-type::after {
+    content: ' *';
+    font-size: 1.15em;
+    color: red;
+  }
   fieldset {
     legend {
       font-weight: bold;
