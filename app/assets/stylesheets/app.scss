@@ -73,7 +73,7 @@ th {
   text-align: left;
 }
 
-label.required-true:after {
+label.required-true p:last-of-type::after {
   content: ' *';
   font-size: 1.15em;
   color: red;
