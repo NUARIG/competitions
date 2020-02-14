@@ -17,7 +17,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
 
   context 'header text' do
     context 'applicant' do
-      scenario 'displays MySubmissions link in the header' do
+      scenario 'displays MyGrants link in the header' do
         login_as grant_admin
 
         visit root_path
@@ -26,7 +26,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
     end
 
     context 'user with no submissions' do
-      scenario 'does not display MySubmissions link in the header' do
+      scenario 'does not display MyGrants link in the header' do
         login_as user
 
         visit root_path
