@@ -59,7 +59,6 @@ module GrantSubmissions
         flash[:notice] = 'Submission was successfully updated'
         submission_redirect(@grant, @submission)
       else
-        @submission.state = 'draft'
         @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'edit'
