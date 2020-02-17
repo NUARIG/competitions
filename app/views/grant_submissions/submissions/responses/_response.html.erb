@@ -9,7 +9,7 @@
       <%= ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}") %>
     </span>
   </td>
-  <td>
+  <td style="min-width: 300px;">
     <div>
       <% if ff.object.submission == f.object %>
           <% case ff.object.question.response_type.to_sym
