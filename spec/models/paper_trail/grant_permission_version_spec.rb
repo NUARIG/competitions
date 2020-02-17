@@ -4,7 +4,7 @@ RSpec.describe PaperTrail::GrantPermissionVersion, type: :model, versioning: tru
   before(:each) do
     @grant            = create(:grant, :with_users_and_submission_form)
     @grant_permission = @grant.grant_permissions.first
-    @admin            = @grant.editors.first
+    @admin            = @grant.administrators.first
   end
 
   context 'metadata' do

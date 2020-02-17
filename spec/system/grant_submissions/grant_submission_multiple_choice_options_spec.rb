@@ -9,7 +9,7 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
     before(:each) do
       @grant  = create(:draft_open_grant)
       @form   = @grant.form
-      @admin  = @grant.editors.first
+      @admin  = @grant.administrators.first
       @option = @grant.questions.find_by(response_type: 'pick_one').multiple_choice_options.first
 
       login_as(@admin)

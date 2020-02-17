@@ -5,7 +5,7 @@ RSpec.describe PaperTrail::ReviewVersion, type: :model, versioning: true  do
     @grant          = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
     @reviewer       = @grant.reviewers.first
     @review         = create(:review, submission: @grant.submissions.first,
-                                      assigner:   @grant.editors.first,
+                                      assigner:   @grant.administrators.first,
                                       reviewer:   @reviewer)
   end
 
