@@ -48,8 +48,8 @@ module GrantSubmission
                             allow_nil: true
 
     validate :validate_by_response_type
-    validate :response_if_mandatory, if: -> { question.is_mandatory? }
-    validate :attachment_is_valid,   if: -> { document.attached? }
+    validate :response_if_mandatory, if: -> { question.is_mandatory? && submission.submitted? }
+    validate :attachment_is_valid,   if: -> { document.attached? && submission.submitted? }
 
     include DateOptionalTime
     has_date_optional_time(:datetime_val, :boolean_val)

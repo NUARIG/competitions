@@ -3,7 +3,7 @@
   .cell.small-12.medium-3
     = f.label :title, class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field(attribute: :title, options: { required: true })
+    = f.text_field(attribute: :title)
 
 - @submission.form.sections.sort_by(&:display_order).each do |section|
   .grid-x

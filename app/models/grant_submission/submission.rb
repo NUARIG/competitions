@@ -39,6 +39,8 @@ module GrantSubmission
     validates :title, presence: true
     validates :form, presence: true
 
+    validates_associated :responses, if: -> { self.submitted? }
+
     scope :eager_loading,       -> {includes({:responses => [:question]}, :children)}
 
     scope :order_by_created_at, -> { order(created_at: :desc) }
