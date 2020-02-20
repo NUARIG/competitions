@@ -62,5 +62,15 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
       expect(page).not_to have_text grant2.name
       expect(page).not_to have_link(href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
     end
+
+    scenario 'it does not include reviews for discarded grants' do
+      grant1.discard
+      visit profile_reviews_path
+
+      expect(page).not_to have_text(grant1.name)
+      expect(page).not_to have_link('Incomplete', href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
+      expect(page).to have_text(grant2.name)
+      expect(page).to have_link('Completed', href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
+    end
   end
 end
