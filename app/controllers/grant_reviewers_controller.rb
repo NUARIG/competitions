@@ -55,7 +55,7 @@ class GrantReviewersController < ApplicationController
   private
 
   def set_grant
-    @grant = Grant.not_deleted.friendly.find(params[:grant_id])
+    @grant = Grant.kept.friendly.find(params[:grant_id])
   end
 
   def grant_reviewer_params
