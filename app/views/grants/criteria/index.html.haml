@@ -1,4 +1,4 @@
-- content_for(:page_title, "Edit Review Criteria")
+- content_for(:page_title, 'Edit Review Criteria')
 
 - disable_fields = !policy(@grant).grant_editor_access?
 
@@ -9,13 +9,34 @@
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
-= form_for @grant, url: update_criteria_grant_path(@grant) do |f|
+.tabs-panel.is-active
   %h3 Review Criteria
-  #criteria.grid-x
-    .cell
-      = f.fields_for :criteria, @criteria do |criterion|
-        = render partial:'criterion_fields', locals: { f: criterion }
-      - if disable_fields != true
-        .links
-          = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small warning'
-        = f.submit 'Save Changes', class: 'button'
+
+  .grid-x
+    .cell.small-12
+      %p
+        %em In addtion to "Overall Impact", you can define the review criteria by which submissions to this grant will be scored.
+      %p
+        %em Scoring matches the NIH's #{link_to '9-point scale', href: 'https://grants.nih.gov/grants/policy/review/rev_prep/scoring.htm'} as shown below.
+
+  .grid-x
+    .button-group
+      %label.scoring-guidance
+        Exceptional
+      - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
+        .score_value
+          = radio_button_tag 'overall_impact_score', value
+          = label_tag "#{value}", nil, class: 'button', for: "example-#{value}"
+      %label.scoring-guidance
+        Poor
+
+  %hr
+  = form_for @grant, url: update_criteria_grant_path(@grant) do |f|
+    #criteria.grid-x
+      .cell
+        = f.fields_for :criteria, @criteria do |criterion|
+          = render partial:'criterion_fields', locals: { f: criterion }
+        - if disable_fields != true
+          .links
+            = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small warning'
+          = f.submit 'Save Changes', class: 'button'

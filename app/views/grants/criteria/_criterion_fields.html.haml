@@ -3,24 +3,25 @@
 .nested-fields
   .field
     .grid-x
-      .cell.small-12.medium-3
+      .cell.small-12.medium-2
         = f.label :name
-      .cell.small-12.medium-9
+      .cell.small-12.medium-10
         = f.text_field :name, width: 50, required: true, disabled: disable_fields
   .field
     .grid-x
-      .cell.small-12.medium-3
+      .cell.small-12.medium-2
         = f.label :description
-      .cell.small-12.medium-9
+      .cell.small-12.medium-10
         = f.text_area :description, width: 50, disabled: disable_fields
   .field
     .grid-x
-      .cell.small-12.medium-4
-        = f.label :is_mandatory
+      .cell.small-12.medium-offset-2
         = f.check_box :is_mandatory, disabled: disable_fields
-      .cell.small-12.medium-4
-        = f.label :show_comment_field
+        = f.label :is_mandatory
+        %br
         = f.check_box :show_comment_field, disabled: disable_fields
+        = f.label :show_comment_field
+
   .field
     .grid-x
       = link_to_remove_association 'Remove', f, class: 'button tiny hollow alert remove' unless disable_fields
