@@ -9,8 +9,8 @@
 = search_form_for @q, url: profile_grants_path do |f|
   .grid-x.grid-margin-x.medium-margin-collapse
     .small-12.medium-2.cell
-      %label.text-left.middle
-        Search Grant Name
+      .text-left.middle
+        = f.label :name_cont, 'Search Grant Name'
     .small-12.medium-2.cell
       = f.search_field :name_cont
     .small-12.medium-3.cell
