@@ -1,11 +1,18 @@
-  # frozen_string_literal: true
+# frozen_string_literal: true
 
 class Grant < ApplicationRecord
   include ActiveModel::Validations::Callbacks
-  include SoftDeletable
+
   extend FriendlyId
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
   friendly_id :slug
+
+  include Discard::Model
+
+  after_discard do
+    submissions.discard_all
+    reviews.discard_all
+  end
 
   attr_accessor :duplicate
 
