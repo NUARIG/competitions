@@ -8,6 +8,10 @@ FactoryBot.define do
     decimal_val  { nil }
     datetime_val { nil }
 
+    trait :with_required_string do
+      association :question,   factory: :required_short_text_question
+    end
+
     trait :string_val do
       string_val { Faker::Lorem.sentence }
     end
@@ -42,6 +46,7 @@ FactoryBot.define do
     end
 
     factory :string_val_response,          traits: %i[string_val]
+    factory :required_string_val_response, traits: %i[string_val with_required_string]
     factory :text_val_response,            traits: %i[text_val]
     factory :number_response,              traits: %i[number]
     factory :valid_file_upload_response,   traits: %i[with_pdf]

@@ -30,7 +30,15 @@ FactoryBot.define do
       end
     end
 
-    factory :submission_with_responses,       traits: %i[with_responses]
-    factory :draft_submitted_with_responses,  traits: %i[draft with_responses]
+
+    trait :with_required_string_response do
+      after(:create) do |submission|
+        create(:required_string_val_response, submission: submission, question: question)
+      end
+    end
+
+    factory :submission_with_responses,             traits: %i[with_responses]
+    factory :draft_submission_with_responses,        traits: %i[draft with_responses]
+    factory :draft_with_required_string_response,   traits: %i[draft with_required_string_response]
   end
 end
