@@ -29,7 +29,7 @@ RSpec.describe GrantReviewerServices do
         other_reviewer = create(:grant_reviewer, grant: other_grant,
                                                  reviewer: @grant_reviewer.reviewer)
         other_review   = create(:review, submission: other_grant.submissions.first,
-                                          assigner: other_grant.editors.first,
+                                          assigner: other_grant.administrators.first,
                                           reviewer: @grant_reviewer.reviewer)
         reviewer = @grant_reviewer.reviewer
 

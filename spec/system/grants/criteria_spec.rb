@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Criteria', type: :system, js: true do
   describe 'Index' do
     let(:grant) { create(:draft_grant) }
-    let(:admin) { grant.editors.first }
+    let(:admin) { grant.administrators.first }
 
     before(:each) do
       login_as(admin)

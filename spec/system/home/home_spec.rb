@@ -12,7 +12,7 @@ RSpec.describe 'Home', type: :system do
       @draft_grant        = create(:draft_open_grant)
       @soft_deleted_grant = create(:grant_with_users, deleted_at: 1.hour.ago)
       @user               = create(:user)
-      @admin_user         = @open_grant.editors.first
+      @admin_user         = @open_grant.administrators.first
       visit root_path
     end
 

@@ -12,16 +12,16 @@ RSpec.describe Review, type: :model do
 
   let(:grant)          { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:new_reviewer)   { create(:grant_reviewer, grant: grant)}
-  let(:review)         { build(:review, assigner: grant.editors.first,
+  let(:review)         { build(:review, assigner: grant.administrators.first,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: grant.submissions.first) }
-  let(:invalid_review) { build(:review, assigner: grant.editors.first,
+  let(:invalid_review) { build(:review, assigner: grant.administrators.first,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: grant.submissions.first) }
   let(:system_admin)   { create(:system_admin_user) }
   let(:invalid_user)   { create(:user) }
 
-  let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.editors.first,
+  let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.administrators.first,
                                                                                                            submission: grant.submissions.first,
                                                                                                            reviewer: grant.reviewers.first)}
 

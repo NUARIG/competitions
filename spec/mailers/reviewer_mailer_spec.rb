@@ -4,7 +4,7 @@ include UsersHelper
 RSpec.describe ReviewerMailer, type: :mailer do
   context 'assignment' do
     let(:grant)    { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-    let(:review)   { create(:incomplete_review, assigner: grant.editors.first,
+    let(:review)   { create(:incomplete_review, assigner: grant.administrators.first,
                                                 reviewer: grant.reviewers.first,
                                                 submission: grant.submissions.first) }
     let(:reviewer) { review.reviewer }
@@ -29,7 +29,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
 
   context 'unassignment' do
     let(:grant)    { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-    let(:review)   { create(:incomplete_review, assigner: grant.editors.first,
+    let(:review)   { create(:incomplete_review, assigner: grant.administrators.first,
                                                 reviewer: grant.reviewers.first,
                                                 submission: grant.submissions.first) }
     let(:reviewer) { review.reviewer }
@@ -50,7 +50,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
 
   context 'opt_out' do
     let(:grant)    { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-    let(:review)   { create(:incomplete_review, assigner: grant.editors.second,
+    let(:review)   { create(:incomplete_review, assigner: grant.administrators.second,
                                                 reviewer: grant.reviewers.first,
                                                 submission: grant.submissions.first) }
     let(:reviewer) { review.reviewer }
@@ -74,7 +74,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
 
       @grant_admin = User.find_by(id: grant.grant_permissions.where(role: 'admin').pluck(:user_id))
       @mailer = described_class.opt_out(review: review)
-      expect(@mailer.to).to eql grant.editors.pluck(:email)
+      expect(@mailer.to).to eql grant.administrators.pluck(:email)
     end
 
     it 'includes the reviewer name in the body' do
