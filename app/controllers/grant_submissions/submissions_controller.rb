@@ -44,6 +44,7 @@ module GrantSubmissions
         flash[:notice] = 'You successfully applied'
         submission_redirect(@grant, @submission)
       else
+        @submission.state = 'draft'
         @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'new'

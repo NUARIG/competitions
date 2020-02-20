@@ -12,7 +12,7 @@
     <div>
       <% if ff.object.submission == f.object %>
         <%= ff.text_area(attribute: ffn,
-                         options: { rows: 5, cols: 31, required: ff.object.question.is_mandatory, data: { question_id: ff.object.question.id } }) %>
+                         options: { rows: 5, cols: 31, data: { question_id: ff.object.question.id } }) %>
       <% else %>
           <%= ff.object.formatted_response_value %>
       <% end %>
