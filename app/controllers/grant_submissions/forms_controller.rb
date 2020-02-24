@@ -26,7 +26,7 @@ module GrantSubmissions
     private
 
     def set_grant
-      @grant = Grant.friendly.find(params[:grant_id])
+      @grant = Grant.kept.friendly.find(params[:grant_id])
     end
 
     def form_params

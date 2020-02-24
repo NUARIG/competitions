@@ -17,7 +17,8 @@ module GrantSubmissions
     end
 
     def new
-      @grant = Grant.friendly
+      @grant = Grant.kept
+                    .friendly
                     .includes(form:
                                 { sections:
                                   {questions: :multiple_choice_options} }
@@ -81,7 +82,7 @@ module GrantSubmissions
     private
 
     def set_grant
-      @grant = Grant.friendly.find(params[:grant_id])
+      @grant = Grant.kept.friendly.find(params[:grant_id])
     end
 
     def set_state(submission)
@@ -105,9 +106,9 @@ module GrantSubmissions
                         form   = @grant.form
                         @grant.submissions.build(form: form)
                       when 'edit', 'update'
-                        GrantSubmission::Submission.find(params[:id])
+                        GrantSubmission::Submission.kept.find(params[:id])
                       when 'show'
-                        GrantSubmission::Submission.with_reviewers.find(params[:id])
+                        GrantSubmission::Submission.kept.with_reviewers.find(params[:id])
                       when 'create'
                         @grant.submissions.build(submission_params.merge(created_id: current_user.id))
                       else

@@ -7,7 +7,7 @@ module GrantSubmissions
       # GET /reviews
       # GET /reviews.json
       def index
-        @grant = Grant.with_criteria.friendly.find(params[:grant_id])
+        @grant = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
         @q              = Review.with_reviewer.with_criteria_reviews.by_submission(@submission).ransack(params[:q])
@@ -88,9 +88,9 @@ module GrantSubmissions
       end
 
       def set_review_grant_and_submission
-        @review     = Review.includes(:criteria, submission: :applicant).find(params[:id])
-        @grant      = @review.grant
-        @submission = @review.submission
+        @grant      = Grant.kept.with_criteria.friendly.find(params[:grant_id])
+        @submission = @grant.submissions.kept.find(params[:submission_id])
+        @review     = @submission.reviews.kept.includes(:criteria, submission: :applicant).find(params[:id])
       end
 
       def review_params
