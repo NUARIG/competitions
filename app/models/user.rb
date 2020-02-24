@@ -38,6 +38,8 @@ class User < ApplicationRecord
   validates :first_name,        presence: true
   validates :last_name,         presence: true
 
+  validates_uniqueness_of :era_commons, unless: -> { era_commons.blank? }
+
   scope :order_by_last_name,    -> { order(last_name: :asc) }
 
   # https://github.com/apokalipto/devise_saml_authenticatable/issues/151

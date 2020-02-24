@@ -5,7 +5,7 @@ RSpec.describe ReviewPolicy, type: :policy do
 
   let(:grant)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)        { grant.submissions.first }
-  let(:review)            { create(:incomplete_review, assigner: grant.editors.first,
+  let(:review)            { create(:incomplete_review, assigner: grant.administrators.first,
                                     reviewer: grant.reviewers.first,
                                     submission: grant.submissions.first) }
   let(:applicant)         { submission.applicant}
@@ -120,7 +120,7 @@ RSpec.describe ReviewPolicy, type: :policy do
     let(:other_grant) { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
 
     context 'with an editor on another grant' do
-      let(:user)        { other_grant.editors.first }
+      let(:user)        { other_grant.administrators.first }
 
       it { is_expected.not_to permit_action(:index) }
       it { is_expected.not_to permit_action(:new) }

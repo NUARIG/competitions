@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class GrantCreatorRequestsController < ApplicationController
-  skip_after_action :verify_policy_scoped, only: %i[index]
+  before_action     :set_grant_creator_request, only: %i[edit show update]
+  skip_after_action :verify_policy_scoped,      only: %i[index]
 
   def index
     authorize GrantCreatorRequest, :review?
@@ -9,9 +10,14 @@ class GrantCreatorRequestsController < ApplicationController
   end
 
   def new
-    @grant_creator_request = GrantCreatorRequest.new
-    authorize @grant_creator_request
-    @grant_creator_request.requester = current_user
+    authorize GrantCreatorRequest, :create?
+    if current_user.grant_creator?
+      flash[:warning] = 'You already have permission to create grants.'
+      redirect_to profile_path
+    else
+      @grant_creator_request = GrantCreatorRequest.new
+      @grant_creator_request.requester = current_user
+    end
   end
 
   def create
@@ -31,18 +37,15 @@ class GrantCreatorRequestsController < ApplicationController
   end
 
   def edit
-    @grant_creator_request = GrantCreatorRequest.find(params[:id])
     authorize @grant_creator_request
   end
 
   def show
-    @grant_creator_request = GrantCreatorRequest.find(params[:id])
     authorize @grant_creator_request
     render :edit
   end
 
   def update
-    @grant_creator_request = GrantCreatorRequest.find(params[:id])
     authorize @grant_creator_request
     if @grant_creator_request.update_attributes(grant_creator_request_params)
       flash[:success] = 'Your request has been updated. You will be notified after review.'
@@ -53,10 +56,6 @@ class GrantCreatorRequestsController < ApplicationController
     end
   end
 
-  def destroy
-    authorize @grant_creator_request
-  end
-
   private
 
   def grant_creator_request_params
@@ -64,6 +63,6 @@ class GrantCreatorRequestsController < ApplicationController
   end
 
   def set_grant_creator_request
-    @grant = GrantCreatorRequest.find(params[:id])
+    @grant_creator_request = GrantCreatorRequest.find(params[:id])
   end
 end

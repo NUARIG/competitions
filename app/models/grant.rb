@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+  # frozen_string_literal: true
 
 class Grant < ApplicationRecord
   include ActiveModel::Validations::Callbacks
@@ -20,7 +20,7 @@ class Grant < ApplicationRecord
   has_many   :reviewers,        through: :grant_reviewers
 
   has_many   :grant_permissions
-  has_many   :editors,          through: :grant_permissions,
+  has_many   :administrators,   through: :grant_permissions,
                                 source: :user
 
   has_many   :questions,        through: :form

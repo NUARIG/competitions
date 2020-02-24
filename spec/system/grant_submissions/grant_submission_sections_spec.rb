@@ -6,7 +6,7 @@ RSpec.describe 'GrantSubmission::Sections', type: :system do
       @grant   = create(:draft_grant)
       @form    = @grant.form
       @section = @form.sections.first
-      @admin   = @grant.editors.first
+      @admin   = @grant.administrators.first
 
       login_as(@admin)
       visit edit_grant_form_path(@grant, @form)

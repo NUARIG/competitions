@@ -162,7 +162,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       expect(page).to have_content 'Grant saved'
       click_link('Permissions', href: grant_grant_permissions_path(grant).to_s)
       expect(page).to have_content full_name(@user)
-      expect(grant.editors.count).to eql 1
+      expect(grant.administrators.count).to eql 1
       expect(@user.grant_permissions.where(grant: grant).first.role).to eql 'admin'
     end
 

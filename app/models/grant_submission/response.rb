@@ -19,8 +19,6 @@ module GrantSubmission
                                                     two_words_connector: ' or ',
                                                     last_word_connector: ' or ').freeze
 
-    MAXIMUM_TEXT_VAL_LENGTH = 4000
-
     belongs_to :submission,             class_name: 'GrantSubmission::Submission',
                                         foreign_key: 'grant_submission_submission_id',
                                         inverse_of: :responses
@@ -37,7 +35,6 @@ module GrantSubmission
     validates_presence_of   :submission, :question
     validates_inclusion_of  :grant_submission_question_id,
                             in: -> (it) { it.submission.form.questions.pluck(:id) }
-                            #in: -> (it) { it.submission.responded_to.questions.pluck(:id) }
     validates_inclusion_of  :grant_submission_multiple_choice_option_id,
                             in: -> (it) { it.question.multiple_choice_options.pluck(:id) },
                             allow_nil: true
@@ -127,8 +124,6 @@ module GrantSubmission
         validate_number_if_number_response
       when 'short_text'
         validate_length_if_short_text_response
-      when 'long_text'
-        validate_length_if_long_text_response
       when 'file_upload'
         if document.attached?
           validate_attachment_size_if_file_upload_response
@@ -151,13 +146,6 @@ module GrantSubmission
     def validate_length_if_short_text_response
       if string_val.length > 255
         errors.add(:string_val, :too_long, question: question.text)
-      end
-    end
-
-    def validate_length_if_long_text_response
-      if text_val.length > MAXIMUM_TEXT_VAL_LENGTH
-        errors.add(:text_val, :too_long, question: question.text,
-                                         length: ActiveSupport::NumberHelper.number_to_delimited(MAXIMUM_TEXT_VAL_LENGTH))
       end
     end
 

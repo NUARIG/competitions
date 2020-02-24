@@ -7,9 +7,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       @submission   = @grant.submissions.first
       @applicant    = @submission.applicant
       @system_admin = create(:system_admin_user)
-      @grant_admin  = @grant.editors.first
-      @grant_editor = @grant.editors.second
-      @grant_viewer = @grant.editors.third
+      @grant_admin  = @grant.administrators.first
+      @grant_editor = @grant.administrators.second
+      @grant_viewer = @grant.administrators.third
     end
 
     context 'published grant' do
@@ -150,7 +150,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     describe 'Published Open Grant', js: true do
       before(:each) do
         @grant     = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-        @editor    = @grant.editors.first
+        @editor    = @grant.administrators.first
         @applicant = create(:user)
       end
 
@@ -188,7 +188,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     describe 'Draft Grant', js: true do
       before(:each) do
         @draft_grant = create(:draft_grant)
-        @editor      = @draft_grant.editors.first
+        @editor      = @draft_grant.administrators.first
         @applicant   = create(:user)
       end
 

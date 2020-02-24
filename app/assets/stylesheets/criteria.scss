@@ -1,0 +1,36 @@
+@import 'settings';
+main {
+  &.criteria {
+    .button-group {
+      .scoring-guidance {
+        color: $dark-gray;
+        padding: 0.5em 1em;
+      }
+      .score_value,{
+        display: inline-block;
+        margin-right: .5em;
+        &:last-of-type {
+          margin-right: none;
+        }
+        label {
+          border: 1px solid $dark-gray;
+          background-color: $white;
+          color: $dark-gray;
+          cursor: default;
+        }
+        input {
+          cursor: default;
+          display: none;
+          + label.button {
+            border-radius: 1000px;
+          }
+          &:checked + label,
+          &:checked + label:active {
+            background-color: $dark-gray;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}

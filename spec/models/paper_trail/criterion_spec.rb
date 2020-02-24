@@ -6,7 +6,7 @@ RSpec.describe PaperTrail::CriterionVersion, type: :model, versioning: true do
     @reviewer        = @grant.reviewers.first
     @review          = create(:review, submission: @grant.submissions.first,
                                        reviewer: @reviewer,
-                                       assigner: @grant.editors.first)
+                                       assigner: @grant.administrators.first)
     @criterion       = @review.grant.criteria.first
   end
 

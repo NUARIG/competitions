@@ -8,7 +8,7 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
     before(:each) do
       @grant = create(:draft_open_grant)
       @form  = @grant.form
-      @admin = @grant.editors.first
+      @admin = @grant.administrators.first
 
       login_as(@admin)
       visit edit_grant_form_path(@grant, @form)

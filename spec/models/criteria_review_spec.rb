@@ -16,7 +16,7 @@ RSpec.describe CriteriaReview, type: :model do
   context 'validations' do
     let(:grant)  { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let(:review) { create(:review, submission: grant.submissions.first,
-                                   assigner: grant.editors.first,
+                                   assigner: grant.administrators.first,
                                    reviewer: grant.reviewers.first) }
 
     before(:each) do

@@ -5,7 +5,7 @@ RSpec.describe 'GrantReviewers', type: :system do
     let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer,
                            max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
                            max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
-    let(:grant_admin)  { grant.editors.first }
+    let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
     let(:user)         { create(:user) }
     let(:unknown_user) { build(:user) }
@@ -28,7 +28,7 @@ RSpec.describe 'GrantReviewers', type: :system do
     let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer,
                                  max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
                                  max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
-    let(:grant_admin)  { grant.editors.first }
+    let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
     let(:user)         { create(:user) }
     let(:unknown_user) { build(:user) }
@@ -63,7 +63,7 @@ RSpec.describe 'GrantReviewers', type: :system do
     let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer,
                                   max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
                                   max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
-    let(:grant_admin)  { grant.editors.first }
+    let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
     let(:review)       { create(:review, assigner: grant_admin,
                                          reviewer: reviewer,

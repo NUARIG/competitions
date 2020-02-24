@@ -88,12 +88,6 @@ RSpec.describe GrantSubmission::Response, type: :model do
         expect(text_val_response.errors).to include(:grant_submission_question_id)
       end
 
-      it 'validates length' do
-        text_val_response.update_attribute(:text_val, Faker::Lorem.characters(number: 4001))
-        expect(text_val_response).not_to be_valid
-        expect(text_val_response.errors).to include(:text_val)
-      end
-
       it 'does not allow an attachment' do
         text_val_response.document.attach(io: File.open(Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf')), filename: 'text_file.pdf')
         expect(text_val_response).not_to be_valid
