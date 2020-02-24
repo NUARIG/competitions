@@ -54,25 +54,37 @@ RSpec.describe 'grant_submission review requests', type: :request do
   end
 
   context '#show' do
-    it 'sucessfully renders to reviewer' do
-      sign_in(review.reviewer)
-      get grant_submission_review_path(grant, submission, review)
+    context 'kept' do
+      it 'sucessfully renders to reviewer' do
+        sign_in(review.reviewer)
+        get grant_submission_review_path(grant, submission, review)
 
-      expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'redirects the applicant' do
+        sign_in(review.submission.applicant)
+        get grant_submission_review_path(grant, submission, review)
+
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 'redirects an invalid user' do
+        sign_in(invalid_user)
+        get grant_submission_review_path(grant, submission, review)
+
+        expect(response).to have_http_status(:redirect)
+      end
     end
 
-    it 'redirects the applicant' do
-      sign_in(review.submission.applicant)
-      get grant_submission_review_path(grant, submission, review)
+    context 'discarded', with_errors_rendered: true do
+      it 'renders 404' do
+        sign_in(review.reviewer)
+        grant.discard
+        get grant_submission_review_path(grant, submission, review)
 
-      expect(response).to have_http_status(:redirect)
-    end
-
-    it 'redirects an invalid user' do
-      sign_in(invalid_user)
-      get grant_submission_review_path(grant, submission, review)
-
-      expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(404)
+      end
     end
   end
 
