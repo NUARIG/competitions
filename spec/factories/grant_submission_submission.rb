@@ -17,14 +17,23 @@ FactoryBot.define do
         submission.grant.questions.each do |question|
           case question.response_type.to_sym
           when :short_text
-            create(:string_val_response, submission: submission,
-                                         question: question)
+            create(:string_val_response,        submission: submission,
+                                                question: question)
           when :number
-            create(:number_response, submission: submission,
-                                     question: question)
+            create(:number_response,            submission: submission,
+                                                question: question)
           when :long_text
-            create(:text_val_response, submission: submission,
-                                       question: question)
+            create(:text_val_response,          submission: submission,
+                                                question: question)
+          when :date_opt_time
+            create(:date_opt_time_response,     submission: submission,
+                                                question: question)
+          when :pick_one
+            create(:pick_one_response,          submission: submission,
+                                                question: question)
+          when :file_upload
+            create(:valid_file_upload_response, submission: submission,
+                                                question: question)
           end
         end
       end
