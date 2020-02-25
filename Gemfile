@@ -51,6 +51,7 @@ gem 'sprockets-es6'
 gem 'trix'
 
 # audits
+gem 'discard', '~> 1.2'
 gem 'paper_trail'
 
 gem 'american_date'

@@ -6,13 +6,13 @@
           .home
             = link_to 'CD2H - Competitions', root_path
         - if user_signed_in?
-          - if current_user.editable_grants.not_deleted.any? || current_user.system_admin? || current_user.grant_creator?
+          - if current_user.system_admin? || current_user.grant_creator? || current_user.editable_grants.kept.any?
             %li
               = link_to 'MyGrants', profile_grants_path
-          - if current_user.reviews.any?
+          - if current_user.reviews.kept.any?
             %li
               = link_to 'MyReviews', profile_reviews_path
-          - if current_user.submissions.any?
+          - if current_user.submissions.kept.any?
             %li
               = link_to 'MySubmissions', profile_submissions_path
     .top-bar-right

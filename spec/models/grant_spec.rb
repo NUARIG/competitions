@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'support/shared_examples/soft_deletable'
 
 RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:name) }
@@ -19,7 +18,7 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:review_close_date) }
   it { is_expected.to respond_to(:panel_date) }
   it { is_expected.to respond_to(:panel_location) }
-  it { is_expected.to respond_to(:deleted_at) }
+  it { is_expected.to respond_to(:discarded_at) }
 
   let(:grant) { build(:grant) }
 
@@ -144,104 +143,150 @@ RSpec.describe Grant, type: :model do
 
   describe 'SoftDeletable' do
     it 'cannot be destroyed' do
-      expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be soft deleted.')
+      expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be discarded.')
     end
 
-    context 'associations' do
-      pending 'associations are correctly handled' do
-        fail '#TODO: determine whether any associations should also be soft_deleted'
+
+    context 'published open grant' do
+      let(:published_open_grant) { create(:published_open_grant) }
+
+      it 'is not discardable' do
+        expect(published_open_grant.is_discardable?).to be false
+        expect(published_open_grant.errors.messages[:base]).to include 'Published grant may not be deleted.'
+      end
+
+      it 'is_open?' do
+        expect(published_open_grant.is_open?).to be true
+      end
+
+      it 'is accepting_submissions?' do
+        expect(published_open_grant.accepting_submissions?).to be true
       end
     end
-  end
 
-  context 'published open grant' do
-    let(:published_open_grant) { create(:published_open_grant) }
+    context 'published closed grant' do
+      let(:published_closed_grant) { create(:published_closed_grant) }
 
-    it 'cannot soft deleted' do
-      expect(published_open_grant.deleted?).to be false
-      expect{published_open_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
-      expect{published_open_grant.soft_delete!}.to raise_error('Published grant may not be deleted')
-      expect(published_open_grant.deleted?).to be false
+      it 'is not discardable' do
+        expect(published_closed_grant.is_discardable?).to be false
+        expect(published_closed_grant.errors.messages[:base]).to include 'Published grant may not be deleted.'
+      end
+
+      it 'not is_open?' do
+        expect(published_closed_grant.is_open?).to be false
+      end
+
+      it 'is not accepting_submissions?' do
+        expect(published_closed_grant.accepting_submissions?).to be false
+      end
     end
 
-    it 'is_open?' do
-      expect(published_open_grant.is_open?).to be true
+    context 'published not yet open' do
+      let(:published_not_yet_open) { create(:published_not_yet_open_grant) }
+
+      it 'is not discardable' do
+        expect(published_not_yet_open.is_discardable?).to be false
+        expect(published_not_yet_open.errors.messages[:base]).to include 'Published grant may not be deleted.'
+      end
+
+      it 'not is_open?' do
+        expect(published_not_yet_open.is_open?).to be false
+      end
+
+      it 'is not accepting_submissions?' do
+        expect(published_not_yet_open.accepting_submissions?).to be false
+      end
+
+      context 'discard' do
+        it 'is not valid to discard' do
+          expect(published_not_yet_open.valid?(:discard)).to be false
+          expect(published_not_yet_open.errors.messages[:base]).to include 'Published grant may not be deleted.'
+        end
+      end
     end
 
-    it 'is accepting_submissions?' do
-      expect(published_open_grant.accepting_submissions?).to be true
-    end
-  end
+    context 'draft grant' do
+      let(:draft_grant) { create(:grant, :draft, :with_users_and_submission_form, :with_submission, :with_reviewer) }
+      let(:submission)  { review.submission }
+      let(:review)      { create(:review, submission: draft_grant.submissions.first,
+                                          assigner: draft_grant.grant_permissions.role_admin.first.user,
+                                          reviewer: draft_grant.reviewers.first) }
 
-  context 'published closed grant' do
-    let(:published_closed_grant) { create(:published_closed_grant) }
+      before(:each) do
+        review
+      end
 
-    it 'cannot soft deleted' do
-      expect(published_closed_grant.deleted?).to be false
-      expect{published_closed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
-      expect{published_closed_grant.soft_delete!}.to raise_error('Published grant may not be deleted')
-      expect(published_closed_grant.deleted?).to be false
-    end
+      it 'is discardable' do
+        expect(draft_grant.is_discardable?).to be true
+        expect(draft_grant.errors.messages[:base]).to be_empty
+      end
 
-    it 'not is_open?' do
-      expect(published_closed_grant.is_open?).to be false
-    end
+      it 'is not accepting_submissions?' do
+        expect(draft_grant.accepting_submissions?).to be false
+      end
 
-    it 'is not accepting_submissions?' do
-      expect(published_closed_grant.accepting_submissions?).to be false
-    end
-  end
+      it 'discards associated submission and review' do
+        expect do
+          draft_grant.discard
+        end.to change{review.reload.discarded_at}
+           .and change{submission.reload.discarded_at}
+      end
 
-  context 'published not yet open' do
-    let(:published_not_yet_open) { create(:published_not_yet_open_grant) }
+      context '#validations' do
+        context ':discard' do
+          it 'is not valid' do
+            expect(draft_grant.valid?(:discard)).to be true
+            expect(draft_grant.errors.messages[:base]).to be_empty
+          end
+        end
+      end
 
-    it 'cannot soft deleted' do
-      expect(published_not_yet_open.deleted?).to be false
-      expect{published_not_yet_open.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Published grant may not be deleted')
-      expect{published_not_yet_open.soft_delete!}.to raise_error('Published grant may not be deleted')
-      expect(published_not_yet_open.deleted?).to be false
-    end
+      context 'undiscarding' do
+        before(:each) do
+          draft_grant.discard
+        end
 
-    it 'not is_open?' do
-      expect(published_not_yet_open.is_open?).to be false
-    end
+        it 'undiscards submissions' do
+          expect do
+            draft_grant.undiscard
+          end.to change{submission.reload.discarded_at}.to(nil)
+             .and change{GrantSubmission::Submission.kept.count}.by 1
+        end
 
-    it 'is not accepting_submissions?' do
-      expect(published_not_yet_open.accepting_submissions?).to be false
-    end
-  end
-
-  context 'draft grant' do
-    let (:draft_grant) { create(:grant, :draft) }
-
-    it 'can be soft deleted' do
-      expect(draft_grant.deleted?).to be false
-      expect{draft_grant.is_soft_deletable?}.not_to raise_error
-      expect{draft_grant.soft_delete!}.not_to raise_error
-      expect(draft_grant.deleted?).to be true
-    end
-
-    it 'is not accepting_submissions?' do
-      expect(draft_grant.accepting_submissions?).to be false
-    end
-  end
-
-  context 'completed grant' do
-    let (:completed_grant) { create(:grant, :completed) }
-
-    it 'cannot be soft deleted' do
-      expect(completed_grant.deleted?).to be false
-      expect{completed_grant.is_soft_deletable?}.to raise_error(SoftDeleteException, 'Completed grant may not be deleted')
-      expect{completed_grant.soft_delete!}.to raise_error('Completed grant may not be deleted')
-      expect(completed_grant.deleted?).to be false
+        it 'undiscards reviews' do
+          expect do
+            draft_grant.undiscard
+          end.to change{review.reload.discarded_at}.to(nil)
+             .and change{Review.kept.count}.by 1
+        end
+      end
     end
 
-    it 'not is_open?' do
-      expect(completed_grant.is_open?).to be false
+    context 'completed grant' do
+      let (:completed_grant) { create(:grant, :completed) }
+
+      it 'is not discardable' do
+        expect(completed_grant.is_discardable?).to be false
+        expect(completed_grant.errors.messages[:base]).to include 'Completed grant may not be deleted.'
+      end
+
+      it 'not is_open?' do
+        expect(completed_grant.is_open?).to be false
+      end
+
+      it 'is not accepting_submissions?' do
+        expect(completed_grant.accepting_submissions?).to be false
+      end
+
+      context '#validations' do
+        context ':discard' do
+          it 'is not valid' do
+            expect(completed_grant.valid?(:discard)).to be false
+            expect(completed_grant.errors.messages[:base]).to include 'Completed grant may not be deleted.'
+          end
+        end
+      end
     end
 
-    it 'is not accepting_submissions?' do
-      expect(completed_grant.accepting_submissions?).to be false
-    end
   end
 end

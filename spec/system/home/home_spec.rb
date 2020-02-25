@@ -10,7 +10,7 @@ RSpec.describe 'Home', type: :system do
       @closed_grant       = create(:published_closed_grant)
       @completed_grant    = create(:completed_grant)
       @draft_grant        = create(:draft_open_grant)
-      @soft_deleted_grant = create(:grant_with_users, deleted_at: 1.hour.ago)
+      @discarded_grant    = create(:grant_with_users, discarded_at: 1.hour.ago)
       @user               = create(:user)
       @admin_user         = @open_grant.administrators.first
       visit root_path
@@ -70,7 +70,7 @@ RSpec.describe 'Home', type: :system do
       end
 
       scenario 'does not display a soft_deleted grant' do
-        expect(page).not_to have_content @soft_deleted_grant.name
+        expect(page).not_to have_content @discarded_grant.name
       end
     end
 

@@ -40,7 +40,8 @@ module Grants
 
     def set_original_grant
       begin
-        @original_grant = Grant.friendly
+        @original_grant = Grant.kept
+                               .friendly
                                .includes(form: { sections: :questions } )
                                .find(params[:grant_id])
       rescue

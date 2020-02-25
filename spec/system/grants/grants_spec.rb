@@ -8,7 +8,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     before(:each) do
       @grant                  = create(:grant_with_users)
       @inaccessible_grant     = create(:grant_with_users)
-      @soft_deleted_grant     = create(:grant_with_users, deleted_at: 1.hour.ago)
+      @discarded_grant        = create(:grant_with_users, discarded_at: 1.hour.ago)
       @admin_user             = @grant.grant_permissions.role_admin.first.user
 
       @draft_grant            = create(:draft_grant)
@@ -18,8 +18,8 @@ RSpec.describe 'Grants', type: :system, js: true do
       visit grants_path
     end
 
-    scenario 'does not display soft_deleted grant' do
-      expect(page).not_to have_content(@soft_deleted_grant.name)
+    scenario 'does not display discarded grant' do
+      expect(page).not_to have_content(@discarded_grant.name)
     end
 
     scenario 'displays only public grants for grant_admins' do
@@ -176,40 +176,46 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
   end
 
-  describe 'SoftDelete' do
+  describe 'Discard' do
+    let(:grant)      { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+    let(:admin_user) { grant.grant_permissions.role_admin.first.user }
+
     before(:each) do
-      @grant          = create(:grant_with_users)
-      @admin_user     = @grant.grant_permissions.role_admin.first.user
-
-      login_as(@admin_user)
+      login_as admin_user
     end
 
-    pending 'published grant with submissions cannot be deleted' do
+    scenario 'published grant with submissions cannot be discarded' do
+      visit edit_grant_path(grant)
+      click_link 'Delete'
+      page.driver.browser.switch_to.alert.accept
+      expect(page).to have_content 'Published grant may not be deleted'
+      expect(grant.reload.discarded?).to be false
+    end
+
+    pending 'published grant without submissions cannot be discarded' do
       fail '#TODO: grant.submissions.count.zero?'
     end
 
-    pending 'published grant without submissions can be deleted' do
-      fail '#TODO: grant.submissions.count.zero?'
-    end
-
-    pending 'delete button hidden when not soft_deletable' do
-      fail '#TODO: logic to display the delete button'
+    pending 'delete button hidden when not discardable' do
+      fail '#TODO: logic to display the delete button?'
     end
 
     scenario 'draft grant can be soft deleted' do
-      @grant.update_attributes!(state: 'draft')
-      visit edit_grant_path(@grant.id)
+      grant.update_attributes!(state: 'draft')
+      visit edit_grant_path(grant)
       click_link 'Delete'
       page.driver.browser.switch_to.alert.accept
       expect(page).to have_content 'Grant was successfully deleted.'
+      expect(grant.reload.discarded?).to be true
     end
 
-    scenario 'completed grant cannot be soft deleted' do
-      @grant.update_attributes!(state: 'completed')
-      visit edit_grant_path(@grant.id)
+    scenario 'completed grant cannot be discarded' do
+      grant.update_attributes!(state: 'completed')
+      visit edit_grant_path(grant)
       click_link 'Delete'
       page.driver.browser.switch_to.alert.accept
       expect(page).to have_content 'Completed grant may not be deleted'
+      expect(grant.reload.discarded?).to be false
     end
   end
 

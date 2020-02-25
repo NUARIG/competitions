@@ -1,11 +1,23 @@
-  # frozen_string_literal: true
+# frozen_string_literal: true
 
 class Grant < ApplicationRecord
   include ActiveModel::Validations::Callbacks
-  include SoftDeletable
+
   extend FriendlyId
   has_paper_trail versions: { class_name: 'PaperTrail::GrantVersion' }
   friendly_id :slug
+
+  include Discard::Model
+
+  after_discard do
+    submissions.discard_all
+    reviews.discard_all
+  end
+
+  after_undiscard do
+    submissions.undiscard_all
+    reviews.undiscard_all
+  end
 
   attr_accessor :duplicate
 
@@ -115,7 +127,9 @@ class Grant < ApplicationRecord
   validate      :has_at_least_one_question?, on: :update,
                                              if: -> () { will_save_change_to_attribute?('state', to: 'published') }
 
-  scope :public_grants,      -> { not_deleted.
+  validate      :is_discardable?,            on: :discard
+
+  scope :public_grants,      -> { undiscarded.
                                     published.
                                     where(':date BETWEEN
                                                    publish_date
@@ -128,8 +142,8 @@ class Grant < ApplicationRecord
   scope :unassigned_submissions, lambda { |*args| where('submission_reviews_count < :max_reviewers', { :max_reviewers => args.first || 2 }) }
 
 
-  def is_soft_deletable?
-    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_soft_deletable?")
+  def is_discardable?
+    SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_discardable?")
   end
 
   def is_open?
@@ -152,35 +166,27 @@ class Grant < ApplicationRecord
     self.state ||= Grant::GRANT_STATES[:draft]
   end
 
-  def deletable?
-    # TODO: Review destroy / soft delete logic as other models are added
-    raise SoftDeleteException.new('Grants must be soft deleted.')
-  end
-
   def prepare_slug
     slug.strip!
   end
 
-  def published_soft_deletable?
-    # TODO: e.g. submissions.count.zero?
-    raise SoftDeleteException.new('Published grant may not be deleted')
+  def deletable?
+    raise SoftDeleteException.new('Grants must be discarded.')
   end
 
-  def completed_soft_deletable?
-    raise SoftDeleteException.new('Completed grant may not be deleted')
+  def published_discardable?
+    # TODO: e.g. submissions.count.zero?
+    errors.add(:base, 'Published grant may not be deleted.')
+    return false
+  end
+
+  def completed_discardable?
+    # TODO: this state is not active
+    errors.add(:base, 'Completed grant may not be deleted.')
+    return false
   end
 
   def has_at_least_one_question?
     errors.add(:base, 'A question is required before a grant can be published.') unless questions.any?
-  end
-
-  def process_association_soft_delete
-    ActiveRecord::Base.transaction do
-      # TODO: determine whether any/all of these should these be called
-      # grant_permissions.update_all(deleted_at: Time.now)
-      #       reviews
-      #       reviewers
-      #       panel
-    end
   end
 end

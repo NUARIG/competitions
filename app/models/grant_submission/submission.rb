@@ -1,6 +1,7 @@
 module GrantSubmission
   class Submission < ApplicationRecord
     include WithScoring
+    include Discard::Model
 
     self.table_name = 'grant_submission_submissions'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },

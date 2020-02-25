@@ -10,7 +10,7 @@ class GrantPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user.system_admin?
-        scope.not_deleted.by_publish_date
+        scope.kept.by_publish_date
       else
         scope.public_grants.by_publish_date
       end

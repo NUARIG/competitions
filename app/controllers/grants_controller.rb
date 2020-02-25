@@ -68,13 +68,11 @@ class GrantsController < ApplicationController
   # DELETE /grants/1.json
   def destroy
     authorize @grant
-    #@grant.soft_delete! # calling concern method
-    result = GrantServices::SoftDelete.call(grant: @grant)
     respond_to do |format|
-      if result.success?
+      if @grant.valid?(:discard) && @grant.discard
         format.html { redirect_to grants_url, notice: 'Grant was successfully deleted.' }
       else
-        flash[:alert] = result.message
+        flash[:alert] = @grant.errors.full_messages
         format.html { redirect_back(fallback_location: edit_grant_url(@grant)) }
       end
     end
@@ -109,7 +107,7 @@ class GrantsController < ApplicationController
   end
 
   def set_grant
-    @grant = Grant.not_deleted.friendly.find(params[:id])
+    @grant = Grant.kept.friendly.find(params[:id])
   end
 
   def draft_banner

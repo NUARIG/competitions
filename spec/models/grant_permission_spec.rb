@@ -6,7 +6,6 @@ RSpec.describe GrantPermission, type: :model do
   it { is_expected.to respond_to(:grant) }
   it { is_expected.to respond_to(:user) }
   it { is_expected.to respond_to(:role) }
-  it { is_expected.to respond_to(:deleted_at) }
 
   let(:grant)             { create(:grant) }
 

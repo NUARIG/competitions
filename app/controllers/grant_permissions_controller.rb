@@ -74,11 +74,11 @@ class GrantPermissionsController < ApplicationController
   private
 
   def set_grant
-    @grant = Grant.friendly.find(params[:grant_id])
+    @grant = Grant.kept.friendly.find(params[:grant_id])
   end
 
   def set_grant_and_grant_permissions
-    @grant = Grant.includes(:grant_permissions).friendly.find(params[:grant_id])
+    @grant = Grant.kept.includes(:grant_permissions).friendly.find(params[:grant_id])
     @grant_permissions = @grant.grant_permissions
   end
 

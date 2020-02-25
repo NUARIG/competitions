@@ -1,5 +1,6 @@
 class Review < ApplicationRecord
   include WithScoring
+  include Discard::Model
 
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
                   meta:     { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }

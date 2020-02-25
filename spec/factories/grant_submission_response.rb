@@ -33,12 +33,12 @@ FactoryBot.define do
 
     trait :with_pdf do
       association :question, factory: :file_upload_question
-      document { fixture_file_upload(Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'), filename: 'text_file.txt', mime_type: 'application/pdf') }
+      document { Rack::Test::UploadedFile.new('spec/support/file_upload/text_file.pdf', 'application/pdf') }
     end
 
     trait :with_invalid_file do
       association :question, factory: :file_upload_question
-      document { fixture_file_upload(Rails.root.join('spec', 'support', 'file_upload', 'text_file.txt'), filename: 'text_file.txt', mime_type: 'text/plain') }
+      document { Rack::Test::UploadedFile.new('spec/support/file_upload/text_file.txt', 'text/plain') }
     end
 
     factory :string_val_response,          traits: %i[string_val]
