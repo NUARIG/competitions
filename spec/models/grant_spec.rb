@@ -146,6 +146,7 @@ RSpec.describe Grant, type: :model do
       expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be discarded.')
     end
 
+
     context 'published open grant' do
       let(:published_open_grant) { create(:published_open_grant) }
 
@@ -239,6 +240,26 @@ RSpec.describe Grant, type: :model do
           end
         end
       end
+
+      context 'undiscarding' do
+        before(:each) do
+          draft_grant.discard
+        end
+
+        it 'undiscards submissions' do
+          expect do
+            draft_grant.undiscard
+          end.to change{submission.reload.discarded_at}.to(nil)
+             .and change{GrantSubmission::Submission.kept.count}.by 1
+        end
+
+        it 'undiscards reviews' do
+          expect do
+            draft_grant.undiscard
+          end.to change{review.reload.discarded_at}.to(nil)
+             .and change{Review.kept.count}.by 1
+        end
+      end
     end
 
     context 'completed grant' do
@@ -266,5 +287,6 @@ RSpec.describe Grant, type: :model do
         end
       end
     end
+
   end
 end

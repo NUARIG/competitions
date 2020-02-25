@@ -14,6 +14,11 @@ class Grant < ApplicationRecord
     reviews.discard_all
   end
 
+  after_undiscard do
+    submissions.undiscard_all
+    reviews.undiscard_all
+  end
+
   attr_accessor :duplicate
 
   attribute :max_reviewers_per_submission, :integer, default: 2
