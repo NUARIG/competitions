@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'GrantSubmission::Responses', type: :system do
-  def successful_application_message
+  def successfully_saved_submission_message
+    'Submission was successfully saved.'
+  end
+
+  def successfully_submitted_submission_message
     'You successfully applied'
   end
 
@@ -25,7 +29,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
           select("#{first_option_text}", from: multiple_choice_question.text)
           click_button 'Submit'
-          expect(page).to have_content successful_application_message
+          expect(page).to have_content successfully_submitted_submission_message
         end
 
         scenario 'accepts a file_upload response' do
@@ -35,7 +39,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
           find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
           page.attach_file(file_upload_question.text, Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'))
           click_button 'Submit'
-          expect(page).to have_content successful_application_message
+          expect(page).to have_content successfully_submitted_submission_message
         end
       end
 
@@ -50,7 +54,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
             click_button 'Submit'
-            expect(page).not_to have_content successful_application_message
+            expect(page).not_to have_content successfully_submitted_submission_message
             expect(page).to have_content "Response to '#{short_text_question.text}' is required."
           end
 
@@ -61,7 +65,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             click_button 'Submit'
-            expect(page).not_to have_content successful_application_message
+            expect(page).not_to have_content successfully_submitted_submission_message
             expect(page).to have_content "Response to '#{long_text_question.text}' is required."
           end
 
@@ -73,7 +77,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
             click_button 'Submit'
-            expect(page).not_to have_content successful_application_message
+            expect(page).not_to have_content successfully_submitted_submission_message
             expect(page).to have_content "A selection for '#{multiple_choice_question.text}' is required."
           end
 
@@ -85,7 +89,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
               click_button 'Submit'
-              expect(page).not_to have_content successful_application_message
+              expect(page).not_to have_content successfully_submitted_submission_message
               expect(page).to have_content "Response to '#{number_question.text}' is required."
             end
 
@@ -96,7 +100,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field(number_question.text, with: '').set('Ten')
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
               click_button 'Submit'
-              expect(page).not_to have_content successful_application_message
+              expect(page).not_to have_content successfully_submitted_submission_message
               expect(page).to have_content "Response to '#{number_question.text}' must be a number."
             end
 
@@ -107,7 +111,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field(number_question.text, with: '').set('123.00aaa')
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
               click_button 'Submit'
-              expect(page).not_to have_content successful_application_message
+              expect(page).not_to have_content successfully_submitted_submission_message
               expect(page).to have_content "Response to '#{number_question.text}' must be a number."
             end
           end
@@ -119,7 +123,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
 
             click_button 'Submit'
-            expect(page).not_to have_content successful_application_message
+            expect(page).not_to have_content successfully_submitted_submission_message
           end
         end
 
@@ -133,14 +137,14 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               end
 
               scenario 'do not receive success message on field with wrong type of response' do
-                expect(page).not_to have_content successful_application_message
+                expect(page).not_to have_content successfully_submitted_submission_message
                 expect(page).to have_link 'text_file.pdf'
               end
 
               scenario 'submits file successfully when file when validation error is corrected' do
                 find_field('Number Question', with: 'Number').set(10)
                 click_button 'Submit'
-                expect(page).to have_content successful_application_message
+                expect(page).to have_content successfully_submitted_submission_message
                 expect(GrantSubmission::Response.find_by(question: file_upload_question).document.attached?).to be true
               end
             end
@@ -163,7 +167,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
                 find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 click_button 'Save as Draft'
-                expect(page).to have_content 'You started your submission.'
+                expect(page).to have_content successfully_saved_submission_message
                 expect(page).to have_content GrantSubmission::Submission.last.title
                 expect(page).to have_content 'Edit'
               end
@@ -183,7 +187,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
                 click_button 'Submit'
-                expect(page).to have_content successful_application_message
+                expect(page).to have_content successfully_submitted_submission_message
                 expect(page).to have_current_path profile_submissions_path
                 expect(page).to have_content GrantSubmission::Submission.last.title
                 expect(page).not_to have_content 'Edit'
@@ -216,7 +220,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 click_button 'Save as Draft'
 
-                expect(page).to have_content 'Submission was successfully updated.'
+                expect(page).to have_content successfully_saved_submission_message
                 expect(page).to have_current_path profile_submissions_path
                 expect(page).to have_content GrantSubmission::Submission.last.title
                 expect(page).to have_content 'Edit'
@@ -241,7 +245,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
                 click_button 'Submit'
-                expect(page).to have_content successful_application_message
+                expect(page).to have_content successfully_submitted_submission_message
                 expect(page).to have_current_path profile_submissions_path
                 expect(page).to have_content GrantSubmission::Submission.last.title
                 expect(page).not_to have_content 'Edit'
@@ -293,7 +297,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Number Question').set(Faker::Number.number(digits: 10))
                 find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 click_button 'Save as Draft'
-                expect(page).to have_content 'Submission was successfully updated.'
+                expect(page).to have_content successfully_saved_submission_message
                 expect(page).to have_current_path grant_submissions_path(@grant)
                 expect(page).to have_content GrantSubmission::Submission.last.title
                 expect(page).to have_content 'Edit'
@@ -316,7 +320,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
                 click_button 'Submit'
-                expect(page).to have_content successful_application_message
+                expect(page).to have_content successfully_submitted_submission_message
                 expect(page).to have_current_path grant_submissions_path(@grant)
                 expect(page).to have_content GrantSubmission::Submission.last.title
                 expect(page).not_to have_content 'Edit'
