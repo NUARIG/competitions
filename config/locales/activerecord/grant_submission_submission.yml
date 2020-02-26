@@ -3,6 +3,7 @@ en:
     attributes:
       grant_submission/submission: &submission
         title: Your Project's Title
+        responses: Your responses
     errors:
       models:
         grant_submission/submission:
