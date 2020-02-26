@@ -12,12 +12,13 @@ RSpec.describe Review, type: :model do
 
   let(:grant)          { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:new_reviewer)   { create(:grant_reviewer, grant: grant)}
+  let(:submission)     { grant.submissions.first }
   let(:review)         { build(:review, assigner: grant.administrators.first,
                                         reviewer: grant.grant_reviewers.first.reviewer,
-                                        submission: grant.submissions.first) }
+                                        submission: submission) }
   let(:invalid_review) { build(:review, assigner: grant.administrators.first,
                                         reviewer: grant.grant_reviewers.first.reviewer,
-                                        submission: grant.submissions.first) }
+                                        submission: submission) }
   let(:system_admin)   { create(:system_admin_user) }
   let(:invalid_user)   { create(:user) }
 
@@ -56,9 +57,15 @@ RSpec.describe Review, type: :model do
         expect(review).not_to be_valid
       end
 
-      it 'prevents a reviewer from being assigned twice' do
+      it 'prevents a reviewer from being assigned the same review twice' do
         review.save
         expect(invalid_review).not_to be_valid
+      end
+
+      it 'prevents a draft submission from being reviewed' do
+        submission.update_attribute(:state, 'draft')
+        expect(review).not_to be_valid
+        expect(review.errors).to include(:submission)
       end
     end
 
