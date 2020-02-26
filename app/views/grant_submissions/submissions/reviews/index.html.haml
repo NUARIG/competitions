@@ -22,8 +22,11 @@
       .cell.small-12
         - if @reviews.empty?
           %p
-            There are no reviews for this submission.
-            = link_to 'Assign it to a reviewer', grant_reviewers_path(@grant)
+            - if @submission.submitted?
+              There are no reviews for this submission.
+              = link_to 'Assign it to a reviewer', grant_reviewers_path(@grant)
+            - elsif @submission.draft?
+              This submission must be completed before it can be reviewed.
         -else
 
           = render 'shared/pagy_header', locals: { pagy: @pagy }
