@@ -231,7 +231,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 click_button 'Submit'
                 expect(page).to have_content 'Please review the following error'
-                expect(page).to have_content 'is invalid'
+                expect(page).to have_content 'Your responses have highlighted errors.'
               end
 
               scenario 'accepts submission with answer for required short text' do
@@ -307,7 +307,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 click_button 'Submit'
                 expect(page).to have_content 'Please review the following error'
-                expect(page).to have_content 'is invalid'
+                expect(page).to have_content 'Your responses have highlighted errors.'
               end
 
               scenario 'accepts submission with answer for required short text' do
