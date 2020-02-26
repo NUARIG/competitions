@@ -42,7 +42,6 @@ module GrantSubmissions
       set_state(@submission)
       if @submission.save(context: @submission.state.to_sym)
         @submission.state == 'submitted' ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'You started your submission.')
-        # flash[:notice] = 'You successfully applied'
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'

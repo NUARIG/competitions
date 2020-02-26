@@ -151,51 +151,42 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
       context 'states' do
         let(:file_upload_question) {@grant.questions.find_by(response_type: 'file_upload')}
 
-        context 'required questions' do
+        context 'required short text question' do
           context 'on create' do
-            context 'saving as draft' do
-              context 'requires response mandatory short_text question' do
-                scenario 'no answer for required short text' do
-                  short_text_question = @grant.questions.where(response_type: 'short_text').first
-                  short_text_question.update_attribute(:is_mandatory, true)
+            before(:each) do
+              short_text_question = @grant.questions.where(response_type: 'short_text').first
+              short_text_question.update_attribute(:is_mandatory, true)
+            end
 
-                  find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  click_button 'Save as Draft'
-                  expect(page).to have_content 'You started your submission.'
-                  expect(page).to have_current_path profile_submissions_path
-                  expect(page).to have_content GrantSubmission::Submission.last.title
-                  expect(page).to have_content 'Edit'
-                end
+            context 'saving as draft' do
+              scenario 'saves when no answer for required short text' do
+                find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                click_button 'Save as Draft'
+                expect(page).to have_content 'You started your submission.'
+                expect(page).to have_content GrantSubmission::Submission.last.title
+                expect(page).to have_content 'Edit'
               end
             end
 
             context 'submitting' do
-              context 'requires response mandatory short_text question' do
-                scenario 'no answer for required short text' do
-                  short_text_question = @grant.questions.where(response_type: 'short_text').first
-                  short_text_question.update_attribute(:is_mandatory, true)
+              scenario 'throws error when no answer for required short text' do
+                find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                click_button 'Submit'
+                expect(page).to have_content 'Please review the following error'
+                expect(page).to have_content 'is required'
+              end
 
-                  find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  click_button 'Submit'
-                  expect(page).to have_content 'Please review the following error'
-                  expect(page).to have_content 'is required'
-                end
-
-                scenario 'with answer for required short text' do
-                  short_text_question = @grant.questions.where(response_type: 'short_text').first
-                  short_text_question.update_attribute(:is_mandatory, true)
-
-                  find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
-                  click_button 'Submit'
-                  expect(page).to have_content 'You successfully applied.'
-                  expect(page).to have_current_path profile_submissions_path
-                  expect(page).to have_content GrantSubmission::Submission.last.title
-                  expect(page).not_to have_content 'Edit'
-                end
+              scenario 'accepts submission with answer for required short text' do
+                find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
+                click_button 'Submit'
+                expect(page).to have_content successful_application_message
+                expect(page).to have_current_path profile_submissions_path
+                expect(page).to have_content GrantSubmission::Submission.last.title
+                expect(page).not_to have_content 'Edit'
               end
             end
           end
@@ -218,45 +209,42 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             end
 
             context 'saving as draft' do
-              context 'requires response mandatory short_text question' do
-                scenario 'no answer for required short text' do
-                  click_link 'Edit'
-                  expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
-                  find_field('Number Question').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  click_button 'Save as Draft'
-                  expect(page).to have_content 'Submission was successfully updated.'
-                  expect(page).to have_current_path profile_submissions_path
-                  expect(page).to have_content GrantSubmission::Submission.last.title
-                  expect(page).to have_content 'Edit'
-                end
+              scenario 'saves when no answer for required short text' do
+                click_link 'Edit'
+                expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
+                find_field('Number Question').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                click_button 'Save as Draft'
+
+                expect(page).to have_content 'Submission was successfully updated.'
+                expect(page).to have_current_path profile_submissions_path
+                expect(page).to have_content GrantSubmission::Submission.last.title
+                expect(page).to have_content 'Edit'
               end
             end
 
             context 'submitting' do
-              context 'requires response mandatory short_text question' do
-                scenario 'no answer for required short text' do
-                  click_link 'Edit'
-                  expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
-                  find_field('Number Question').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  click_button 'Submit'
-                  expect(page).to have_content 'Please review the following error'
-                  expect(page).to have_content 'is invalid'
-                end
+              scenario 'throws error when no answer for required short text' do
+                click_link 'Edit'
+                expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
+                find_field('Number Question').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                click_button 'Submit'
+                expect(page).to have_content 'Please review the following error'
+                expect(page).to have_content 'is invalid'
+              end
 
-                scenario 'with answer for required short text' do
-                  click_link 'Edit'
-                  expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
-                  find_field('Number Question').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
-                  click_button 'Submit'
-                  expect(page).to have_content 'You successfully applied.'
-                  expect(page).to have_current_path profile_submissions_path
-                  expect(page).to have_content GrantSubmission::Submission.last.title
-                  expect(page).not_to have_content 'Edit'
-                end
+              scenario 'accepts submission with answer for required short text' do
+                click_link 'Edit'
+                expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
+                find_field('Number Question').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
+                click_button 'Submit'
+                expect(page).to have_content successful_application_message
+                expect(page).to have_current_path profile_submissions_path
+                expect(page).to have_content GrantSubmission::Submission.last.title
+                expect(page).not_to have_content 'Edit'
               end
             end
           end
@@ -275,74 +263,63 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                                   created_id: @applicant.id,
                                   title:      Faker::Lorem.sentence,
                                   state:      'draft')
-              short_text_question = @grant.questions.where(response_type: 'short_text').first
-              short_text_question.update_attribute(:is_mandatory, true)
+        short_text_question = @grant.questions.where(response_type: 'short_text').first
+        short_text_question.update_attribute(:is_mandatory, true)
 
-              short_text_response = @submission.responses.where(question: short_text_question).first
-              short_text_response.update_attribute(:string_val, '')
+        short_text_response = @submission.responses.where(question: short_text_question).first
+        short_text_response.update_attribute(:string_val, '')
 
         login_as(@admin)
-        visit grant_path(@grant)
       end
 
       context 'states' do
         let(:file_upload_question) {@grant.questions.find_by(response_type: 'file_upload')}
 
-        context 'single required question' do
-
+        context 'single required short_text question' do
           context 'on update' do
             context 'saving as draft' do
-              context 'requires response mandatory short_text question' do
-                scenario 'no answer for required short text' do
-                  click_link 'Edit'
-                  expect(page).to have_content('Submissions')
-                  click_link 'Submissions'
-                  expect(page).to have_content(@applicant.last_name)
-                  click_link 'Edit'
-                  expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
-                  find_field('Number Question').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  click_button 'Save as Draft'
-                  expect(page).to have_content 'Submission was successfully updated.'
-                  expect(page).to have_current_path grant_submissions_path(@grant)
-                  expect(page).to have_content GrantSubmission::Submission.last.title
-                  expect(page).to have_content 'Edit'
-                end
+              scenario 'grant admin can visit submission edit path' do
+                visit grant_path(@grant)
+                click_link 'Edit'
+                expect(page).to have_content('Submissions')
+                click_link 'Submissions'
+                expect(page).to have_content(@applicant.last_name)
+                click_link 'Edit'
+                expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
+              end
+
+              scenario 'saves when no answer for required short text' do
+                visit edit_grant_submission_path(@grant, @submission)
+                find_field('Number Question').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                click_button 'Save as Draft'
+                expect(page).to have_content 'Submission was successfully updated.'
+                expect(page).to have_current_path grant_submissions_path(@grant)
+                expect(page).to have_content GrantSubmission::Submission.last.title
+                expect(page).to have_content 'Edit'
               end
             end
 
             context 'submitting' do
-              context 'requires response mandatory short_text question' do
-                scenario 'no answer for required short text' do
-                  click_link 'Edit'
-                  expect(page).to have_content('Submissions')
-                  click_link 'Submissions'
-                  expect(page).to have_content(@applicant.last_name)
-                  click_link 'Edit'
-                  expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
-                  find_field('Number Question').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  click_button 'Submit'
-                  expect(page).to have_content 'Please review the following error'
-                  expect(page).to have_content 'is invalid'
-                end
+              scenario 'throws error when no answer for required short text' do
+                visit edit_grant_submission_path(@grant, @submission)
+                find_field('Number Question').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                click_button 'Submit'
+                expect(page).to have_content 'Please review the following error'
+                expect(page).to have_content 'is invalid'
+              end
 
-                scenario 'with answer for required short text' do
-                  click_link 'Edit'
-                  expect(page).to have_content('Submissions')
-                  click_link 'Submissions'
-                  expect(page).to have_content(@applicant.last_name)
-                  click_link 'Edit'
-                  expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
-                  find_field('Number Question').set(Faker::Number.number(digits: 10))
-                  find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
-                  find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
-                  click_button 'Submit'
-                  expect(page).to have_content 'You successfully applied.'
-                  expect(page).to have_current_path grant_submissions_path(@grant)
-                  expect(page).to have_content GrantSubmission::Submission.last.title
-                  expect(page).not_to have_content 'Edit'
-                end
+              scenario 'accepts submission with answer for required short text' do
+                visit edit_grant_submission_path(@grant, @submission)
+                find_field('Number Question').set(Faker::Number.number(digits: 10))
+                find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+                find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
+                click_button 'Submit'
+                expect(page).to have_content successful_application_message
+                expect(page).to have_current_path grant_submissions_path(@grant)
+                expect(page).to have_content GrantSubmission::Submission.last.title
+                expect(page).not_to have_content 'Edit'
               end
             end
           end
