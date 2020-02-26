@@ -8,6 +8,8 @@ en:
       models:
         grant_submission/submission:
           attributes:
+            responses:
+              invalid: have highlighted errors.
     models:
       submission:
         one: submission
