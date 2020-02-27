@@ -48,14 +48,14 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
         context 'single question' do
           scenario 'requires response mandatory short_text question' do
-            short_text_question = @grant.questions.where(response_type: 'short_text').first
-            short_text_question.update_attribute(:is_mandatory, true)
+            required_short_text_question = @grant.questions.where(response_type: 'short_text').first
+            required_short_text_question.update_attribute(:is_mandatory, true)
 
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
             click_button 'Submit'
             expect(page).not_to have_content successfully_submitted_submission_message
-            expect(page).to have_content "Response to '#{short_text_question.text}' is required."
+            expect(page).to have_content "Response to '#{required_short_text_question.text}' is required."
           end
 
           scenario 'requires response mandatory long_text question' do
@@ -158,8 +158,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
         context 'required short text question' do
           context 'on create' do
             before(:each) do
-              short_text_question = @grant.questions.where(response_type: 'short_text').first
-              short_text_question.update_attribute(:is_mandatory, true)
+              required_short_text_question = @grant.questions.where(response_type: 'short_text').first.update_attribute(:is_mandatory, true)
             end
 
             context 'saving as draft' do
@@ -179,7 +178,8 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
                 click_button 'Submit'
                 expect(page).to have_content 'Please review the following error'
-                expect(page).to have_content 'is required'
+                expect(page).to have_content "Response to 'Short Text Question' is required."
+                expect(page).to have_content 'Your responses have highlighted errors.'
               end
 
               scenario 'accepts submission with answer for required short text' do
@@ -203,10 +203,10 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                                   created_id: @applicant.id,
                                   title:      Faker::Lorem.sentence,
                                   state:      'draft')
-              short_text_question = @grant.questions.where(response_type: 'short_text').first
-              short_text_question.update_attribute(:is_mandatory, true)
+              required_short_text_question = @grant.questions.where(response_type: 'short_text').first
+              required_short_text_question.update_attribute(:is_mandatory, true)
 
-              short_text_response = @submission.responses.where(question: short_text_question).first
+              short_text_response = @submission.responses.where(question: required_short_text_question).first
               short_text_response.update_attribute(:string_val, '')
 
               visit profile_submissions_path
@@ -267,10 +267,10 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                                   created_id: @applicant.id,
                                   title:      Faker::Lorem.sentence,
                                   state:      'draft')
-        short_text_question = @grant.questions.where(response_type: 'short_text').first
-        short_text_question.update_attribute(:is_mandatory, true)
+        required_short_text_question = @grant.questions.where(response_type: 'short_text').first
+        required_short_text_question.update_attribute(:is_mandatory, true)
 
-        short_text_response = @submission.responses.where(question: short_text_question).first
+        short_text_response = @submission.responses.where(question: required_short_text_question).first
         short_text_response.update_attribute(:string_val, '')
 
         login_as(@admin)
