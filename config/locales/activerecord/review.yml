@@ -3,6 +3,7 @@ en:
     attributes:
       review: &review
         reviewer: Reviewer
+        submission: Submission
         overall_impact: Overall Impact
         overall_impact_score: Overall Impact Score
         overall_impact_comment: Overall Impact Comment
@@ -18,6 +19,8 @@ en:
               may_not_review_own_submission: 'may not review their own submission.'
               is_not_a_reviewer: 'is not a reviewer on this grant.'
               taken: 'has already been assigned this submission.'
+            submission:
+              may_not_be_draft: 'is a draft submission and must be completed before it can be reviewed.'
     models:
       review:
         one: review

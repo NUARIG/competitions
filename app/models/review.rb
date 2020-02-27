@@ -40,6 +40,7 @@ class Review < ApplicationRecord
   validate :reviewer_may_be_assigned,       if: :new_record?
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
+  validate :submission_is_not_draft
 
   scope :with_criteria_reviews,    -> { includes(:criteria_reviews) }
   scope :with_reviewer,            -> { includes(:reviewer) }
@@ -85,6 +86,10 @@ class Review < ApplicationRecord
 
   def reviewer_may_not_be_reassigned
     errors.add(:reviewer, :may_not_be_reassigned)
+  end
+
+  def submission_is_not_draft
+    errors.add(:submission, :may_not_be_draft) if submission.draft?
   end
 
   # TODO: use this for every review load?

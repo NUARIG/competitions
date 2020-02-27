@@ -9,7 +9,7 @@ class GrantReviewersController < ApplicationController
     authorize @grant, :grant_editor_access?
 
     @grant_reviewers        = @grant.grant_reviewers.includes(:reviewer).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
-    @unassigned_submissions = @grant.submissions.to_be_assigned(@grant.max_reviewers_per_submission).includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
+    @unassigned_submissions = @grant.submissions.submitted.to_be_assigned(@grant.max_reviewers_per_submission).includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
   end
 
   def create

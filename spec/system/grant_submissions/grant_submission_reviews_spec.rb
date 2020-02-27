@@ -180,6 +180,17 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       applicant           = submission.applicant
     end
 
+    context 'draft submission' do
+      scenario 'does not appear for assignment' do
+        submission.reviews.delete_all
+        submission.update_attribute(:state, 'draft')
+        login_as grant_admin
+        visit grant_reviewers_path(grant)
+
+        expect(page).not_to have_text submission.title
+      end
+    end
+
     context 'success' do
       before(:each) do
         review

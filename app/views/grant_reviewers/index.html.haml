@@ -20,7 +20,9 @@
         = f.email_field :reviewer_email, placeholder: 'Email', class: 'input-group-field'
         .input-group-button
           = f.submit 'Look Up', class: 'button small'
+
   %hr
+
   .grid-x
     .cell.small-5
       %h4
@@ -36,8 +38,11 @@
         Drag the unassigned submissions below to the box under the desired reviewer on the left.
       %p
         Each submission may be assessed by up to #{@grant.max_reviewers_per_submission} reviewers
+      %p
+        Note: Draft submissions are not reviewable.
+
   .grid-x
-    .cell.small-5#assigned-reviewers
+    #assigned-reviewers.cell.small-5
       - if @grant_reviewers.none?
         There are no reviewers. Use the form above to define reviewers by their email address.
       - else
@@ -47,7 +52,7 @@
       #unassigned_submissions.sticky(data-sticky data-top-anchor="assigned-reviewers")
         .unassigned_submission_list
           - if @unassigned_submissions.none?
-            There are no submissions that need to be assigned.
+            There are no completed submissions that need to be assigned.
           - else
             = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
 
