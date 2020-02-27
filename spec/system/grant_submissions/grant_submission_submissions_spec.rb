@@ -183,6 +183,35 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).not_to have_content 'You successfully applied'
         end
       end
+
+      context '#update' do
+        before(:each) do
+          @submission = create(:draft_submission_with_responses,
+                              grant:      @grant,
+                              form:       @grant.form,
+                              created_id: @applicant.id,
+                              title:      Faker::Lorem.sentence,
+                              state:      'draft')
+
+          login_as(@applicant)
+          visit profile_submissions_path
+        end
+
+        scenario "can visit edit path for draft submission" do
+          visit edit_grant_submission_path(@grant, @submission)
+          expect(page).to have_content "Editing Application"
+          expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
+        end
+
+        scenario "can't visit edit path for submitted submission" do
+          visit edit_grant_submission_path(@grant, @submission)
+          click_button 'Submit'
+          expect(page).to have_current_path profile_submissions_path
+          visit edit_grant_submission_path(@grant, @submission)
+          expect(page).to have_content "You are not authorized to perform this action."
+          expect(page).to have_current_path root_path
+        end
+      end
     end
 
     describe 'Draft Grant', js: true do
