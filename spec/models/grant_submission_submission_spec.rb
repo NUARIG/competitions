@@ -9,6 +9,8 @@ RSpec.describe GrantSubmission::Submission, type: :model do
   it { is_expected.to respond_to(:reviewers) }
   it { is_expected.to respond_to(:criteria_reviews) }
   it { is_expected.to respond_to(:reviews_count) }
+  it { is_expected.to respond_to(:state) }
+  it { is_expected.to respond_to(:submitted_at) }
 
   let(:submission) { build(:submission_with_responses) }
 
