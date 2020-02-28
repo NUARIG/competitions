@@ -42,6 +42,10 @@ module GrantSubmission
 
     validates_associated :responses, if: -> { self.submitted? }
 
+    validate :can_be_unsubmitted?, on: :update,
+                                   if: -> () { will_save_change_to_attribute?('state', from: SUBMISSION_STATES[:submitted],
+                                                                                       to: SUBMISSION_STATES[:draft]) }
+
     scope :eager_loading,       -> {includes({:responses => [:question]}, :children)}
 
     scope :order_by_created_at, -> { order(created_at: :desc) }
@@ -70,6 +74,12 @@ module GrantSubmission
 
     def overall_impact_scores
       reviews.pluck(:overall_impact_score)
+    end
+
+    private
+
+    def can_be_unsubmitted?
+      errors.add(:base, 'This submission has already been scored and may not be edited.') if self.reviews.completed.any?
     end
   end
 end
