@@ -79,7 +79,7 @@ module GrantSubmission
     private
 
     def can_be_unsubmitted?
-      errors.add(:base, 'This submission has already been scored and may not be edited.') if self.reviews.completed.any?
+      errors.add(:base, :reviewed_submission_cannot_be_unsubmitted) if self.reviews.completed.any?
     end
   end
 end

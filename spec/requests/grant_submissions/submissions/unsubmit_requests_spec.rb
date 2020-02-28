@@ -13,6 +13,26 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
                                                      assigner: grant_editor,
                                                      reviewer: reviewer) }
 
+  def successful_unsubmit_message
+    'You have changed the status of this submission to Draft. It may now be edited by the applicant.'
+  end
+
+  def draft_unsubmit_message
+    'This submission is already editable.'
+  end
+
+  def reviewed_submission_unsubmit_error
+    I18n.t('activerecord.errors.models.grant_submission/submission.attributes.base.reviewed_submission_cannot_be_unsubmitted')
+  end
+
+  def draft_status
+    GrantSubmission::Submission::SUBMISSION_STATES[:draft]
+  end
+
+  def submitted_status
+    GrantSubmission::Submission::SUBMISSION_STATES[:submitted]
+  end
+
   context '#update' do
     before(:each) do
       sign_in(grant_editor)
@@ -24,8 +44,8 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
           it 'sucessfully changes the state of the submission' do
             patch unsubmit_grant_submission_path(grant_id: grant.id, id: submission.id)
             follow_redirect!
-            expect(response.body).to include('You have changed the status of this submission to Draft. It may now be edited by the applicant.')
-            expect(submission.reload.state).to eql 'draft'
+            expect(response.body).to include(successful_unsubmit_message)
+            expect(submission.reload.state).to eql draft_status
           end
         end
 
@@ -35,7 +55,8 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
               scored_review.reload
               patch unsubmit_grant_submission_path(grant_id: grant.id, id: submission.id)
               follow_redirect!
-              expect(response.body).to include('This submission has already been scored and may not be edited.')
+              expect(response.body).to include(reviewed_submission_unsubmit_error)
+              expect(submission.reload.state).to eql submitted_status
             end
           end
 
@@ -44,8 +65,8 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
               unscored_review.reload
               patch unsubmit_grant_submission_path(grant_id: grant.id, id: submission.id)
               follow_redirect!
-              expect(response.body).to include('You have changed the status of this submission to Draft. It may now be edited by the applicant.')
-              expect(submission.reload.state).to eql 'draft'
+              expect(response.body).to include(successful_unsubmit_message)
+              expect(submission.reload.state).to eql draft_status
             end
           end
         end
@@ -56,8 +77,8 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
           submission.update_attribute(:state, GrantSubmission::Submission::SUBMISSION_STATES[:draft])
           patch unsubmit_grant_submission_path(grant_id: grant.id, id: submission.id)
           follow_redirect!
-          expect(response.body).to include('This submission is already editable.')
-          expect(submission.reload.state).to eql 'draft'
+          expect(response.body).to include(draft_unsubmit_message)
+          expect(submission.reload.state).to eql draft_status
         end
       end
     end
