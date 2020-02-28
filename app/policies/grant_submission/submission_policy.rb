@@ -58,6 +58,10 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
     !grant.published? && (grant_admin_access?)
   end
 
+  def unsubmit?
+    grant_editor_access?
+  end
+
   private
 
   def submission

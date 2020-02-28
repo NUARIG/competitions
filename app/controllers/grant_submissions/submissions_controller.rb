@@ -113,7 +113,7 @@ module GrantSubmissions
                       when 'create'
                         @grant.submissions.build(submission_params.merge(created_id: current_user.id))
                       else
-                        @grant.submissions.find(params[:id]) if params[:id]
+                        @grant.submissions.kept.find(params[:id]) if params[:id]
                       end
     end
 
