@@ -24,6 +24,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).to have_content @submission.title
             expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
           end
         end
@@ -48,7 +49,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           visit grant_submissions_path(@grant)
           expect(page).to have_content @submission.title
           expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
-          expect(page).to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
         end
       end
@@ -61,6 +63,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_content @submission.title
           expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
         end
       end
@@ -80,6 +83,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         scenario 'does not have admin links' do
           expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
         end
 
@@ -103,6 +107,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).to have_content @submission.title
             expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(@grant, @submission)
           end
         end
@@ -115,6 +120,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).to have_content @submission.title
             expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(@grant, @submission)
           end
         end
@@ -127,7 +133,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           visit grant_submissions_path(@grant)
           expect(page).to have_content @submission.title
           expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
-          expect(page).to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
         end
       end
@@ -140,6 +147,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_content @submission.title
           expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(@grant, @submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
+          expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
         end
       end

@@ -80,7 +80,6 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       scenario 'includes a link to edit the review' do
         login_as grant_editor
         visit grant_submission_review_path(grant, submission, review)
-
         expect(page).to have_link 'Edit', href: edit_grant_submission_review_path(grant, submission, review)
       end
     end

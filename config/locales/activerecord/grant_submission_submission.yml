@@ -8,6 +8,8 @@ en:
       models:
         grant_submission/submission:
           attributes:
+            base:
+              reviewed_submission_cannot_be_unsubmitted: This submission has already been scored and may not be edited.
             responses:
               invalid: have highlighted errors.
     models:

@@ -28,6 +28,9 @@ Rails.application.routes.draw do
       end
     end
     resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
+      member do
+        patch 'unsubmit',         to: 'grant_submissions/submissions/unsubmit#update'
+      end
       resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews' do
         delete 'opt_out',         to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
       end
