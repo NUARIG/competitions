@@ -44,6 +44,45 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     end
   end
 
+  describe 'unsubmit' do
+    let(:grant)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+    let(:submission)        { grant.submissions.first }
+    let(:grant_admin)       { grant.grant_permissions.role_admin.first.user }
+
+    let(:scored_review)     { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                                           assigner:   grant_admin,
+                                                                                           reviewer:   grant.reviewers.first) }
+    let(:incomplete_review) { create(:incomplete_review, submission: submission,
+                                                         assigner: grant_admin,
+                                                         reviewer: grant.reviewers.first) }
+
+    context 'with no reviews' do
+      it 'may be unsubmitted' do
+        submission.update_attribute(:state, GrantSubmission::Submission::SUBMISSION_STATES[:draft])
+        expect(submission).to be_valid
+      end
+    end
+
+    context 'with reviews' do
+      context 'unscored' do
+        it 'may be unsubmitted' do
+          incomplete_review.reload
+          submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
+          expect(submission.errors).to be_empty
+          expect(submission).to be_valid
+        end
+      end
+
+      context 'scored' do
+        it 'may not be unsubmitted' do
+          scored_review.reload
+          submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
+          expect(submission.errors).to include(:base)
+        end
+      end
+    end
+  end
+
   describe 'score related methods' do
     let(:grant)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let(:grant_admin)       { grant.grant_permissions.role_admin.first.user }
