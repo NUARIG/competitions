@@ -40,7 +40,7 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
           end
 
           context 'unscored' do
-            it 'cannot be unsubmitted' do
+            it 'can be unsubmitted' do
               unscored_review.reload
               patch unsubmit_grant_submission_path(grant_id: grant.id, id: submission.id)
               follow_redirect!
