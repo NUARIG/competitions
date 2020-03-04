@@ -280,15 +280,11 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
         let(:file_upload_question) {@grant.questions.find_by(response_type: 'file_upload')}
 
         context 'single required short_text question' do
-          context 'on update' do
-            context 'saving as draft' do
+          context '#update' do
+            context 'draft' do
               scenario 'grant admin can visit submission edit path' do
-                visit grant_path(@grant)
-                click_link 'Edit'
-                expect(page).to have_content('Submissions')
-                click_link 'Submissions'
-                expect(page).to have_content(@applicant.last_name)
-                click_link 'Edit'
+                visit grant_submissions_path(@grant)
+                click_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
                 expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
               end
 
@@ -304,7 +300,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               end
             end
 
-            context 'submitting' do
+            context 'submit' do
               scenario 'throws error when no answer for required short text' do
                 visit edit_grant_submission_path(@grant, @submission)
                 find_field('Number Question').set(Faker::Number.number(digits: 10))
@@ -323,7 +319,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                 expect(page).to have_content successfully_submitted_submission_message
                 expect(page).to have_current_path grant_submissions_path(@grant)
                 expect(page).to have_content GrantSubmission::Submission.last.title
-                expect(page).not_to have_content 'Edit'
+                expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(@grant, @submission)
               end
             end
           end
