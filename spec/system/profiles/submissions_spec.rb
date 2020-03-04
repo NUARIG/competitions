@@ -48,6 +48,12 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
       expect(page).to have_link('Edit', href: edit_grant_submission_path(grant2, draft_submission))
     end
 
+    scenario 'it updates the timestamp on update' do
+      draft_submission.update_attribute(:title, 'updated title')
+      visit profile_submissions_path
+      expect(page).to have_text draft_submission.updated_at
+    end
+
     scenario 'it can be filtered on grant name' do
       find_field('Search Grant or Project', with: '').set('First')
       click_button 'Search'
