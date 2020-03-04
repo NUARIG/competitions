@@ -47,7 +47,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
   end
 
   def update?
-    grant_editor_access? || current_user_is_applicant?
+    (grant_editor_access? || current_user_is_applicant?) && submission.draft?
   end
 
   def edit?
