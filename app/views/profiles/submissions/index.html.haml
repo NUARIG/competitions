@@ -31,7 +31,7 @@
         %th
           = sort_link(@q, :state, 'State')
         %th
-          = sort_link(@q, :created_at, 'Submitted On')
+          = sort_link(@q, :updated_at, 'Last Updated')
         %th
     %tbody
       - @submissions.each do |submission|
@@ -41,9 +41,9 @@
           %td
             = link_to submission.grant.name, grant_path(submission.grant)
           %td
-            = submission.state
+            = submission.state.titleize
           %td
-            = submission.created_at
+            = submission.updated_at
           %td
             - unless submission.submitted?
               = link_to 'Edit', edit_grant_submission_path(submission.grant, submission), class: 'button clear'

@@ -7,9 +7,11 @@ FactoryBot.define do
     association   :applicant, factory: :user
     title         { Faker::Lorem.sentence }
     state         { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
+    submitted_at  { Time.now }
 
     trait :draft do
-      state       { GrantSubmission::Submission::SUBMISSION_STATES[:draft] }
+      state         { GrantSubmission::Submission::SUBMISSION_STATES[:draft] }
+      submitted_at  nil
     end
 
     trait :with_responses do
