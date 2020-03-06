@@ -9,15 +9,17 @@
       <%= ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}") %>
     </span>
 
+    <% if ff.object.question.instruction.present? %>
+      <p>
+        <%= simple_format(ff.object.question.instruction) %>
+      </p>
+    <% end %>
+
     <div>
-      <% if ff.object.submission == f.object %>
-        <%= ff.text_area(attribute: ffn,
-                         options: { rows: 5, cols: 31, data: { question_id: ff.object.question.id } }) %>
+      <%- if ff.object.submission == f.object %>
+        <%= ff.date_opt_time_field :datetime_val, :boolean_val, options: { data: { question_id: ff.object.question.id } } %>
       <% else %>
           <%= ff.object.formatted_response_value %>
-      <% end %>
-      <% if ff.object.question.instruction.present? %>
-        <p class="helper-text">Instruction: <%= simple_format(ff.object.question.instruction, {}, wrapper_tag: 'span') %></p>
       <% end %>
     </div>
   </td>
