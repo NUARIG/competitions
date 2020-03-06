@@ -3,15 +3,8 @@
       <% f.object.responses.detect { |r| r.question == q } || f.object.responses.build(question: q) %>
   <% end %>
   <%= f.fields_for :responses, responses do |ff| %>
-    <%# field_name = ff.object.form_field_name %>
-    <%# is_mandatory = ff.object.question.is_mandatory %>
     <% if ff.object.submission == f.object %>
-      <% case ff.object.question.response_type.to_sym
-         when :long_text %>
-           <%= render partial: 'grant_submissions/submissions/responses/long_text_response', locals: { f: f, ff: ff } %>
-         <% else %>
-           <%= render partial: 'grant_submissions/submissions/responses/response', locals: { f: f, ff: ff } %>
-      <% end %>
+      <% render partial: "grant_submissions/submissions/responses/#{ff.object.question.response_type}_response", locals: { f: f, ff: ff } %>
     <% end %>
   <% end %>
 </table>
