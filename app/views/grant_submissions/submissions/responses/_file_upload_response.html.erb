@@ -1,30 +1,5 @@
-<tr class="question question-<%= ff.object.question.id %>">
-  <% ffn = ff.object.form_field_name %>
-  <% is_mandatory = ff.object.question.is_mandatory %>
-  <td colspan="2">
-    <span>
-      <% if ff.object.submission == f.object %>
-          <%= ff.hidden_field :grant_submission_question_id %>
-      <% end %>
-      <%= ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}") %>
-    </span>
+<%= ff.file_upload_field(has_saved_file: (ff.object.document && ff.object.document.attached?),
+                         file_field: ffn,
+                         remove_document: :remove_document,
+                         document: ff.object.document) %>
 
-    <% if ff.object.question.instruction.present? %>
-      <p>
-        <%= simple_format(ff.object.question.instruction) %>
-      </p>
-    <% end %>
-
-    <div>
-
-      <%- if ff.object.submission == f.object %>
-        <%= ff.file_upload_field(has_saved_file: (ff.object.document && ff.object.document.attached?),
-                                 file_field: ffn,
-                                 remove_document: :remove_document,
-                                 document: ff.object.document) %>
-      <% else %>
-          <%= ff.object.formatted_response_value %>
-      <% end %>
-    </div>
-  </td>
-</tr>

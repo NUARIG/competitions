@@ -1,32 +1,4 @@
-<tr class="question question-<%= ff.object.question.id %>">
-  <% ffn = ff.object.form_field_name %>
-  <% is_mandatory = ff.object.question.is_mandatory %>
-  <td colspan="2">
-    <span>
-      <% if ff.object.submission == f.object %>
-          <%= ff.hidden_field :grant_submission_question_id %>
-      <% end %>
-      <%= ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}") %>
-    </span>
-
-    <% if ff.object.question.instruction.present? %>
-      <p>
-        <%= simple_format(ff.object.question.instruction) %>
-      </p>
-    <% end %>
-
-    <div>
-
-      <%- if ff.object.submission == f.object %>
-        <%= ff.select(method: ffn,
-                      choices: options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.text, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id),
-                      options: { include_blank: true },
-                      html_options: { data: { question_id: ff.object.question.id } }) %>
-      <% else %>
-          <%= ff.object.formatted_response_value %>
-      <% end %>
-
-      <p class="helper-text">Instruction: Up to 256 characters</p>
-    </div>
-  </td>
-</tr>
+<%= ff.select(method: ffn,
+              choices: options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.text, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id),
+              options: { include_blank: 'Select One' },
+              html_options: { data: { question_id: ff.object.question.id } }) %>
