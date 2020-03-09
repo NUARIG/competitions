@@ -1,0 +1,19 @@
+%table.hover.unstriped
+  - responses = section.questions.sort_by(&:display_order).map do |q|
+    - f.object.responses.detect { |r| r.question == q } || f.object.responses.build(question: q)
+
+  = f.fields_for :responses, responses do |ff|
+    - if ff.object.submission == f.object
+      - ffn = ff.object.form_field_name
+      %tr.question{id: "question-#{ff.object.question.id}"}
+        %td
+          - is_mandatory = ff.object.question.is_mandatory
+
+          - if ff.object.submission == f.object
+            = ff.hidden_field :grant_submission_question_id
+
+            = ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}")
+
+            = render partial: "grant_submissions/submissions/responses/#{ff.object.question.response_type}_response", locals: { f: f, ff: ff, ffn: ffn }
+          - else
+            = ff.object.formatted_response_value
