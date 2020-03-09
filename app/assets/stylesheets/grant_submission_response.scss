@@ -1,25 +1,37 @@
 main.submissions {
-  label.required-true p:last-of-type::after {
-    content: ' *';
-    font-size: 1.15em;
-    color: red;
+  .instructions {
+    font-size: .85em;
+    padding: 0 0.25em;
+  }
+  label {
+    p {
+      line-height: 1.25em;
+    }
+    &.required-true p:last-of-type::after {
+      content: ' *';
+      font-size: 1.15em;
+      color: red;
+    }
   }
   fieldset {
     legend {
       font-weight: bold;
       padding: 0 1em;
     }
-    td {
-      border-top: 1px solid #EEE;
-      vertical-align: top;
-      .helper-text {
-        font-size: .85em;
-        font-style: italic;
-      }
-      .no-response {
-        font-size: .85em;
-        font-style: italic;
-        text-transform: uppercase
+    tr.question {
+      td {
+        border-top: 1px solid #EEE;
+        padding: 1em 0.5em;
+        vertical-align: top;
+        .helper-text {
+          font-size: .95em;
+          font-style: italic;
+        }
+        .no-response {
+          font-size: .85em;
+          font-style: italic;
+          text-transform: uppercase
+        }
       }
     }
   }
