@@ -9,7 +9,7 @@
       <a data-form_builder_upload_clear style="font-size: 80%" class="button tiny btn-pill warning" href="#">Clear</a>
     <%= f.hidden_field remove_document, {:'data-form_builder_remove_document' => ''} %>
   <% end %>
-  <div class="helper-text">
+  <div class="help-text">
     <%= "#{GrantSubmission::Response::READABLE_ALLOWED_DOCUMENT_TYPES} files only. Up to #{GrantSubmission::Response::READABLE_MAXIMUM_DOCUMENT_FILE_SIZE}" %>
   </div>
 </div>

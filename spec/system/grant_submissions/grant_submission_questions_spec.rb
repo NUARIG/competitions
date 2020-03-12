@@ -21,7 +21,7 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
       end.not_to (change{@grant.questions.count})
 
       expect(page).to have_text 'Question Text is required'
-      expect(page).to have_text 'Question Response Type must be selected'
+      expect(page).to have_text 'Question Type must be selected'
     end
 
     scenario 'can be added to an existing section' do
@@ -29,7 +29,7 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
         new_question_text = Faker::Lorem.sentence
         click_link add_question_text
         find_field('Question Text', with: '').set(new_question_text)
-        find_field('Type of Response', with: '').select('Number')
+        find_field('Question Type', with: '').select('Number')
         click_button 'Save'
       end.to (change{@grant.questions.count}).by 1
       expect(page).to have_text 'Submission Form successfully updated'
@@ -48,7 +48,7 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
       within all("fieldset").last do
         click_link(add_question_text)
         find_field('Question Text', with: '').set(@grant.questions.first.text)
-        find_field('Type of Response').select('Number')
+        find_field('Question Type').select('Number')
       end
       click_button 'Save'
       expect(page).to have_text 'Submission Form successfully updated'

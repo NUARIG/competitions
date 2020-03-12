@@ -5,11 +5,10 @@ en:
         text: Question Text
         instruction: Help Text
         is_mandatory: Required
-        response_type: Type of Response
+        response_type: Question Type
       grant_submission/form/sections/questions:
         <<: *question
         is_mandatory: Question Required
-        response_type: Question Response Type
     errors:
       models:
         grant_submission/question:
@@ -27,3 +26,5 @@ en:
     label:
       grant_submission/question:
         <<: *question
+        instruction: Help Text (optional)
+        is_mandatory: Required?
