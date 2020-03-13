@@ -9,15 +9,23 @@ module Grants
       authorize @grant, :update?
       if @grant.update(grant_params)
         flash[:notice] = "Publish status was changed to #{@grant.state}."
-        redirect_back fallback_location: grant_path(@grant)
+        redirect_to send("#{@grant.state}_redirect_path")
       else
         @grant.errors.add(:base, "Status change failed. This grant is still in #{@grant.reload.state} mode.")
         flash[:alert] = @grant.errors.full_messages
-        redirect_back fallback_location: grant_path(@grant)
+        redirect_to edit_grant_path(@grant)
       end
     end
 
     private
+
+    def draft_redirect_path
+      edit_grant_path(@grant)
+    end
+
+    def published_redirect_path
+      grant_path(@grant)
+    end
 
     def grant_params
       params.require(:grant_state).permit(:state)

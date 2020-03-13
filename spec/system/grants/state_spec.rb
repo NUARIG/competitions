@@ -24,6 +24,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can change status to draft' do
         click_button 'Switch to Draft'
+        expect(current_path).to eq(edit_grant_path(@published_grant))
         expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Publish status was changed to draft.'
       end
@@ -31,6 +32,7 @@ RSpec.describe 'Grants', type: :system do
       scenario 'displays error on failure' do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
         click_button 'Switch to Draft'
+        expect(current_path).to eq(edit_grant_path(@published_grant))
         expect(page).to have_content 'Status change failed. This grant is still in published mode.'
       end
     end
@@ -99,7 +101,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can change status to published with at least one question' do
         click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Published'
+        expect(current_path).to eq(grant_path(@draft_grant))
         expect(page).to have_content 'Publish status was changed to published'
       end
 
@@ -130,7 +132,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can change status to published with at least one question' do
         click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Published'
+        expect(current_path).to eq(grant_path(@draft_grant))
         expect(page).to have_content 'Publish status was changed to published'
       end
 
