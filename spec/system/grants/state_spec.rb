@@ -110,6 +110,16 @@ RSpec.describe 'Grants', type: :system do
         click_button 'Publish this Grant'
         expect(page).to have_content 'Status change failed. This grant is still in draft mode.'
       end
+
+      scenario 'redirects properly from other error pages' do
+        # TODO: Addresses issue #408, but this behavior should be fine-tuned
+        visit edit_grant_form_path(@draft_grant, @draft_grant.form)
+        click_link 'Add a Section'
+        click_button 'Save'
+        expect(page).to have_content 'Section Title is required.'
+        click_button 'Publish this Grant'
+        expect(page).to have_content 'Publish status was changed to published'
+      end
     end
 
     context 'grant editor user' do
