@@ -51,9 +51,6 @@ module GrantSubmission
     include DateOptionalTime
     has_date_optional_time(:datetime_val, :boolean_val)
 
-    include PartialDate
-    has_partial_date(:partial_date_val)
-
     def remove_document=(val)
       remove_document = val # allows clearing file inputs to persist across validation errors
       if val == 1 || val == "1"
