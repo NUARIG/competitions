@@ -61,18 +61,4 @@ module DateOptionalTime
   def get_date_opt_time(datetime_comp, has_time_comp)
     self.send(has_time_comp) ? self.send(datetime_comp) : self.send(datetime_comp).try(:to_date)
   end
-
-  # old data across many tables has various insignificant timestmaps. These should all be 0
-  # see eb82f94086df6b30e3f44f3734c2feb592464b3a for more info
-  def clear_bad_time(datetime_comp, has_time_comp)
-    if !self.send(datetime_comp)
-      nil
-    else
-      self.send(has_time_comp) ? self.send(datetime_comp) : Time.zone.parse("#{self.send(datetime_comp).strftime('%F')} 00:00")
-    end
-  end
-
-  def form_dates_entry(datetime_comp, has_time_comp)
-    [clear_bad_time(datetime_comp, has_time_comp), get_date_opt_time(datetime_comp, has_time_comp)]
-  end
 end
