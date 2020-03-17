@@ -24,6 +24,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can change status to draft' do
         click_button 'Switch to Draft'
+        expect(current_path).to eq(edit_grant_path(@published_grant))
         expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Publish status was changed to draft.'
       end
@@ -31,6 +32,7 @@ RSpec.describe 'Grants', type: :system do
       scenario 'displays error on failure' do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
         click_button 'Switch to Draft'
+        expect(current_path).to eq(edit_grant_path(@published_grant))
         expect(page).to have_content 'Status change failed. This grant is still in published mode.'
       end
     end
@@ -99,7 +101,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can change status to published with at least one question' do
         click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Published'
+        expect(current_path).to eq(grant_path(@draft_grant))
         expect(page).to have_content 'Publish status was changed to published'
       end
 
@@ -107,6 +109,16 @@ RSpec.describe 'Grants', type: :system do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
         click_button 'Publish this Grant'
         expect(page).to have_content 'Status change failed. This grant is still in draft mode.'
+      end
+
+      scenario 'redirects properly from other error pages' do
+        # TODO: Addresses issue #408, but this behavior should be fine-tuned
+        visit edit_grant_form_path(@draft_grant, @draft_grant.form)
+        click_link 'Add a Section'
+        click_button 'Save'
+        expect(page).to have_content 'Section Title is required.'
+        click_button 'Publish this Grant'
+        expect(page).to have_content 'Publish status was changed to published'
       end
     end
 
@@ -130,7 +142,7 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'can change status to published with at least one question' do
         click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Published'
+        expect(current_path).to eq(grant_path(@draft_grant))
         expect(page).to have_content 'Publish status was changed to published'
       end
 
