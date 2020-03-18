@@ -15,7 +15,7 @@ module WithSubmissionState
     private
 
     def cannot_update_submitted_submission
-      errors.add(:base, 'The Submission has been submitted and cannot be changed.')
+      errors.add(:base, "The #{self.class.to_s.titleize} has been submitted and cannot be changed.")
     end
   end
 end
