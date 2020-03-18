@@ -2,6 +2,8 @@ require 'rails_helper'
 include ActionDispatch::TestProcess::FixtureFile
 
 RSpec.describe GrantSubmission::Response, type: :model do
+  it_should_behave_like "WithSubmissionState"
+
   it { is_expected.to respond_to(:submission) }
   it { is_expected.to respond_to(:question) }
   it { is_expected.to respond_to(:multiple_choice_option) }
@@ -12,24 +14,39 @@ RSpec.describe GrantSubmission::Response, type: :model do
   it { is_expected.to respond_to(:boolean_val) }
   it { is_expected.to respond_to(:document) }
 
-  let(:grant)       { create(:published_open_grant_with_users)}
-  let(:other_grant) { create(:open_grant_with_users_and_form_and_submission_and_reviewer)}
-  let(:submission)  { build(:grant_submission_submission, grant: grant, form: grant.form)}
+  let(:grant)                 { create(:published_open_grant_with_users)}
+  let(:other_grant)           { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+  let(:submission)            { build(:grant_submission_submission, grant: grant, form: grant.form) }
+  let(:submitted_submission)  { build(:grant_submission_submission, grant: grant, form: grant.form) }
+  let(:draft_submission)      { create(:draft_submission, grant: grant, form: grant.form) }
 
   context 'string_val' do
-    let(:string_val_response) { build(:string_val_response, submission: submission,
-                                                            question:   grant.form.questions.where(response_type: 'short_text').first)}
+    let(:string_val_response) { build(:string_val_response, submission: draft_submission,
+                                                            question: grant.form.questions.where(response_type: 'short_text').first)}
+
 
     context '#validations' do
       it 'validates response to a question from the grant' do
         expect(string_val_response).to be_valid
       end
 
-      it 'requires response when question is_mandatory' do
-        string_val_response.question.update_attribute(:is_mandatory, true)
-        string_val_response.update_attribute(:string_val, '')
-        expect(string_val_response).not_to be_valid
-        expect(string_val_response.errors).to include(:string_val)
+      context 'is_mandatory' do
+        context 'draft submission' do
+          it 'does not require response when question is_mandatory' do
+            string_val_response.question.update_attribute(:is_mandatory, true)
+            string_val_response.update_attribute(:string_val, '')
+            expect(string_val_response).to be_valid
+          end
+        end
+
+        context 'submitted submission' do
+          it 'requires response when question is_mandatory' do
+            string_val_response.update_attribute(:submission, submitted_submission)
+            string_val_response.question.update_attribute(:is_mandatory, true)
+            string_val_response.update_attribute(:string_val, '')
+            expect(string_val_response).not_to be_valid
+          end
+        end
       end
 
       it 'requires response to be to a question from its grant' do
@@ -67,19 +84,31 @@ RSpec.describe GrantSubmission::Response, type: :model do
   end
 
   context 'text_val' do
-    let(:text_val_response) { build(:text_val_response, submission: submission,
-                                                         question:   grant.form.questions.where(response_type: 'long_text').first)}
+    let(:text_val_response) { build(:text_val_response, submission: draft_submission,
+                                                         question:  grant.form.questions.where(response_type: 'long_text').first)}
 
     context '#validations' do
       it 'validates response to a question from the grant' do
         expect(text_val_response).to be_valid
       end
 
-      it 'requires response when question is_mandatory' do
-        text_val_response.question.update_attribute(:is_mandatory, true)
-        text_val_response.update_attribute(:text_val, '')
-        expect(text_val_response).not_to be_valid
-        expect(text_val_response.errors).to include(:text_val)
+      context 'is_mandatory' do
+        context 'draft submission' do
+          it 'does not require response when question is_mandatory' do
+            text_val_response.question.update_attribute(:is_mandatory, true)
+            text_val_response.update_attribute(:string_val, '')
+            expect(text_val_response).to be_valid
+          end
+        end
+
+        context 'submitted submission' do
+          it 'requires response when question is_mandatory' do
+            text_val_response.update_attribute(:submission, submitted_submission)
+            text_val_response.question.update_attribute(:is_mandatory, true)
+            text_val_response.update_attribute(:string_val, '')
+            expect(text_val_response).not_to be_valid
+          end
+        end
       end
 
       it 'requires response to be to a question from its grant' do
@@ -111,8 +140,9 @@ RSpec.describe GrantSubmission::Response, type: :model do
   end
 
   context 'number' do
-    let(:number_response) { build(:number_response, submission: submission,
+    let(:number_response) { build(:number_response, submission: draft_submission,
                                                     question:   grant.form.questions.where(response_type: 'number').first)}
+
 
     context '#validations' do
       # String input specs in spec/system/grant_submission_response_spec.rb
@@ -120,11 +150,23 @@ RSpec.describe GrantSubmission::Response, type: :model do
         expect(number_response).to be_valid
       end
 
-      it 'requires response when question is_mandatory' do
-        number_response.question.update_attribute(:is_mandatory, true)
-        number_response.update_attribute(:decimal_val, '')
-        expect(number_response).not_to be_valid
-        expect(number_response.errors).to include(:decimal_val)
+      context 'is_mandatory' do
+        context 'draft submission' do
+          it 'does not require response when question is_mandatory' do
+            number_response.question.update_attribute(:is_mandatory, true)
+            number_response.update_attribute(:string_val, '')
+            expect(number_response).to be_valid
+          end
+        end
+
+        context 'submitted submission' do
+          it 'requires response when question is_mandatory' do
+            number_response.update_attribute(:submission, submitted_submission)
+            number_response.question.update_attribute(:is_mandatory, true)
+            number_response.update_attribute(:string_val, '')
+            expect(number_response).not_to be_valid
+          end
+        end
       end
 
       it 'requires response to be to a question from its grant' do
@@ -159,7 +201,7 @@ RSpec.describe GrantSubmission::Response, type: :model do
     let(:pick_one_question) { grant.form.questions.where(response_type: 'pick_one').first }
     let(:other_question)    { build(:pick_one_question_with_options) }
     let(:options)           { pick_one_question.multiple_choice_options }
-    let(:pick_one_response) { build(:pick_one_response, submission: submission,
+    let(:pick_one_response) { build(:pick_one_response, submission: draft_submission,
                                                         question:   pick_one_question,
                                                         multiple_choice_option: options.first) }
 
@@ -168,12 +210,24 @@ RSpec.describe GrantSubmission::Response, type: :model do
         expect(pick_one_response).to be_valid
       end
 
-      it 'requires a choice if is_mandatory' do
-        pick_one_question.is_mandatory = true
-        pick_one_response.multiple_choice_option = nil
-        expect(pick_one_response).not_to be_valid
-        expect(pick_one_response.errors).to include(:grant_submission_multiple_choice_option_id)
-      end
+      context 'is_mandatory' do
+        context 'draft submission' do
+          it 'does not require response when question is_mandatory' do
+            pick_one_response.question.update_attribute(:is_mandatory, true)
+            pick_one_response.update_attribute(:string_val, '')
+            expect(pick_one_response).to be_valid
+          end
+        end
+
+        context 'submitted submission' do
+          it 'requires response when question is_mandatory' do
+            pick_one_response.update_attribute(:submission, submitted_submission)
+            pick_one_response.question.update_attribute(:is_mandatory, true)
+            pick_one_response.update_attribute(:string_val, '')
+            expect(pick_one_response).not_to be_valid
+          end
+        end
+       end
 
       it 'requires multiple_choice_option to be from the same question' do
         other_question.save
@@ -198,20 +252,31 @@ RSpec.describe GrantSubmission::Response, type: :model do
   end
 
   context 'date_opt_time' do
-    let(:date_response) { build(:date_opt_time_response, submission: submission,
-                                                          question:   grant.form.questions.where(response_type: 'date_opt_time').first)}
-
+    let(:date_response) { build(:date_opt_time_response,  submission: draft_submission,
+                                                          question: grant.form.questions.where(response_type: 'date_opt_time').first)}
     context '#validations' do
       it 'validates response to a question from the grant' do
         expect(date_response).to be_valid
       end
 
-      it 'requires response when question is_mandatory' do
-        date_response.question.update_attribute(:is_mandatory, true)
-        date_response.update_attribute(:datetime_val, '')
-        expect(date_response).not_to be_valid
-        expect(date_response.errors).to include(:datetime_val_date_optional_time_magik)
-      end
+      context 'is_mandatory' do
+        context 'draft submission' do
+          it 'does not require response when question is_mandatory' do
+            date_response.question.update_attribute(:is_mandatory, true)
+            date_response.update_attribute(:string_val, '')
+            expect(date_response).to be_valid
+          end
+        end
+
+        context 'submitted submission' do
+          it 'requires response when question is_mandatory' do
+            date_response.update_attribute(:submission, submitted_submission)
+            date_response.question.update_attribute(:is_mandatory, true)
+            date_response.update_attribute(:string_val, '')
+            expect(date_response).not_to be_valid
+          end
+        end
+       end
 
       pending 'requires a response to be a date' do
         fail 'See #295: review DateOptionalTime has_date_optional_time method'

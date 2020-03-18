@@ -202,7 +202,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
                               state:      'draft')
 
           login_as(@applicant)
-          visit profile_submissions_path
         end
 
         scenario 'can visit edit path for draft submission' do
@@ -211,10 +210,10 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_current_path edit_grant_submission_path(@grant, @submission)
         end
 
-        scenario 'cannot edit submitted submission' do
+        scenario 'cannot vist edit path for submitted submission' do
+          @submission.update_attribute(:state, 'submitted')
           visit edit_grant_submission_path(@grant, @submission)
-          click_button 'Submit'
-          expect(page).to have_content 'The Submission has been submitted and cannot be changed'
+          expect(page).to have_content 'You are not authorized to perform this action'
         end
       end
     end
