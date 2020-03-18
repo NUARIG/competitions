@@ -9,6 +9,10 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
     'You successfully applied'
   end
 
+  def successfully_updated_draft_submission_message
+    'Submission was successfully updated and saved'
+  end
+
   describe 'Published Open Grant', js: true do
     let(:grant)     { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let(:applicant) { create(:user) }
@@ -220,7 +224,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 100))
               click_button 'Save as Draft'
 
-              expect(page).to have_content successfully_saved_submission_message
+              expect(page).to have_content successfully_updated_draft_submission_message
               expect(page).to have_current_path profile_submissions_path
               expect(page).to have_content GrantSubmission::Submission.last.title
               expect(page).to have_content 'Edit'

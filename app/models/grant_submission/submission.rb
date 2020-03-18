@@ -3,6 +3,9 @@ module GrantSubmission
     include WithScoring
     include Discard::Model
 
+    attr_accessor :user_submitted_state
+    after_validation :set_state,  if: -> { user_submitted_state.present? }
+
     self.table_name = 'grant_submission_submissions'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
                     meta: { grant_id: :grant_id, applicant_id: :created_id }
@@ -29,18 +32,15 @@ module GrantSubmission
 
     accepts_nested_attributes_for :responses, allow_destroy: true
 
-
-
     SUBMISSION_STATES     = { draft:     'draft',
-                              submitted: 'submitted'
-                            }.freeze
+                              submitted: 'submitted'}.freeze
 
     enum state: SUBMISSION_STATES
 
     validates :title, presence: true
     validates :form, presence: true
 
-    validates_associated :responses, if: -> { self.submitted? }
+    validates_associated :responses
 
     validate :can_be_unsubmitted?, on: :update,
                                    if: -> () { will_save_change_to_attribute?('state', from: SUBMISSION_STATES[:submitted],
@@ -77,6 +77,11 @@ module GrantSubmission
     end
 
     private
+
+    def set_state
+      byebug
+      self.update_attribute(:state, user_submitted_state)
+    end
 
     def can_be_unsubmitted?
       errors.add(:base, :reviewed_submission_cannot_be_unsubmitted) if self.reviews.completed.any?

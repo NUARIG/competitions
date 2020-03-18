@@ -1,6 +1,8 @@
 module GrantSubmissions
   class SubmissionsController < GrantBaseController
     before_action :set_grant, except: :new
+    before_action :set_incoming_state_param, only: %[create update]
+
 
     def index
       @grant   = GrantDecorator.new(@grant)
@@ -21,8 +23,7 @@ module GrantSubmissions
                     .friendly
                     .includes(form:
                                 { sections:
-                                  {questions: :multiple_choice_options} }
-                              )
+                                  {questions: :multiple_choice_options} } )
                     .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
       set_submission
@@ -41,8 +42,9 @@ module GrantSubmissions
       set_submission
       authorize @submission
       set_state(@submission)
-      if @submission.save(context: @submission.state.to_sym)
-        @submission.state == 'submitted' ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
+
+      if @submission.save
+        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
@@ -56,9 +58,9 @@ module GrantSubmissions
       set_submission
       authorize @submission
       set_state(@submission)
-      @submission.assign_attributes(submission_params)
-      if @submission.save(context: @submission.state.to_sym)
-         @submission.state == 'submitted' ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
+
+      if @submission.update(submission_params) # (context: @submission.state.to_sym)
+        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
@@ -124,7 +126,6 @@ module GrantSubmissions
                        :grant_submission_form_id,
                        :parent_id,
                        :grant_submission_section_id,
-                       :state,
                        responses_attributes: [
                          :id,
                          :grant_submission_submission_id,

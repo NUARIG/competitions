@@ -14,11 +14,11 @@ RSpec.describe GrantSubmission::Response, type: :model do
 
   let(:grant)       { create(:published_open_grant_with_users)}
   let(:other_grant) { create(:open_grant_with_users_and_form_and_submission_and_reviewer)}
-  let(:submission)  { create(:grant_submission_submission, grant: grant, form: grant.form)}
+  let(:submission)  { build(:grant_submission_submission, grant: grant, form: grant.form)}
 
   context 'string_val' do
-    let(:string_val_response) { create(:string_val_response, submission: submission,
-                                                             question:   grant.form.questions.where(response_type: 'short_text').first)}
+    let(:string_val_response) { build(:string_val_response, submission: submission,
+                                                            question:   grant.form.questions.where(response_type: 'short_text').first)}
 
     context '#validations' do
       it 'validates response to a question from the grant' do
@@ -67,7 +67,7 @@ RSpec.describe GrantSubmission::Response, type: :model do
   end
 
   context 'text_val' do
-    let(:text_val_response) { create(:text_val_response, submission: submission,
+    let(:text_val_response) { build(:text_val_response, submission: submission,
                                                          question:   grant.form.questions.where(response_type: 'long_text').first)}
 
     context '#validations' do
