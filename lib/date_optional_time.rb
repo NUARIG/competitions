@@ -46,11 +46,13 @@ module DateOptionalTime
   end
 
   def add_date_optional_time_error(datetime_comp)
-    errors.add(datetime_comp, "must be a valid Date/Time in the format MM/DD/YYYY")
+    raise NoMethodError, "DateOptionalTime exptects #add_date_optional_time_error() to be defined in #{self.class}."
+    # errors.add(datetime_comp, "must be a valid Date/Time in the format MM/DD/YYYY")
   end
 
   def date_optional_time_errors?(datetime_comp)
-    errors[datetime_comp].blank?
+    raise NoMethodError, "DateOptionalTime exptects #date_optional_time_errors?() to be defined in #{self.class}."
+    # errors[datetime_comp].blank?
   end
 
   def set_date_opt_time(dt_input, datetime_comp, has_time_comp, datestring)
