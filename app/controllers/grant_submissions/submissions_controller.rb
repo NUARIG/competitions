@@ -59,7 +59,7 @@ module GrantSubmissions
       authorize @submission
       set_state(@submission)
 
-      if @submission.update(submission_params) # (context: @submission.state.to_sym)
+      if @submission.update(submission_params)
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
         submission_redirect(@grant, @submission)
       else

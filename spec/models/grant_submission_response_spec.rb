@@ -278,8 +278,11 @@ RSpec.describe GrantSubmission::Response, type: :model do
         end
        end
 
-      pending 'requires a response to be a date' do
-        fail 'See #295: review DateOptionalTime has_date_optional_time method'
+      it 'requires a response to be a date' do
+        date_response.question.update_attribute(:is_mandatory, true)
+        date_response.update_attribute(:datetime_val, 'abcdef')
+        expect(date_response).not_to be_valid
+        expect(date_response.errors).to include(:datetime_val_date_optional_time_magik)
       end
 
       it 'requires response to be to a question from its grant' do

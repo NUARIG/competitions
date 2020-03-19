@@ -32,7 +32,7 @@
           %th
             = sort_link(@q, :state, 'State')
           %th
-            = sort_link(@q, :created_at, 'Submitted On')
+            = sort_link(@q, :updated_at, 'Last Updated')
           %th
       %tbody
         - @submissions.each do |submission|
@@ -44,7 +44,7 @@
             %td
               = submission.state.titleize
             %td
-              = submission.created_at
+              = submission.updated_at
             %td
               - if current_user.get_role_by_grant(grant: @grant)
                 #ul.menu.simple
