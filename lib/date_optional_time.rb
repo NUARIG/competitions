@@ -5,7 +5,7 @@ module DateOptionalTime
   # TODO: Move to app/models/concerns?
 
   module ClassMethods
-    def has_date_optional_time(datetime_comp, has_time_comp)
+    def has_date_optional_time(datetime_comp:, has_time_comp:)
       dt_input = date_optional_time_attribute(datetime_comp)
       attr_reader dt_input
       validate {parse_date_string(self.send(dt_input), datetime_comp)}
@@ -46,13 +46,11 @@ module DateOptionalTime
   end
 
   def add_date_optional_time_error(datetime_comp)
-    raise NoMethodError, "DateOptionalTime exptects #add_date_optional_time_error() to be defined in #{self.class}."
-    # errors.add(datetime_comp, "must be a valid Date/Time in the format MM/DD/YYYY")
+    raise NoMethodError, "DateOptionalTime expects #add_date_optional_time_error() to be defined in #{self.class}."
   end
 
   def date_optional_time_errors?(datetime_comp)
-    raise NoMethodError, "DateOptionalTime exptects #date_optional_time_errors?() to be defined in #{self.class}."
-    # errors[datetime_comp].blank?
+    raise NoMethodError, "DateOptionalTime expects #date_optional_time_errors?() to be defined in #{self.class}."
   end
 
   def set_date_opt_time(dt_input, datetime_comp, has_time_comp, datestring)

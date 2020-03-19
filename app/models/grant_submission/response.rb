@@ -1,6 +1,7 @@
 module GrantSubmission
   class Response < ApplicationRecord
     include WithSubmissionState
+
     attr_accessor :remove_document
 
     self.table_name = 'grant_submission_responses'
@@ -50,7 +51,7 @@ module GrantSubmission
     validate :attachment_is_valid,   if: -> { document.attached? }
 
     include DateOptionalTime
-    has_date_optional_time(:datetime_val, :boolean_val)
+    has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
 
     def remove_document=(val)
       remove_document = val # allows clearing file inputs to persist across validation errors
