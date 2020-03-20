@@ -4,7 +4,8 @@ module GrantSubmission
     include Discard::Model
 
     attr_accessor :user_submitted_state
-    after_validation :set_state,  if: -> { user_submitted_state.present? }
+    after_validation :set_state, on: [:create, :update],
+                                 if: -> { user_submitted_state.present? && errors.none? }
 
     self.table_name = 'grant_submission_submissions'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
@@ -79,7 +80,6 @@ module GrantSubmission
     private
 
     def set_state
-      byebug
       self.update_attribute(:state, user_submitted_state)
     end
 

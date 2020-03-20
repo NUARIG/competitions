@@ -47,7 +47,7 @@ module GrantSubmission
                             allow_nil: true
 
     validate :validate_by_response_type
-    validate :response_if_mandatory, if: -> { question.is_mandatory? && submission.submitted? }
+    validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
     validate :attachment_is_valid,   if: -> { document.attached? }
 
     include DateOptionalTime

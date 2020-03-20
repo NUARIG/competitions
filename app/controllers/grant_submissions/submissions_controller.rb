@@ -41,7 +41,7 @@ module GrantSubmissions
     def create
       set_submission
       authorize @submission
-      set_state(@submission)
+      @submission.user_submitted_state = params[:state]
 
       if @submission.save
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
@@ -57,10 +57,11 @@ module GrantSubmissions
     def update
       set_submission
       authorize @submission
-      set_state(@submission)
+      @submission.user_submitted_state = params[:state]
 
       if @submission.update(submission_params)
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
+        @submission.touch
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
@@ -88,9 +89,9 @@ module GrantSubmissions
       @grant = Grant.kept.friendly.find(params[:grant_id])
     end
 
-    def set_state(submission)
-      submission.state = params[:state]
-      submission.submitted_at = Time.now if submission.submitted?
+    def set_submission_state
+      @submission.state = params[:state]
+      @submission.submitted_at = Time.now if @submission.submitted?
     end
 
     def submission_redirect(grant, submission)
