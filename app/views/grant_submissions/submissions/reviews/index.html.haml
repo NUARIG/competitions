@@ -27,7 +27,7 @@
               = link_to 'Assign it to a reviewer', grant_reviewers_path(@grant)
             - elsif @submission.draft?
               This submission must be completed before it can be reviewed.
-        -else
+        - else
 
           = render 'shared/pagy_header', locals: { pagy: @pagy }
 
@@ -46,4 +46,34 @@
                   %th= criterion.name
             %tbody
               = render @reviews
+
+    - if @reviews.completed.any?
+
+      .grid-x.grid-padding-y
+        .cell.small-12
+          %h3
+            Scores and Comments
+
+      - @grant.criteria.each do |criterion|
+        .grid-x.grid-y
+          .row
+            .cell.small-12
+              %h5{id: "criterion-#{criterion.id}"}
+                = criterion.name
+          .row
+            .cell.small-12
+              - @reviews.completed.each do |review|
+                .grid-x.review
+                  .cell.small-12.medium-2.reviewer
+                    = full_name(review.reviewer)
+                  .cell.small-12.medium-10.responses
+                    .grid-y
+                      - scored_criterion = review.criteria_reviews.to_a.detect {|score| score.criterion_id == criterion.id}
+                      - if scored_criterion
+                        .row
+                          = scored_criterion.score
+                        .row
+                          = scored_criterion.comment
+                      - else
+                        NS
 
