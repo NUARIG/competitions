@@ -1,8 +1,6 @@
 module GrantSubmissions
   class SubmissionsController < GrantBaseController
     before_action :set_grant, except: :new
-    before_action :set_incoming_state_param, only: %[create update]
-
 
     def index
       @grant   = GrantDecorator.new(@grant)
@@ -87,11 +85,6 @@ module GrantSubmissions
 
     def set_grant
       @grant = Grant.kept.friendly.find(params[:grant_id])
-    end
-
-    def set_submission_state
-      @submission.state = params[:state]
-      @submission.submitted_at = Time.now if @submission.submitted?
     end
 
     def submission_redirect(grant, submission)
