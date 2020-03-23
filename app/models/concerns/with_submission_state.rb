@@ -7,7 +7,6 @@ module WithSubmissionState
     validate :cannot_update_submitted_submission, on: :update,
                                                   if: :submitted?
 
-
     def submitted?
       raise NotImplementedError, "#{self.class} does not have: "
     end

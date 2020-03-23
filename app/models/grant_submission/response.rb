@@ -121,7 +121,6 @@ module GrantSubmission
 
     private
 
-
     def validate_by_response_type
       case question.response_type
       when 'number'
