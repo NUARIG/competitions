@@ -191,6 +191,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context '#update' do
         before(:each) do
           submission.update_attribute(:state, 'draft')
+          grant.questions.where(response_type: 'short_text').first.update_attribute(:is_mandatory, true)
           login_as(applicant)
         end
 
@@ -201,15 +202,21 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).to have_current_path edit_grant_submission_path(grant, submission)
           end
 
-          scenario 'can save submission as draft' do
+          scenario 'can save valid submission as draft' do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set(Faker::Lorem.sentence)
             click_button 'Save as Draft'
             expect(page).to have_content 'Submission was successfully updated and saved.'
           end
 
+          scenario 'can save an incomplete submission as draft' do
+            visit edit_grant_submission_path(grant, submission)
+            find_field('Short Text Question').set('')
+            click_button 'Save as Draft'
+            expect(page).to have_content 'Submission was successfully updated and saved.'
+          end
+
           scenario 'cannot submit a submission with an error' do
-            grant.questions.where(response_type: 'short_text').first.update_attribute(:is_mandatory, true)
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set('')
             click_button 'Submit'
