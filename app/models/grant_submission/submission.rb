@@ -7,8 +7,6 @@ module GrantSubmission
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
                     meta: { grant_id: :grant_id, applicant_id: :created_id }
 
-    ransack_alias :applicant, :applicant_first_name_or_applicant_last_name_cont
-
     belongs_to :grant,          inverse_of: :submissions
     belongs_to :form,           class_name: 'GrantSubmission::Form',
                                 foreign_key: 'grant_submission_form_id',
