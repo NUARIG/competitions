@@ -1,0 +1,20 @@
+@import 'settings';
+
+main.reviews {
+  #reviews-overview {
+    .grid-x.criterion,
+    #overall-impact.grid-x {
+      border-bottom: 1px solid $medium-gray;
+      .row {
+        .reviews {
+          .review {
+            padding: 1em;
+          }
+        }
+      }
+    }
+    #overall-impact.grid-x {
+      border-bottom: none;
+    }
+  }
+}
