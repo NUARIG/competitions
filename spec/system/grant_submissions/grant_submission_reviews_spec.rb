@@ -50,18 +50,65 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
     context 'submission with reviews' do
       before(:each) do
         login_as(@admin)
-        visit grant_submission_reviews_path(@grant, @submission)
       end
 
-      scenario 'displays table with all criteria' do
-        criteria = @grant.criteria.pluck(:name)
-        headers = all('th').map {|column| column.text.strip }
-        expect(criteria.all? { |criterion| headers.include?(criterion) }).to be true
+      context 'incomplete review' do
+        before(:each) do
+          visit grant_submission_reviews_path(@grant, @submission)
+        end
+
+        scenario 'displays table with all criteria' do
+          criteria = @grant.criteria.pluck(:name)
+          headers = all('th').map {|column| column.text.strip }
+          expect(criteria.all? { |criterion| headers.include?(criterion) }).to be true
+        end
+
+        scenario 'includes table of assigned reviews' do
+          expect(page).to have_text sortable_full_name(@reviewer)
+          expect(page).to have_text 'Incomplete'
+        end
+
+        scenario 'does not include score and comment summary' do
+          expect(page).not_to have_text 'Scores and Comments'
+          expect(page).not_to have_text 'Overall Impact Scores and Comments'
+        end
       end
 
-      scenario 'includes table of assigned reviews' do
-        expect(page).to have_text sortable_full_name(@reviewer)
-        expect(page).to have_text 'Incomplete'
+      context 'complete review' do
+        before(:each) do
+          @submission_review.grant_criteria.each do |criterion|
+            criterion.update_attribute(:show_comment_field, true)
+            create(:scored_criteria_review, criterion: criterion,
+                                            review: @submission_review,
+                                            score: random_score)
+          end
+          @submission_review.update(overall_impact_score: random_score)
+
+          @unscored_criterion = @submission_review.criteria_reviews.first
+          @unscored_criterion.update_attribute(:score, nil)
+          @unscored_criterion.update_attribute(:comment, 'Commented criterion.')
+
+          @uncommented_criterion = @submission_review.criteria_reviews.last.criterion
+
+          visit grant_submission_reviews_path(@grant, @submission)
+        end
+
+        scenario 'includes scores and comments' do
+          expect(page).to have_text 'Scores and Comments'
+          expect(page).to have_text 'Overall Impact Scores and Comments'          # fail 'TK' # scored_review_with_scored_mandatory_criteria_review
+        end
+
+        scenario 'displays NS for unscored criteria' do
+          expect(find_by_id("criterion-#{@unscored_criterion.criterion.id}-score")).to have_text 'NS'
+        end
+
+        scenario 'displays comment when commented' do
+          expect(find_by_id("criterion-#{@unscored_criterion.criterion.id}-comment")).to have_text 'Commented criterion.'
+        end
+
+        scenario 'does not have comment selector if no comment' do
+          expect(page).not_to have_selector"criterion-#{@uncommented_criterion.id}-comment"
+        end
       end
     end
   end
