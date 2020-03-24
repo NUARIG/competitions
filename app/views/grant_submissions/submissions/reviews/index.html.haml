@@ -64,25 +64,21 @@
           .row
             .cell.small-12.reviews
               - @reviews.completed.each do |review|
-                .grid-x.review
-                  .cell.small-12.medium-2.reviewer
+                .grid-x.grid-margin-x.review{id: "review-#{review.id}" }
+                  .cell.small-12.medium-2.reviewer.text-right
                     = full_name(review.reviewer)
                   .cell.small-12.medium-10.responses
                     .grid-y
                       - scored_criterion = review.criteria_reviews.to_a.detect {|score| score.criterion_id == criterion.id}
-                      .row
+                      .row{id: "criterion-#{criterion.id}-score"}
                         - if scored_criterion.score.present?
                           = scored_criterion.score
                         - else
                           NS
-                      .row
-                        - if scored_criterion.comment.present?
+                      - if scored_criterion.comment.present?
+                        .row{id: "criterion-#{criterion.id}-comment"}
                           = scored_criterion.comment
-                        - else
-                          %em
-                            No comment provided.
 
-            %hr
 
       .grid-x.grid-padding-y
         .cell.small-12
