@@ -1,5 +1,7 @@
 module GrantSubmission
   class Response < ApplicationRecord
+    include WithSubmissionState
+
     attr_accessor :remove_document
 
     self.table_name = 'grant_submission_responses'
@@ -45,11 +47,11 @@ module GrantSubmission
                             allow_nil: true
 
     validate :validate_by_response_type
-    validate :response_if_mandatory, if: -> { question.is_mandatory? && submission.submitted? }
-    validate :attachment_is_valid,   if: -> { document.attached? && submission.submitted? }
+    validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
+    validate :attachment_is_valid,   if: -> { document.attached? }
 
     include DateOptionalTime
-    has_date_optional_time(:datetime_val, :boolean_val)
+    has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
 
     def remove_document=(val)
       remove_document = val # allows clearing file inputs to persist across validation errors
@@ -111,6 +113,10 @@ module GrantSubmission
       when :file_upload
         :document
       end
+    end
+
+    def submitted?
+      self.submission.submitted? && (!self.submission.changed? || self.submission.changes.keys.include?('state'))
     end
 
     private
