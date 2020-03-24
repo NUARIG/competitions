@@ -1,4 +1,5 @@
 require 'rails_helper'
+include UsersHelper
 
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   context '#index' do
@@ -150,6 +151,30 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(@grant, @submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(@grant, @submission)
         end
+      end
+    end
+
+    context 'search' do
+      before(:each) do
+        @draft_grant = create(:draft_submission_with_responses, grant: @grant,
+                                                                form: @grant.form)
+        login_as(@grant_admin)
+      end
+
+      scenario 'filters on applicant last name' do
+        visit grant_submissions_path(@grant)
+        expect(page).to have_content sortable_full_name(@draft_grant.applicant)
+        find_field('Search Applicant Last Name or Project Title').set(@applicant.last_name)
+        click_button 'Search'
+        expect(page).not_to have_content sortable_full_name(@draft_grant.applicant)
+      end
+
+      scenario 'filters on application title' do
+        visit grant_submissions_path(@grant)
+        expect(page).to have_content @draft_grant.title
+        find_field('Search Applicant Last Name or Project Title').set(@submission.title.truncate_words(2, omission: ''))
+        click_button 'Search'
+        expect(page).not_to have_content @draft_grant.title
       end
     end
   end

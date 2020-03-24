@@ -23,8 +23,7 @@
     = search_form_for @q, url: grant_submissions_path(@grant) do |f|
       .grid-x.grid-margin-x.medium-margin-collapse
         .small-12.medium-4.cell
-          %label.text-left.middle
-            Search Applicant Last Name or Project Title:
+          = f.label :applicant_last_name_or_title_cont, 'Search Applicant Last Name or Project Title', class: 'text-left middle'
         .small-12.medium-3.cell
           = f.search_field :applicant_last_name_or_title_cont
           =# f.search_field :search_cont
