@@ -95,7 +95,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
         scenario 'includes scores and comments' do
           expect(page).to have_text 'Scores and Comments'
-          expect(page).to have_text 'Overall Impact Scores and Comments'          # fail 'TK' # scored_review_with_scored_mandatory_criteria_review
+          expect(page).to have_text 'Overall Impact Scores and Comments'
         end
 
         scenario 'displays NS for unscored criteria' do
