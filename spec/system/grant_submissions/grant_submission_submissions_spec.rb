@@ -13,6 +13,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:draft_submission) { create(:draft_submission_with_responses, grant: grant, form: grant.form) }
   let(:draft_grant)      { create(:draft_grant) }
   let(:other_submission) { create(:grant_submission_submission, grant: grant) }
+  let(:review)           { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                                        assigner: grant_admin,
+                                                                                        reviewer: grant.reviewers.first) }
 
   context '#index' do
     context 'published grant' do
@@ -29,6 +32,25 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+
+          context 'with reviews' do
+            scenario 'submission with no review shows dashes' do
+              visit grant_submissions_path(grant)
+              overall   = page.find("td[data-overall-impact='#{submission.id}']")
+              composite = page.find("td[data-composite='#{submission.id}']")
+              expect(overall).to have_text '-'
+              expect(composite).to have_text '-'
+            end
+
+            scenario 'submission with one review shows dashes for scores' do
+              review
+              visit grant_submissions_path(grant)
+              overall   = page.find("td[data-overall-impact='#{submission.id}']")
+              composite = page.find("td[data-composite='#{submission.id}']")
+              expect(overall).to have_text review.overall_impact_score
+              expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
+            end
           end
         end
 
@@ -92,6 +114,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'does not include other applicant submission' do
           expect(page).not_to have_content other_submission.title
+        end
+
+        scenario 'does not include score columns' do
+          expect(page).not_to have_content 'Overall Impact'
+          expect(page).not_to have_content 'Composite'
         end
       end
     end
