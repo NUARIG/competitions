@@ -1,4 +1,5 @@
 require 'rails_helper'
+include UsersHelper
 
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)            { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
@@ -9,6 +10,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant_editor)     { grant.administrators.second }
   let(:grant_viewer)     { grant.administrators.third }
   let(:new_applicant)    { create(:user) }
+  let(:draft_submission) { create(:draft_submission_with_responses, grant: grant, form: grant.form) }
   let(:draft_grant)      { create(:draft_grant) }
   let(:other_submission) { create(:grant_submission_submission, grant: grant) }
 
@@ -71,7 +73,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'applicant' do
         before(:each) do
-          # submission_by_other_applicant = create(:grant_submission_submission, grant: grant)
           other_submission
           login_as(applicant)
 
@@ -152,6 +153,29 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
         end
+      end
+    end
+
+    context 'search' do
+      before(:each) do
+        draft_submission
+        login_as(grant_admin)
+      end
+
+      scenario 'filters on applicant last name' do
+        visit grant_submissions_path(grant)
+        expect(page).to have_content sortable_full_name(draft_submission.applicant)
+        find_field('Search Applicant Last Name or Project Title').set(applicant.last_name)
+        click_button 'Search'
+        expect(page).not_to have_content sortable_full_name(draft_submission.applicant)
+      end
+
+      scenario 'filters on application title' do
+        visit grant_submissions_path(grant)
+        expect(page).to have_content draft_submission.title
+        find_field('Search Applicant Last Name or Project Title').set(submission.title.truncate_words(2, omission: ''))
+        click_button 'Search'
+        expect(page).not_to have_content draft_submission.title
       end
     end
   end

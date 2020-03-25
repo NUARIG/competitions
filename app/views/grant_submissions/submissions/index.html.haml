@@ -20,6 +20,17 @@
         You have no submissions to this grant.
   - else
 
+    = search_form_for @q, url: grant_submissions_path(@grant) do |f|
+      .grid-x.grid-margin-x.medium-margin-collapse
+        .small-12.medium-4.cell
+          = f.label :applicant_last_name_or_title_cont, 'Search Applicant Last Name or Project Title', class: 'text-left middle'
+        .small-12.medium-3.cell
+          = f.search_field :applicant_last_name_or_title_cont
+          =# f.search_field :search_cont
+        .small-12.medium-3.cell
+          = f.submit 'Search', class: 'button'
+          = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
+
     = render 'shared/pagy_header', locals: { pagy: @pagy }
 
     %table
