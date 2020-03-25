@@ -5,7 +5,7 @@ en:
         name: Criterion Name
         description: Instructions / Help Text
         is_mandatory: Required
-        show_comment_field: Show Comment Field
+        show_comment_field: Allow Reviewers to Comment
     errors:
       models:
         criterion:
