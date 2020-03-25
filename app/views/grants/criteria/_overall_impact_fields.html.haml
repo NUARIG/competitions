@@ -1,0 +1,10 @@
+.nested-fields
+  .field
+    .grid-x
+      .cell.small-12.medium-2
+        = label_tag :overall_impact_score
+      .cell.small-12.medium-9.medium-offset-1
+        = text_field_tag :name, '', width: 50, disabled: true
+        %p.help-text 'Overall Impact Scrore is Required and commenting is enabled.'
+
+%hr
