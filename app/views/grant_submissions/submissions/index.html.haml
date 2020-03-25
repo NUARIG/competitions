@@ -33,8 +33,14 @@
 
     = render 'shared/pagy_header', locals: { pagy: @pagy }
 
-    %table
+    %table#grant-submissions
       %thead
+        - if current_user.get_role_by_grant(grant: @grant)
+          %tr
+            %th{colspan: 4}
+            %th{colspan: 2}
+              Scores
+            %th
         %tr
           %th
             = sort_link(@q, :applicant_last_name, 'Applicant')
@@ -43,11 +49,19 @@
           %th
             = sort_link(@q, :state, 'State')
           %th
-            = sort_link(@q, :updated_at, 'Last Updated')
-          %th
+            = sort_link(@q, :updated_at, 'Updated')
+          - if current_user.get_role_by_grant(grant: @grant)
+            %th
+              %span{ title: 'Average of scored reviews' }
+                Overall Impact
+            %th
+              %span{ title: 'Average of scored Criteria' }
+                Composite
+            %th
       %tbody
         - @submissions.each do |submission|
-          %tr
+          - has_completed_reviews = submission.reviews.to_a.any?{ |review| review.overall_impact_score.present? }
+          %tr{data: { submission: submission.id } }
             %td
               = link_to sortable_full_name(submission.applicant), grant_submission_path(@grant, submission)
             %td
@@ -55,10 +69,20 @@
             %td
               = submission.state.titleize
             %td
-              = submission.updated_at
-            %td
-              - if current_user.get_role_by_grant(grant: @grant)
-                #ul.menu.simple
+              = date_time_separate_lines(submission.updated_at)
+            - if current_user.get_role_by_grant(grant: @grant)
+              %td.overall-impact{data: { overall: { impact: submission.id } } }
+                - if has_completed_reviews
+                  = submission.calculate_average_score(submission.reviews.to_a.map(&:overall_impact_score))
+                - else
+                  \-
+              %td.composite{data: { composite: submission.id } }
+                - if submission.reviews.completed.any?
+                  = submission.calculate_average_score(submission.criteria_reviews.to_a.map(&:score))
+                - else
+                  \-
+              %td
+                %ul.menu.simple
                   = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { submission: submission, grant: @grant }
 
     != pagy_foundation_nav(@pagy)

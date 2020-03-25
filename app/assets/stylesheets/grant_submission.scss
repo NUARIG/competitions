@@ -1,0 +1,21 @@
+main.submissions {
+  #grant-submissions {
+    thead tr {
+      &:first-of-type {
+        th {
+          padding-bottom: 0;
+          padding-top: 0;
+        }
+      }
+      th {
+        font-size: .85em;
+      }
+    }
+    td {
+      vertical-align: top;
+      ul {
+        padding: 0;
+      }
+    }
+  }
+}
