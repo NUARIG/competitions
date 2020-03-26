@@ -10,10 +10,21 @@
 .tabs-panel.is-active
   %h2
     = yield(:page_title)
-
   %p
     = link_to 'Back to Permissions', grant_grant_permissions_path
-
+  %ul
+    %li
+      %strong
+        Admin
+      = "- Delete, edit, and view grant and its submissions and reviews."
+    %li
+      %strong
+        Editor
+      = "- Edit and view grant and its submissions and reviews."
+    %li
+      %strong
+        Viewer
+      = "- View grant and its submissions and reviews."
 .grid-x
   .cell
     = form_with model: [@grant, @grant_permission], local: true do |f|
