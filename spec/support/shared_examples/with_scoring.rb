@@ -16,5 +16,10 @@ RSpec.shared_examples 'WithScoring' do
       empty_scores = []
       expect(instance.calculate_average_score(empty_scores)).to eql 0
     end
+
+    it 'returns zero when it receives an array of nils' do
+      empty_scores = [nil, nil, nil]
+      expect(instance.calculate_average_score(empty_scores)).to eql 0
+    end
   end
 end
