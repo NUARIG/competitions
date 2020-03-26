@@ -10,12 +10,20 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant_editor)     { grant.administrators.second }
   let(:grant_viewer)     { grant.administrators.third }
   let(:new_applicant)    { create(:user) }
-  let(:draft_submission) { create(:draft_submission_with_responses, grant: grant, form: grant.form) }
+  let(:draft_submission) { create(:draft_submission_with_responses,
+                                    grant: grant,
+                                    form: grant.form) }
   let(:draft_grant)      { create(:draft_grant) }
   let(:other_submission) { create(:grant_submission_submission, grant: grant) }
-  let(:review)           { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
-                                                                                        assigner: grant_admin,
-                                                                                        reviewer: grant.reviewers.first) }
+  let(:review)           { create(:scored_review_with_scored_mandatory_criteria_review,
+                                    submission: submission,
+                                    assigner: grant_admin,
+                                    reviewer: grant.reviewers.first) }
+  let(:new_reviewer)     { create(:grant_reviewer, grant: grant) }
+  let(:new_review)       { create(:scored_review_with_scored_mandatory_criteria_review,
+                                    submission: submission,
+                                    assigner: grant_admin,
+                                    reviewer: new_reviewer.reviewer) }
 
   context '#index' do
     context 'published grant' do
@@ -43,13 +51,35 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               expect(composite).to have_text '-'
             end
 
-            scenario 'submission with one review shows dashes for scores' do
+            scenario 'submission with one review shows scores' do
               review
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
               expect(overall).to have_text review.overall_impact_score
               expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
+            end
+
+            scenario 'submission with one review shows scores' do
+              review
+              visit grant_submissions_path(grant)
+              overall   = page.find("td[data-overall-impact='#{submission.id}']")
+              composite = page.find("td[data-composite='#{submission.id}']")
+              expect(overall).to have_text review.overall_impact_score
+              expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
+            end
+
+            scenario 'submission with multiple reviews shows proper scores' do
+              reviews = [review, new_review]
+              visit grant_submissions_path(grant)
+              overall   = page.find("td[data-overall-impact='#{submission.id}']")
+              composite = page.find("td[data-composite='#{submission.id}']")
+
+              expected_average_overall = (reviews.map(&:overall_impact_score).sum.to_f / 2).round(2)
+              expected_composite       = (submission.criteria_reviews.to_a.map(&:score).sum.to_f / submission.criteria_reviews.count).round(2)
+
+              expect(overall).to have_text expected_average_overall
+              expect(composite).to have_text expected_composite
             end
           end
         end
