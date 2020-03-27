@@ -21,7 +21,7 @@ class GrantSubmission::SubmissionPolicy < GrantPolicy
 
     def resolve
       if user.system_admin? || check_grant_access(%i[admin editor viewer])
-        @grant.submissions
+        GrantSubmission::Submission.includes(:applicant, :reviews, :criteria_reviews).where(grant_id: @grant.id)
       else
         scope.where(applicant: user)
       end

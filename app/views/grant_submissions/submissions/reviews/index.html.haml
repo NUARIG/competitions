@@ -74,7 +74,8 @@
                         - if scored_criterion.score.present?
                           = scored_criterion.score
                         - else
-                          NS
+                          %span{ title: 'No Score' }
+                            NS
                       - if scored_criterion.comment.present?
                         .row{id: "criterion-#{criterion.id}-comment"}
                           = scored_criterion.comment

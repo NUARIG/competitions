@@ -37,6 +37,10 @@ module ApplicationHelper
     date.blank? ? '' : date.strftime('%m/%d/%Y')
   end
 
+  def date_time_separate_lines(date)
+    date.blank? ? '' : date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe
+  end
+
   # BEGIN FormBuilder
   def view_or_edit(form)
     form.available? ? "Edit" : "View"
