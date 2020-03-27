@@ -24,6 +24,10 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
                                     submission: submission,
                                     assigner: grant_admin,
                                     reviewer: new_reviewer.reviewer) }
+  let(:unscored_review)  { create(:incomplete_review,
+                                    submission: submission,
+                                    assigner: grant_admin,
+                                    reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
 
   context '#index' do
     context 'published grant' do
@@ -36,7 +40,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           scenario 'can visit the submissions index page' do
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -75,10 +79,26 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
 
-              expected_average_overall = (reviews.map(&:overall_impact_score).sum.to_f / 2).round(2)
+              expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
               expected_composite       = (submission.criteria_reviews.to_a.map(&:score).sum.to_f / submission.criteria_reviews.count).round(2)
 
               expect(overall).to have_text expected_average_overall
+              expect(composite).to have_text expected_composite
+            end
+
+            scenario 'submission with multiple reviews shows proper scores' do
+              reviews = [review, new_review, unscored_review]
+              visit grant_submissions_path(grant)
+
+              overall   = page.find("td[data-overall-impact='#{submission.id}']")
+              composite = page.find("td[data-composite='#{submission.id}']")
+              completed = page.find("div[data-completed-reviews='#{submission.id}'")
+
+              expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
+              expected_composite       = (submission.criteria_reviews.to_a.map(&:score).compact.sum.to_f / submission.criteria_reviews.count).round(2)
+
+              expect(overall).to have_text expected_average_overall
+              expect(completed).to have_text '2 / 3'
               expect(composite).to have_text expected_composite
             end
           end
@@ -90,7 +110,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
           end
@@ -103,7 +123,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -116,7 +136,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+          expect(page).not_to have_link 'Assign Reviews', href: grant_submission_reviews_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -136,6 +156,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'does not have admin links' do
+          expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
           expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
@@ -147,6 +168,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'does not include score columns' do
+          expect(page).not_to have_content 'Reviews'
           expect(page).not_to have_content 'Overall Impact'
           expect(page).not_to have_content 'Composite'
         end
@@ -165,7 +187,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -178,7 +200,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -192,7 +214,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -205,7 +227,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
