@@ -60,18 +60,18 @@
 
       %tbody
         - @submissions.each do |submission|
-          - submission_reviews = submission.reviews.to_a
-          - has_completed_reviews = submission_reviews.any?{ |review| review.overall_impact_score.present? }
+          - review_data = review_data(submission)
+          - applicant   = submission.applicant
 
           %tr{data: { submission: submission.id } }
             %td
-              = link_to sortable_full_name(submission.applicant), grant_submission_path(@grant, submission)
+              = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
             %td
               = link_to submission.title, grant_submission_path(@grant, submission)
             %td
               %div.status{data: {status: submission.id} }
                 = submission.state.titleize
-              - if current_user.get_role_by_grant(grant: @grant) != 'viewer' && current_user != submission.applicant
+              - if current_user.get_role_by_grant(grant: @grant) != 'viewer' && current_user != applicant
                 %div.administer.small{data: { status: submission.id} }
                   - if submission.draft?
                     = link_to 'Edit', edit_grant_submission_path(@grant, submission)
@@ -84,22 +84,18 @@
               = date_time_separate_lines(submission.updated_at)
             - if current_user.get_role_by_grant(grant: @grant)
               %td
-                = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
-                - if submission.reviews.any?
-                  %div.count.small{title: 'Completed / Assigned'}
-                    #{submission_reviews.count{ |review| !review.overall_impact_score.nil? }} / #{submission_reviews.count}
+                - if review_data.assigned_review_count == '0'
+                  = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
+                - else
+                  = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
+                  %div.count.small{title: 'Completed / Assigned', data: { completed: {reviews: submission.id}}}
+                    #{review_data.completed_review_count} / #{review_data.assigned_review_count}
               %td.overall-impact{data: { overall: { impact: submission.id } } }
-                - if has_completed_reviews
-                  %div.average{title: 'Average of Completed'}
-                    = submission.calculate_average_score(submission_reviews.map(&:overall_impact_score))
-                - else
-                  \-
+                %div.average{title: 'Average of Completed'}
+                  = review_data.overall_impact_average
               %td.composite{data: { composite: submission.id } }
-                - if submission.reviews.completed.any?
-                  %span{title: 'Average of Scored Criteria'}
-                    = submission.calculate_average_score(submission.criteria_reviews.to_a.map(&:score))
-                - else
-                  \-
+                %span{title: 'Average of Scored Criteria'}
+                  = review_data.composite_score
 
 
     != pagy_foundation_nav(@pagy)
