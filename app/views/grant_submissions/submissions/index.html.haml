@@ -47,7 +47,7 @@
           %th
             = sort_link(@q, :state, 'State')
           %th
-            = sort_link(@q, :updated_at, 'Updated')
+            = sort_link(@q, :user_updated_at, 'Updated')
           - if current_user.get_role_by_grant(grant: @grant)
             %th
               Reviews
@@ -81,7 +81,7 @@
                   %div.delete
                     = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'small', confirm: 'Are you sure?'
             %td
-              = date_time_separate_lines(submission.updated_at)
+              = date_time_separate_lines(submission.user_updated_at)
             - if current_user.get_role_by_grant(grant: @grant)
               %td
                 - if review_data.assigned_review_count == '0'
