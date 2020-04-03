@@ -75,12 +75,12 @@ module GrantSubmission
       reviews.pluck(:overall_impact_score)
     end
 
-    def average_overall_impact_score
-      calculate_average_score(reviews.to_a.map(&:overall_impact_score))
+    def set_average_overall_impact_score
+      self.update_attribute(:average_overall_impact_score, calculate_average_score(reviews.to_a.map(&:overall_impact_score)))
     end
 
-    def composite_score
-      calculate_average_score(criteria_reviews.to_a.map(&:score))
+    def set_composite_score
+      self.update_attribute(:composite_score, calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
     end
 
     private
