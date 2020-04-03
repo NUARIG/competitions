@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe 'grant_submission review requests', type: :request do
+  def random_score
+    rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE)
+  end
+
+  def criteria_params
+    criteria_review_params = {}
+    grant.criteria.each_with_index do |criteria, index|
+      criteria_review_params[index] = { criterion_id: criteria.id,
+                                        score: random_score }
+    end
+    criteria_review_params
+  end
+
   let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:grant_editor) { grant.grant_permissions.role_editor.first.user }
   let(:grant_viewer) { grant.grant_permissions.role_viewer.first.user }
@@ -89,6 +102,38 @@ RSpec.describe 'grant_submission review requests', type: :request do
   end
 
   context '#edit' do
+    it 'udpates the submission average_overall_impact_score' do
+      sign_in(review.reviewer)
+
+      expect do
+        patch(grant_submission_review_path(grant_id: grant.id,
+                                           submission_id: submission.id,
+                                           id: review.id,
+                                           params: {
+                                             review: {
+                                               overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE),
+                                               criteria_reviews_attributes: criteria_params
+                                             }
+                                           }))
+      end.to change{ submission.reload.average_overall_impact_score }
+    end
+
+    it 'udpates the submission composite score' do
+      sign_in(review.reviewer)
+
+      expect do
+        patch(grant_submission_review_path(grant_id: grant.id,
+                                           submission_id: submission.id,
+                                           id: review.id,
+                                           params: {
+                                             review: {
+                                               overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE),
+                                               criteria_reviews_attributes: criteria_params
+                                             }
+                                           }))
+      end.to change{ submission.reload.composite_score }
+    end
+
     it 'redirects the applicant' do
       sign_in(review.submission.applicant)
       get edit_grant_submission_review_path(grant, submission, review)

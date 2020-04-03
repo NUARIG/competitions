@@ -26,7 +26,8 @@ module GrantSubmission
                                 inverse_of: :submission
     has_many :reviewers,        through: :reviews,
                                 source: :reviewer
-    has_many :criteria_reviews, through: :reviews
+    has_many :criteria_reviews, through: :reviews,
+                                inverse_of: :submission
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true

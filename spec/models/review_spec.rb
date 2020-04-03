@@ -77,7 +77,8 @@ RSpec.describe Review, type: :model do
       end
 
       it 'requires an overall score to be less than or equal to Review::MAXIMUM_ALLOWED_SCORE' do
-        review.update(overall_impact_score: Review::MAXIMUM_ALLOWED_SCORE + 1)
+        review.save
+        review.overall_impact_score = Review::MAXIMUM_ALLOWED_SCORE + 1
         expect(review).not_to be_valid
         expect(review.errors).to include(:overall_impact_score)
         review.update(overall_impact_score: Review::MAXIMUM_ALLOWED_SCORE)

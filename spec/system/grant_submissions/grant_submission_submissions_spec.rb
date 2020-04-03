@@ -57,6 +57,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'submission with one review shows scores' do
               review
+              review.save
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
@@ -66,6 +67,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'submission with one review shows scores' do
               review
+              review.save
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
@@ -75,6 +77,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'submission with multiple reviews shows proper scores' do
               reviews = [review, new_review]
+              review.save
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
