@@ -55,6 +55,13 @@ module GrantSubmission
     scope :with_reviewers,      -> { includes( :reviewers ) }
     scope :with_applicant,      -> { includes( :applicant ) }
 
+    scope :sort_by_average_overall_impact_score_nulls_last_asc,  -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score ASC NULLS LAST")) }
+    scope :sort_by_average_overall_impact_score_nulls_last_desc, -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score DESC NULLS LAST")) }
+
+    scope :sort_by_composite_score_nulls_last_asc,  -> { order(Arel.sql("composite_score = 0 nulls last, composite_score ASC")) }
+    scope :sort_by_composite_score_nulls_last_desc, -> { order(Arel.sql("composite_score = 0 nulls last, composite_score DESC")) }
+
+
     # TODO: available? to...edit? delete?
     def available?
       return true
