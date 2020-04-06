@@ -52,18 +52,18 @@
             %th
               Reviews
             %th
-              %span{ title: 'Average of scored reviews' }
-                Overall Impact
+              %span{ title: 'Average of scored reviews - scored first' }
+                = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact')
             %th
-              %span{ title: 'Average of scored Criteria' }
-                Composite
+              %span{ title: 'Average of scored Criteria - scored first' }
+                = sort_link(@q, :composite_score_nulls_last, 'Composite Score')
 
       %tbody
         - @submissions.each do |submission|
           - review_data = review_data(submission)
           - applicant   = submission.applicant
 
-          %tr{data: { submission: submission.id } }
+          %tr.submission{data: { submission: submission.id } }
             %td
               = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
             %td
