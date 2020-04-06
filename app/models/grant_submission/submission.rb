@@ -26,7 +26,8 @@ module GrantSubmission
                                 inverse_of: :submission
     has_many :reviewers,        through: :reviews,
                                 source: :reviewer
-    has_many :criteria_reviews, through: :reviews
+    has_many :criteria_reviews, through: :reviews,
+                                inverse_of: :submission
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true
@@ -54,6 +55,13 @@ module GrantSubmission
     scope :with_reviewers,      -> { includes( :reviewers ) }
     scope :with_applicant,      -> { includes( :applicant ) }
 
+    scope :sort_by_average_overall_impact_score_nulls_last_asc,  -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score ASC NULLS LAST")) }
+    scope :sort_by_average_overall_impact_score_nulls_last_desc, -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score DESC NULLS LAST")) }
+
+    scope :sort_by_composite_score_nulls_last_asc,  -> { order(Arel.sql("composite_score = 0 nulls last, composite_score ASC")) }
+    scope :sort_by_composite_score_nulls_last_desc, -> { order(Arel.sql("composite_score = 0 nulls last, composite_score DESC")) }
+
+
     # TODO: available? to...edit? delete?
     def available?
       return true
@@ -75,12 +83,12 @@ module GrantSubmission
       reviews.pluck(:overall_impact_score)
     end
 
-    def average_overall_impact_score
-      calculate_average_score(reviews.to_a.map(&:overall_impact_score))
+    def set_average_overall_impact_score
+      self.update_attribute(:average_overall_impact_score, calculate_average_score(reviews.to_a.map(&:overall_impact_score)))
     end
 
-    def composite_score
-      calculate_average_score(criteria_reviews.to_a.map(&:score))
+    def set_composite_score
+      self.update_attribute(:composite_score, calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
     end
 
     private

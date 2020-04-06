@@ -47,23 +47,23 @@
           %th
             = sort_link(@q, :state, 'State')
           %th
-            = sort_link(@q, :updated_at, 'Updated')
+            = sort_link(@q, :user_updated_at, 'Updated')
           - if current_user.get_role_by_grant(grant: @grant)
             %th
               Reviews
             %th
-              %span{ title: 'Average of scored reviews' }
-                Overall Impact
+              %span{ title: 'Average of scored reviews - scored first' }
+                = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact')
             %th
-              %span{ title: 'Average of scored Criteria' }
-                Composite
+              %span{ title: 'Average of scored Criteria - scored first' }
+                = sort_link(@q, :composite_score_nulls_last, 'Composite Score')
 
       %tbody
         - @submissions.each do |submission|
           - review_data = review_data(submission)
           - applicant   = submission.applicant
 
-          %tr{data: { submission: submission.id } }
+          %tr.submission{data: { submission: submission.id } }
             %td
               = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
             %td
@@ -81,7 +81,7 @@
                   %div.delete
                     = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'small', confirm: 'Are you sure?'
             %td
-              = date_time_separate_lines(submission.updated_at)
+              = date_time_separate_lines(submission.user_updated_at)
             - if current_user.get_role_by_grant(grant: @grant)
               %td
                 - if review_data.assigned_review_count == '0'

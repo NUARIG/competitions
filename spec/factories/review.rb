@@ -29,10 +29,17 @@ FactoryBot.define do
       end
     end
 
-    factory :incomplete_review,                                   traits: %i[incomplete]
-    factory :review_with_score,                                   traits: %i[with_score]
-    factory :review_with_comment,                                 traits: %i[with_comment]
-    factory :review_with_score_and_comment,                       traits: %i[with_score with_comment]
-    factory :scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review]
+    trait :reload_submission do
+      after(:create) do |review|
+        # ensures current calculations are loaded
+        review.submission.reload
+      end
+    end
+
+    factory :incomplete_review,                                   traits: %i[incomplete reload_submission]
+    factory :review_with_score,                                   traits: %i[with_score reload_submission]
+    factory :review_with_comment,                                 traits: %i[with_comment reload_submission]
+    factory :review_with_score_and_comment,                       traits: %i[with_score with_comment reload_submission]
+    factory :scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review reload_submission]
   end
 end

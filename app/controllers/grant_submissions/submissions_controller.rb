@@ -5,7 +5,7 @@ module GrantSubmissions
     def index
       @grant   = GrantDecorator.new(@grant)
       @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
-      @q.sorts = 'updated_at desc' if @q.sorts.empty?
+      @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
       @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
     end
 
@@ -42,6 +42,7 @@ module GrantSubmissions
       @submission.user_submitted_state = params[:state]
 
       if @submission.save
+        @submission.update_attribute(:user_updated_at, Time.now)
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
         submission_redirect(@grant, @submission)
       else
@@ -59,7 +60,7 @@ module GrantSubmissions
 
       if @submission.update(submission_params)
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
-        @submission.touch
+        @submission.update_attribute(:user_updated_at, Time.now)
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'

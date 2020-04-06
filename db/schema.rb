@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_18_181408) do
+ActiveRecord::Schema.define(version: 2020_03_31_152614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -338,8 +338,11 @@ ActiveRecord::Schema.define(version: 2020_02_18_181408) do
     t.datetime "updated_at", null: false
     t.integer "reviews_count", default: 0
     t.string "state", null: false
-    t.datetime "submitted_at"
+    t.datetime "user_updated_at"
     t.datetime "discarded_at"
+    t.datetime "applicant_last_updated_at"
+    t.decimal "average_overall_impact_score", precision: 5, scale: 2
+    t.decimal "composite_score", precision: 5, scale: 2
     t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
     t.index ["discarded_at"], name: "index_grant_submission_submissions_on_discarded_at"
     t.index ["grant_id", "created_id"], name: "i_gss_on_grant_id_and_created_id"

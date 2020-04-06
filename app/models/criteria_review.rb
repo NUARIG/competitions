@@ -4,7 +4,7 @@ class CriteriaReview < ApplicationRecord
                   meta:     { review_id: :review_id }
 
   belongs_to :criterion
-  belongs_to :review
+  belongs_to :review, touch: true
 
   has_one :submission, through: :review
   has_one :grant,      through: :review
