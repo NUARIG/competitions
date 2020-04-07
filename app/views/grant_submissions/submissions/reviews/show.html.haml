@@ -1,12 +1,19 @@
 - content_for(:page_title, "Review of #{@submission.title} by #{full_name(@review.reviewer)}")
 - current_user_can_edit = policy(@review).edit?
 
-%h1 Submission Review
+%h1= @grant.name
+
+%h3 Submission Review
+
+- if current_user.get_role_by_grant(grant: @grant)
+  = link_to 'Back to All Reviews', grant_reviews_path(@grant)
+- else
+  = link_to 'Back to My Reviews', profile_reviews_path
 
 = render 'review_header', locals: { grant: @grant, submission: @submission, review: @review }
 
 - if current_user_can_edit
-  = link_to 'Edit', edit_grant_submission_review_path(@review.grant, @review.submission, @review)
+  = link_to 'Edit this Review', edit_grant_submission_review_path(@review.grant, @review.submission, @review)
 
 #criteria
   %h4 Criteria Scores
@@ -64,4 +71,4 @@
           No comment provided.
 
 - if current_user_can_edit
-  = link_to 'Edit', edit_grant_submission_review_path(@review.grant, @review.submission, @review)
+  = link_to 'Edit this Review', edit_grant_submission_review_path(@review.grant, @review.submission, @review)
