@@ -84,7 +84,9 @@
               = date_time_separate_lines(submission.updated_at)
             - if current_user.get_role_by_grant(grant: @grant)
               %td
-                - if review_data.assigned_review_count == '0'
+                - if submission.draft? && review_data.assigned_review_count == '0'
+                  %span.not-allowed{title: 'Draft submissions may not be assigned for review'} -
+                - elsif submission.submitted? && review_data.assigned_review_count == '0'
                   = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
                 - else
                   = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
