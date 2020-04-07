@@ -246,8 +246,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         visit grant_reviewers_path(grant)
       end
 
-      pending 'creates a review' do
-        fail 'see issue #414'
+      scenario 'creates a review' do
         submission_to_assign = find_by_id("submission_#{submission.id}")
         unassigned_reviewer  = find("#reviews_#{new_grant_reviewer.reviewer.id} ul.review_list")
 
@@ -272,8 +271,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         visit grant_reviewers_path(grant)
       end
 
-      pending 'does not add review when reviewer is applicant' do
-        fail 'see issue #414'
+      scenario 'does not add review when reviewer is applicant' do
         submission_to_assign = find_by_id("submission_#{submission.id}")
         applicant_reviews    = find("#reviews_#{applicant_reviewer.reviewer.id} ul.review_list")
 
@@ -285,8 +283,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         expect(page).to have_text 'Reviewer may not review their own submission.'
       end
 
-      pending 'does not add review when reviewer has been assigned' do
-        fail 'see issue #414'
+      scenario 'does not add review when reviewer has been assigned' do
         submission_to_assign = find_by_id("submission_#{submission.id}")
         reviewer_reviews    = find("#reviews_#{reviewer.id} ul.review_list")
 
