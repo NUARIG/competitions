@@ -158,9 +158,12 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe '#update', js: true do
     context 'success' do
       context 'grant_admin' do
-        scenario 'may edit the review' do
+        before(:each) do
           login_as grant_admin
           visit edit_grant_submission_review_path(grant, submission, review)
+        end
+
+        scenario 'may edit the review' do
           expect(review.is_complete?).to be false
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
@@ -170,14 +173,39 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           expect(page).to have_text 'Review was successfully updated.'
           expect(review.reload.is_complete?).to be true
         end
+
+        scenario 'redirects to Grant Submissions path' do
+          grant.criteria.each do |criterion|
+            find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+          end
+          find("label[for='overall-#{random_score}']").click
+          click_button 'Submit Your Review'
+          expect(page).to have_text 'Review was successfully updated.'
+          expect(page.current_path).to eql(grant_reviews_path(grant))
+        end
       end
     end
 
     context 'reviewer' do
+      before(:each) do
+        login_as reviewer
+        visit edit_grant_submission_review_path(grant, submission, review)
+      end
+
+      scenario 'redirects to MyReviews path' do
+        grant.criteria.each do |criterion|
+          find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+        end
+        find("label[for='overall-#{random_score}']").click
+        click_button 'Submit Your Review'
+        expect(page).to have_text 'Review was successfully updated.'
+        expect(page.current_path).to eql(profile_reviews_path)
+      end
+
       context 'foundation form abide feedback' do
         scenario 'provides feedback when a required criterion score is not scored' do
-          login_as reviewer
-          visit edit_grant_submission_review_path(grant, submission, review)
+          # login_as reviewer
+          # visit edit_grant_submission_review_path(grant, submission, review)
           click_button 'Submit Your Review'
           expect(page).not_to have_text 'Review was successfully updated.'
           grant.criteria.each do |criterion|
@@ -187,8 +215,8 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
 
         scenario 'provides feedback when overall impact score is not scored' do
-          login_as reviewer
-          visit edit_grant_submission_review_path(grant, submission, review)
+          # login_as reviewer
+          # visit edit_grant_submission_review_path(grant, submission, review)
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
           end
