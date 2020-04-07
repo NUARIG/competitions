@@ -53,7 +53,8 @@ module GrantSubmissions
         authorize @review
         respond_to do |format|
           if @review.update(review_params)
-            format.html { redirect_to grant_submission_review_path(@grant, @submission, @review),
+            set_redirect_path
+            format.html { redirect_to @redirect_path,
                           notice: 'Review was successfully updated.' }
             format.json { render :show, status: :ok, location: @review }
           else
@@ -91,6 +92,14 @@ module GrantSubmissions
         @grant      = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         @submission = @grant.submissions.kept.find(params[:submission_id])
         @review     = @submission.reviews.kept.includes(:criteria, submission: :applicant).find(params[:id])
+      end
+
+      def set_redirect_path
+        @redirect_path  = if current_user.get_role_by_grant(grant: @grant)
+                            grant_reviews_path(@grant)
+                          else
+                            profile_reviews_path
+                          end
       end
 
       def review_params
