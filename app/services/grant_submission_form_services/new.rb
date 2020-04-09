@@ -29,7 +29,7 @@ module GrantSubmissionFormServices
                                         is_mandatory: true,
                                         response_type: 'file_upload')
         end
-      rescue ActiveRecord::Invalid => invalid
+      rescue ActiveRecord::RecordInvalid => invalid
         raise ServiceError(err: invalid)
       end
     end
