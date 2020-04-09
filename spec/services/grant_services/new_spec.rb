@@ -45,14 +45,14 @@ RSpec.describe 'GrantServices' do
 
     context 'failures' do
       it 'returns a struct with .success? false' do
-        allow(GrantPermission).to receive(:create!).and_raise(StandardError)
+        new_grant.update(name: '')
         result = GrantServices::New.call(grant: new_grant, user: grant_creator)
         expect(result.success?).to be false
       end
 
       context 'permission' do
         it 'does not create a grant if permission save fails' do
-          allow(GrantPermission).to receive(:create!).and_raise(StandardError)
+          allow_any_instance_of(GrantPermission).to receive(:user).and_return(nil)
           expect do
             GrantServices::New.call(grant: new_grant, user: grant_creator)
           end.not_to (change{Grant.count})
