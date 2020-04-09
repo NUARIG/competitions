@@ -97,7 +97,6 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           expect do
             click_button('Save as Draft')
           end.not_to change{ Grant.count }
-
           expect(page).to have_content('Name has already been taken')
           expect(page).to have_content('Short Name has already been taken')
         end
