@@ -7,7 +7,7 @@ module GrantSubmissionFormServices
       begin
         # TODO: is requires_new needed?
         ActiveRecord::Base.transaction(requires_new: true) do
-        # Create a form, give it a stock title
+          # Create a form
           new_form = GrantSubmission::Form.create(grant: grant,
                                                   submission_instructions: '',
                                                   created_id: user.id,
@@ -29,6 +29,8 @@ module GrantSubmissionFormServices
                                         is_mandatory: true,
                                         response_type: 'file_upload')
         end
+      rescue ActiveRecord::Invalid => invalid
+        raise ServiceError(err: invalid)
       end
     end
   end
