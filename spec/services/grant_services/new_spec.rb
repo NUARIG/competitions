@@ -48,6 +48,7 @@ RSpec.describe 'GrantServices' do
         new_grant.update(name: '')
         result = GrantServices::New.call(grant: new_grant, user: grant_creator)
         expect(result.success?).to be false
+        expect(result.messages).to include  'Name is required.'
       end
 
       context 'permission' do
