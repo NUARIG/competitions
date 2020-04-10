@@ -1,0 +1,44 @@
+%fieldset.fieldset.form_builder_question_fieldset
+  %legend
+    %span
+      Question
+    = question.link_to_remove 'Delete', id: "delete-question-#{get_question_id(question.object)}", class: 'delete-question button tiny btn-pill hollow alert' if has_edit_permission
+
+  .grid-x.grid-margin-x
+    .cell.small-12.medium-8
+      = question.label :text
+      = question.text_area(attribute: :text, options: { rows: 1, disabled: !(has_edit_permission) })
+    .cell.small-12.medium-4
+      = question.label :response_type
+      = question.select(method: :response_type, |
+                              choices: GrantSubmission::Question::VIEW_RESPONSE_TYPE_TRANSLATION.invert.to_a, |
+                              options: {include_blank: 'Select a Question Type'}, |
+                              html_options: { class: 'form_builder_question_response_type', disabled: !(has_edit_permission) } )
+
+  .grid-x
+    .cell.small-12
+      = question.label :instruction
+      = question.text_area(attribute: :instruction, options: { rows: 1, cols: 100, disabled: !(has_edit_permission) } )
+  .grid-x
+    .cell.small-3
+      = question.label :is_mandatory
+      = question.select(method: :is_mandatory, |
+                        choices: options_for_select([['Yes', true], ['No', false]], question.object.is_mandatory || false), |
+                        options: { include_blank: 'Select One' }, |
+                        html_options: { disabled: !(has_edit_permission) })
+
+  .grid-x
+    .cell.small-12.medium-4
+      %table.submission_multiple_choice_options_table.table.table-condensed.unstriped
+        %tr
+          %td{ colspan: 3}
+            Multiple Choice Options
+            - if has_edit_permission
+              = question.link_to_add 'Add an Option', :multiple_choice_options, data: { location: 'parent', target: '.submission_multiple_choice_options_table'}, class: 'add-option button btn-pill small hollow primary'
+          %tr
+            %td{ colspan: 2 }
+              Select Text
+          = question.fields_for :multiple_choice_options, question.object.multiple_choice_options.sort_by{ |option| option.display_order || 0}, wrapper: false do |option|
+            %tr.fields
+              = render partial: 'multiple_choice_option_form', locals: { multiple_choice_option: option, disabled: !(has_edit_permission) }
+

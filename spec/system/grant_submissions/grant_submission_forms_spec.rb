@@ -97,7 +97,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
           click_link 'Add a Question to this Section'
           new_question_text = Faker::Lorem.sentence
           find_field('Question Text', with: '').set(new_question_text)
-          find_field('Type of Response', with: '').select('Number')
+          find_field('Question Type', with: '').select('Number')
           click_button 'Save'
           expect(@draft_grant.questions.all?{|q| q.display_order <= 4})
           expect(GrantSubmission::Question.find(@original_first_question.id).display_order).to be 1

@@ -50,18 +50,65 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
     context 'submission with reviews' do
       before(:each) do
         login_as(@admin)
-        visit grant_submission_reviews_path(@grant, @submission)
       end
 
-      scenario 'displays table with all criteria' do
-        criteria = @grant.criteria.pluck(:name)
-        headers = all('th').map {|column| column.text.strip }
-        expect(criteria.all? { |criterion| headers.include?(criterion) }).to be true
+      context 'incomplete review' do
+        before(:each) do
+          visit grant_submission_reviews_path(@grant, @submission)
+        end
+
+        scenario 'displays table with all criteria' do
+          criteria = @grant.criteria.pluck(:name)
+          headers = all('th').map {|column| column.text.strip }
+          expect(criteria.all? { |criterion| headers.include?(criterion) }).to be true
+        end
+
+        scenario 'includes table of assigned reviews' do
+          expect(page).to have_text sortable_full_name(@reviewer)
+          expect(page).to have_text 'Incomplete'
+        end
+
+        scenario 'does not include score and comment summary' do
+          expect(page).not_to have_text 'Scores and Comments'
+          expect(page).not_to have_text 'Overall Impact Scores and Comments'
+        end
       end
 
-      scenario 'includes table of assigned reviews' do
-        expect(page).to have_text sortable_full_name(@reviewer)
-        expect(page).to have_text 'Incomplete'
+      context 'complete review' do
+        before(:each) do
+          @submission_review.grant_criteria.each do |criterion|
+            criterion.update_attribute(:show_comment_field, true)
+            create(:scored_criteria_review, criterion: criterion,
+                                            review: @submission_review,
+                                            score: random_score)
+          end
+          @submission_review.update(overall_impact_score: random_score)
+
+          @unscored_criterion = @submission_review.criteria_reviews.first
+          @unscored_criterion.update_attribute(:score, nil)
+          @unscored_criterion.update_attribute(:comment, 'Commented criterion.')
+
+          @uncommented_criterion = @submission_review.criteria_reviews.last.criterion
+
+          visit grant_submission_reviews_path(@grant, @submission)
+        end
+
+        scenario 'includes scores and comments' do
+          expect(page).to have_text 'Scores and Comments'
+          expect(page).to have_text 'Overall Impact Scores and Comments'
+        end
+
+        scenario 'displays NS for unscored criteria' do
+          expect(find_by_id("criterion-#{@unscored_criterion.criterion.id}-score")).to have_text 'NS'
+        end
+
+        scenario 'displays comment when commented' do
+          expect(find_by_id("criterion-#{@unscored_criterion.criterion.id}-comment")).to have_text 'Commented criterion.'
+        end
+
+        scenario 'does not have comment selector if no comment' do
+          expect(page).not_to have_selector"criterion-#{@uncommented_criterion.id}-comment"
+        end
       end
     end
   end
@@ -111,9 +158,12 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe '#update', js: true do
     context 'success' do
       context 'grant_admin' do
-        scenario 'may edit the review' do
+        before(:each) do
           login_as grant_admin
           visit edit_grant_submission_review_path(grant, submission, review)
+        end
+
+        scenario 'may edit the review' do
           expect(review.is_complete?).to be false
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
@@ -123,14 +173,39 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           expect(page).to have_text 'Review was successfully updated.'
           expect(review.reload.is_complete?).to be true
         end
+
+        scenario 'redirects to Grant Submissions path' do
+          grant.criteria.each do |criterion|
+            find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+          end
+          find("label[for='overall-#{random_score}']").click
+          click_button 'Submit Your Review'
+          expect(page).to have_text 'Review was successfully updated.'
+          expect(page.current_path).to eql(grant_reviews_path(grant))
+        end
       end
     end
 
     context 'reviewer' do
+      before(:each) do
+        login_as reviewer
+        visit edit_grant_submission_review_path(grant, submission, review)
+      end
+
+      scenario 'redirects to MyReviews path' do
+        grant.criteria.each do |criterion|
+          find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+        end
+        find("label[for='overall-#{random_score}']").click
+        click_button 'Submit Your Review'
+        expect(page).to have_text 'Review was successfully updated.'
+        expect(page.current_path).to eql(profile_reviews_path)
+      end
+
       context 'foundation form abide feedback' do
         scenario 'provides feedback when a required criterion score is not scored' do
-          login_as reviewer
-          visit edit_grant_submission_review_path(grant, submission, review)
+          # login_as reviewer
+          # visit edit_grant_submission_review_path(grant, submission, review)
           click_button 'Submit Your Review'
           expect(page).not_to have_text 'Review was successfully updated.'
           grant.criteria.each do |criterion|
@@ -140,8 +215,8 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
 
         scenario 'provides feedback when overall impact score is not scored' do
-          login_as reviewer
-          visit edit_grant_submission_review_path(grant, submission, review)
+          # login_as reviewer
+          # visit edit_grant_submission_review_path(grant, submission, review)
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
           end

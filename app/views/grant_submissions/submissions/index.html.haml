@@ -20,10 +20,25 @@
         You have no submissions to this grant.
   - else
 
+    = search_form_for @q, url: grant_submissions_path(@grant) do |f|
+      .grid-x.grid-margin-x.medium-margin-collapse
+        .small-12.medium-4.cell
+          = f.label :applicant_last_name_or_title_cont, 'Search Applicant Last Name or Project Title', class: 'text-left middle'
+        .small-12.medium-3.cell
+          = f.search_field :applicant_last_name_or_title_cont
+        .small-12.medium-3.cell
+          = f.submit 'Search', class: 'button'
+          = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
+
     = render 'shared/pagy_header', locals: { pagy: @pagy }
 
-    %table
+    %table#grant-submissions
       %thead
+        - if current_user.get_role_by_grant(grant: @grant)
+          %tr
+            %th{colspan: 5}
+            %th{colspan: 2}
+              Scores
         %tr
           %th
             = sort_link(@q, :applicant_last_name, 'Applicant')
@@ -32,22 +47,57 @@
           %th
             = sort_link(@q, :state, 'State')
           %th
-            = sort_link(@q, :updated_at, 'Last Updated')
-          %th
+            = sort_link(@q, :updated_at, 'Updated')
+          - if current_user.get_role_by_grant(grant: @grant)
+            %th
+              Reviews
+            %th
+              %span{ title: 'Average of scored reviews' }
+                Overall Impact
+            %th
+              %span{ title: 'Average of scored Criteria' }
+                Composite
+
       %tbody
         - @submissions.each do |submission|
-          %tr
+          - review_data = review_data(submission)
+          - applicant   = submission.applicant
+
+          %tr{data: { submission: submission.id } }
             %td
-              = link_to sortable_full_name(submission.applicant), grant_submission_path(@grant, submission)
+              = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
             %td
               = link_to submission.title, grant_submission_path(@grant, submission)
             %td
-              = submission.state.titleize
+              %div.status{data: {status: submission.id} }
+                = submission.state.titleize
+              - if current_user.get_role_by_grant(grant: @grant) != 'viewer' && current_user != applicant
+                %div.administer.small{data: { status: submission.id} }
+                  - if submission.draft?
+                    = link_to 'Edit', edit_grant_submission_path(@grant, submission)
+                  - elsif submission.submitted?
+                    = link_to 'Switch to Draft', unsubmit_grant_submission_path(@grant, submission), method: :patch, title: 'Allow for editing'
+                - if current_user.get_role_by_grant(grant: @grant) == 'admin' && !@grant.published?
+                  %div.delete
+                    = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'small', confirm: 'Are you sure?'
             %td
-              = submission.updated_at
-            %td
-              - if current_user.get_role_by_grant(grant: @grant)
-                #ul.menu.simple
-                  = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { submission: submission, grant: @grant }
+              = date_time_separate_lines(submission.updated_at)
+            - if current_user.get_role_by_grant(grant: @grant)
+              %td
+                - if submission.draft? && review_data.assigned_review_count == '0'
+                  %span.not-allowed{title: 'Draft submissions may not be assigned for review'} -
+                - elsif submission.submitted? && review_data.assigned_review_count == '0'
+                  = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
+                - else
+                  = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
+                  %div.count.small{title: 'Completed / Assigned', data: { completed: {reviews: submission.id}}}
+                    #{review_data.completed_review_count} / #{review_data.assigned_review_count}
+              %td.overall-impact{data: { overall: { impact: submission.id } } }
+                %div.average{title: 'Average of Completed'}
+                  = review_data.overall_impact_average
+              %td.composite{data: { composite: submission.id } }
+                %span{title: 'Average of Scored Criteria'}
+                  = review_data.composite_score
+
 
     != pagy_foundation_nav(@pagy)

@@ -1,0 +1,4 @@
+<%= ff.select(method: ffn,
+              choices: options_for_select(ff.object.question.multiple_choice_options.sort_by(&:display_order).map { |option| [option.text, option.id, 'data-value' => option.text] }, ff.object.grant_submission_multiple_choice_option_id),
+              options: { include_blank: 'Select One' },
+              html_options: { data: { question_id: ff.object.question.id } }) %>

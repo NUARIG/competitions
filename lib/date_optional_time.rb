@@ -5,7 +5,7 @@ module DateOptionalTime
   # TODO: Move to app/models/concerns?
 
   module ClassMethods
-    def has_date_optional_time(datetime_comp, has_time_comp)
+    def has_date_optional_time(datetime_comp:, has_time_comp:)
       dt_input = date_optional_time_attribute(datetime_comp)
       attr_reader dt_input
       validate {parse_date_string(self.send(dt_input), datetime_comp)}
@@ -46,11 +46,11 @@ module DateOptionalTime
   end
 
   def add_date_optional_time_error(datetime_comp)
-    errors.add(datetime_comp, "must be a valid Date/Time in the format MM/DD/YYYY")
+    raise NoMethodError, "DateOptionalTime expects #add_date_optional_time_error() to be defined in #{self.class}."
   end
 
   def date_optional_time_errors?(datetime_comp)
-    errors[datetime_comp].blank?
+    raise NoMethodError, "DateOptionalTime expects #date_optional_time_errors?() to be defined in #{self.class}."
   end
 
   def set_date_opt_time(dt_input, datetime_comp, has_time_comp, datestring)
@@ -60,19 +60,5 @@ module DateOptionalTime
 
   def get_date_opt_time(datetime_comp, has_time_comp)
     self.send(has_time_comp) ? self.send(datetime_comp) : self.send(datetime_comp).try(:to_date)
-  end
-
-  # old data across many tables has various insignificant timestmaps. These should all be 0
-  # see eb82f94086df6b30e3f44f3734c2feb592464b3a for more info
-  def clear_bad_time(datetime_comp, has_time_comp)
-    if !self.send(datetime_comp)
-      nil
-    else
-      self.send(has_time_comp) ? self.send(datetime_comp) : Time.zone.parse("#{self.send(datetime_comp).strftime('%F')} 00:00")
-    end
-  end
-
-  def form_dates_entry(datetime_comp, has_time_comp)
-    [clear_bad_time(datetime_comp, has_time_comp), get_date_opt_time(datetime_comp, has_time_comp)]
   end
 end

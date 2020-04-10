@@ -5,7 +5,7 @@ module GrantSubmissions
     def index
       @grant   = GrantDecorator.new(@grant)
       @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
-      @q.sorts = 'created_at desc' if @q.sorts.empty?
+      @q.sorts = 'updated_at desc' if @q.sorts.empty?
       @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
     end
 
@@ -21,8 +21,7 @@ module GrantSubmissions
                     .friendly
                     .includes(form:
                                 { sections:
-                                  {questions: :multiple_choice_options} }
-                              )
+                                  {questions: :multiple_choice_options} } )
                     .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
       set_submission
@@ -40,9 +39,10 @@ module GrantSubmissions
     def create
       set_submission
       authorize @submission
-      set_state(@submission)
-      if @submission.save(context: @submission.state.to_sym)
-        @submission.state == 'submitted' ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
+      @submission.user_submitted_state = params[:state]
+
+      if @submission.save
+        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
@@ -55,10 +55,10 @@ module GrantSubmissions
     def update
       set_submission
       authorize @submission
-      set_state(@submission)
-      @submission.assign_attributes(submission_params)
-      if @submission.save(context: @submission.state.to_sym)
-        @submission.state == 'submitted' ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
+      @submission.user_submitted_state = params[:state]
+
+      if @submission.update(submission_params)
+        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
         @submission.touch
         submission_redirect(@grant, @submission)
       else
@@ -85,11 +85,6 @@ module GrantSubmissions
 
     def set_grant
       @grant = Grant.kept.friendly.find(params[:grant_id])
-    end
-
-    def set_state(submission)
-      submission.state = params[:state]
-      submission.submitted_at = Time.now if submission.submitted?
     end
 
     def submission_redirect(grant, submission)
@@ -125,7 +120,6 @@ module GrantSubmissions
                        :grant_submission_form_id,
                        :parent_id,
                        :grant_submission_section_id,
-                       :state,
                        responses_attributes: [
                          :id,
                          :grant_submission_submission_id,

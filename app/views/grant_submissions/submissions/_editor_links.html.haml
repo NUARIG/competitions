@@ -1,7 +1,0 @@
-%li
-  = link_to 'Reviews', grant_submission_reviews_path(@grant, submission), class: 'button clear'
-%li
-  - if submission.draft?
-    = link_to 'Edit', edit_grant_submission_path(grant, submission), class: 'button clear'
-  - elsif submission.submitted?
-    = link_to 'Switch to Draft', unsubmit_grant_submission_path(grant, submission), method: :patch, class: 'button clear', title: 'Allow for editing'
