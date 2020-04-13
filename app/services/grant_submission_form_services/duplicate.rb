@@ -29,7 +29,7 @@ module GrantSubmissionFormServices
               end
             end
           rescue ActiveRecord::RecordInvalid => invalid
-            raise ServiceError.new(invalid: invalid)
+            raise ServiceError::InputInvalid.new(invalid: invalid)
           end
         end
       end

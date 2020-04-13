@@ -17,9 +17,9 @@ module GrantServices
     rescue ActiveRecord::RecordInvalid => invalid
       OpenStruct.new(success?: false,
                      messages: invalid.record.errors.full_messages)
-    rescue ServiceError => err # throws an active record error
+    rescue ServiceError => invalid
       OpenStruct.new(success?: false,
-                     messages: err.record.errors.full_messages)
+                     messages: invalid.record.errors.full_messages)
     end
   end
 end

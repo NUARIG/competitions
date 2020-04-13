@@ -11,7 +11,7 @@ module CriterionServices
                            is_mandatory: true,
                            show_comment_field: true)
         rescue ActiveRecord::RecordInvalid => invalid
-          raise ServiceError.new(invalid: invalid)
+          raise ServiceError::InputInvalid.new(error: invalid)
         end
       end
     end

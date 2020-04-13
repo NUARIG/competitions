@@ -6,7 +6,7 @@ module GrantPermissionServices
       new_permission = original_grant_permission.dup
       new_permission.update_attributes!(grant: new_grant)
     rescue ActiveRecord::RecordInvalid => invalid
-      raise ServiceError.new(invalid: invalid)
+      raise ServiceError::InputInvalid.new(error: invalid)
     end
   end
 end

@@ -30,7 +30,7 @@ module GrantSubmissionFormServices
                                         response_type: 'file_upload')
         end
       rescue ActiveRecord::RecordInvalid => invalid
-        raise ServiceError(err: invalid)
+        raise ServiceError::InputInvalid.new(error: invalid)
       end
     end
   end

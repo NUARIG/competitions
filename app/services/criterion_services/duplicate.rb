@@ -6,7 +6,7 @@ module CriterionServices
       new_criterion = original_criterion.dup
       new_criterion.update_attributes!(grant: new_grant)
     rescue ActiveRecord::RecordInvalid => invalid
-      raise ServiceError.new(invalid: invalid)
+      raise ServiceError::InputInvalid.new(error: invalid)
     end
   end
 end
