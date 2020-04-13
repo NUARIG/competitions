@@ -28,6 +28,8 @@ module GrantSubmissionFormServices
                 new_question.save!
               end
             end
+          rescue ActiveRecord::RecordInvalid => invalid
+            raise ServiceError::InputInvalid.new(invalid: invalid)
           end
         end
       end

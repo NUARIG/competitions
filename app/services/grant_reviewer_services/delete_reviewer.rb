@@ -8,12 +8,8 @@ module GrantReviewerServices
               .by_grant(grant_reviewer.grant)
               .destroy_all
       end
-
       OpenStruct.new(success?: true,
                      messages: 'Reviewer and their reviews have been deleted for this grant.')
-    rescue
-      OpenStruct.new(success?: false,
-                     messages: 'Unable to delete this reviewer\'s reviews.' )
     end
   end
 end

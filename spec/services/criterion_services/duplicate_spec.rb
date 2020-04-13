@@ -20,4 +20,10 @@ RSpec.describe CriterionServices::Duplicate do
       expect(@new_grant.criteria.last.name).to eql(@criterion.name)
     end
   end
+
+  context 'failure' do
+    it 'throws a ServiceError on failure' do
+      expect{CriterionServices::Duplicate.call(original_criterion: @criterion, new_grant: nil)}.to raise_error(ServiceError::InputInvalid)
+    end
+  end
 end
