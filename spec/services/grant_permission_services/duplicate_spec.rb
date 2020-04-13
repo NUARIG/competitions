@@ -16,6 +16,6 @@ RSpec.describe GrantPermissionServices::Duplicate do
   end
 
   it 'throws ServiceError on failure' do
-    expect{ GrantPermissionServices::Duplicate.call(original_grant_permission: @grant.grant_permissions.first, new_grant: nil) }.to raise_error(ServiceError)
+    expect{ GrantPermissionServices::Duplicate.call(original_grant_permission: @grant.grant_permissions.first, new_grant: nil) }.to raise_error(ServiceError::InputInvalid)
   end
 end

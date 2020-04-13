@@ -23,7 +23,7 @@ RSpec.describe CriterionServices::Duplicate do
 
   context 'failure' do
     it 'throws a ServiceError on failure' do
-      expect{CriterionServices::Duplicate.call(original_criterion: @criterion, new_grant: nil)}.to raise_error(ServiceError)
+      expect{CriterionServices::Duplicate.call(original_criterion: @criterion, new_grant: nil)}.to raise_error(ServiceError::InputInvalid)
     end
   end
 end

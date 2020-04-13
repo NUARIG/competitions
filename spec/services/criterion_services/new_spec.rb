@@ -13,7 +13,7 @@ RSpec.describe CriterionServices::New do
     end.to (change{@grant.criteria.count}.by (Criterion::DEFAULT_CRITERIA.count))
   end
 
-  it 'throws ServiceError on failure' do
-    expect{ CriterionServices::New.call(grant: nil) }.to raise_error(ServiceError)
+  it 'raises ServiceError on failure' do
+    expect{ CriterionServices::New.call(grant: nil) }.to raise_error(ServiceError::InputInvalid)
   end
 end
