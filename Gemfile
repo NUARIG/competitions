@@ -65,6 +65,10 @@ gem "select2-rails"
 # s3
 gem "aws-sdk-s3", require: false
 
+# exports
+gem 'caxlsx'
+gem 'caxlsx_rails'
+
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
