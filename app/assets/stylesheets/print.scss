@@ -1,0 +1,18 @@
+@media print {
+  // Hide link paths
+  .top-bar,
+  th,
+  td,
+  footer {
+    a[href]:after {
+      content: none !important;
+    }
+  }
+
+  // Hide page sections
+  .top-bar .top-bar-right,
+  ul#grant-info.tabs,
+  footer img {
+    display: none;
+  }
+}
