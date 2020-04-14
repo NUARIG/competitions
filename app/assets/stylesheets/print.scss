@@ -1,18 +1,64 @@
 @media print {
-  // Hide link paths
-  .top-bar,
-  th,
-  td,
-  footer {
-    a[href]:after {
-      content: none !important;
+  a[href]:after {
+    content: none !important;
+  }
+
+  .top-bar-left ul li:not(:first-child),
+  .top-bar .top-bar-right,
+  ul#grant-info.tabs,
+  footer #logos,
+  .submissions .grid-x aside {
+    display: none;
+  }
+
+  #title {
+    padding-bottom: 1rem !important;
+  }
+
+  header,
+  aside,
+  aside ~ div,
+  footer,
+  footer ~ div {
+    width: 100% !important;
+    * {
+      padding: 0 !important;
     }
   }
 
-  // Hide page sections
-  .top-bar .top-bar-right,
-  ul#grant-info.tabs,
-  footer img {
-    display: none;
+  a.button,
+  .text-center {
+    text-align: left !important;
+  }
+
+  aside {
+    .card {
+      border: 0px;
+      .card-section {
+        padding: 0 !important;
+      }
+    }
+  }
+
+  fieldset {
+    border: 0px !important;
+    margin-bottom: 1em;
+    legend {
+      font-size: 1.5em;
+    }
+    table.section_table {
+      tr {
+        padding: .5em;
+        td:first-child {
+          padding: .25em .5em .25em 0.25em !important;
+          width: 30%;
+        }
+      }
+    }
+  }
+
+  footer {
+    border-top: 1px solid #E6E6E6;
+    text-align: left;
   }
 }
