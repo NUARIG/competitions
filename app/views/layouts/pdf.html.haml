@@ -1,0 +1,26 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}/
+    %title
+      = title_tag_content(page_title: yield(:page_title))
+    = csrf_meta_tags
+    = csp_meta_tag
+    = wicked_pdf_stylesheet_link_tag "application", media: 'all'
+    = wicked_pdf_stylesheet_link_tag "pdf"
+    = wicked_pdf_javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+
+  %body
+    %div.grid-container
+      %div.grid-x.grid-margin-x.grid-margin-y
+        = render 'layouts/header'
+
+      %div.grid-x.grid-margin-x.grid-margin-y
+        %main.cell{class: "#{controller_name}"}
+          = render 'layouts/flash'
+
+          = yield
+
+      %div.grid-x.grid-margin-x.grid-margin-y
+        = render 'layouts/footer'
