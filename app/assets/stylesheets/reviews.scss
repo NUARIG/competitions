@@ -70,10 +70,14 @@ main {
       }
     }
     @media print {
+      #reviews-overview .grid-x.criterion,
+      #reviews-overview #overall-impact.grid-x {
+        border-bottom: 1px solid red !important;
+      }
+
       .criterion .row,
       #overall-impact .row {
-        clear: both;
-        .reviews {
+        .review {
           clear: both;
           display: flex;
           margin-bottom: 0.5em;
@@ -82,7 +86,7 @@ main {
             max-width: 25%;
           }
           .responses {
-            display: block;
+            font-size: 1em;
             float: left;
             max-width: 70%;
           }

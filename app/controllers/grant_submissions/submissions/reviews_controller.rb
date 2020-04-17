@@ -16,13 +16,13 @@ module GrantSubmissions
         respond_to do |format|
           format.html { render :index }
           format.pdf  { render pdf:                     "reviews_#{@submission.applicant.last_name}_#{@submission.title.truncate_words(3, separator: '-')}",
-                               # disposition:             'attachment',
-                               template:                'grant_submissions/submissions/reviews/index.html.haml',
-                               layout:                  'pdf.html.haml',
-                               disable_internal_links:  true,
+                               disable_smart_shrinking: true,
                                disable_external_links:  true,
+                               disable_internal_links:  true,
+                               # disposition:             'attachment',
+                               layout:                  'pdf.html.haml',
                                print_media_type:        true,
-                               disable_smart_shrinking: true }
+                               template:                'grant_submissions/submissions/reviews/index.html.haml' }
         end
       end
 
