@@ -1,0 +1,19 @@
+@media print {
+  * {
+    font-size: 1em;
+  }
+
+  .pdf-hide {
+    display: none !important;
+  }
+
+  table{
+    font-size: .75rem;
+    max-width: 2480px;
+    width:100%;
+  }
+
+  footer {
+    font-size: .75rem;
+  }
+}
