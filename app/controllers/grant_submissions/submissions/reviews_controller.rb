@@ -13,6 +13,17 @@ module GrantSubmissions
         @q              = Review.with_reviewer.with_criteria_reviews.by_submission(@submission).ransack(params[:q])
         @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
+        respond_to do |format|
+          format.html { render :index }
+          format.pdf  { render pdf:                     "reviews_#{@submission.applicant.last_name}_#{@submission.title.truncate_words(3, separator: '-')}",
+                               # disposition:             'attachment',
+                               template:                'grant_submissions/submissions/reviews/index.html.haml',
+                               layout:                  'pdf.html.haml',
+                               disable_internal_links:  true,
+                               disable_external_links:  true,
+                               print_media_type:        true,
+                               disable_smart_shrinking: true }
+        end
       end
 
       # GET /reviews/1
