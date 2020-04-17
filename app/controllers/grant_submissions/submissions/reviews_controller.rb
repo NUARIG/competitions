@@ -19,7 +19,7 @@ module GrantSubmissions
                                disable_smart_shrinking: true,
                                disable_external_links:  true,
                                disable_internal_links:  true,
-                               # disposition:             'attachment',
+                               disposition:             'attachment',
                                layout:                  'pdf.html.haml',
                                print_media_type:        true,
                                template:                'grant_submissions/submissions/reviews/index.html.haml' }

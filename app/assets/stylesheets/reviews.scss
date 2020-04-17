@@ -70,11 +70,10 @@ main {
       }
     }
     @media print {
-      #reviews-overview .grid-x.criterion,
-      #reviews-overview #overall-impact.grid-x {
-        border-bottom: 1px solid red !important;
+      .criterion,
+      #overall-impact {
+        border-bottom: 0px !important;
       }
-
       .criterion .row,
       #overall-impact .row {
         .review {
@@ -89,6 +88,9 @@ main {
             font-size: 1em;
             float: left;
             max-width: 70%;
+          }
+          &:last-of-type {
+            margin-bottom: 1em;
           }
         }
       }

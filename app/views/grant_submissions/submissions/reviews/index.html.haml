@@ -94,7 +94,7 @@
             .row
               .cell.small-12.reviews
                 - @reviews.completed.each do |review|
-                  .grid-x.review
+                  .grid-x.grid-margin-x.review
                     .cell.small-12.medium-2.reviewer
                       = full_name(review.reviewer)
                     .cell.small-12.medium-10.responses
