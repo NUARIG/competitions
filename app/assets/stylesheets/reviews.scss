@@ -69,5 +69,25 @@ main {
         }
       }
     }
+    @media print {
+      .criterion .row,
+      #overall-impact .row {
+        clear: both;
+        .reviews {
+          clear: both;
+          display: flex;
+          margin-bottom: 0.5em;
+          .reviewer {
+            float: left;
+            max-width: 25%;
+          }
+          .responses {
+            display: block;
+            float: left;
+            max-width: 70%;
+          }
+        }
+      }
+    }
   }
 }

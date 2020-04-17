@@ -4,21 +4,25 @@
 
 .tabs-panel.is-active
   %h3
-    = "Reviews of #{@submission.title}:"
+    Reviews
+    %span.pdf-hide
+      of
+      = @submission.title
 
   #reviews-overview.grid-container-x
-    .grid-x
-      .cell.small-12.medium-2
-        %strong
-          Submission:
-      .cell.small-12.medium-10
-        = link_to @submission.title, grant_submission_path(@submission.grant, @submission)
     .grid-x
       .cell.small-12.medium-2
         %strong
           Applicant:
       .cell.small-12.medium-10
         = full_name(@submission.applicant)
+    .grid-x
+      .cell.small-12.medium-2
+        %strong
+          Submission:
+      .cell.small-12.medium-10
+        = link_to @submission.title, grant_submission_path(@submission.grant, @submission)
+
     .grid-x.grid-padding-y
       .cell.small-12
         - if @reviews.empty?
@@ -37,7 +41,7 @@
               %tr
                 %th
                   = sort_link(@q, :reviewer_last_name, 'Reviewer')
-                %th
+                %th.pdf-hide
                   = sort_link(@q, :overall_impact, 'Review')
                 %th
                   = sort_link(@q, :overall_impact)
