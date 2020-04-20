@@ -12,7 +12,9 @@
       %label.middle
         http://example.org/
     .cell.small-12.medium-9
-      = f.text_field :slug, required: true, maxlength: Grant::SLUG_MAX_LENGTH, disabled: disable_fields, class: 'small-12 medium-6'
+      = f.text_field :slug, required: true, maxlength: Grant::SLUG_MAX_LENGTH, disabled: disable_fields, class: 'small-12 medium-6', aria: { 'described-by': 'slug-help' }
+      %p.help-text#slug-help
+        Generates a unique short URL to use when advertising or linking to this grant (3-15 characters).
 .grid-x.grid-padding-y
   .cell
     = f.label :rfa, 'RFA'
