@@ -15,7 +15,7 @@ module GrantSubmissions
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
         respond_to do |format|
           format.html { render :index }
-          format.pdf  { render pdf:                     "reviews_#{@submission.applicant.last_name}_#{@submission.title.truncate_words(3, separator: '-')}",
+          format.pdf  { render pdf:                     "reviews_#{@submission.applicant.last_name}_#{@submission.title.truncate_words(5, omission: '').gsub(/\W/,'-')}",
                                disable_smart_shrinking: true,
                                disable_external_links:  true,
                                disable_internal_links:  true,
