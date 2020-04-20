@@ -68,6 +68,8 @@ gem "aws-sdk-s3", require: false
 # exports
 gem 'caxlsx'
 gem 'caxlsx_rails'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   gem 'awesome_print'

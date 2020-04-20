@@ -110,3 +110,8 @@ trix-editor + p.help-text {
 .not-allowed {
   cursor: not-allowed;
 }
+
+// Related to Foundation tabs highlighting
+.tabs-content {
+  border: 0px !important;
+}

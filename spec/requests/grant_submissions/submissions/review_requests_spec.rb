@@ -66,6 +66,21 @@ RSpec.describe 'grant_submission review requests', type: :request do
     end
   end
 
+  context '#index' do
+    before(:each) do
+      review.touch
+      sign_in(grant_editor)
+    end
+
+    context 'pdf formats' do
+      it 'renders a pdf' do
+        get grant_submission_reviews_path(grant, submission), headers: { "ACCEPT" => "application/pdf" }
+
+        expect(response.content_type).to eql 'application/pdf'
+      end
+    end
+  end
+
   context '#show' do
     context 'kept' do
       it 'sucessfully renders to reviewer' do
