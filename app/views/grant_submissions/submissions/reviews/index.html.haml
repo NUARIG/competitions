@@ -23,6 +23,14 @@
       .cell.small-12.medium-10
         = link_to @submission.title, grant_submission_path(@submission.grant, @submission)
 
+    #pdf.grid-container-x.pdf-hide
+      .grid-x.grid-margin-y
+        .cell.small-12
+          %p.small
+            = link_to "Save this page as a PDF #{image_tag 'PDF_24.png', class: 'icon' }".html_safe, grant_submission_reviews_path(@grant, @submission, { format: 'pdf' } )
+
+
+
     .grid-x.grid-padding-y
       .cell.small-12
         - if @reviews.empty?

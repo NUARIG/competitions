@@ -57,8 +57,6 @@
             %th
               %span{ title: 'Average of scored Criteria - scored first' }
                 = sort_link(@q, :composite_score_nulls_last, 'Composite')
-            %th
-
 
       %tbody
         - @submissions.each do |submission|
@@ -92,6 +90,7 @@
                   = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
                 - else
                   = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
+                  = link_to "#{image_tag 'PDF_24.png', class: 'icon', title: 'Save reviews summary as a PDF' }".html_safe, grant_submission_reviews_path(@grant, submission, { format: 'pdf' } )
                   %div.count.small{title: 'Completed / Assigned', data: { completed: {reviews: submission.id}}}
                     #{review_data.completed_review_count} / #{review_data.assigned_review_count}
               %td.overall-impact{data: { overall: { impact: submission.id } } }
@@ -100,9 +99,6 @@
               %td.composite{data: { composite: submission.id } }
                 %span{title: 'Average of Scored Criteria'}
                   = review_data.composite_score
-              %td
-                %span{class: 'small'}
-                  = link_to 'PDF', grant_submission_reviews_path(@grant, submission, { format: 'pdf' } )
 
 
     != pagy_foundation_nav(@pagy)
