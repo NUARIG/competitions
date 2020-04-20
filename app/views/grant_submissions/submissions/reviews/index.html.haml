@@ -1,5 +1,8 @@
 - content_for(:page_title, "Reviews of #{@submission.title}")
 
+%h1
+  = @grant.name
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @submission.grant }
 
 .tabs-panel.is-active
