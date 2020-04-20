@@ -78,7 +78,7 @@
                             NS
                       - if scored_criterion.comment.present?
                         .row{id: "criterion-#{criterion.id}-comment"}
-                          = scored_criterion.comment
+                          = simple_format(scored_criterion.comment)
 
 
       .grid-x.grid-padding-y
