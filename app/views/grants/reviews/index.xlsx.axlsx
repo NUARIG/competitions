@@ -1,9 +1,11 @@
 wb = xlsx_package.workbook
 
-link_style = wb.styles.add_style({fg_color: '0000FF', u: true})
+header_style = wb.styles.add_style({b: true})
+link_style   = wb.styles.add_style({fg_color: '0000FF', u: true})
 
 wb.add_worksheet(name: "Reviews #{@grant.name.gsub(/\W/, ' ')}") do |sheet|
-  sheet.add_row ["Reviewer", "Applicant", "Submission Title", "Overall Impact Score", "Composite Score"]
+  sheet.add_row ["Reviewer", "Applicant", "Submission Title", "Overall Impact Score", "Composite Score"], :style => header_style
+
   @reviews.each_with_index do |review, row_index|
     submission = review.submission
     row = sheet.add_row [sortable_full_name(review.reviewer),       # A
