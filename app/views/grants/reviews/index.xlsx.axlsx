@@ -1,0 +1,21 @@
+wb = xlsx_package.workbook
+
+link_style = wb.styles.add_style({fg_color: '0000FF', u: true})
+
+wb.add_worksheet(name: "Reviews #{@grant.name.gsub(/\W/, ' ')}") do |sheet|
+  sheet.add_row ["Reviewer", "Applicant", "Submission Title", "Overall Impact Score", "Composite Score"]
+  @reviews.each_with_index do |review, row_index|
+    submission = review.submission
+    row = sheet.add_row [sortable_full_name(review.reviewer),       # A
+                         sortable_full_name(submission.applicant),  # B
+                         submission.title,                          # C
+                         review.overall_impact_score,               # D
+                         review.composite_score]                    # F
+    sheet.add_hyperlink(:location => grant_submission_review_url(@grant, submission, review),
+                        :ref => "A#{row_index + 2}") # account for header row
+    row.cells[0].style = link_style
+    sheet.add_hyperlink(:location => grant_submission_url(@grant, submission),
+                        :ref => "C#{row_index + 2}")
+    row.cells[2].style = link_style
+  end
+end
