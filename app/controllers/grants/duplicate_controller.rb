@@ -10,7 +10,6 @@ module Grants
       @grant = GrantServices::CopyAttributes.call(@original_grant.id)
       @grant.valid?
       flash.now[:warning] = 'Information from ' + @original_grant.name + ' has been copied below.'
-      flash.now[:alert]   = 'Please review and update the following information.'
     end
 
     def create
