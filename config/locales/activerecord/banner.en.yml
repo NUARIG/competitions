@@ -17,7 +17,7 @@ en:
         body: Body
         visible: Visible
         created_at: Created At
-        updated_at: Updated At
+        updated_at: Last Updated At
     errors:
       models:
         banner:
