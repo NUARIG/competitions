@@ -68,20 +68,41 @@ RSpec.describe 'Banners', type: :system do
             expect(page).to have_content('Body is required.')
           end
 
-          scenario 'create a banner' do
-            @body = Faker::Lorem.sentence
-            truncated_body = @body.truncate_words(2, omission: '')
+          context 'visible' do
+            scenario 'create a banner' do
+              @body = Faker::Lorem.sentence
+              truncated_body = @body.truncate_words(2, omission: '')
 
-            click_link 'Create New Banner'
-            expect(current_path).to eq("/banners/new")
-            fill_in_trix_editor('banner_body', with: @body)
-            click_button 'Save'
-            expect(current_path).to eq("/banners")
-            expect(page).to have_content('Banner was created and will continue to be visible until that setting is changed or it is deleted.')
-            expect(page).to have_content(truncated_body)
+              click_link 'Create New Banner'
+              expect(current_path).to eq("/banners/new")
+              fill_in_trix_editor('banner_body', with: @body)
+              click_button 'Save'
+              expect(current_path).to eq("/banners")
+              expect(page).to have_content I18n.t('banners.create.visible_success')
+              expect(page).to have_content(truncated_body)
 
-            visit root_path
-            expect(page).to have_content(@body)
+              visit root_path
+              expect(page).to have_content(@body)
+            end
+          end
+
+          context 'not visible' do
+            scenario 'create a banner' do
+              @body = Faker::Lorem.sentence
+              truncated_body = @body.truncate_words(2, omission: '')
+
+              click_link 'Create New Banner'
+              expect(current_path).to eq("/banners/new")
+              uncheck 'Visible'
+              fill_in_trix_editor('banner_body', with: @body)
+              click_button 'Save'
+              expect(current_path).to eq("/banners")
+              expect(page).to have_content I18n.t('banners.create.not_visible_success')
+              expect(page).to have_content(truncated_body)
+
+              visit root_path
+              expect(page).not_to have_content(@body)
+            end
           end
         end
 
@@ -97,24 +118,32 @@ RSpec.describe 'Banners', type: :system do
 
         context '#edit' do
           before(:each) do
-            @new_body = Faker::Lorem.sentence
+            @new_body       = Faker::Lorem.sentence
             @truncated_body = @new_body.truncate_words(2, omission: '')
+
+            visit edit_banner_path(@banner)
           end
 
-          scenario 'edit a banner' do
-            expect(page).to have_content(@banner.body.truncate_words(2, omission: ''))
-            click_link 'Edit', href: edit_banner_path(@banner)
-            expect(current_path).to eq("/banners/#{@banner.id}/edit")
-            fill_in_trix_editor('banner_body', with: @new_body)
-            click_button 'Update'
-            expect(current_path).to eq("/banners")
-            expect(page).to have_content(@truncated_body)
+          context 'visible' do
+            scenario 'edit a banner' do
+              fill_in_trix_editor('banner_body', with: @new_body)
+              click_button 'Update'
+              expect(page).to have_content I18n.t('banners.update.visible_success')
+              expect(current_path).to eq("/banners")
+              expect(page).to have_content(@truncated_body)
+            end
+          end
+
+          context 'not visible' do
+            scenario 'edit a banner' do
+              uncheck 'Visible'
+              click_button 'Update'
+              expect(page).to have_content I18n.t('banners.update.not_visible_success')
+              expect(current_path).to eq("/banners")
+            end
           end
 
           scenario 'unsuccessful edit of a banner' do
-            expect(page).to have_content(@banner.body.split.first)
-            click_link 'Edit'
-            expect(current_path).to eq("/banners/#{@banner.id}/edit")
             @banner.body.length.times do
               find(:xpath, "//trix-editor[@input='banner_body']").send_keys(:backspace)
             end

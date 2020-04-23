@@ -23,8 +23,7 @@ class BannersController < ApplicationController
     authorize @banner
     if @banner.save
       # TODO: Confirm messages the user should see
-      flash[:warning] = 'Banner was created and will continue to be visible until that setting is changed or it is deleted.'
-      redirect_to banners_path
+      redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
     else
       flash.now[:alert] = @banner.errors.full_messages
       render :new
@@ -38,8 +37,7 @@ class BannersController < ApplicationController
   def update
     authorize @banner
     if @banner.update(banner_params)
-      flash[:notice] = 'Banner was successfully updated.'
-      redirect_to banners_path
+      redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
     else
       flash.now[:alert] = @banner.errors.full_messages
       render :edit
