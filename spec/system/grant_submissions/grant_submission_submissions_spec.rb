@@ -1,7 +1,7 @@
 require 'rails_helper'
 include UsersHelper
 
-RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
+RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do 
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)            { grant.submissions.first }
   let(:applicant)             { submission.applicant }
