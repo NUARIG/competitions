@@ -2,6 +2,9 @@ class Review < ApplicationRecord
   include WithScoring
   include Discard::Model
 
+  after_commit     :update_submission_averages, on: %i[create update destroy]
+  after_touch      :update_submission_averages
+
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
                   meta:     { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
 
@@ -64,6 +67,11 @@ class Review < ApplicationRecord
 
   def composite_score
     calculate_average_score(scored_criteria_scores)
+  end
+
+  def update_submission_averages
+    submission.set_composite_score
+    submission.set_average_overall_impact_score
   end
 
   private

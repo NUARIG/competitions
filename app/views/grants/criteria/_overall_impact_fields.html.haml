@@ -2,9 +2,10 @@
   .field
     .grid-x
       .cell.small-12.medium-2
-        = label_tag :overall_impact_score
+        = label_tag :overall_impact_score, 'Criterion Name'
       .cell.small-12.medium-9.medium-offset-1
-        = text_field_tag :name, '', width: 50, disabled: true
-        %p.help-text 'Overall Impact Scrore is Required and commenting is enabled.'
+        = text_field_tag :name, 'Overall Impact Score', placeholder: 'Overall Impact Score', width: 50, disabled: true
+        %p.help-text
+          Overall Impact Score is Required and commenting is enabled.
 
 %hr

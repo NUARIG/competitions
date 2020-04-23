@@ -10,7 +10,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
   it { is_expected.to respond_to(:criteria_reviews) }
   it { is_expected.to respond_to(:reviews_count) }
   it { is_expected.to respond_to(:state) }
-  it { is_expected.to respond_to(:submitted_at) }
+  it { is_expected.to respond_to(:user_updated_at) }
 
   let(:submission) { build(:submission_with_responses) }
 
@@ -99,8 +99,10 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let(:add_score)         { create(:scored_criteria_review, review: incomplete_review,
                                                               criterion: grant.criteria.first)}
 
+
     before(:each) do
-      reviews = [scored_review, incomplete_review]
+        scored_review.save
+        incomplete_review.save
     end
 
     context '#overall_impact_scores' do
@@ -117,7 +119,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
         expect(grant_submission.all_scored_criteria.length).to be scored_review.criteria.length
         expect do
           add_score
-        end.to change{grant_submission.all_scored_criteria.length}.by 1
+        end.to change{grant_submission.reload.all_scored_criteria.length}.by 1
       end
     end
 
@@ -127,7 +129,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
         expect(grant_submission.scores_by_criterion(grant.criteria.first).length).to be 1
         expect do
           add_score
-        end.to change{grant_submission.scores_by_criterion(grant.criteria.first).length}.by 1
+        end.to change{grant_submission.reload.scores_by_criterion(grant.criteria.first).length}.by 1
       end
     end
   end

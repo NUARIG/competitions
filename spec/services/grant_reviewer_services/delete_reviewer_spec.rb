@@ -38,35 +38,5 @@ RSpec.describe GrantReviewerServices do
         end.to change{reviewer.reviews.by_grant(other_grant).count}.by(0).and change{reviewer.reviews.by_grant(@grant).count}.by(-1)
       end
     end
-
-    context 'failure' do
-      it "does not delete reviews on failure" do
-        allow_any_instance_of(GrantReviewer).to receive(:destroy!).and_raise(StandardError)
-        expect do
-          GrantReviewerServices::DeleteReviewer.call(grant_reviewer: @grant_reviewer)
-        end.not_to change{Review.count}
-      end
-
-      it "does not delete grant_reviewer on failure" do
-        allow_any_instance_of(GrantReviewer).to receive(:destroy!).and_raise(StandardError)
-        expect do
-          GrantReviewerServices::DeleteReviewer.call(grant_reviewer: @grant_reviewer)
-        end.not_to change{@grant.grant_reviewers.count}
-      end
-
-      it "does not delete reviewer's reviews on failure" do
-        allow_any_instance_of(Review).to receive(:destroy).and_raise(StandardError)
-        expect do
-          GrantReviewerServices::DeleteReviewer.call(grant_reviewer: @grant_reviewer)
-        end.not_to change{@grant.grant_reviewers.count}
-      end
-
-      it "does not delete reviewer's reviews on failure" do
-        allow_any_instance_of(Review).to receive(:destroy).and_raise(StandardError)
-        expect do
-          GrantReviewerServices::DeleteReviewer.call(grant_reviewer: @grant_reviewer)
-        end.not_to change{@grant.reviews.count}
-      end
-    end
   end
 end

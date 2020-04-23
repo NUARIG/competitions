@@ -1,33 +1,36 @@
 require 'rails_helper'
 include UsersHelper
 
-RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
-  let(:grant)            { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-  let(:submission)       { grant.submissions.first }
-  let(:applicant)        { submission.applicant }
-  let(:system_admin)     { create(:system_admin_user) }
-  let(:grant_admin)      { grant.administrators.first }
-  let(:grant_editor)     { grant.administrators.second }
-  let(:grant_viewer)     { grant.administrators.third }
-  let(:new_applicant)    { create(:user) }
-  let(:draft_submission) { create(:draft_submission_with_responses,
+RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do 
+  let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+  let(:submission)            { grant.submissions.first }
+  let(:applicant)             { submission.applicant }
+  let(:system_admin)          { create(:system_admin_user) }
+  let(:grant_admin)           { grant.administrators.first }
+  let(:grant_editor)          { grant.administrators.second }
+  let(:grant_viewer)          { grant.administrators.third }
+  let(:new_applicant)         { create(:user) }
+  let(:draft_submission)      { create(:draft_submission_with_responses,
+                                         grant: grant,
+                                         form: grant.form) }
+  let(:draft_grant)           { create(:draft_grant) }
+  let(:other_submission)      { create(:grant_submission_submission, grant: grant) }
+  let(:review)                { create(:scored_review_with_scored_mandatory_criteria_review,
+                                         submission: submission,
+                                         assigner: grant_admin,
+                                         reviewer: grant.reviewers.first) }
+  let(:new_reviewer)          { create(:grant_reviewer, grant: grant) }
+  let(:new_review)            { create(:scored_review_with_scored_mandatory_criteria_review,
+                                         submission: submission,
+                                         assigner: grant_admin,
+                                         reviewer: new_reviewer.reviewer) }
+  let(:unscored_review)       { create(:incomplete_review,
+                                         submission: submission,
+                                         assigner: grant_admin,
+                                         reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
+  let(:unreviewed_submission) { create(:submission_with_responses,
                                     grant: grant,
                                     form: grant.form) }
-  let(:draft_grant)      { create(:draft_grant) }
-  let(:other_submission) { create(:grant_submission_submission, grant: grant) }
-  let(:review)           { create(:scored_review_with_scored_mandatory_criteria_review,
-                                    submission: submission,
-                                    assigner: grant_admin,
-                                    reviewer: grant.reviewers.first) }
-  let(:new_reviewer)     { create(:grant_reviewer, grant: grant) }
-  let(:new_review)       { create(:scored_review_with_scored_mandatory_criteria_review,
-                                    submission: submission,
-                                    assigner: grant_admin,
-                                    reviewer: new_reviewer.reviewer) }
-  let(:unscored_review)  { create(:incomplete_review,
-                                    submission: submission,
-                                    assigner: grant_admin,
-                                    reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
 
   context '#index' do
     context 'published grant' do
@@ -56,7 +59,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             end
 
             scenario 'submission with one review shows scores' do
-              review
+              review.save
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
@@ -65,7 +68,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             end
 
             scenario 'submission with one review shows scores' do
-              review
+              review.save
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
@@ -75,6 +78,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'submission with multiple reviews shows proper scores' do
               reviews = [review, new_review]
+              review.save
               visit grant_submissions_path(grant)
               overall   = page.find("td[data-overall-impact='#{submission.id}']")
               composite = page.find("td[data-composite='#{submission.id}']")
@@ -100,6 +104,36 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               expect(overall).to have_text expected_average_overall
               expect(completed).to have_text '2 / 3'
               expect(composite).to have_text expected_composite
+            end
+          end
+
+          context 'with multiple submissions' do
+            before(:each) do
+              review.save
+              unreviewed_submission.save
+
+              login_as(grant_admin)
+              visit grant_submissions_path(grant)
+            end
+
+            scenario 'sorts overall_impact by scored submissions to top' do
+              expect(page.find(".average", match: :first)).to have_text '-'
+
+              click_link('Overall Impact')
+              expect(page.find(".average", match: :first)).to have_text submission.average_overall_impact_score
+
+              click_link('Overall Impact')
+              expect(page.find(".average", match: :first)).to have_text submission.average_overall_impact_score
+            end
+
+            scenario 'sorts composite_score by scored submissions to top' do
+              expect(page.find(".composite", match: :first)).to have_text '-'
+
+              click_link('Composite Score')
+              expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+
+              click_link('Composite Score')
+              expect(page.find(".composite", match: :first)).to have_text submission.composite_score
             end
           end
         end

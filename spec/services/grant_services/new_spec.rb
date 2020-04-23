@@ -45,68 +45,15 @@ RSpec.describe 'GrantServices' do
 
     context 'failures' do
       it 'returns a struct with .success? false' do
-        allow(GrantPermission).to receive(:create!).and_raise(StandardError)
+        new_grant.update(name: '')
         result = GrantServices::New.call(grant: new_grant, user: grant_creator)
         expect(result.success?).to be false
+        expect(result.messages).to include  'Name is required.'
       end
 
       context 'permission' do
         it 'does not create a grant if permission save fails' do
-          allow(GrantPermission).to receive(:create!).and_raise(StandardError)
-          expect do
-            GrantServices::New.call(grant: new_grant, user: grant_creator)
-          end.not_to (change{Grant.count})
-          expect(GrantPermission.count).to be 0
-          expect(GrantSubmission::Form.count).to be 0
-          expect(GrantSubmission::Section.count).to be 0
-          expect(GrantSubmission::Question.count).to be 0
-          expect(Criterion.count).to be 0
-        end
-      end
-
-      context 'form' do
-        it 'does not create a grant if the form save fails' do
-          allow(GrantSubmission::Form).to receive(:create).and_raise(StandardError)
-          expect do
-            GrantServices::New.call(grant: new_grant, user: grant_creator)
-          end.not_to (change{Grant.count})
-          expect(GrantPermission.count).to be 0
-          expect(GrantSubmission::Form.count).to be 0
-          expect(GrantSubmission::Section.count).to be 0
-          expect(GrantSubmission::Question.count).to be 0
-          expect(Criterion.count).to be 0
-        end
-      end
-
-      context 'section' do
-        it 'does not create a grant if the default section save fails' do
-          allow_any_instance_of(GrantSubmission::Section).to receive(:save).and_raise(StandardError)
-          expect do
-            GrantServices::New.call(grant: new_grant, user: grant_creator)
-          end.not_to (change{Grant.count})
-          expect(GrantPermission.count).to be 0
-          expect(GrantSubmission::Form.count).to be 0
-          expect(GrantSubmission::Section.count).to be 0
-          expect(GrantSubmission::Question.count).to be 0
-        end
-      end
-
-      context 'question' do
-        it 'does not create a grant if a default question save fails' do
-          allow_any_instance_of(GrantSubmission::Question).to receive(:save).and_raise(StandardError)
-          expect do
-            GrantServices::New.call(grant: new_grant, user: grant_creator)
-          end.not_to (change{Grant.count})
-          expect(GrantPermission.count).to be 0
-          expect(GrantSubmission::Form.count).to be 0
-          expect(GrantSubmission::Section.count).to be 0
-          expect(GrantSubmission::Question.count).to be 0
-          expect(Criterion.count).to be 0
-        end
-      end
-      context 'criteria' do
-        it 'does not create a grant if criterion save fails' do
-          allow(Criterion).to receive(:create).and_raise(StandardError)
+          allow_any_instance_of(GrantPermission).to receive(:user).and_return(nil)
           expect do
             GrantServices::New.call(grant: new_grant, user: grant_creator)
           end.not_to (change{Grant.count})

@@ -14,10 +14,12 @@ module GrantServices
         CriterionServices::New.call(grant: grant)
       end
       OpenStruct.new(success?: true)
-    rescue
-      #TODO: Log errors
+    rescue ActiveRecord::RecordInvalid => invalid
       OpenStruct.new(success?: false,
-                     messages: grant.errors.any? ? grant.errors.full_messages : 'An error occurred while saving this grant. Please try again.')
+                     messages: invalid.record.errors.full_messages)
+    rescue ServiceError::InputInvalid => invalid
+      OpenStruct.new(success?: false,
+                     messages: invalid.record.errors.full_messages)
     end
   end
 end

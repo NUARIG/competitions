@@ -19,10 +19,12 @@ module GrantServices
 
         end
         OpenStruct.new(success?: true)
-      rescue
-        errors = new_grant.errors.any? ? new_grant.errors.full_messages : 'An error occurred while duplicating this grant. Please try again.'
+      rescue ActiveRecord::RecordInvalid => invalid
         OpenStruct.new(success?: false,
-                       messages: errors)
+                       messages: invalid.record.errors.full_messages)
+      rescue ServiceError::InputInvalid => invalid
+        OpenStruct.new(success?: false,
+                       messages: invalid.record.errors.full_messages)
       end
     end
   end
