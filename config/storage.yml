@@ -1,18 +1,18 @@
 test:
   service: Disk
-  root: <%= Rails.root.join("tmp/storage") %>
+  root: <%= COMPETITIONS_CONFIG[:aws][:root] %>
 
 local:
   service: Disk
-  root: <%= Rails.root.join("storage") %>
+  root: <%= COMPETITIONS_CONFIG[:aws][:root] %>
 
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
   service: S3
   access_key_id: <%= Rails.application.credentials.dig(Rails.env.to_sym, :aws_access_key_id) %>
   secret_access_key: <%= Rails.application.credentials.dig(Rails.env.to_sym, :aws_secret_access_key) %>
-  region: <%= Rails.application.credentials.dig(Rails.env.to_sym, :aws_region) %>
-  bucket: <%= Rails.application.credentials.dig(Rails.env.to_sym, :aws_bucket) %>
+  region: <%= COMPETITIONS_CONFIG[:aws][:region] %>
+  bucket: <%= COMPETITIONS_CONFIG[:aws][:bucket] %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

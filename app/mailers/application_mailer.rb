@@ -2,7 +2,7 @@
 
 class ApplicationMailer < ActionMailer::Base
   # TODO: set per environment email
-  default from: Rails.application.credentials.dig(Rails.env.to_sym, :mailer_address)
+  default from: COMPETITIONS_CONFIG[:database][:mailer_address]
   layout 'mailer'
   helper :users
 end

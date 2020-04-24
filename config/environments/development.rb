@@ -66,12 +66,12 @@ Rails.application.configure do
   config.active_record.default_timezone = :local
 
   # Mailcatcher - download at https://mailcatcher.me/
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025 }
-  config.action_mailer.raise_delivery_errors = true
-  config.subdomain = ''
-  config.app_domain = 'localhost'
-  config.action_mailer.default_url_options = { host: config.app_domain, port: 3000 }
+  config.subdomain = COMPETITIONS_CONFIG[:subdomain]
+  config.app_domain = COMPETITIONS_CONFIG[:app_domain]
+  config.action_mailer.default_url_options = COMPETITIONS_CONFIG[:default_url_options]
+  config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:raise_delivery_errors]
+  config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
+  config.action_mailer.smtp_settings = Rails.application.credentials.dig(Rails.env.to_sym, :smtp_settings)
 
   # Bullet
   config.after_initialize do
