@@ -1,7 +1,7 @@
 %tr
   %td
     = sortable_full_name(review.reviewer)
-  %td
+  %td.pdf-hide
     = review.is_complete? ? link_to('Full Review', grant_submission_review_path(@grant, @submission, review)) : 'Incomplete'
   %td
     = (review.overall_impact_score || 0)

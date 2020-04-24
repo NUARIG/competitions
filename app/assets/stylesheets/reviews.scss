@@ -69,5 +69,31 @@ main {
         }
       }
     }
+    @media print {
+      .criterion,
+      #overall-impact {
+        border-bottom: 0px !important;
+      }
+      .criterion .row,
+      #overall-impact .row {
+        .review {
+          clear: both;
+          display: flex;
+          margin-bottom: 0.5em;
+          .reviewer {
+            float: left;
+            max-width: 25%;
+          }
+          .responses {
+            font-size: 1em;
+            float: left;
+            max-width: 70%;
+          }
+          &:last-of-type {
+            margin-bottom: 1em;
+          }
+        }
+      }
+    }
   }
 }

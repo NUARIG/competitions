@@ -52,6 +52,13 @@
         font-size: .95em;
       }
     }
+
+    thead tr {
+      th {
+        font-size: .85em;
+        vertical-align: bottom;
+      }
+    }
   }
 
   footer {
@@ -102,4 +109,9 @@ trix-editor + p.help-text {
 
 .not-allowed {
   cursor: not-allowed;
+}
+
+// Related to Foundation tabs highlighting
+.tabs-content {
+  border: 0px !important;
 }

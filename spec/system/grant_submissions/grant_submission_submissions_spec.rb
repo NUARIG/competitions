@@ -129,10 +129,10 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             scenario 'sorts composite_score by scored submissions to top' do
               expect(page.find(".composite", match: :first)).to have_text '-'
 
-              click_link('Composite Score')
+              click_link('Composite')
               expect(page.find(".composite", match: :first)).to have_text submission.composite_score
 
-              click_link('Composite Score')
+              click_link('Composite')
               expect(page.find(".composite", match: :first)).to have_text submission.composite_score
             end
           end

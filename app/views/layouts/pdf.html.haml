@@ -7,9 +7,9 @@
       = title_tag_content(page_title: yield(:page_title))
     = csrf_meta_tags
     = csp_meta_tag
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = stylesheet_link_tag     wicked_pdf_asset_base64("pdf")
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = wicked_pdf_stylesheet_link_tag "application", media: 'all'
+    = wicked_pdf_stylesheet_link_tag "pdf"
+    = wicked_pdf_javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
   %body
     %div.grid-container
