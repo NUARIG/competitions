@@ -1,11 +1,19 @@
 - content_for(:page_title, 'Duplicate Grant')
+
 %h1
   Create a grant based on
   = @grant.name
 
 %p
-  Once you update and save, it will copy all roles from
+  Duplicating a grant copies information from the previous grant so you don't need to start from scratch.
+
+%p
+  Once you update and save, all roles, questions, and criteria will be copied from from
   = link_to "#{@grant.name}", grant_path(params[:grant_id])
+
+
+%p
+  You can change or delete anything.
 
 = form_with model: @grant, url: grant_duplicate_path, local: true do |f|
   = render 'grants/form', f: f, grant: @grant, disable_fields: false

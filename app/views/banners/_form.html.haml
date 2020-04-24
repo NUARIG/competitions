@@ -1,22 +1,24 @@
-%h3
-
-.grid-x.grid-padding-y
-  .cell.small-12.medium-6
-    = f.label :visible, 'Visible'
-    = f.check_box :visible
-.grid-x.grid-padding-y
+.row.grid-x.grid-padding-y
   .cell
     = f.label :body, 'Body'
     = f.hidden_field :body, id: :banner_body
     %trix-editor(input='banner_body')
-.grid-x.grid-padding-y
-  .cell.small-12.medium-6
-    = f.label :created_at, 'Created At'
-    = f.text_field :created_at, disabled: true, class: 'small-12 medium-4'
-  .cell.small-12.medium-6
-    = f.label :updated_at, 'Updated At'
-    = f.text_field :updated_at, disabled: true, class: 'small-12 medium-4'
-
+.row.grid-x.grid-padding-y
+  .cell.small-12.medium-1
+    = f.label :visible
+  .cell.small-12.medium-1
+    = f.check_box :visible
+- unless banner.new_record?
+  .row.grid-x.grid-padding-y
+    .cell.small-12.medium-2.text-left
+      = f.label :created_at, class: 'small'
+    .cell.small-12.medium-3
+      = banner.created_at
+  .grid-x.grid-padding-y
+    .cell.small-12.medium-2
+      = f.label :updated_at, class: 'small'
+    .cell.small-12.medium-3
+      = banner.updated_at
 .grid-x
   .actions
     - if banner.new_record?
@@ -25,4 +27,4 @@
     - else
       = f.submit 'Update', class: 'button'
       = link_to 'Cancel', banner, class: 'button secondary clear'
-    = link_to 'Delete', banner, method: :destroy, data: { confirm: 'Are you sure?'}, class: 'button alert clear'
+      = link_to 'Delete', banner, method: :destroy, data: { confirm: 'Are you sure?'}, class: 'button alert clear'
