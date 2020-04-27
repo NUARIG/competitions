@@ -1,4 +1,8 @@
-- content_for(:page_title, "Edit - #{@banner.id}")
+- content_for(:page_title, "Edit - Banner: #{strip_tags(@banner.body.truncate_words(4))}")
+
+
+%h1
+  Edit Banner
 
 = form_with model: @banner, local: true, id: 'banner-edit' do |f|
   = render 'form', f: f, banner: @banner

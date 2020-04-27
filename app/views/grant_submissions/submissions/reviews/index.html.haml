@@ -1,5 +1,8 @@
 - content_for(:page_title, "Reviews of #{@submission.title}")
 
+%h1
+  = @grant.name
+
 = render 'shared/grant_edit_tabbed_menu', { grant: @submission.grant }
 
 .tabs-panel.is-active
@@ -90,7 +93,7 @@
                             NS
                       - if scored_criterion.comment.present?
                         .row{id: "criterion-#{criterion.id}-comment"}
-                          = scored_criterion.comment
+                          = simple_format(scored_criterion.comment)
 
 
       .grid-x.grid-padding-y
