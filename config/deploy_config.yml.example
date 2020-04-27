@@ -1,0 +1,29 @@
+# This file is used to populate the deploy.rb file
+# for each environment (https://github.com/capistrano/rails).
+application: #competitions
+repository: # https://github.com/NUARIG/competitions.git
+deployer: # <USER_ON_DEPLOYMENT_SERVER>
+deployer_roles: # Capistrano roles
+  - app
+  - db
+  - web
+deploy_to: # <TARGET_DIRECTORY_ON_DEPLOYMENT_SERVER>
+linked_files: # <ARRAY_OF_SYMLINKED_FILES>
+linked_directories: # <ARRAY_OF_SYMLINKED_DIRECTORIES>
+  - "log"
+  - "tmp/pids"
+  - "tmp/cache"
+  - "tmp/sockets"
+  - "public/system"
+development:
+  server_name: # e.g. localhost
+test:
+  server_name: # e.g. localhost
+staging:
+  app_host: # <APP_HOST_NAME>
+  server_name: # <APP_SERVER_NAME>
+  server_alias: # <APP_SERVER_ALIAS>
+production:
+  app_host: # <APP_HOST_NAME>
+  server_name: # <APP_SERVER_NAME>
+  server_alias: # <APP_SERVER_ALIAS>

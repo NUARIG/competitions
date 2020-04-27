@@ -1,0 +1,9 @@
+#In the config directory, create a YAML file (attribute-map.yml)
+# that maps SAML attributes with your model's fields.
+# https://github.com/apokalipto/devise_saml_authenticatable
+
+# attribute-map.yml
+"urn:mace:dir:attribute-def:uid": "user_name"
+"urn:mace:dir:attribute-def:email": "email"
+"urn:mace:dir:attribute-def:name": "last_name"
+"urn:mace:dir:attribute-def:givenName": "name"
