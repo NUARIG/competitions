@@ -1,7 +1,7 @@
 development: # The following should be defined for every environment.
-  default_url_options: { host: , # e.g. config.app_domain
-                         port:   # e.g. 3000
-                       }
+  default_url_options:
+    host: # e.g. localhost
+    port: # e.g. 3000
   subdomain: # e.g. ''
   app_domain: # e.g. 'localhost'
   database: # https://guides.rubyonrails.org/configuring.html#configuring-a-database
@@ -29,7 +29,9 @@ development: # The following should be defined for every environment.
     idp_slo_target_url: #IDP logout URL
     idp_sso_target_url: #IDP login URL
 test:
-  default_url_options: { host: }
+  default_url_options:
+    host:
+    port:
   subdomain:
   app_domain:
   database:

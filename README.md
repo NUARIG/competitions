@@ -7,12 +7,23 @@ This repository contains a re-factored version of the [NITRO-Competitions](https
 
 # Installation
 
-Configure the following files.
+Configure the following files with your instance's attributes.
 
-attribute-map.yml
+# config/attribute-map.yml
 
-competitions_config.yml
+This file is required for mapping the SAML IDP and SP attributes.
+https://github.com/apokalipto/devise_saml_authenticatable
 
-deploy_config.yml
+# config/competitions_config.yml
 
-credentials.yml
+The application's configuration has been consolidated into this file. Here you will configure your instance's values for your database, storage, mailers, and saml authentication. Keys, passwords, and secrets will be stored in the credentials.yml.enc
+
+# config/deploy_config.yml
+
+Here you will find instance specific values for Capistrano deployment of the application.
+https://github.com/capistrano/rails
+
+# config/credentials.yml
+
+Keys, passwords, and secrets are encrypted here.
+https://guides.rubyonrails.org/5_2_release_notes.html#credentials
