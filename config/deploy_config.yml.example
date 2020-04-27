@@ -9,12 +9,6 @@ deployer_roles: # Capistrano roles
   - web
 deploy_to: # <TARGET_DIRECTORY_ON_DEPLOYMENT_SERVER>
 linked_files: # <ARRAY_OF_SYMLINKED_FILES>
-linked_directories: # <ARRAY_OF_SYMLINKED_DIRECTORIES>
-  - "log"
-  - "tmp/pids"
-  - "tmp/cache"
-  - "tmp/sockets"
-  - "public/system"
 development:
   server_name: # e.g. localhost
 test:
