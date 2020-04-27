@@ -309,7 +309,7 @@ Devise.setup do |config|
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = COMPETITIONS_CONFIG[:saml][:saml_default_user_key]
+  config.saml_default_user_key = COMPETITIONS_CONFIG[:saml][:saml_default_user_key].to_sym
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
