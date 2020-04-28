@@ -4,6 +4,13 @@ Competitions is an open source tool to run NIH-style peer review of competitions
 
 This repository contains a re-factored version of the [NITRO-Competitions](https://github.com/NUBIC/nitro-competitions) original code base which is currently running at Northwestern University Clinical and Translational Institute (NUCATS). It is work-progress, and intended primarily to enable a cloud-based implementtion in support of the [CTSA National Center for Data to Health (CD2H)](https://ctsa.ncats.nih.gov/cd2h/) operations.
 
+# Prerequesites
+
+Installing Competitions requires certain configurations.
+  -A shibboleth IDP for these configuration
+  -Storage should be configured locally or with AWS.
+    -It is possible to user other services, but more changes will be necessary.
+  -Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
 
 # Installation
 
