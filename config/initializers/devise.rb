@@ -298,7 +298,7 @@ Devise.setup do |config|
   # config.sign_in_after_change_password = true
 
 
-  config.saml_sign_out_success_url = Rails.application.credentials.dig(Rails.env.to_sym, :sign_out_url)
+  config.saml_sign_out_success_url = COMPETITIONS_CONFIG[:saml][:sign_out_url]
 
   # ==> Configuration for :saml_authenticatable
   # Create user if the user does not exist. (Default is false)
