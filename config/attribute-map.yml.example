@@ -1,5 +1,5 @@
-#In the config directory, create a YAML file (attribute-map.yml)
-# that maps SAML attributes with your model's fields.
+# Update this file and save as attribute-map.yml
+# This file maps the IDP SAML attributes with the User model.
 # https://github.com/apokalipto/devise_saml_authenticatable
 
 # attribute-map.yml

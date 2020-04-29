@@ -7,10 +7,10 @@ This repository contains a re-factored version of the [NITRO-Competitions](https
 # Prerequesites
 
 Installing Competitions requires certain configurations.
-  -A shibboleth IDP for these configuration
-  -Storage should be configured locally or with AWS.
-    -It is possible to user other services, but more changes will be necessary.
-  -Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
+  * A shibboleth IDP for these configuration
+  * Storage should be configured locally or with AWS.
+    - It is possible to user other services, but more changes will be necessary.
+  * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
 
 # Installation
 

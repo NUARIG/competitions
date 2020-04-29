@@ -35,7 +35,6 @@ set :pty, true
 # Default value for :linked_files is []
 # append :linked_files, "/etc/competitions/database.yml"
 set :linked_files, DEPLOY_CONFIG['linked_files']
-# set :linked_files, %w{config/master.key config/attribute-map.yml config/competitions_config.yml}
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
