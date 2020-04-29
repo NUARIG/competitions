@@ -10,8 +10,6 @@ development: # Change name per environment e.g. staging, production, etc.
     database: # <DATABASE_NAME>
     username: # <DATABASE_USERNAME>
   storage:
-    local: # Use the following for local storage.
-      root: # e.g. <%= Rails.root.join("storage") %>\
     aws: # Use the following for AWS storage.
       region: # e.g. us-east-2
       bucket: # <BUCKET_NAME>
@@ -42,8 +40,6 @@ development: # Change name per environment e.g. staging, production, etc.
   #   database: <DATABASE_NAME_TEST>
   #   username: <DATABASE_USERNAME_TEST>
   # storage:
-  #   local: # Use the following for local storage.
-  #     root: <%= Rails.root.join("storage") %>\
   #   aws: # Use the following for AWS storage.
   #     region:
   #     bucket:
