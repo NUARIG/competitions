@@ -9,10 +9,6 @@ development: # Change name per environment e.g. staging, production, etc.
     host: # e.g. localhost, <DATABASE_SERVER>
     database: # <DATABASE_NAME>
     username: # <DATABASE_USERNAME>
-  storage:
-    aws: # Use the following for AWS storage.
-      region: # e.g. us-east-2
-      bucket: # <BUCKET_NAME>
   mailer:
     mailer_address: # <APP_EMAIL_ADDRESS>
     delivery_method: # e.g. smtp

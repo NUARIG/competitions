@@ -9,6 +9,10 @@ deployer_roles: # Capistrano roles
   - web
 deploy_to: # <TARGET_DIRECTORY_ON_DEPLOYMENT_SERVER>
 linked_files: # <ARRAY_OF_SYMLINKED_FILES>
+  # - <SERVER_LOCATION_OF_MASTER.KEY>
+  # - <SERVER_LOCATION_OF_ATTRIBUTE_MAP.YML>
+  # - <SERVER_LOCATION_OF_COMPETITIONS_CONFIG.YML>
+  # - <SERVER_LOCATION_OF_STORAGE.YML>
 development:
   server_name: # e.g. localhost
 test:
