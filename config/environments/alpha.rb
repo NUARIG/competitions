@@ -71,14 +71,15 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:raise_delivery_errors]
 
-  config.action_mailer.default_url_options = Rails.application.credentials.dig(Rails.env.to_sym, :default_url_options)
-
-  config.subdomain = Rails.application.credentials.dig(Rails.env.to_sym, :subdomain)
-  config.app_domain = Rails.application.credentials.dig(Rails.env.to_sym, :app_domain)
-  config.action_mailer.delivery_method = Rails.application.credentials.dig(Rails.env.to_sym, :delivery_method).to_sym
-  config.action_mailer.perform_deliveries = Rails.application.credentials.dig(Rails.env.to_sym, :perform_deliveries)
+  config.subdomain = COMPETITIONS_CONFIG[:subdomain]
+  config.app_domain = COMPETITIONS_CONFIG[:app_domain]
+  config.action_mailer.default_url_options = { host: COMPETITIONS_CONFIG[:default_url_options][:host],
+                                               port: COMPETITIONS_CONFIG[:default_url_options][:port]
+                                             }
+  config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:perform_deliveries]
+  config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
   config.action_mailer.smtp_settings = Rails.application.credentials.dig(Rails.env.to_sym, :smtp_settings)
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

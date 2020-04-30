@@ -1,0 +1,60 @@
+development: # Change name per environment e.g. staging, production, etc.
+  app_domain: # e.g. 'localhost', 'example.edu', etc.
+  subdomain: # e.g. '', 'competitions', etc.
+  default_url_options:
+    host: # e.g. localhost, https://competitions_example.com, etc.
+    port: # e.g. '', 3000, etc.
+  database:
+    adapter: # e.g. postgres, mysql, etc.
+    host: # e.g. localhost, <DATABASE_SERVER>
+    database: # <DATABASE_NAME>
+    username: # <DATABASE_USERNAME>
+  storage:
+    aws: # Use the following for AWS storage.
+      region: # e.g. us-east-2
+      bucket: # <BUCKET_NAME>
+  mailer:
+    mailer_address: # <APP_EMAIL_ADDRESS>
+    delivery_method: # e.g. smtp
+    raise_delivery_errors: # <BOOLEAN> Default is false. If true, configure the external email server for imediate delivery.
+    perform_deliveries: # <BOOLEAN> Default is true. Determines whether deliveries are carried out when the deliver method is invoked on the Mail message.
+  saml: # See https://github.com/apokalipto/devise_saml_authenticatable for more information
+    saml_default_user_key: # The user will be looked up by this key
+    sign_out_url: # URL in your SP that the IDP should send users back to
+    assertion_consumer_service_url: # e.g. 'http://localhost:3000/users/saml/auth'
+    assertion_consumer_service_binding: # e.g. 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+    name_identifier_format: # e.g. "urn:oasis:names:tc:SAML:2.0:nameid-format:<IDP_DEFAULT_USER_KEY>"
+    issuer: # e.g. 'http://localhost:3000/users/saml/metadata'
+    authn_context: # e.g. ''
+    idp_slo_target_url: #IDP logout URL
+    idp_sso_target_url: #IDP login URL
+# test: Test should be included and configured in local environment.
+  # app_domain:  'localhost'
+  # subdomain: ''
+  # default_url_options:
+  #   host: 'localhost'
+  #   port: 3000
+  # database:
+  #   adapter: postgres
+  #   host: localhost
+  #   database: <DATABASE_NAME_TEST>
+  #   username: <DATABASE_USERNAME_TEST>
+  # storage:
+  #   aws: # Use the following for AWS storage.
+  #     region:
+  #     bucket:
+  # mailer:
+  #   mailer_address: # <APP_EMAIL_ADDRESS>
+  #.  delivery_method: test
+  #   raise_delivery_errors:
+  #   perform_deliveries:
+  # saml: # See https://github.com/apokalipto/devise_saml_authenticatable for more information
+  #   saml_default_user_key: # The user will be looked up by this key
+  #   sign_out_url: # URL in your SP that the IDP should send users back to
+  #   assertion_consumer_service_url: # e.g. 'http://localhost:3000/users/saml/auth'
+  #   assertion_consumer_service_binding: # e.g. 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+  #   name_identifier_format: # e.g. "urn:oasis:names:tc:SAML:2.0:nameid-format:<IDP_DEFAULT_USER_KEY>"
+  #   issuer: # e.g. 'http://localhost:3000/users/saml/metadata'
+  #   authn_context: # e.g. ''
+  #   idp_slo_target_url: #IDP logout URL
+  #   idp_sso_target_url: #IDP login URL

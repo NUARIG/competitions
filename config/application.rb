@@ -26,3 +26,11 @@ module Competitions
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
   end
 end
+
+competitions_config = File.join(Rails.root, 'config', 'competitions_config.yml')
+
+if File.exists?(competitions_config)
+  COMPETITIONS_CONFIG = ActiveSupport::HashWithIndifferentAccess.new(YAML.load(File.open(competitions_config)))[Rails.env.to_sym]
+else
+  Rails.logger.info("Warning: Competitions config file is missing. (#{competitions_config})")
+end
