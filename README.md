@@ -13,6 +13,7 @@ Installing Competitions requires certain configurations.
   * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
   * Postgres database
   * RVM installed on server
+  * Capistrano for deployment
 
 # Installation
 
@@ -27,10 +28,15 @@ https://github.com/apokalipto/devise_saml_authenticatable
 
 The application's configuration has been consolidated into this file. Here you will configure your instance's values for your database, storage, mailers, and saml authentication. Keys, passwords, and secrets will be stored in the credentials.yml.enc
 
+# config/database.yml
+
 # config/deploy_config.yml
 
-Here you will find instance specific values for Capistrano deployment of the application.
-https://github.com/capistrano/rails
+Here you will find instance specific values for Capistrano deployment of the application (https://github.com/capistrano/rails).
+
+Include all of your instance's configuration files under linked_files in config/deploy_config.yml, if you are symlinking these on your deployment server.
+
+# config/storage.yml
 
 # config/credentials.yml
 
