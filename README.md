@@ -11,6 +11,8 @@ Installing Competitions requires certain configurations.
   * Storage should be configured locally or with AWS.
     - It is possible to user other services, but more changes will be necessary.
   * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
+  * Postgres database
+  * RVM installed on server
 
 # Installation
 
