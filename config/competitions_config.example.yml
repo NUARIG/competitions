@@ -1,14 +1,11 @@
 development: # Change name per environment e.g. staging, production, etc.
+  application_name: 'Competitions' # or replace with <YOUR_APPLICATION_NAME>
+  contact_email: # <APP_EMAIL_ADDRESS>
   app_domain: # e.g. 'localhost', 'example.edu', etc.
   subdomain: # e.g. '', 'competitions', etc.
   default_url_options:
     host: # e.g. localhost, https://competitions_example.com, etc.
     port: # e.g. '', 3000, etc.
-  database:
-    adapter: # e.g. postgres, mysql, etc.
-    host: # e.g. localhost, <DATABASE_SERVER>
-    database: # <DATABASE_NAME>
-    username: # <DATABASE_USERNAME>
   mailer:
     mailer_address: # <APP_EMAIL_ADDRESS>
     delivery_method: # e.g. smtp
@@ -24,21 +21,15 @@ development: # Change name per environment e.g. staging, production, etc.
     authn_context: # e.g. ''
     idp_slo_target_url: #IDP logout URL
     idp_sso_target_url: #IDP login URL
+    # Update idp_cert in rails credentials.
 # test: Test should be included and configured in local environment.
+  # application_name: 'Competitions' # or replace with <YOUR_APPLICATION_NAME>
+  # contact_email: # <APP_EMAIL_ADDRESS>
   # app_domain:  'localhost'
   # subdomain: ''
   # default_url_options:
   #   host: 'localhost'
   #   port: 3000
-  # database:
-  #   adapter: postgres
-  #   host: localhost
-  #   database: <DATABASE_NAME_TEST>
-  #   username: <DATABASE_USERNAME_TEST>
-  # storage:
-  #   aws: # Use the following for AWS storage.
-  #     region:
-  #     bucket:
   # mailer:
   #   mailer_address: # <APP_EMAIL_ADDRESS>
   #.  delivery_method: test
@@ -54,3 +45,4 @@ development: # Change name per environment e.g. staging, production, etc.
   #   authn_context: # e.g. ''
   #   idp_slo_target_url: #IDP logout URL
   #   idp_sso_target_url: #IDP login URL
+  #   # Update idp_cert in rails credentials.
