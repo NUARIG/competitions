@@ -4,7 +4,7 @@
       %ul.menu
         %li
           .home
-            = link_to 'CD2H - Competitions', root_path
+            = link_to "#{COMPETITIONS_CONFIG[:application_name]}", root_path
         - if user_signed_in?
           - if current_user.system_admin? || current_user.grant_creator? || current_user.editable_grants.kept.any?
             %li
