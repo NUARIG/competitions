@@ -4,11 +4,16 @@ application: #competitions
 repository: # https://github.com/NUARIG/competitions.git
 deployer: # <USER_ON_DEPLOYMENT_SERVER>
 deployer_roles: # Capistrano roles
-  - app
-  - db
-  - web
+  # - app
+  # - db
+  # - web
 deploy_to: # <TARGET_DIRECTORY_ON_DEPLOYMENT_SERVER>
 linked_files: # <ARRAY_OF_SYMLINKED_FILES>
+  # - config/master.key
+  # - config/attribute-map.yml
+  # - config/competitions_config.yml
+  # - config/storage.yml
+  # - config/database.yml
 development:
   server_name: # e.g. localhost
 test:

@@ -33,7 +33,6 @@ set :log_level, :debug
 set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "/etc/competitions/database.yml"
 set :linked_files, DEPLOY_CONFIG['linked_files']
 
 # Default value for linked_dirs is []
