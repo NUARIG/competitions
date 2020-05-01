@@ -17,7 +17,7 @@ Installing Competitions requires certain configurations.
 
 # Installation
 
-Configure the following files with your instance's attributes.
+Configure the following files with your instance's attributes and store the files on the server.
 
 # config/attribute-map.yml
 
@@ -37,6 +37,12 @@ Here you will find instance specific values for Capistrano deployment of the app
 Include all of your instance's configuration files under linked_files in config/deploy_config.yml, if you are symlinking these on your deployment server.
 
 # config/storage.yml
+
+# config/environments
+
+Included are a test and development environment configured out of the box. There are also example environment files for staging and production included. These will need the following configured before they will work.
+  * storage
+  * time_zone
 
 # config/credentials.yml
 
