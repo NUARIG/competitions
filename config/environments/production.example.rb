@@ -44,7 +44,7 @@ Rails.application.configure do
   # config.active_storage.service = :local
 
   # set this in storage.yml and credentials file
-  config.active_storage.service = :amazon
+  config.active_storage.service = # e.g. :amazon, :local, etc.
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
@@ -107,6 +107,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Time zone
-  config.time_zone = 'Central Time (US & Canada)'
+  config.time_zone = # e.g. 'Central Time (US & Canada)' # https://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html
   config.active_record.default_timezone = :local
 end

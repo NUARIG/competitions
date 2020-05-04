@@ -14,6 +14,8 @@ linked_files: # <ARRAY_OF_SYMLINKED_FILES>
   # - config/competitions_config.yml
   # - config/storage.yml
   # - config/database.yml
+  # - config/environments/production.yml
+  # - config/environments/staging.yml
 development:
   server_name: # e.g. localhost
 test:
