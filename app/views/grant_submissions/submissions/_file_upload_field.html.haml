@@ -1,0 +1,12 @@
+%div{:'data-form_builder_upload' => ''}
+  - if has_saved_file
+    = f.hidden_field :document, value: f.object.document.signed_id, class: 'document_file_input'
+    = link_to f.object.document.filename.to_s, rails_blob_path(document, disposition: "attachment"), {:'data-form_builder_upload_file_link' => ''}
+
+  = f.file_field :document, disabled: disabled, accept: allowed_file_extensions, class: 'document_file_input'
+  - if !disabled && has_saved_file
+    = link_to 'Clear', '#', class: 'button tiny warning', :'data-form_builder_upload_clear'=>''
+    = f.hidden_field remove_document, {:'data-form_builder_remove_document' => '' }
+
+  %div.help-text
+    = "#{GrantSubmission::Response::READABLE_ALLOWED_DOCUMENT_TYPES} files only. Up to #{GrantSubmission::Response::READABLE_MAXIMUM_DOCUMENT_FILE_SIZE}"

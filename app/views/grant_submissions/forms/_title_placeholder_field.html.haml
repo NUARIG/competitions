@@ -1,0 +1,14 @@
+%div.fields
+  %fieldset.fieldset.form_builder_question_fieldset
+    %legend
+      %span
+        Question
+
+    = label_tag :project_title, 'Project Title'
+    = text_field :project_title, '', placeholder: 'Project Title field is required', disabled: true, aria: { 'described-by': 'projectTitleDateHelp' }
+
+    %p#projectTitleDateHelp.help-text
+      This field is required for all submissions and may not be deleted.asdf
+
+
+
