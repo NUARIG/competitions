@@ -28,6 +28,12 @@ RSpec.describe 'grant reviews requests', type: :request do
         get grant_reviews_path(grant).to_s + '.xlsx'
         expect(response.content_type).to include 'openxml'
       end
+
+      it 'renders xlsx for Grant with invalid characters' do
+        grant.update_attribute(:name, 'A\ Test: *With* [Invalid/Bad] Characters?')
+        get grant_reviews_path(grant).to_s + '.xlsx'
+        expect(response.content_type).to include 'openxml'
+      end
     end
   end
 end
