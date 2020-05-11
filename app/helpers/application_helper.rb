@@ -41,6 +41,11 @@ module ApplicationHelper
     date.blank? ? '' : date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe
   end
 
+  # Exports
+  def prepare_excel_worksheet_name(sheet_name:)
+    sheet_name.gsub(/\\/, '').gsub(/[\/*\[\]:?]/, '').truncate(31, omission: '')
+  end
+
   # BEGIN FormBuilder
   def view_or_edit(form)
     form.available? ? "Edit" : "View"
