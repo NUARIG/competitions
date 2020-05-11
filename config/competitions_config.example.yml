@@ -11,7 +11,7 @@ development: # Change name per environment e.g. staging, production, etc.
     delivery_method: # e.g. smtp
     raise_delivery_errors: # <BOOLEAN> Default is false. If true, configure the external email server for imediate delivery.
     perform_deliveries: # <BOOLEAN> Default is true. Determines whether deliveries are carried out when the deliver method is invoked on the Mail message.
-    # NOTE: Update smtp_settings in rails credentials.
+    # NOTE: Update smtp_settings in config/secrets.yml.
   saml: # See https://github.com/apokalipto/devise_saml_authenticatable for more information
     saml_default_user_key: # The user will be looked up by this key
     sign_out_url: # URL in your SP that the IDP should send users back to
@@ -22,7 +22,7 @@ development: # Change name per environment e.g. staging, production, etc.
     authn_context: # e.g. ''
     idp_slo_target_url: #IDP logout URL
     idp_sso_target_url: #IDP login URL
-    # NOTE: Update idp_cert in rails credentials.
+    # NOTE: Update idp_cert in config/secrets.yml.
 # test: Test should be included and configured in local environment.
   # application_name: 'Competitions' # or replace with <YOUR_APPLICATION_NAME>
   # contact_email: # <APP_EMAIL_ADDRESS>
@@ -46,4 +46,4 @@ development: # Change name per environment e.g. staging, production, etc.
   #   authn_context: # e.g. ''
   #   idp_slo_target_url: #IDP logout URL
   #   idp_sso_target_url: #IDP login URL
-  #   # Update idp_cert in rails credentials.
+  #   # Update idp_cert in config/secrets.yml.

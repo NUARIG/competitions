@@ -81,7 +81,7 @@ Rails.application.configure do
                                              }
   config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:perform_deliveries]
   config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
-  config.action_mailer.smtp_settings = Rails.application.credentials.dig(Rails.env.to_sym, :smtp_settings)
+  config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
