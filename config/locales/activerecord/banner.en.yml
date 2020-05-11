@@ -1,4 +1,15 @@
 en:
+  banners:
+    create:
+      visible_success: |
+        The banner has been saved and will be visible until it is deleted or toggled off.
+      not_visible_success: |
+        The banner has been saved but is not shown. Check "Visible" to show to users.
+    update:
+      visible_success:
+        The banner has been updated and is visible until it is deleted or toggled off.
+      not_visible_success: |
+        The banner has been updated but is not shown. Check "Visible" to show to users.
   activerecord:
     attributes:
       banner: &banner
@@ -6,7 +17,7 @@ en:
         body: Body
         visible: Visible
         created_at: Created At
-        updated_at: Updated At
+        updated_at: Last Updated At
     errors:
       models:
         banner:

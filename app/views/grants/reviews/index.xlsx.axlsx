@@ -1,0 +1,43 @@
+headers = ["Reviewer",
+           "Applicant",
+           "Submission Title",
+           "Overall Impact Score",
+           "Composite Score"].concat(@criteria.map(&:name))
+
+wb = xlsx_package.workbook
+
+sheet_name = prepare_excel_worksheet_name(sheet_name: @grant.name)
+
+header_style = wb.styles.add_style({b: true})
+link_style   = wb.styles.add_style({fg_color: '0000FF', u: true})
+
+wb.add_worksheet(name: sheet_name) do |sheet|
+  sheet.add_row headers, :style => header_style
+
+  @reviews.each_with_index do |review, row_index|
+    submission = review.submission
+    review.criteria_reviews
+
+    review_scores = @criteria.map do |criterion|
+                       criteria_review_score = review.criteria_reviews
+                                                 .to_a
+                                                 .detect { |score| score.criterion_id == criterion.id }
+                       criteria_review_score.nil? ? '0' : criteria_review_score.score
+                     end
+
+
+    row = sheet.add_row [
+                         sortable_full_name(review.reviewer),       # A
+                         sortable_full_name(submission.applicant),  # B
+                         submission.title,                          # C
+                         (review.overall_impact_score ||= 0),       # D
+                         review.composite_score                     # E
+                        ].concat(review_scores)
+    sheet.add_hyperlink(:location => grant_submission_review_url(@grant, submission, review),
+                        :ref => "A#{row_index + 2}") # account for header row
+    row.cells[0].style = link_style
+    sheet.add_hyperlink(:location => grant_submission_url(@grant, submission),
+                        :ref => "C#{row_index + 2}")
+    row.cells[2].style = link_style
+  end
+end

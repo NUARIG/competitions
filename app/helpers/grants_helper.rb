@@ -8,8 +8,8 @@ module GrantsHelper
   def populate_grant_tabs(grant_permission_role:, grant:)
     case grant_permission_role
     when 'editor', 'admin'
-      { 'View'            => grant_path(grant),
-        'Edit'            => edit_grant_path(grant),
+      { (grant.published? ? 'View' : 'Preview') => grant_path(grant),
+        'Overview'            => edit_grant_path(grant),
         'Submission Form' => edit_grant_form_path(grant, grant.form),
         'Review Criteria' => criteria_grant_path(grant),
         'Submissions'     => grant_submissions_path(grant),
@@ -18,7 +18,7 @@ module GrantsHelper
         'Permissions'     => grant_grant_permissions_path(grant) }
     when 'viewer'
       { 'View'            => grant_path(grant),
-        'Edit'            => edit_grant_path(grant),
+        'Overview'        => edit_grant_path(grant),
         'Submission Form' => edit_grant_form_path(grant, grant.form),
         'Review Criteria' => criteria_grant_path(grant),
         'Submissions'     => grant_submissions_path(grant),

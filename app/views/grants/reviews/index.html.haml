@@ -10,6 +10,9 @@
 .tabs-panel.is-active
   %h2
     Reviews
+  - unless @reviews.empty?
+    %p
+      = link_to "Save all Reviews #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_reviews_url(@grant, {format: 'xlsx'})
 
   .grid-x
     .cell
