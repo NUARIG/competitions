@@ -77,7 +77,7 @@ config.subdomain = COMPETITIONS_CONFIG[:subdomain]
                                                port: COMPETITIONS_CONFIG[:default_url_options][:port]
                                              }
   config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
-  config.action_mailer.smtp_settings = Rails.application.credentials.dig(Rails.env.to_sym, :smtp_settings)
+  config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
 
   # config.action_mailer.default_url_options = { host: config.app_domain, port: 3000 }
 

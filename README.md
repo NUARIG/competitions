@@ -4,7 +4,7 @@ Competitions is an open source tool to run NIH-style peer review of competitions
 
 This repository contains a re-factored version of the [NITRO-Competitions](https://github.com/NUBIC/nitro-competitions) original code base which is currently running at Northwestern University Clinical and Translational Institute (NUCATS). It is work-progress, and intended primarily to enable a cloud-based implementtion in support of the [CTSA National Center for Data to Health (CD2H)](https://ctsa.ncats.nih.gov/cd2h/) operations.
 
-# Prerequesites
+# Prerequisites
 
 Installing Competitions requires certain configurations.
   * A shibboleth IDP for these configuration
@@ -19,6 +19,16 @@ Installing Competitions requires certain configurations.
 
 Configure the following files with your instance's attributes and store the files on the server.
 
+```
+config/environments/*
+config/attribute-map.yml
+config/competitions_config.yml
+config/database.yml
+config/deploy_config.yml
+config/secrets.yml
+config/storage.yml
+```
+
 ### config/attribute-map.yml
 
 This file is required for mapping the SAML IDP and SP attributes.
@@ -26,7 +36,7 @@ https://github.com/apokalipto/devise_saml_authenticatable
 
 ### config/competitions_config.yml
 
-The application's configuration has been consolidated into this file. Here you will configure your instance's values for your database, storage, mailers, and saml authentication. Keys, passwords, and secrets will be stored in the credentials.yml.enc
+The application's configuration has been consolidated into this file. Here you will configure your instance's values for your mailers, saml authentication, and application variables. Keys, passwords, and secrets will be stored in /config/secrets.yml
 
 ### config/database.yml
 You will need to configure your database connection. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2/configuring.html#configuring-a-database).
@@ -43,7 +53,7 @@ development:
 
 Here you will find instance specific values for Capistrano deployment of the application (https://github.com/capistrano/rails).
 
-Include all of your instance's configuration files under linked_files in config/deploy_config.yml, if you are symlinking these on your deployment server.
+If you are symlinking your instance's configuration files on your deployment server, these should be included under the linked_files in config/deploy_config.yml.
 
 ### config/storage.yml
 You will need to configure your instance's storage. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
@@ -70,7 +80,9 @@ Included are a test and development environment configured out of the box. There
   * storage
   * time_zone
 
-### config/credentials.yml
+### config/secrets.yml
 
-Keys, passwords, and secrets are encrypted in this file.
+Keys, passwords, secrets, and other sensitive information in a secure file.
+
+You could use config/credentials.yml for this purpose also.
 https://guides.rubyonrails.org/5_2_release_notes.html#credentials

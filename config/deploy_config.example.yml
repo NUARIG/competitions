@@ -12,8 +12,9 @@ linked_files: # <ARRAY_OF_SYMLINKED_FILES>
   # - config/master.key
   # - config/attribute-map.yml
   # - config/competitions_config.yml
-  # - config/storage.yml
   # - config/database.yml
+  # - config/secrets.yml
+  # - config/storage.yml
   # - config/environments/production.yml
   # - config/environments/staging.yml
 development:

@@ -35,6 +35,7 @@
 /config/competitions_config.yml
 /config/database.yml
 /config/deploy_config.yml
+/config/secrets.yml
 /config/storage.yml
 
 # Rspec
