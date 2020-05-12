@@ -53,7 +53,7 @@ development:
 
 Here you will find instance specific values for Capistrano deployment of the application (https://github.com/capistrano/rails).
 
-If you are symlinking your instance's configuration files on your deployment server, these should be included under the linked_files in config/deploy_config.yml, if you are symlinking these on your deployment server.
+If you are symlinking your instance's configuration files on your deployment server, these should be included under the linked_files in config/deploy_config.yml.
 
 ### config/storage.yml
 You will need to configure your instance's storage. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
