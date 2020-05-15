@@ -2,13 +2,13 @@
   %legend
     %span
       = section.title
-  %table.section_table
+  %table.section_table.hover.unstriped
     - responses = section.questions.sort_by(&:display_order).map do |question|
       - submission.responses.detect { |r| r.question == question }
     - responses.each do |response|
-      %tr.question
+      %tr
         %td
-          = response.question.text
-      %tr.answer
-        %td
-          = render partial: "grant_submissions/responses/#{response.question.response_type}_response", locals: { response: response }
+          %label
+            = response.question.text
+          .answer
+            = render partial: "grant_submissions/responses/#{response.question.response_type}_response", locals: { response: response }

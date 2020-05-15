@@ -1,7 +1,7 @@
 main.submissions {
   fieldset {
     tr {
-      &.question {
+      label {
         font-size: 1.15em;
         line-height: 1.25em;
         font-style: italic;
@@ -12,8 +12,7 @@ main.submissions {
         text-indent: 1em;
       }
       .no-response {
-        font-size: .85em;
-        font-style: italic;
+        font-size: .95em;
         text-transform: uppercase
       }
     }
