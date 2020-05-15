@@ -1,0 +1,21 @@
+main.submissions {
+  fieldset {
+    tr {
+      &.question {
+        font-size: 1.15em;
+        line-height: 1.25em;
+        font-style: italic;
+      }
+      &.answer {
+        font-size: .85em;
+        line-height: 1em;
+        text-indent: 1em;
+      }
+      .no-response {
+        font-size: .85em;
+        font-style: italic;
+        text-transform: uppercase
+      }
+    }
+  }
+}

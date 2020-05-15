@@ -1,4 +1,4 @@
-%fieldset.fieldset.form_builder_section_fieldset
+%fieldset
   %legend
     %span
       = section.title
@@ -6,8 +6,9 @@
     - responses = section.questions.sort_by(&:display_order).map do |question|
       - submission.responses.detect { |r| r.question == question }
     - responses.each do |response|
-      %tr
+      %tr.question
         %td
           = response.question.text
+      %tr.answer
         %td
           = render partial: "grant_submissions/responses/#{response.question.response_type}_response", locals: { response: response }
