@@ -2,16 +2,12 @@
   <head>
     <title>We're sorry, but something went wrong (500)</title>
     <style>
-      html { box-sizing: border-box; font-size: 100%; line-height: 1.15; -webkit-text-size-adjust: 100%; }
+ html { box-sizing: border-box; font-size: 100%; line-height: 1.15; -webkit-text-size-adjust: 100%; }
       body { margin: 0; }
       h1 { font-size: 2em; margin: 0.67em 0; }
       hr { box-sizing: content-box; height: 0; overflow: visible; }
       a { background-color: transparent; }
-      b, strong { font-weight: bolder; }
-      img { border-style: none; }
-      *, *::before, *::after { box-sizing: inherit; }
       body { margin: 0; padding: 0; background: #fefefe; font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; font-weight: normal; line-height: 1.5; color: #0a0a0a; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-      img { display: inline-block; vertical-align: middle; max-width: 100%; height: auto; -ms-interpolation-mode: bicubic; }
       .grid-container { padding-right: 0.625rem; padding-left: 0.625rem; max-width: 75rem; margin: 0 auto; }
       @media print, screen and (min-width: 40em) { .grid-container { padding-right: 0.9375rem; padding-left: 0.9375rem; } }
       .grid-x { display: flex; flex-flow: row wrap; }
@@ -42,20 +38,6 @@
         .grid-margin-x > .medium-6 { width: calc(50% - 1.875rem); }
       }
       .grid-padding-x .grid-padding-x { margin-right: -0.625rem; margin-left: -0.625rem; }
-      @media print, screen and (min-width: 40em) { .grid-padding-x .grid-padding-x { margin-right: -0.9375rem; margin-left: -0.9375rem; } }
-      .grid-container:not(.full) > .grid-padding-x { margin-right: -0.625rem; margin-left: -0.625rem; }
-      @media print, screen and (min-width: 40em) { .grid-container:not(.full) > .grid-padding-x { margin-right: -0.9375rem; margin-left: -0.9375rem; } }
-      .grid-padding-x > .cell { padding-right: 0.625rem; padding-left: 0.625rem; }
-      @media print, screen and (min-width: 40em) { .grid-padding-x > .cell { padding-right: 0.9375rem; padding-left: 0.9375rem; } }
-      .small-up-1 > .cell { width: 100%; }
-      @media print, screen and (min-width: 40em) { .medium-up-2 > .cell { width: 50%; } }
-      @media print, screen and (min-width: 64em) { .large-up-3 > .cell { width: 33.3333333333%; } }
-      .grid-margin-x.small-up-1 > .cell { width: calc(100% - 1.25rem); }
-      @media print, screen and (min-width: 40em) {
-        .grid-margin-x.small-up-1 > .cell { width: calc(100% - 1.875rem); }
-      }
-      @media print, screen and (min-width: 64em) { .grid-margin-x.large-up-3 > .cell { width: calc(33.3333333333% - 1.875rem); } }
-      .grid-margin-y { margin-top: -0.625rem; margin-bottom: -0.625rem; }
       @media print, screen and (min-width: 40em) { .grid-margin-y { margin-top: -0.9375rem; margin-bottom: -0.9375rem; } }
       .grid-margin-y > .cell { height: calc(100% - 1.25rem); margin-top: 0.625rem; margin-bottom: 0.625rem; }
       @media print, screen and (min-width: 40em) { .grid-margin-y > .cell { height: calc(100% - 1.875rem); margin-top: 0.9375rem; margin-bottom: 0.9375rem; } }
@@ -77,8 +59,6 @@
       div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, th, td { margin: 0; padding: 0; }
       p { margin-bottom: 1rem; font-size: inherit; line-height: 1.6; text-rendering: optimizeLegibility; }
       em, i { font-style: italic; line-height: inherit; }
-      strong, b { font-weight: bold; line-height: inherit; }
-      small { font-size: 80%; line-height: inherit; }
       h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 { font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; font-style: normal; font-weight: normal; color: inherit; text-rendering: optimizeLegibility; }
       h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h4 small, .h4 small, h5 small, .h5 small, h6 small, .h6 small { line-height: 0; color: #cacaca; }
       h1, .h1 { font-size: 1.5rem; line-height: 1.4; margin-top: 0; margin-bottom: 0.5rem; }
@@ -98,39 +78,7 @@
       a:hover, a:focus { color: #1468a0; }
       a img { border: 0; }
       hr { clear: both; max-width: 75rem; height: 0; margin: 1.25rem auto; border-top: 0; border-right: 0; border-bottom: 1px solid #cacaca; border-left: 0; }
-      ul, ol, dl { margin-bottom: 1rem; list-style-position: outside; line-height: 1.6; }
-      li { font-size: inherit; }
-      ul { margin-left: 1.25rem; list-style-type: disc; }
-      ol { margin-left: 1.25rem; }
-      ul ul, ol ul, ul ol, ol ol { margin-left: 1.25rem; margin-bottom: 0; }
-      .subheader { margin-top: 0.2rem; margin-bottom: 0.5rem; font-weight: normal; line-height: 1.4; color: #8a8a8a; }
-      ul.no-bullet, ol.no-bullet { margin-left: 0; list-style: none; }
       .text-center { text-align: center; }
-      @media print, screen and (min-width: 40em) {
-        .medium-text-left { text-align: left; }
-        .medium-text-right { text-align: right; }
-        .medium-text-center { text-align: center; }
-        .medium-text-justify { text-align: justify; }
-      }
-      .menu { padding: 0; margin: 0; list-style: none; position: relative; display: flex; flex-wrap: wrap; }
-      .menu a { line-height: 1; text-decoration: none; display: block; padding: 0.7rem 1rem; }
-      .menu a { margin-bottom: 0; }
-      .top-bar { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; padding: 0.5rem; flex-wrap: wrap; }
-      .top-bar, .top-bar ul { background-color: #e6e6e6; }
-      .top-bar .top-bar-left, .top-bar .top-bar-right { flex: 0 0 100%; max-width: 100%; }
-      @media print, screen and (min-width: 40em) {
-        .top-bar { flex-wrap: nowrap; }
-        .top-bar .top-bar-left { flex: 1 1 auto; margin-right: auto; }
-        .top-bar .top-bar-right { flex: 0 1 auto; margin-left: auto; }
-      }
-      @media screen and (max-width: 63.99875em) {
-        .top-bar.stacked-for-medium { flex-wrap: wrap; }
-        .top-bar.stacked-for-medium .top-bar-left,   .top-bar.stacked-for-medium .top-bar-right { flex: 0 0 100%; max-width: 100%; }
-      }
-      .top-bar-left, .top-bar-right { flex: 0 0 auto; }
-      .home { font-weight: bold; }
-      .grid-container footer { background-color: #E6E6E6; color: #555; font-size: .85em; margin-top: 1.5em; padding: 1em; width: 100%; }
-      #logos .cell { padding: 1em 2em; }
     </style>
   </head>
   <body>
