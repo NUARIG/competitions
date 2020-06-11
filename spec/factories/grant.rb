@@ -131,5 +131,6 @@ FactoryBot.define do
     factory :completed_grant_with_users,                    traits: %i[completed with_users]
 
     factory :open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published open with_users_and_submission_form with_submission with_reviewer]
+    factory :draft_open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[draft open with_users_and_submission_form with_submission with_reviewer]
   end
 end
