@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :grant_creator_request do
     association     :requester, factory: :user
-    request_comment { Faker::Lorem.sentences(number: 2) }
+    request_comment { Faker::Lorem.sentences(number: 2).join(' ') }
 
     trait :approved do
       status { 'approved' }
