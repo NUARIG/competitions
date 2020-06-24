@@ -1,5 +1,5 @@
 module GrantCreatorRequests
-  class ReviewController < GrantCreatorRequestsController
+  class ReviewController < ApplicationController
     before_action :set_and_authorize_grant_creator_request
 
     def show; end

@@ -1,7 +1,5 @@
-# frozen_string_literal: true
-
 class GrantCreatorRequestsController < ApplicationController
-  # before_action     :set_grant_creator_request, only: %i[edit show update]
+  before_action     :set_grant_creator_request, only: %i[edit show update]
   skip_after_action :verify_policy_scoped,      only: %i[index]
 
   def index
@@ -37,18 +35,18 @@ class GrantCreatorRequestsController < ApplicationController
   end
 
   def edit
-    set_grant_creator_request
+    # set_grant_creator_request
     authorize @grant_creator_request
   end
 
   def show
-    set_grant_creator_request
+    # set_grant_creator_request
     authorize @grant_creator_request
     render :edit
   end
 
   def update
-    set_grant_creator_request
+    # set_grant_creator_request
     authorize @grant_creator_request
     if @grant_creator_request.update_attributes(grant_creator_request_params)
       flash[:success] = 'Your request has been updated. You will be notified after review.'
