@@ -352,5 +352,6 @@ Devise.setup do |config|
     settings.idp_slo_target_url                 = COMPETITIONS_CONFIG[:saml][:idp_slo_target_url]
     settings.idp_sso_target_url                 = COMPETITIONS_CONFIG[:saml][:idp_sso_target_url]
     settings.idp_cert                           = Rails.application.secrets[:idp_cert]
+    settings.security                           = COMPETITIONS_CONFIG[:saml][:idp_security]
   end
 end
