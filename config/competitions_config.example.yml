@@ -25,9 +25,9 @@ development:
     authn_context: '' # e.g. ''
     idp_slo_target_url: #<IDP logout URL>
     idp_sso_target_url: #<IDP login URL>
-    # Most of the following idp_security  settings
-    # are the default settings from the ruby-saml gem.
-    # We have changed the want_assertions_signed to true.
+    # The following idp_security settings are the default settings from
+    # the ruby-saml gem (https://github.com/onelogin/ruby-saml#signing),
+    # except we have changed the want_assertions_signed to true.
     idp_security: { authn_requests_signed: false,
                     logout_requests_signed: false,
                     logout_responses_signed: false,
