@@ -17,6 +17,13 @@ development:
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   saml:
     saml_default_user_key: 'email' # The user will be looked up by this key
+    # The following maps the IDP SAML attribute's names(left)
+    #  with the User model attributes.
+    attribute_map:  { "email": "email",
+                      "firstName": "first_name",
+                      "lastName": "last_name",
+                      "upn": "upn"
+                    }
     sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
     assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'
     assertion_consumer_service_binding: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST' # e.g. 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
@@ -58,6 +65,12 @@ development:
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   # saml:
   #   saml_default_user_key: 'email' # The user will be looked up by this key
+      # This file maps the IDP SAML attributes with the User model.
+  #   attribute_map:  { "email": "email",
+  #                     "firstName": "first_name",
+  #                     "lastName": "last_name",
+  #                     "upn": "upn"
+  #.                  }
   #   sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
   #   assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'
   #   assertion_consumer_service_binding: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST' # e.g. 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'

@@ -21,7 +21,6 @@ Configure the following files with your instance's attributes and store the file
 
 ```
 config/environments/*
-config/attribute-map.yml
 config/competitions_config.yml
 config/database.yml
 config/deploy_config.yml
@@ -29,13 +28,8 @@ config/secrets.yml
 config/storage.yml
 ```
 
-### config/attribute-map.yml
-
-This file is required for mapping the SAML IDP and SP attributes.
-https://github.com/apokalipto/devise_saml_authenticatable
-
 ### config/competitions_config.yml
-
+https://github.com/apokalipto/devise_saml_authenticatable
 The application's configuration has been consolidated into this file. Here you will configure your instance's values for your mailers, saml authentication, and application variables. Keys, passwords, and secrets will be stored in /config/secrets.yml
 
 ### config/database.yml
