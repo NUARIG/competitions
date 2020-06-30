@@ -66,6 +66,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
         expect do
           click_button 'Save'
         end.not_to change{grant.criteria.count}
+        sleep(0.5)
         expect(page).to have_content 'Must have at least one review criteria.'
       end
 

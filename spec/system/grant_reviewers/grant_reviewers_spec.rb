@@ -79,23 +79,27 @@ RSpec.describe 'GrantReviewers', type: :system do
 
     context 'success' do
       scenario 'reviewer can be deleted' do
-        click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-        page.driver.browser.switch_to.alert.accept
+        accept_alert do
+          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        end
         expect(page).to have_content "Reviewer and their reviews have been deleted for this grant."
       end
 
       scenario 'reviewer and their reviews can be deleted' do
         expect(reviewer.reviews.by_grant(grant).count).to eq(1)
-        click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-        page.driver.browser.switch_to.alert.accept
+        accept_alert do
+          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        end
         expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
         expect(reviewer.reviews.by_grant(Grant.last).count).to eq(0)
       end
 
       scenario 'displays error when reviewer is not found' do
         allow_any_instance_of(GrantReviewer).to receive(:nil?).and_return(true)
-        click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-        page.driver.browser.switch_to.alert.accept
+        accept_alert do
+          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        end
+        # page.driver.browser.switch_to.alert.accept
         expect(page).to have_content('Reviewer could not be found.')
       end
     end
@@ -106,22 +110,25 @@ RSpec.describe 'GrantReviewers', type: :system do
       end
 
       scenario 'displays error messages on failure' do
-        click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-        page.driver.browser.switch_to.alert.accept
+        accept_alert do
+          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        end
         expect(page).to have_content('Unable to delete this reviewer\'s reviews.')
       end
 
       scenario 'does not change the number of reviewers' do
         expect do
-          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-          page.driver.browser.switch_to.alert.accept
+          accept_alert do
+            click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+          end
         end.to_not change{grant.grant_reviewers.count}
       end
 
       scenario 'does not change the number of reviews' do
         expect do
-          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-          page.driver.browser.switch_to.alert.accept
+          accept_alert do
+            click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+          end
         end.to_not change{grant.reviews.count}
       end
     end
@@ -129,8 +136,9 @@ RSpec.describe 'GrantReviewers', type: :system do
     context 'paper_trail', versioning: true do
       scenario 'it tracks whodunnit' do
         grant_reviewer = GrantReviewer.find_by(grant: grant, reviewer: reviewer)
-        click_link('Remove', href: grant_reviewer_path(grant, grant_reviewer))
-        page.driver.browser.switch_to.alert.accept
+        accept_alert do
+          click_link('Remove', href: grant_reviewer_path(grant, grant_reviewer))
+        end
         expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
         expect(grant_reviewer.versions.last.whodunnit).to be grant_admin.id
       end
