@@ -18,6 +18,10 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
       expect(mailer.body).to have_link 'http://localhost:3000/profile/grants', href: profile_grants_url
     end
 
+    it 'includes a link to the application root url' do
+      expect(mailer.body).to have_link COMPETITIONS_CONFIG[:application_name], href: root_url
+    end
+
     it 'addresses the requester by their full name' do
       requester = approved_request.requester
       expect(mailer.body.encoded).to include "Dear #{requester.first_name} #{CGI.escapeHTML(requester.last_name)}"
@@ -40,6 +44,9 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
       expect(mailer.body).to have_link href: new_grant_creator_request_url
     end
 
+    it 'includes a link to the application root url' do
+      expect(mailer.body).to have_link COMPETITIONS_CONFIG[:application_name], href: root_url
+    end
 
     it 'addressed the requester by their full name' do
       requester = rejected_request.requester

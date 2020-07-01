@@ -20,10 +20,11 @@ class ReviewerMailer < ApplicationMailer
   private
 
   def set_attributes(review:)
-    @review     = review
-    @reviewer   = @review.reviewer
-    @submission = @review.submission
-    @grant      = @review.grant
+    @review           = review
+    @reviewer         = @review.reviewer
+    @submission       = @review.submission
+    @grant            = @review.grant
+    @application_name = COMPETITIONS_CONFIG[:application_name]
   end
 
   def get_opt_out_recipients
