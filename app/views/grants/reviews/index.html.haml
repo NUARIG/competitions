@@ -44,15 +44,15 @@
           %thead
             %tr
               %th
-                = sort_link(@q, :applicant_last_name, 'Applicant')
+                = sort_link(@q, :applicant_last_name, 'Applicant',{}, {title: 'Sort on Applicant'})
               %th
-                = sort_link(@q, :submission_title, 'Submission')
+                = sort_link(@q, :submission_title, 'Submission',{}, {title: 'Sort on Submission Title'})
               %th
-                = sort_link(@q, :reviewer_last_name, 'Reviewer')
+                = sort_link(@q, :reviewer_last_name, 'Reviewer',{}, {title: 'Sort on Reviewer Last Name'})
               %th
-                = sort_link(@q, :overall_impact_score, 'Review')
+                = sort_link(@q, :overall_impact_score, 'Review',{}, {title: 'Sort on Completed'})
               %th
-                = sort_link(@q, :overall_impact_score)
+                = sort_link(@q, :overall_impact_score,{}, {title: 'Sort on Overall Impact Score'})
               %th Composite Score
 
           %tbody

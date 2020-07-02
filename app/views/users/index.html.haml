@@ -26,13 +26,13 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :last_name, 'Name')
+          = sort_link(@q, :last_name, 'Name',{}, {title: 'Sort on Name'})
         %th
-          = sort_link(@q, :email)
+          = sort_link(@q, :email,{}, {title: 'Sort on Email'})
         %th
-          = sort_link(@q, :created_at, 'Joined')
+          = sort_link(@q, :created_at, 'Joined',{}, {title: 'Sort on Joined On'})
         %th
-          = sort_link(@q, :current_sign_in_at, 'Last Access')
+          = sort_link(@q, :current_sign_in_at, 'Last Access',{}, {title: 'Sort on Last Access'})
         %th
 
     = render @users
