@@ -41,23 +41,23 @@
               Scores
         %tr
           %th
-            = sort_link(@q, :applicant_last_name, 'Applicant')
+            = sort_link(@q, :applicant_last_name, 'Applicant',{}, {title: 'Sort on Applicant'})
           %th
-            = sort_link(@q, :title, 'Title')
+            = sort_link(@q, :title, 'Title',{}, {title: 'Sort on Title'})
           %th
-            = sort_link(@q, :state, 'State')
+            = sort_link(@q, :state, 'State',{}, {title: 'Sort on State'})
           %th
-            = sort_link(@q, :user_updated_at, 'Updated')
+            = sort_link(@q, :user_updated_at, 'Updated',{}, {title: 'Sort on Updated At'})
           - if current_user.get_role_by_grant(grant: @grant)
             %th
               Reviews
             %th
 
               %span{ title: 'Average of scored reviews - scored first' }
-                = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact')
+                = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact',{}, {title: 'Sort on Overal Impact Score'})
             %th
               %span{ title: 'Average of scored Criteria - scored first' }
-                = sort_link(@q, :composite_score_nulls_last, 'Composite')
+                = sort_link(@q, :composite_score_nulls_last, 'Composite',{}, {title: 'Sort on Composite Score'})
 
       %tbody
         - @submissions.each do |submission|
