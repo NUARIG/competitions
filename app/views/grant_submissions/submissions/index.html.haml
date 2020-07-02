@@ -47,7 +47,7 @@
           %th
             = sort_link(@q, :state, 'State',{}, {title: 'Sort on State'})
           %th
-            = sort_link(@q, :user_updated_at, 'Updated',{}, {title: 'Sort on Updated At'})
+            = sort_link(@q, :user_updated_at, 'Updated',{}, {title: 'Sort on Updated'})
           - if current_user.get_role_by_grant(grant: @grant)
             %th
               Reviews
