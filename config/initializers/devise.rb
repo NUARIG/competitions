@@ -326,6 +326,9 @@ Devise.setup do |config|
   # by setting this to a custom reader class, or use the default.
   config.idp_entity_id_reader = DeviseSamlAuthenticatable::CompetitionsIdpEntityIdReader
 
+  # https://github.com/apokalipto/devise_saml_authenticatable#attribute-map-initializer
+  config.saml_attribute_map_resolver = DeviseSamlAuthenticatable::CompetitionsAttributeMapResolver
+
   # You can set a handler object that takes the response for a failed SAML request and the strategy,
   # and implements a #handle method. This method can then redirect the user, return error messages, etc.
   # config.saml_failed_callback = nil

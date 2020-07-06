@@ -1,9 +1,0 @@
-# Update this file and save as attribute-map.yml
-# This file maps the IDP SAML attributes with the User model.
-# https://github.com/apokalipto/devise_saml_authenticatable
-
-# attribute-map.yml
-"urn:mace:dir:attribute-def:uid": "upn"
-"urn:mace:dir:attribute-def:email": "email"
-"urn:mace:dir:attribute-def:name": "last_name"
-"urn:mace:dir:attribute-def:givenName": "first_name"
