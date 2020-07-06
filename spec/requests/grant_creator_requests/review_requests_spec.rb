@@ -114,7 +114,7 @@ RSpec.describe 'review requests', type: :request do
                                                     params: { id: grant_creator_request.id, grant_creator_request: { status: 'approved' } })
             expect(ActionMailer::Base.deliveries.size).to eq(1)
             email = (ActionMailer::Base.deliveries).first
-            expect(email.subject).to eq('CD2H Competitions - Approved Grant Creator Request')
+            expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Approved Grant Creator Request")
           end
         end
 
@@ -124,7 +124,7 @@ RSpec.describe 'review requests', type: :request do
                                                     params: { id: grant_creator_request.id, grant_creator_request: { status: 'rejected' } })
             expect(ActionMailer::Base.deliveries.size).to eq(1)
             email = (ActionMailer::Base.deliveries).first
-            expect(email.subject).to eq('CD2H Competitions - Rejected Grant Creator Request')
+            expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Rejected Grant Creator Request")
           end
         end
 
