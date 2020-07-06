@@ -5,7 +5,7 @@
   You have been asked to review the submission
   = surround '"', ',"' do
     = link_to @submission.title, grant_submission_url(@grant, @submission)
-  an application to the grant #{link_to @grant.name, grant_url(@grant)} in Competitions.
+  an application to the grant #{link_to @grant.name, grant_url(@grant)} in #{link_to @application_name, root_url}.
 
 %p
   By clicking the link above you can review or opt out of reviewing this submission.

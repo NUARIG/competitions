@@ -23,7 +23,7 @@ RSpec.describe 'grant_submission review opt_out requests', type: :request do
       expect(ActionMailer::Base.deliveries.size).to eq(1)
       email = (ActionMailer::Base.deliveries).first
       expect(email.to).to eq([@assigner.email])
-      expect(email.subject).to eq('CD2H Competitions: Reviewer Opt Out Notification')
+      expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Reviewer Opt Out Notification")
     end
 
     it 'mails grant admin when the assigner no longer has grant permissions' do
@@ -35,7 +35,7 @@ RSpec.describe 'grant_submission review opt_out requests', type: :request do
       expect(ActionMailer::Base.deliveries.size).to eq(1)
       email = (ActionMailer::Base.deliveries).first
       expect(email.to).to eq([@admin.email])
-      expect(email.subject).to eq('CD2H Competitions: Reviewer Opt Out Notification')
+      expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Reviewer Opt Out Notification")
     end
   end
 end

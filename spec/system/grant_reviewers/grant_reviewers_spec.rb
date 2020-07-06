@@ -99,7 +99,6 @@ RSpec.describe 'GrantReviewers', type: :system do
         accept_alert do
           click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
         end
-        # page.driver.browser.switch_to.alert.accept
         expect(page).to have_content('Reviewer could not be found.')
       end
     end

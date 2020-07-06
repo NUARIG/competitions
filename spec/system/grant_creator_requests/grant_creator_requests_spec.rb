@@ -28,7 +28,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
     context 'success' do
       it 'accepts a valid request' do
-        page.fill_in 'How Do You Plan to Use Competitions?', with: Faker::Lorem.sentence
+        page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: Faker::Lorem.sentence
         click_button 'Request Grant Creation Access'
         expect(page).to have_content 'Your request has been sent. You will be notified after review.'
         expect(current_path).to eq(profile_path)
@@ -53,7 +53,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
     context 'success' do
       it 'accepts a valid request' do
-        page.fill_in 'How Do You Plan to Use Competitions?', with: "Updated #{Faker::Lorem.sentence}"
+        page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: "Updated #{Faker::Lorem.sentence}"
         click_button 'Re-submit This Grant Creation Access Request'
         expect(page).to have_content 'Your request has been updated. You will be notified after review.'
         expect(current_path).to eq(profile_path)
@@ -62,7 +62,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
     context 'failure' do
       it 'rejects an incomplete request' do
-        page.fill_in 'How Do You Plan to Use Competitions?', with: ''
+        page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: ''
         click_button 'Re-submit This Grant Creation Access Request'
         expect(page).to have_content 'Comment is required'
       end

@@ -2,8 +2,8 @@ en:
   mailers:
     reviewer_mailer:
         assignment:
-          subject: 'CD2H Competitions: Submission Review Assignment'
+          subject: "%{application_name}: Submission Review Assignment"
         unassignment:
-          subject: 'CD2H Competitions: Unassigned Submission Review'
+          subject: "%{application_name}: Unassigned Submission Review"
         opt_out:
-          subject: 'CD2H Competitions: Reviewer Opt Out Notification'
+          subject: "%{application_name}: Reviewer Opt Out Notification"

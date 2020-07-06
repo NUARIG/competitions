@@ -17,7 +17,7 @@
         = f.text_field :email, value: request.requester.email, disabled: true, class: 'small-12 medium-4'
     .grid-x
       .cell.small-12.medium-2
-        = f.label :request_comment
+        = f.label :request_comment, t('helpers.label.grant_creator_request.request_comment', application_name: COMPETITIONS_CONFIG[:application_name])
       .cell.small-12.medium-10
         = f.text_area :request_comment, class: 'small-12 medium-4', disabled: request.requester != current_user
     - if request.persisted?
