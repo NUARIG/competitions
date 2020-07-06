@@ -2,15 +2,15 @@
   %thead
     %tr
       %th
-        = sort_link(q, :title, 'Grant Title')
+        = sort_link(q, :title, 'Grant Title',{}, {title: 'Sort on Grant Title'})
       %th
-        = sort_link(q, :state, 'State')
+        = sort_link(q, :state, 'State',{}, {title: 'Sort on State'})
       %th
-        = sort_link(q, :publish_date)
+        = sort_link(q, :publish_date,{}, {title: 'Sort on Publish Date'})
       %th
-        = sort_link(q, :submission_open_date)
+        = sort_link(q, :submission_open_date,{}, {title: 'Sort on Submission Open Date'})
       %th
-        = sort_link(q, :submission_close_date)
+        = sort_link(q, :submission_close_date,{}, {title: 'Sort on Submission Close Date'})
       %th
 
   %tbody
