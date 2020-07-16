@@ -28,6 +28,28 @@
   }
 
   main {
+    #submenu {
+      background: none;
+      padding: 0;
+      .menu {
+        background: none;
+        li.menu-text {
+          color: #646464;
+          padding-left: 0;
+          padding-right: 0;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      }
+      .top-bar-right {
+        .menu {
+          input {
+            margin: 0;
+          }
+        }
+      }
+    }
     .menu.simple {
       margin: 1rem 0;
     }
@@ -114,4 +136,9 @@ trix-editor + p.help-text {
 // Related to Foundation tabs highlighting
 .tabs-content {
   border: 0px !important;
+}
+
+a.icon-24px {
+  position: relative;
+  bottom: 2px;
 }
