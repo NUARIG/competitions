@@ -141,6 +141,7 @@ class Grant < ApplicationRecord
   scope :with_criteria,      -> { includes(:criteria) }
   scope :unassigned_submissions, lambda { |*args| where('submission_reviews_count < :max_reviewers', { :max_reviewers => args.first || 2 }) }
   scope :with_reviewers,     -> { includes(:reviewers) }
+  scope :with_reviews,       -> { includes(:reviews) }
 
   def is_discardable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_discardable?")

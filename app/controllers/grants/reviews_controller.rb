@@ -5,7 +5,7 @@ module Grants
     def index
 
       if request.format.html?
-        @grant = Grant.kept.friendly.find(params[:grant_id])
+        @grant = Grant.kept.friendly.with_reviews.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
 
         @q              = Review.by_grant(@grant).ransack(params[:q])
