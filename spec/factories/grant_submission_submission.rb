@@ -2,12 +2,12 @@
 
 FactoryBot.define do
   factory :grant_submission_submission, class: 'GrantSubmission::Submission' do
-    association     :grant, factory: :grant
-    association     :form,  factory: :grant_submission_form
-    association     :applicant, factory: :user
-    title           { Faker::Lorem.sentence }
-    state           { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
-    user_updated_at { Time.now }
+    association      :grant, factory: :grant
+    association      :form,  factory: :grant_submission_form
+    association      :applicant, factory: :user
+    sequence(:title) { |n| "Submission #{n}" }
+    state            { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
+    user_updated_at  { Time.now }
 
     trait :draft do
       state           { GrantSubmission::Submission::SUBMISSION_STATES[:draft] }
