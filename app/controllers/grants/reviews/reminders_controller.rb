@@ -23,6 +23,10 @@ module Grants
       def send_reminder_emails
         @incomplete_reviews_by_reviewer.each do |reviewer, incomplete_reviews|
           ReminderMailer.grant_reviews_reminder(grant: @grant, reviewer: reviewer, incomplete_reviews: incomplete_reviews).deliver_now
+
+          incomplete_reviews.each do |review|
+            review.update_column(:reminded_at, Time.now)
+          end
         end
       end
     end

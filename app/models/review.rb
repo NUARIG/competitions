@@ -56,7 +56,8 @@ class Review < ApplicationRecord
   scope :by_submission,            -> (submission) { where(grant_submission_submission_id: submission.id) }
   scope :completed,                -> { where.not(overall_impact_score: nil) }
   scope :incomplete,               -> { where(overall_impact_score: nil) }
-  scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
+  # TODO: could be used to throttle reminders to a given timeframe
+  # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
     !overall_impact_score.nil?

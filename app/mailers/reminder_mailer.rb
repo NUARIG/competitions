@@ -7,10 +7,6 @@ class ReminderMailer < ApplicationMailer
     @incomplete_reviews = incomplete_reviews
 
     mail(to: reviewer.email, subject: I18n.t('mailers.reminder.grant_reviews.subject', grant_name: grant.name))
-
-    @incomplete_reviews.each do |review|
-      review.update_column(:reminded_at, Time.now)
-    end
   end
 end
 
