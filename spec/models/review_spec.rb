@@ -9,14 +9,16 @@ RSpec.describe Review, type: :model do
   it { is_expected.to respond_to(:reviewer) }
   it { is_expected.to respond_to(:overall_impact_score) }
   it { is_expected.to respond_to(:overall_impact_comment) }
+  it { is_expected.to respond_to(:reminded_at) }
 
   let(:grant)          { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:new_reviewer)   { create(:grant_reviewer, grant: grant)}
   let(:submission)     { grant.submissions.first }
-  let(:review)         { build(:review, assigner: grant.administrators.first,
+  let(:assigner)       { grant.administrators.first }
+  let(:review)         { build(:review, assigner: assigner,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: submission) }
-  let(:invalid_review) { build(:review, assigner: grant.administrators.first,
+  let(:invalid_review) { build(:review, assigner: assigner,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: submission) }
   let(:system_admin)   { create(:system_admin_user) }
@@ -119,6 +121,50 @@ RSpec.describe Review, type: :model do
           updated_criterion.update_attribute(:is_mandatory, false)
           CriteriaReview.find_by(review: review, criterion: updated_criterion).update_attribute(:score, nil)
         end.to (change{review.scored_criteria_scores.count}.by(-1))
+      end
+    end
+  end
+
+
+  describe 'scope' do
+    let(:reviewer1) { create(:grant_reviewer, grant: grant) }
+    let(:reviewer2) { create(:grant_reviewer, grant: grant) }
+    let(:reviewer3) { create(:grant_reviewer, grant: grant) }
+    let(:reviewer4) { create(:grant_reviewer, grant: grant) }
+
+    before(:each) do
+      @completed           = create(:scored_review_with_scored_mandatory_criteria_review,
+                                                        submission: submission,
+                                                        assigner: assigner,
+                                                        reviewer: reviewer1.reviewer)
+      @incomplete          = create(:incomplete_review, submission: submission,
+                                                        assigner: assigner,
+                                                        reviewer: reviewer2.reviewer)
+      @reminded_a_day_ago  = create(:reminded_review, submission: submission,
+                                                        assigner: assigner,
+                                                        reviewer: reviewer3.reviewer)
+      @reminded_a_week_ago = create(:incomplete_review, submission: submission,
+                                                        assigner: assigner,
+                                                        reviewer: reviewer4.reviewer,
+                                                        reminded_at: 2.weeks.ago)
+    end
+
+    context 'incomplete' do
+      it 'returns only incomplete reviews' do
+        incomplete_reviews = Review.by_grant(grant).incomplete
+        expect(incomplete_reviews.count).to eql 3
+        expect(incomplete_reviews).not_to include @completed_review
+      end
+    end
+
+    context 'may_be_reminded' do
+      pending 'returns un-remined reviews and reviews reminded more than a week ago' do
+        fail 'Not implemented -- see app/models/review.rb:59'
+        reviews_to_be_reminded = Review.by_grant(grant).may_be_reminded
+        expect(reviews_to_be_reminded.count).to eql 2
+        expect(reviews_to_be_reminded).to include @incomplete
+        expect(reviews_to_be_reminded).to include @reminded_a_week_ago
+        expect(reviews_to_be_reminded).not_to include @reminded_a_day_ago
       end
     end
   end

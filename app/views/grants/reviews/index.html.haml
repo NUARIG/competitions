@@ -10,65 +10,66 @@
 .tabs-panel.is-active
   %h2
     Reviews
-  - unless @reviews.empty?
-    %p
-      = link_to "Save all Reviews #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_reviews_url(@grant, {format: 'xlsx'})
+  #submenu.top-bar
+    - if @reviews.any? || policy(@grant).grant_editor_access?
+      .top-bar-left
+        %ul.menu
+          %li.menu-text
+            Actions:
+          - if policy(@grant).grant_editor_access?
+            %li
+              = link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)
+          - unless @grant.reviews.none?
+            %li
+              = link_to "Save all Reviews #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_reviews_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
+          - if policy(@grant).grant_editor_access? && @grant.reviews.incomplete.any?
+            %li
+              = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete reviews on this grant.' }
+    = search_form_for @q, url: grant_reviews_path(@grant) do |f|
+      .top-bar-right
+        %ul.menu
+          %li.search
+            = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont, placeholder: 'Applicant or Reviewer'
+          %li.search
+            = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Applicant'
 
-  .grid-x
-    .cell
 
-      = search_form_for @q, url: grant_reviews_path(@grant) do |f|
-        .grid-x.grid-margin-x.medium-margin-collapse
-          .small-12.medium-2.cell
-            %label.text-left.middle
-              Search Applicant or Reviewer:
-          .small-12.medium-2.cell
-            = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont
-          .small-12.medium-3.cell
-            = f.submit 'Search', class: 'button'
-            = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
+- if params[:q].nil? && @reviews.empty?
+  %p
+    There were no assigned reviews found.
 
-      - if policy(@grant).grant_editor_access?
-        %p
-          %strong
-            = link_to 'Add reviewers or assign reviews', grant_reviewers_path(@grant)
+- else
+  = render 'shared/pagy_header', locals: { pagy: @pagy }
 
-      - if @reviews.empty?
-        %p
-          There were no assigned reviews found.
+  %table.hover
+    %thead
+      %tr
+        %th
+          = sort_link(@q, :applicant_last_name, 'Applicant', {}, { title: 'Sort on Applicant' })
+        %th
+          = sort_link(@q, :submission_title, 'Submission', {}, { title: 'Sort on Submission Title' })
+        %th
+          = sort_link(@q, :reviewer_last_name, 'Reviewer', {}, { title: 'Sort on Reviewer' })
+        %th
+          = sort_link(@q, :overall_impact_score, 'Review', {}, { title: 'Sort on Overall Impact Score' })
+        %th
+          = sort_link(@q, :overall_impact_score, {}, { title: 'Sort on Overall Impact Score' })
+        %th Composite Score
 
-      - else
-        = render 'shared/pagy_header', locals: { pagy: @pagy }
+    %tbody
+      - @reviews.each do |review|
+        %tr
+          %td
+            = sortable_full_name(review.submission.applicant)
+          %td
+            = link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
+          %td
+            = sortable_full_name(review.reviewer)
+          %td
+            = link_to (review.is_complete? ? 'Full Review' : 'Incomplete'), grant_submission_review_path(review.grant, review.submission, review)
+          %td
+            = (review.overall_impact_score || 0)
+          %td
+            = review.composite_score
 
-        %table.hover
-          %thead
-            %tr
-              %th
-                = sort_link(@q, :applicant_last_name, 'Applicant',{}, {title: 'Sort on Applicant'})
-              %th
-                = sort_link(@q, :submission_title, 'Submission',{}, {title: 'Sort on Submission Title'})
-              %th
-                = sort_link(@q, :reviewer_last_name, 'Reviewer',{}, {title: 'Sort on Reviewer'})
-              %th
-                = sort_link(@q, :overall_impact_score, 'Review',{}, {title: 'Sort on Overall Impact Score'})
-              %th
-                = sort_link(@q, :overall_impact_score,{}, {title: 'Sort on Overall Impact Score'})
-              %th Composite Score
-
-          %tbody
-            - @reviews.each do |review|
-              %tr
-                %td
-                  = sortable_full_name(review.submission.applicant)
-                %td
-                  = link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
-                %td
-                  = sortable_full_name(review.reviewer)
-                %td
-                  = link_to (review.is_complete? ? 'Full Review' : 'Incomplete'), grant_submission_review_path(review.grant, review.submission, review)
-                %td
-                  = (review.overall_impact_score || 0)
-                %td
-                  = review.composite_score
-
-        != pagy_foundation_nav(@pagy)
+  != pagy_foundation_nav(@pagy)
