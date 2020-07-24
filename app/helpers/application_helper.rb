@@ -3,6 +3,19 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  # DEVISE ADDITIONS TO SUPPORT MULTIPLE USER TYPES.
+  # def user_signed_in?
+  #   saml_user_signed_in? || registered_user_signed_in?
+  # end
+
+  # def current_user
+  #   current_saml_user  || current_registered_user
+  end
+
+  # def user_type?(resource, user_class)
+  #   resource.class == user_class
+  # end
+
   # CALLOUTS
   def foundation_alert_class_for(flash_type)
     flash_type.to_s == 'notice' ? 'success' : flash_type

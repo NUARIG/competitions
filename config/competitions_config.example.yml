@@ -22,7 +22,7 @@ development:
     attribute_map:  { "email": "email",
                       "firstName": "first_name",
                       "lastName": "last_name",
-                      "upn": "upn"
+                      "uid": "uid"
                     }
     sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
     assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'
@@ -69,7 +69,7 @@ development:
   #   attribute_map:  { "email": "email",
   #                     "firstName": "first_name",
   #                     "lastName": "last_name",
-  #                     "upn": "upn"
+  #                     "uid": "uid"
   #.                  }
   #   sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
   #   assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'

@@ -5,7 +5,7 @@ FactoryBot.define do
     first_name                  { Faker::Name.first_name }
     last_name                   { Faker::Name.last_name }
     sequence(:email)            { |n| Faker::Internet.email(name: "user#{n}")  }
-    upn                         { email }
+    uid                         { email }
     system_admin                { false }
     grant_creator               { false }
     session_index               { Faker::Lorem.characters }

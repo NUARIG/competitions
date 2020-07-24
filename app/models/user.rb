@@ -4,7 +4,8 @@ class User < ApplicationRecord
   attr_accessor Devise.saml_session_index_key.to_sym
   attr_accessor :grant_permission_role
 
-  devise :saml_authenticatable, :trackable, :timeoutable
+  USER_TYPES = ["SamlUser", "RegisteredUser"]
+
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
                   meta:     { user_id: :id } # added for convenience
 
@@ -31,7 +32,7 @@ class User < ApplicationRecord
   has_many   :grant_creator_requests, foreign_key: :requester_id,
                                       inverse_of: :requester
 
-  validates :upn,               presence: true,
+  validates :uid,               presence: true,
                                 uniqueness: true
   validates :email,             presence: true,
                                 uniqueness: true

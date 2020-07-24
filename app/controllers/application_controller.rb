@@ -33,4 +33,29 @@ class ApplicationController < ActionController::Base
                          params:     params.except(:utf8, :_method, :authenticity_token, :controller, :action))
     end
   end
+
+  # Devise methods
+  # def authenticate_user!
+  #   store_location_for(:registered_user, request.original_url)
+  #   store_location_for(:saml_user, request.original_url)
+  #   if (!saml_user_signed_in? && !registered_user_signed_in?)
+  #     flash[:alert] = 'You need to sign in or sign up before continuing.'
+  #     redirect_to login_url
+  #   end
+  # end
+
+  def user_signed_in?
+    saml_user_signed_in? || registered_user_signed_in?
+  end
+
+  def current_user
+    current_saml_user  || current_registered_user
+  end
+
+  # def user_type?(resource, user_class)
+  #   resource.class == user_class
+  # end
+
+  helper_method :current_user
+  helper_method :user_signed_in?
 end

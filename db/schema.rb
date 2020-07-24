@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_31_152614) do
+ActiveRecord::Schema.define(version: 2020_07_24_164132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -340,7 +340,6 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
     t.string "state", null: false
     t.datetime "user_updated_at"
     t.datetime "discarded_at"
-    t.datetime "applicant_last_updated_at"
     t.decimal "average_overall_impact_score", precision: 5, scale: 2
     t.decimal "composite_score", precision: 5, scale: 2
     t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
@@ -424,7 +423,7 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
     t.index ["whodunnit"], name: "index_user_versions_on_whodunnit"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :bigint, default: -> { "nextval('saml_users_id_seq'::regclass)" }, force: :cascade do |t|
     t.boolean "system_admin", default: false, null: false
     t.string "email", default: "", null: false
     t.string "first_name"
@@ -439,8 +438,9 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.boolean "grant_creator", default: false, null: false
-    t.string "upn", default: "", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.string "uid", default: "", null: false
+    t.string "type"
+    t.index ["email"], name: "index_saml_users_on_email", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
