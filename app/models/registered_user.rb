@@ -3,7 +3,8 @@ class RegisteredUser < User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :confirmable, :registerable, :recoverable, :validatable
 
-  SAML_DOMAINS = COMPETITIONS_CONFIG[:app_domain].to_a
+  SAML_DOMAINS = []
+  SAML_DOMAINS << COMPETITIONS_CONFIG[:app_domain]
   RESTRICTED_EMAIL_DOMAINS   = ['.xyz', '.top', '.website', '.space', '.online']
 
   validate  :cannot_register_with_northwestern_email
