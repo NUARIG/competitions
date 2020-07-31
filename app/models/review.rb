@@ -77,7 +77,8 @@ class Review < ApplicationRecord
     submission.set_average_overall_impact_score
   end
 
-  def may_review?
+  def review_period_closed?
+    # TODO: enforce grant.review_open_date ?
     Time.now > grant.review_close_date
   end
 
@@ -108,7 +109,7 @@ class Review < ApplicationRecord
   end
 
   def is_not_after_close_date
-    errors.add(:base, :may_not_review_after_close_date, review_close_date: grant.review_close_date) if self.may_review?
+    errors.add(:base, :may_not_review_after_close_date, review_close_date: grant.review_close_date) if review_period_closed?
   end
 
   # TODO: use this for every review load?
