@@ -183,4 +183,17 @@ RSpec.describe Review, type: :model do
       end
     end
   end
+
+  describe 'methods' do
+    context 'review_period_closed?' do
+      it 'returns false when review_close_date is in the future' do
+        expect(review.review_period_closed?).to be false
+      end
+
+      it 'returns true when review_close_date has passed' do
+        allow_any_instance_of(Grant).to receive(:review_close_date).and_return(1.minute.ago)
+        expect(review.review_period_closed?).to be true
+      end
+    end
+  end
 end
