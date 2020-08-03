@@ -24,6 +24,16 @@ class ProfilesController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:era_commons)
+    user_params = [:era_commons]
+    user_params << %i[system_admin grant_creator] if current_user.system_admin?
+    if params[:registered_user]
+      user_params << %i[first_name last_name email]
+      params.require(:registered_user).permit(user_params)
+    elsif params[:saml_user]
+      params.require(:saml_user).permit(user_params)
+    else
+      flash[:alert] = 'Unknown user type.'
+      redirect_to :back
+    end
   end
 end

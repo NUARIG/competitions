@@ -30,11 +30,14 @@
         %th
           = sort_link(@q, :email,{}, {title: 'Sort on Email'})
         %th
+          = sort_link(@q, :type,{}, {title: 'Sort on Type'})
+        %th
           = sort_link(@q, :created_at, 'Joined',{}, {title: 'Sort on Join Date'})
         %th
           = sort_link(@q, :current_sign_in_at, 'Last Access',{}, {title: 'Sort on Last Access'})
         %th
 
-    = render @users
+    - @users.each do |user|
+      = render partial: 'user', locals: { user: user }
 
   != pagy_foundation_nav(@pagy)

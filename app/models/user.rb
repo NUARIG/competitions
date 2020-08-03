@@ -4,6 +4,8 @@ class User < ApplicationRecord
   attr_accessor Devise.saml_session_index_key.to_sym
   attr_accessor :grant_permission_role
 
+  devise :trackable, :timeoutable
+
   USER_TYPES = ["SamlUser", "RegisteredUser"]
 
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
@@ -51,5 +53,11 @@ class User < ApplicationRecord
   def get_role_by_grant(grant:)
     self.grant_permission_role ||= {}
     self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
+  end
+
+  # https://github.com/varvet/pundit/issues/478#issuecomment-371737216
+  # Needed so that subclasses inherit the policy from User class.
+  def self.policy_class
+    UserPolicy
   end
 end

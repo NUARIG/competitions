@@ -1,7 +1,9 @@
 class RegisteredUser < User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :confirmable, :registerable, :recoverable, :validatable
+  devise :database_authenticatable, :confirmable, :registerable, :rememberable, :recoverable, :validatable
+
+  after_initialize :set_uid, if: :new_record?
 
   SAML_DOMAINS = []
   SAML_DOMAINS << COMPETITIONS_CONFIG[:app_domain]
@@ -18,10 +20,8 @@ class RegisteredUser < User
     errors.add(:email, 'domain cannot register.') if RESTRICTED_EMAIL_DOMAINS.any? { |domain| email.match? domain }
   end
 
-  # after_initialize :set_username, if: :new_record?
-
-  # private
-  # def set_username
-  #   self.username = self.email
-  # end
+  private
+  def set_uid
+    self.uid = self.email
+  end
 end

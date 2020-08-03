@@ -4,14 +4,16 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Pagy::Backend
 
-  before_action :authenticate_user!, :set_paper_trail_whodunnit, :audit_action
+  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :set_paper_trail_whodunnit, :audit_action
+  before_action :configure_permitted_parameters_for_devise_methods, if: :devise_controller?
 
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  protect_from_forgery with: :exception
+  protect_from_forgery prepend: true, with: :exception
 
   def user_for_paper_trail
     user_signed_in? ? current_user.id : 'Unauthenticated user'
@@ -35,14 +37,14 @@ class ApplicationController < ActionController::Base
   end
 
   # Devise methods
-  # def authenticate_user!
-  #   store_location_for(:registered_user, request.original_url)
-  #   store_location_for(:saml_user, request.original_url)
-  #   if (!saml_user_signed_in? && !registered_user_signed_in?)
-  #     flash[:alert] = 'You need to sign in or sign up before continuing.'
-  #     redirect_to login_url
-  #   end
-  # end
+  def authenticate_user!
+    store_location_for(:registered_user, request.original_url)
+    store_location_for(:saml_user, request.original_url)
+    if (!saml_user_signed_in? && !registered_user_signed_in?)
+      flash[:alert] = 'You need to sign in or sign up before continuing.'
+      redirect_to login_index_url
+    end
+  end
 
   def user_signed_in?
     saml_user_signed_in? || registered_user_signed_in?
@@ -52,10 +54,27 @@ class ApplicationController < ActionController::Base
     current_saml_user  || current_registered_user
   end
 
-  # def user_type?(resource, user_class)
-  #   resource.class == user_class
-  # end
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) || root_path
+  end
 
   helper_method :current_user
   helper_method :user_signed_in?
+
+  protected
+    # Permitted parameters for users in devise methods.
+    def configure_permitted_parameters_for_devise_methods
+      devise_parameter_sanitizer.permit(:sign_in) do |user_params|
+        user_params.permit(:uid, :email, :era_commons, :password)
+      end
+
+      devise_parameter_sanitizer.permit(:sign_up) do |user_params|
+        user_params.permit(:uid, :email, :password, :last_name, :first_name, :era_commons)
+      end
+
+      devise_parameter_sanitizer.permit(:account_update) do |user_params|
+        user_params.permit(:current_password, :password, :password_confirmation, :last_name, :first_name, :era_commons)
+      end
+    end
+
 end

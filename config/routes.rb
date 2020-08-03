@@ -2,11 +2,13 @@
 
 Rails.application.routes.draw do
   devise_for :registered_users
-  # devise_for :users, controllers: { saml_sessions: 'saml_sessions' }
+  devise_for :saml_users, controllers: { saml_sessions: 'saml_sessions' }
 
-  # resources :users,               only: %i[index edit update]
+  resources :users,               only: %i[index edit update]
 
   root to: 'home#index'
+
+  resources :login, only: :index
 
   resources :banners,             except: %i[show]
 

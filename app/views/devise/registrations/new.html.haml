@@ -1,0 +1,29 @@
+- provide(:title_tag, 'Sign Up')
+%h2 Sign up
+%p
+  = "#{COMPETITIONS_CONFIG[:saml][:idp_entity_name]} user?"
+  = link_to 'Log in', new_saml_user_session_path
+%p
+  = "Please provide the following information to create a new account. If you already have an account,"
+  = link_to 'return to the log in page', login_index_path
+  = '.'
+= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+  = render "devise/shared/error_messages", resource: resource
+  #login_fields
+    %div
+      = f.label :first_name
+      = f.text_field :first_name, :autofocus => true
+    %div
+      = f.label :last_name
+      = f.text_field :last_name
+    %div
+      = f.label :email
+      = f.email_field :email
+    %div
+      = f.label :password
+      = f.password_field :password
+    %div
+      = f.label :password_confirmation
+      = f.password_field :password_confirmation
+    %div= f.submit "Sign up"
+= render "devise/shared/links"

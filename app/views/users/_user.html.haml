@@ -4,6 +4,8 @@
   %td
     = user.email
   %td
+    = user.type
+  %td
     = date_mmddyyyy(user.created_at)
   %td
     = time_ago_in_words(user.current_sign_in_at)
