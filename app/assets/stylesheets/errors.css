@@ -1,0 +1,84 @@
+.field_with_errors input,
+.field_with_errors select,
+.field_with_errors textarea {
+  background-color: pink;
+  border: 0.25em solid red;
+  font-weight: bold;
+}
+
+#errorExplanation,
+#error_explanation {
+  border: 3px solid red;
+  padding: 0.85em;
+  padding-bottom: 0;
+  margin-bottom: 1em;
+  background-color: pink;
+}
+
+#errorExplanation h2,
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 0.25em 0.25em 0.25em 1.5em;
+  font-size: 0.9em;
+  margin: -7px;
+  margin-bottom: 0;
+}
+
+#errorExplanation p {
+  color: #333333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li,
+#error_explanation ul li {
+  font-size: 0.9em;
+  list-style: square;
+}
+
+label.error,
+div.notice,
+div.alert {
+  text-align: center;
+  padding: 0.25em;
+  background-color: white;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  margin: 0;
+  font-weight: bold;
+  padding: 0.75em 0 0.5em 1em;
+}
+
+div.notice {
+  color: green;
+  border: 1px solid green;
+  font-size: 1.25em;
+}
+
+div.alert {
+  color: maroon;
+  border: 1px solid maroon;
+  font-size: 1.25em;
+}
+
+span.warning,
+span.required {
+  font-weight: bold;
+  color: maroon;
+}
+
+label.error {
+  color: maroon;
+  border: 1px solid maroon;
+  font-size: 1em;
+}
+
+.instructions {
+  background-color: #bda0cb;
+  border: 1px solid black;
+  color: black;
+  float: right;
+  font-weight: bold;
+  margin-top: 1.5em;
+  padding: 0.75em;
+}

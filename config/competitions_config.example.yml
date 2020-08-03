@@ -8,6 +8,9 @@ development:
   default_url_options:
     host: 'localhost' # e.g. localhost, https://competitions_example.com, etc.
     port: 3000 # e.g. '', 3000, etc.
+  blocked_emails:
+    - localhost
+    # - <YOUR_INSTITUTIONAL_DOMAIN>
   mailer:
     mailer_address: # <APP_EMAIL_ADDRESS>
     delivery_method: smtp # e.g. smtp
@@ -16,6 +19,8 @@ development:
     # NOTE: Update smtp_settings in config/secrets.yml.
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   saml:
+    idp_entity_id: ''
+    idp_entity_name: 'Development'
     saml_default_user_key: 'email' # The user will be looked up by this key
     # The following maps the IDP SAML attribute's names(left)
     #  with the User model attributes.
@@ -57,6 +62,8 @@ development:
   # default_url_options:
   #   host: 'localhost'
   #   port: 3000
+  # blocked_emails: # This is an array of domains that could be in the SAML user.
+  #   - localhost
   # mailer:
   #   mailer_address: # <APP_EMAIL_ADDRESS>
   #.  delivery_method: test
@@ -64,6 +71,8 @@ development:
   #   perform_deliveries:
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   # saml:
+  #   idp_entity_id: ''
+  #   idp_entity_name: 'Okta'
   #   saml_default_user_key: 'email' # The user will be looked up by this key
       # This file maps the IDP SAML attributes with the User model.
   #   attribute_map:  { "email": "email",
@@ -79,7 +88,7 @@ development:
   #   authn_context: '' # e.g. ''
   #   idp_slo_target_url: #IDP logout URL
   #   idp_sso_target_url: #IDP login URL
-  # idp_security: { authn_requests_signed: false,
+  #   idp_security: { authn_requests_signed: false,
   #                   logout_requests_signed: false,
   #                   logout_responses_signed: false,
   #                   want_assertions_signed: true,

@@ -5,19 +5,18 @@ class RegisteredUser < User
 
   after_initialize :set_uid, if: :new_record?
 
-  SAML_DOMAINS = []
-  SAML_DOMAINS << COMPETITIONS_CONFIG[:app_domain]
+  SAML_DOMAINS = COMPETITIONS_CONFIG[:blocked_emails]
   RESTRICTED_EMAIL_DOMAINS   = ['.xyz', '.top', '.website', '.space', '.online']
 
-  validate  :cannot_register_with_northwestern_email
+  validate  :cannot_register_with_saml_email
   validate  :cannot_register_with_spam_domain
 
-  def cannot_register_with_northwestern_email
+  def cannot_register_with_saml_email
     errors.add(:email, 'Please log in with your institutional ID') if SAML_DOMAINS.any? { |domain| email.match? domain }
   end
 
   def cannot_register_with_spam_domain
-    errors.add(:email, 'domain cannot register.') if RESTRICTED_EMAIL_DOMAINS.any? { |domain| email.match? domain }
+    errors.add(:email, 'domain is blocked from registering.') if RESTRICTED_EMAIL_DOMAINS.any? { |domain| email.match? domain }
   end
 
   private
