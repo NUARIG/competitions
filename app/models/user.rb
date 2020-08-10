@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  attr_accessor Devise.saml_session_index_key.to_sym
   attr_accessor :grant_permission_role
 
   devise :trackable, :timeoutable
@@ -44,11 +43,6 @@ class User < ApplicationRecord
   validates_uniqueness_of :era_commons, unless: -> { era_commons.blank? }
 
   scope :order_by_last_name,    -> { order(last_name: :asc) }
-
-  # https://github.com/apokalipto/devise_saml_authenticatable/issues/151
-  def authenticatable_salt
-    self.read_attribute(Devise.saml_session_index_key.to_sym) if self.read_attribute(Devise.saml_session_index_key.to_sym).present?
-  end
 
   def get_role_by_grant(grant:)
     self.grant_permission_role ||= {}

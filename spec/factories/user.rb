@@ -10,6 +10,7 @@ FactoryBot.define do
     grant_creator               { false }
     session_index               { Faker::Lorem.characters }
     current_sign_in_at          { Time.now }
+    type                        { 'SamlUser' }
 
     trait :system_admin do
       system_admin { true }

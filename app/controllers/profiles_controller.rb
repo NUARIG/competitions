@@ -31,7 +31,7 @@ class ProfilesController < ApplicationController
     when 'SamlUser'
       params.require(:user).permit(user_params)
     when 'RegisteredUser'
-      params.require(:user).permit(user_params + [first_name last_name email])
+      params.require(:user).permit(user_params + [:first_name, :last_name, :email])
     end
   end
 end

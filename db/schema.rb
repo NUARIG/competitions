@@ -423,8 +423,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_160003) do
     t.index ["whodunnit"], name: "index_user_versions_on_whodunnit"
   end
 
-  create_table "users", id: :bigint, default: -> { "nextval('saml_users_id_seq'::regclass)" }, force: :cascade do |t|
-    t.boolean "system_admin", default: false, null: false
+  create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "first_name"
     t.string "last_name"
@@ -437,6 +436,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_160003) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
+    t.boolean "system_admin", default: false, null: false
     t.boolean "grant_creator", default: false, null: false
     t.string "uid", default: "", null: false
     t.string "type"
@@ -448,7 +448,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_160003) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_saml_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
