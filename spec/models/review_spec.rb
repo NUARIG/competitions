@@ -69,6 +69,12 @@ RSpec.describe Review, type: :model do
         expect(review).not_to be_valid
         expect(review.errors).to include(:submission)
       end
+
+      it 'prevents a review from being submitted after grant review close date' do
+        grant.update(publish_date: 6.days.ago, submission_open_date: 5.days.ago, submission_close_date: 4.days.ago, review_open_date: 3.days.ago, review_close_date: 2.days.ago)
+        expect(review).not_to be_valid
+        expect(review.errors.messages[:base]).to include I18n.t('activerecord.errors.models.review.attributes.base.may_not_review_after_close_date', review_close_date: grant.review_close_date)
+      end
     end
 
     describe '#update' do
@@ -99,6 +105,15 @@ RSpec.describe Review, type: :model do
         review.save
         review.update(reviewer: new_reviewer.reviewer)
         expect(review.errors[:reviewer]).to include(I18n.t('activerecord.errors.models.review.attributes.reviewer.may_not_be_reassigned'))
+      end
+
+      it 'prevents an update from being submitted after grant review close date' do
+        review.save
+        grant.update(publish_date: 6.days.ago, submission_open_date: 5.days.ago, submission_close_date: 4.days.ago, review_open_date: 3.days.ago, review_close_date: 2.days.ago)
+        review.update(overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE))
+        review.reload
+        expect(review).not_to be_valid
+        expect(review.errors.messages[:base]).to include I18n.t('activerecord.errors.models.review.attributes.base.may_not_review_after_close_date', review_close_date: grant.review_close_date)
       end
     end
 
@@ -165,6 +180,19 @@ RSpec.describe Review, type: :model do
         expect(reviews_to_be_reminded).to include @incomplete
         expect(reviews_to_be_reminded).to include @reminded_a_week_ago
         expect(reviews_to_be_reminded).not_to include @reminded_a_day_ago
+      end
+    end
+  end
+
+  describe 'methods' do
+    context 'review_period_closed?' do
+      it 'returns false when review_close_date is in the future' do
+        expect(review.review_period_closed?).to be false
+      end
+
+      it 'returns true when review_close_date has passed' do
+        allow_any_instance_of(Grant).to receive(:review_close_date).and_return(1.minute.ago)
+        expect(review.review_period_closed?).to be true
       end
     end
   end

@@ -44,6 +44,7 @@ class Review < ApplicationRecord
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
   validate :submission_is_not_draft
+  validate :is_not_after_close_date
 
   scope :with_criteria_reviews,    -> { includes(:criteria_reviews) }
   scope :with_reviewer,            -> { includes(:reviewer) }
@@ -76,6 +77,11 @@ class Review < ApplicationRecord
     submission.set_average_overall_impact_score
   end
 
+  def review_period_closed?
+    # TODO: enforce grant.review_open_date ?
+    Time.now > grant.review_close_date
+  end
+
   private
 
   def reviewer_is_a_grant_reviewer
@@ -100,6 +106,10 @@ class Review < ApplicationRecord
 
   def submission_is_not_draft
     errors.add(:submission, :may_not_be_draft) if submission.draft?
+  end
+
+  def is_not_after_close_date
+    errors.add(:base, :may_not_review_after_close_date, review_close_date: grant.review_close_date) if review_period_closed?
   end
 
   # TODO: use this for every review load?
