@@ -1,7 +1,7 @@
 require 'rails_helper'
 include UsersHelper
 
-RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do 
+RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)            { grant.submissions.first }
   let(:applicant)             { submission.applicant }
@@ -322,6 +322,12 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
           click_button 'Submit'
           expect(page).not_to have_content 'You successfully applied'
+        end
+
+        context 'instructions' do
+          scenario 'displays question instructions' do
+            expect(page).to have_content grant.questions.first.instruction
+          end
         end
       end
 
