@@ -21,8 +21,8 @@
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           = ff.hidden_field :criterion_id
           .score_value{class: "score_value_#{value}"}
-            = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}", required:criterion.is_mandatory })
-            = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}" }
+            = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}", required:criterion.is_mandatory, disabled: disabled })
+            = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}", disabled: disabled }
         %label.scoring-guidance
           Poor
   - if criterion_review.criterion.show_comment_field
@@ -30,4 +30,4 @@
       .cell.small-12.medium-3
         = ff.label :comments
       .cell.small-12.medium-9
-        = ff.text_area :comment, { id: "#{criterion_id}-comment", class: 'comment'}
+        = ff.text_area :comment, { id: "#{criterion_id}-comment", class: 'comment', disabled: disabled}

@@ -148,9 +148,44 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
         login_as review.reviewer
         visit edit_grant_submission_review_path(grant, submission, review)
-
         expect(page).to have_selector("##{criterion_id_selector(grant.criteria.first)}-comment")
         expect(page).not_to have_selector("##{criterion_id_selector(grant.criteria.last)}-comment")
+      end
+
+      context 'closed review period' do
+        context 'reviewer' do
+          before(:each) do
+            login_as review.reviewer
+          end
+
+          scenario 'displays warning message' do
+            allow_any_instance_of(Review).to receive(:review_period_closed?).and_return(true)
+            visit edit_grant_submission_review_path(grant, submission, review)
+            expect(page).to have_content('Review period is closed')
+          end
+
+          scenario 'disables each criteria and overall impact review button' do
+            allow_any_instance_of(Review).to receive(:review_period_closed?).and_return(true)
+            visit edit_grant_submission_review_path(grant, submission, review)
+
+            Capybara.ignore_hidden_elements = false
+            grant.criteria.each do |criterion|
+              (1..9).each do |i|
+                expect(page.find_field("#{criterion_id_selector(criterion)}-#{i}", disabled: true)).not_to be nil
+              end
+            end
+            (1..9).each do |i|
+              expect(page.find_field("overall-#{i}", disabled: true)).not_to be nil
+            end
+            Capybara.ignore_hidden_elements = true
+          end
+
+          scenario 'disables the submit button' do
+            allow_any_instance_of(Review).to receive(:review_period_closed?).and_return(true)
+            visit edit_grant_submission_review_path(grant, submission, review)
+            expect(page).to have_button('Submit Your Review', disabled: true)
+          end
+        end
       end
     end
   end
