@@ -3,6 +3,17 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  # VIEW HELPERS
+  def full_root_url
+    subdomain = (COMPETITIONS_CONFIG[:subdomain] || "")
+    subdomain += "." unless subdomain.empty?
+    host = COMPETITIONS_CONFIG[:app_domain]
+    domain = [subdomain, host].join
+    port = (COMPETITIONS_CONFIG[:default_url_options][:port] || "").to_s
+    port = ":" + port unless port.empty?
+    url = 'https://' + domain + port + '/'
+  end
+
   # CALLOUTS
   def foundation_alert_class_for(flash_type)
     flash_type.to_s == 'notice' ? 'success' : flash_type

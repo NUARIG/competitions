@@ -8,10 +8,10 @@
   .cell.small-12
     = f.label :slug, 'Short Name', disabled: disable_fields
   .cell.grid-x.small-12
-    .cell.small-12.medium-3
-      %label.middle
-        http://example.org/
-    .cell.small-12.medium-9
+    .cell.small-12.medium-4
+      %label.middle{ style: 'font-size: .85em' }
+        = full_root_url
+    .cell.small-12.medium-8
       = f.text_field :slug, required: true, maxlength: Grant::SLUG_MAX_LENGTH, disabled: disable_fields, class: 'small-12 medium-6', aria: { 'described-by': 'slug-help' }
       %p.help-text#slug-help
         Generates a unique short URL to use when advertising or linking to this grant (3-15 characters).
