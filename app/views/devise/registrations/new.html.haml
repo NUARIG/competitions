@@ -12,18 +12,18 @@
   #login_fields
     %div
       = f.label :first_name
-      = f.text_field :first_name, :autofocus => true
+      = f.text_field :first_name, autofocus: true, required: true
     %div
       = f.label :last_name
-      = f.text_field :last_name
+      = f.text_field :last_name, required: true
     %div
       = f.label :email
-      = f.email_field :email
+      = f.email_field :email, required: true
     %div
       = f.label :password
-      = f.password_field :password
+      = f.password_field :password, required: true
     %div
       = f.label :password_confirmation
-      = f.password_field :password_confirmation
+      = f.password_field :password_confirmation, required: true
     %div= f.submit "Sign up"
 = render "devise/shared/links"

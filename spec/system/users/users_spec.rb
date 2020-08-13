@@ -6,22 +6,22 @@ include UsersHelper
 RSpec.describe 'Users', type: :system, js: true  do
   describe '#index' do
     before(:each) do
-      @user1         = create(:user, last_name: 'BBBB',
+      @user1         = create(:saml_user, last_name: 'BBBB',
                                      created_at: 65.minutes.ago,
                                      current_sign_in_at: 65.minutes.ago)
-      @user2         = create(:user, last_name: 'AAAA',
+      @user2         = create(:saml_user, last_name: 'AAAA',
                                      created_at: 1.month.ago,
                                      current_sign_in_at: 1.day.ago)
-      @grant_creator = create(:grant_creator_user, last_name: 'ZZZZ',
+      @grant_creator = create(:grant_creator_saml_user, last_name: 'ZZZZ',
                                                    created_at: 1.week.ago,
                                                    current_sign_in_at: 1.month.ago)
-      @system_admin  = create(:system_admin_user, last_name: 'CCCC',
+      @system_admin  = create(:system_admin_saml_user, last_name: 'CCCC',
                                                   created_at: 1.year.ago)
     end
 
     context 'Sorts' do
       before(:each) do
-        login_as @system_admin
+        login_as(@system_admin, scope: :saml_user)
         visit users_path
 
         @system_admin.update_attribute(:current_sign_in_at, 45.days.ago)
@@ -100,13 +100,13 @@ RSpec.describe 'Users', type: :system, js: true  do
   end
 
   describe 'update' do
-    let(:user)          { create(:user, current_sign_in_at: Time.now) }
-    let(:system_admin)  { create(:system_admin_user) }
-    let(:other_user)    { create(:user) }
+    let(:user)          { create(:saml_user, current_sign_in_at: Time.now) }
+    let(:system_admin)  { create(:system_admin_saml_user) }
+    let(:other_user)    { create(:saml_user) }
 
     context 'system_admin' do
       before(:each) do
-        login_as system_admin
+        login_as(system_admin, scope: :saml_user)
 
         visit(edit_user_path(user))
       end
@@ -135,7 +135,7 @@ RSpec.describe 'Users', type: :system, js: true  do
 
     context 'user' do
       before(:each) do
-        login_as user
+        login_as(user, scope: :saml_user)
 
         visit(profile_path)
       end

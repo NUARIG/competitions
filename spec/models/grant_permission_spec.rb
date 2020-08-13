@@ -4,14 +4,14 @@ require 'rails_helper'
 
 RSpec.describe GrantPermission, type: :model do
   it { is_expected.to respond_to(:grant) }
-  it { is_expected.to respond_to(:user) }
+  it { is_expected.to respond_to(:saml_user) }
   it { is_expected.to respond_to(:role) }
 
   let(:grant)             { create(:grant) }
 
-  let(:admin_user)        { create(:user) }
-  let(:editor_user)       { create(:user) }
-  let(:viewer_user)       { create(:user) }
+  let(:admin_user)        { create(:saml_user) }
+  let(:editor_user)       { create(:saml_user) }
+  let(:viewer_user)       { create(:saml_user) }
 
   let(:admin_grant_permission)  { build(:admin_grant_permission, grant_id: grant.id, user_id: admin_user.id) }
   let(:editor_grant_permission) { build(:editor_grant_permission, grant_id: grant.id, user_id: editor_user.id) }

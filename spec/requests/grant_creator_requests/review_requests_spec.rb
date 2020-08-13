@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe 'review requests', type: :request do
 
   let(:grant_creator_request) { create(:grant_creator_request) }
-  let(:grant_creator)         { create(:grant_creator_user) }
-  let(:system_admin_user)     { create(:system_admin_user) }
-  let(:another_user)          { create(:user) }
+  let(:grant_creator)         { create(:grant_creator_saml_user) }
+  let(:system_admin_user)     { create(:system_admin_saml_user) }
+  let(:another_user)          { create(:saml_user) }
 
   context '#index' do
     context 'system_admin' do

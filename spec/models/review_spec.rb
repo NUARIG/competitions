@@ -19,8 +19,8 @@ RSpec.describe Review, type: :model do
   let(:invalid_review) { build(:review, assigner: grant.administrators.first,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: submission) }
-  let(:system_admin)   { create(:system_admin_user) }
-  let(:invalid_user)   { create(:user) }
+  let(:system_admin)   { create(:system_admin_saml_user) }
+  let(:invalid_user)   { create(:saml_user) }
 
   let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.administrators.first,
                                                                                                            submission: grant.submissions.first,

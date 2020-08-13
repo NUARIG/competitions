@@ -9,12 +9,12 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
                                                                     form: grant2.form,
                                                                     applicant: applicant) }
   let(:applicant)        { submission.applicant }
-  let(:user)             { create(:user) }
+  let(:user)             { create(:saml_user) }
 
   context 'header text' do
     context 'applicant' do
       scenario 'displays MySubmissions link in the header' do
-        login_as applicant
+        login_as(applicant, scope: :saml_user)
 
         visit root_path
         expect(page).to have_link('MySubmissions', href: profile_submissions_path)
@@ -23,7 +23,7 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
 
     context 'user with no submissions' do
       scenario 'does not display MySubmissions link in the header' do
-        login_as user
+        login_as(user, scope: :saml_user)
 
         visit root_path
         expect(page).not_to have_link('MySubmissions', href: profile_submissions_path)
@@ -34,7 +34,7 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
   context '#index' do
     before(:each) do
       [submission, draft_submission]
-      login_as applicant
+      login_as(applicant, scope: :saml_user)
       visit profile_submissions_path
     end
 

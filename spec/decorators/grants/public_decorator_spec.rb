@@ -9,8 +9,8 @@ RSpec.describe Grants::PublicDecorator do
 
   context 'user with no roles' do
     before(:each) do
-      @user = create(:user)
-      sign_in @user
+      @user = create(:saml_user)
+      sign_in(@user)
       @decorated_open_grant = Grants::PublicDecorator.decorate(@open_grant)
     end
 

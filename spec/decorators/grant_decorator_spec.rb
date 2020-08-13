@@ -31,8 +31,8 @@ RSpec.describe GrantDecorator do
     describe '#menu_links' do
       context 'user with no roles' do
         before(:each) do
-          @user = create(:user)
-          sign_in @user
+          @user = create(:saml_user)
+          sign_in(@user)
           @decorated_open_grant = GrantDecorator.decorate(@open_grant)
         end
 
@@ -51,7 +51,7 @@ RSpec.describe GrantDecorator do
       context 'grant admin user' do
         before(:each) do
           @admin_user = @open_grant.grant_permissions.role_admin.first.user
-          sign_in @admin_user
+          sign_in(@admin_user)
           @decorated_open_grant = GrantDecorator.decorate(@open_grant)
         end
 
