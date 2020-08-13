@@ -323,6 +323,12 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           click_button 'Submit'
           expect(page).not_to have_content 'You successfully applied'
         end
+
+        context 'instructions' do
+          scenario 'displays question instructions' do
+            expect(page).to have_content grant.questions.first.instruction
+          end
+        end
       end
 
       context '#update' do

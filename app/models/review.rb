@@ -44,6 +44,7 @@ class Review < ApplicationRecord
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
   validate :submission_is_not_draft
+  validate :is_not_after_close_date
 
   scope :with_criteria_reviews,    -> { includes(:criteria_reviews) }
   scope :with_reviewer,            -> { includes(:reviewer) }
@@ -54,8 +55,10 @@ class Review < ApplicationRecord
   scope :order_by_created_at,      -> { order(created_at: :desc) }
   scope :by_reviewer,              -> (reviewer)   { where(reviewer_id: reviewer.id) }
   scope :by_submission,            -> (submission) { where(grant_submission_submission_id: submission.id) }
-  scope :completed,                -> { where.not(overall_impact_score: nil)}
-  scope :incomplete,               -> { where(overall_impact_score: nil)}
+  scope :completed,                -> { where.not(overall_impact_score: nil) }
+  scope :incomplete,               -> { where(overall_impact_score: nil) }
+  # TODO: could be used to throttle reminders to a given timeframe
+  # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
     !overall_impact_score.nil?
@@ -72,6 +75,11 @@ class Review < ApplicationRecord
   def update_submission_averages
     submission.set_composite_score
     submission.set_average_overall_impact_score
+  end
+
+  def review_period_closed?
+    # TODO: enforce grant.review_open_date ?
+    Time.now > grant.review_close_date
   end
 
   private
@@ -98,6 +106,10 @@ class Review < ApplicationRecord
 
   def submission_is_not_draft
     errors.add(:submission, :may_not_be_draft) if submission.draft?
+  end
+
+  def is_not_after_close_date
+    errors.add(:base, :may_not_review_after_close_date, review_close_date: grant.review_close_date) if review_period_closed?
   end
 
   # TODO: use this for every review load?

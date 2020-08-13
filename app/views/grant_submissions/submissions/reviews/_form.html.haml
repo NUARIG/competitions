@@ -1,3 +1,9 @@
+- disabled = review.review_period_closed?
+
+- if disabled == true
+  .callout.warning
+    Review period is closed
+
 = form_for (review), url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } } do |f|
   - if review.criteria_reviews.any?
     %h3
@@ -6,13 +12,13 @@
       Please score this submission using the following criteria:
     - review.criteria_reviews.each do |criterion_review|
       = f.fields_for :criteria_reviews, criterion_review do |criterion_review_fields|
-        = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review }
+        = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review, disabled: disabled }
 
-  = render partial: 'overall_impact', locals: { f: f }
+  = render partial: 'overall_impact', locals: { f: f, disabled: disabled }
 
   .alert.callout{style: 'display: none', data: {abide: { error: true }}}
     %p
       Please check the required scores.
 
   .actions
-    = f.submit 'Submit Your Review', class: 'button'
+    = f.submit 'Submit Your Review', class: 'button', disabled: disabled
