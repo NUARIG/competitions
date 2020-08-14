@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe GrantPermission, type: :model do
   it { is_expected.to respond_to(:grant) }
-  it { is_expected.to respond_to(:saml_user) }
+  it { is_expected.to respond_to(:user) }
   it { is_expected.to respond_to(:role) }
 
   let(:grant)             { create(:grant) }
