@@ -16,6 +16,8 @@ development:
     # NOTE: Update smtp_settings in config/secrets.yml.
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   saml:
+    idp_entity_id: ''
+    idp_entity_name: 'DEV'
     saml_default_user_key: 'email' # The user will be looked up by this key
     # The following maps the IDP SAML attribute's names(left)
     #  with the User model attributes.
@@ -63,6 +65,8 @@ development:
   #   perform_deliveries:
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   # saml:
+  #   idp_entity_id: ''
+  #   idp_entity_name: 'TEST'
   #   saml_default_user_key: 'email' # The user will be looked up by this key
       # This file maps the IDP SAML attributes with the User model.
   #   attribute_map:  { 'email': 'email',
@@ -78,7 +82,7 @@ development:
   #   authn_context: '' # e.g. ''
   #   idp_slo_target_url: #IDP logout URL
   #   idp_sso_target_url: #IDP login URL
-  # idp_security: { authn_requests_signed: false,
+  #   idp_security: { authn_requests_signed: false,
   #                   logout_requests_signed: false,
   #                   logout_responses_signed: false,
   #                   want_assertions_signed: true,
