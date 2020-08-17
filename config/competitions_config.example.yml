@@ -19,10 +19,10 @@ development:
     saml_default_user_key: 'email' # The user will be looked up by this key
     # The following maps the IDP SAML attribute's names(left)
     #  with the User model attributes.
-    attribute_map:  { "email": "email",
-                      "firstName": "first_name",
-                      "lastName": "last_name",
-                      "upn": "upn"
+    attribute_map:  { 'email': 'email',
+                      'firstName': 'first_name',
+                      'lastName': 'last_name',
+                      'upn': 'upn'
                     }
     sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
     assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'
@@ -48,7 +48,6 @@ development:
                     check_idp_cert_expiration: false,
                     check_sp_cert_expiration: false }
     # NOTE: Update idp_cert in config/secrets.yml.
-#Test should be included and configured in local environment.
 # test:
   # application_name: 'Competitions' # or replace with <YOUR_APPLICATION_NAME>
   # contact_email: # <APP_EMAIL_ADDRESS>
@@ -66,10 +65,10 @@ development:
   # saml:
   #   saml_default_user_key: 'email' # The user will be looked up by this key
       # This file maps the IDP SAML attributes with the User model.
-  #   attribute_map:  { "email": "email",
-  #                     "firstName": "first_name",
-  #                     "lastName": "last_name",
-  #                     "upn": "upn"
+  #   attribute_map:  { 'email': 'email',
+  #                     'firstName': 'first_name',
+  #                     'lastName': 'last_name',
+  #                     'upn': 'upn'
   #.                  }
   #   sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
   #   assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'

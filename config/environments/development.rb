@@ -71,7 +71,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:raise_delivery_errors]
 
   # Mailcatcher - download at https://mailcatcher.me/
-config.subdomain = COMPETITIONS_CONFIG[:subdomain]
+  config.subdomain = COMPETITIONS_CONFIG[:subdomain]
   config.app_domain = COMPETITIONS_CONFIG[:app_domain]
   config.action_mailer.default_url_options = { host: COMPETITIONS_CONFIG[:default_url_options][:host],
                                                port: COMPETITIONS_CONFIG[:default_url_options][:port]

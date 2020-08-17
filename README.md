@@ -7,14 +7,25 @@ With the support of the [CTSA National Center for Data to Health (CD2H)](https:/
 
 # Prerequisites
 
-Installing Competitions requires certain configurations.
-  * A shibboleth IDP for these configuration
-  * Storage should be configured locally or with AWS.
-    - It is possible to user other services, but more changes will be necessary.
+The following are required to install competitions:
+  * A shibboleth IDP
+  * Storage should be configured locally or with AWS
   * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
   * Postgres database
   * RVM installed on server
   * Capistrano for deployment
+
+# Compatibility
+
+  * Ruby:   2.6.6
+  * Rails:  5.2.4
+
+# Shibboleth IDP
+  You will need an IDP for your staging and production instances which may be coordinated with your university or the NIH.
+
+  You can use One Login or Okta to set up an IDP for development.
+    - https://www.onelogin.com/developer-signup
+    - https://developer.okta.com/signup/
 
 # Installation
 
@@ -51,7 +62,9 @@ Here you will find instance specific values for Capistrano deployment of the app
 If you are symlinking your instance's configuration files on your deployment server, these should be included under the linked_files in config/deploy_config.yml.
 
 ### config/storage.yml
-You will need to configure your instance's storage. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
+You will need to configure your instance's storage. The configurations for local or AWS storage are included. It is possible to use other services with further changes.
+
+For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
 ```
 local:
   service: Disk
@@ -70,13 +83,12 @@ amazon:
 ```
 
 ### config/environments
-
-Included are a test and development environment configured out of the box. There are also example environment files for staging and production included. These will need the following configured before they will work.
+Test and development environments are configured out of the box.
+The included staging and production environment files require the following to be configured:
   * storage
   * time_zone
 
 ### config/secrets.yml
-
 Keys, passwords, secrets, and other sensitive information in a secure file.
 
 You could use config/credentials.yml for this purpose also.
