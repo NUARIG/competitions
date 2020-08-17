@@ -11,7 +11,7 @@ FactoryBot.define do
     current_sign_in_at          { Time.now }
     confirmed_at                { Time.now }
     type                        { 'RegisteredUser' }
-    encrypted_password          { 'password' }
+    password                    { 'password' }
 
     trait :system_admin do
       system_admin { true }
