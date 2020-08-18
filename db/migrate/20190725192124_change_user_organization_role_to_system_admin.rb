@@ -1,13 +1,14 @@
 class ChangeUserOrganizationRoleToSystemAdmin < ActiveRecord::Migration[5.2]
   def up
-    rename_column :users, :organization_role, :system_admin
-    change_column :users, :system_admin, 'boolean USING (CASE system_admin WHEN \'admin\' THEN \'t\'::boolean ELSE \'f\'::boolean END)', null: false, default: false
+    add_column :users, :system_admin, :boolean, null: false, default: false
+    User.where(organization_role: 'admin').update_all(system_admin: true)
+    remove_column :users, :organization_role
   end
 
   def down
-    rename_column :users, :system_admin, :organization_role
-    change_column :users, :organization_role, 'varchar(255) USING (CASE when organization_role THEN \'admin\' else \'none\' end)', null: false, default: 'none'
+    add_column :users, :organization_role, null: false, default: 'none'
+    User.where(system_admin: true).update_all(organization_role: 'admin')
+    remove_column :users, :system_admin
   end
 end
-
 

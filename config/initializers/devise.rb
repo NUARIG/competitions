@@ -297,8 +297,7 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
-
-  config.saml_sign_out_success_url = Rails.application.credentials.dig(Rails.env.to_sym, :sign_out_url)
+  config.saml_sign_out_success_url = COMPETITIONS_CONFIG[:saml][:sign_out_url]
 
   # ==> Configuration for :saml_authenticatable
   # Create user if the user does not exist. (Default is false)
@@ -309,7 +308,7 @@ Devise.setup do |config|
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = :email
+  config.saml_default_user_key = COMPETITIONS_CONFIG[:saml][:saml_default_user_key].to_sym
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
@@ -326,6 +325,9 @@ Devise.setup do |config|
   # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
   # by setting this to a custom reader class, or use the default.
   config.idp_entity_id_reader = DeviseSamlAuthenticatable::CompetitionsIdpEntityIdReader
+
+  # https://github.com/apokalipto/devise_saml_authenticatable#attribute-map-initializer
+  config.saml_attribute_map_resolver = DeviseSamlAuthenticatable::CompetitionsAttributeMapResolver
 
   # You can set a handler object that takes the response for a failed SAML request and the strategy,
   # and implements a #handle method. This method can then redirect the user, return error messages, etc.
@@ -345,13 +347,14 @@ Devise.setup do |config|
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
     # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
-    settings.assertion_consumer_service_url     = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_url)
-    settings.assertion_consumer_service_binding = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_binding)
-    settings.name_identifier_format             = Rails.application.credentials.dig(Rails.env.to_sym, :una_name_identifier_format)
-    settings.issuer                             = Rails.application.credentials.dig(Rails.env.to_sym, :una_issuer)
-    settings.authn_context                      = Rails.application.credentials.dig(Rails.env.to_sym, :una_authn_context)
-    settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
-    settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
-    settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
+    settings.assertion_consumer_service_url     = COMPETITIONS_CONFIG[:saml][:assertion_consumer_service_url]
+    settings.assertion_consumer_service_binding = COMPETITIONS_CONFIG[:saml][:assertion_consumer_service_binding]
+    settings.name_identifier_format             = COMPETITIONS_CONFIG[:saml][:name_identifier_format]
+    settings.issuer                             = COMPETITIONS_CONFIG[:saml][:issuer]
+    settings.authn_context                      = COMPETITIONS_CONFIG[:saml][:authn_context]
+    settings.idp_slo_target_url                 = COMPETITIONS_CONFIG[:saml][:idp_slo_target_url]
+    settings.idp_sso_target_url                 = COMPETITIONS_CONFIG[:saml][:idp_sso_target_url]
+    settings.idp_cert                           = Rails.application.secrets[:idp_cert]
+    settings.security                           = COMPETITIONS_CONFIG[:saml][:idp_security]
   end
 end

@@ -44,7 +44,7 @@ RSpec.describe 'grant_submission review requests', type: :request do
         expect(ActionMailer::Base.deliveries.size).to eq(1)
         email = (ActionMailer::Base.deliveries).first
         expect(email.to).to eq([reviewer.email])
-        expect(email.subject).to eq('CD2H Competitions: Submission Review Assignment')
+        expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Submission Review Assignment")
       end
     end
 
@@ -61,7 +61,7 @@ RSpec.describe 'grant_submission review requests', type: :request do
         expect(ActionMailer::Base.deliveries.size).to eq(1)
         email = (ActionMailer::Base.deliveries).first
         expect(email.to).to eq([reviewer.email])
-        expect(email.subject).to eq('CD2H Competitions: Unassigned Submission Review')
+        expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Unassigned Submission Review")
       end
     end
   end

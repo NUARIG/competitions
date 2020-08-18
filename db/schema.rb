@@ -340,7 +340,6 @@ ActiveRecord::Schema.define(version: 2020_07_07_184059) do
     t.string "state", null: false
     t.datetime "user_updated_at"
     t.datetime "discarded_at"
-    t.datetime "applicant_last_updated_at"
     t.decimal "average_overall_impact_score", precision: 5, scale: 2
     t.decimal "composite_score", precision: 5, scale: 2
     t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
@@ -426,7 +425,6 @@ ActiveRecord::Schema.define(version: 2020_07_07_184059) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.boolean "system_admin", default: false, null: false
     t.string "email", default: "", null: false
     t.string "first_name"
     t.string "last_name"
@@ -439,6 +437,7 @@ ActiveRecord::Schema.define(version: 2020_07_07_184059) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
+    t.boolean "system_admin", default: false, null: false
     t.boolean "grant_creator", default: false, null: false
     t.string "upn", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true

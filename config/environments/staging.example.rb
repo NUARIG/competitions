@@ -43,7 +43,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options)
 
   # set this in storage.yml and credentials file
-  config.active_storage.service = :amazon
+  config.active_storage.service = # e.g. :amazon, :local, etc.
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
@@ -71,16 +71,16 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:raise_delivery_errors]
 
-  config.action_mailer.default_url_options = Rails.application.credentials.dig(Rails.env.to_sym, :default_url_options)
-
-  config.subdomain = Rails.application.credentials.dig(Rails.env.to_sym, :subdomain)
-  config.app_domain = Rails.application.credentials.dig(Rails.env.to_sym, :app_domain)
-  config.action_mailer.delivery_method = Rails.application.credentials.dig(Rails.env.to_sym, :delivery_method).to_sym
-  config.action_mailer.perform_deliveries = Rails.application.credentials.dig(Rails.env.to_sym, :perform_deliveries)
-  config.action_mailer.smtp_settings = Rails.application.credentials.dig(Rails.env.to_sym, :smtp_settings)
-
+  config.subdomain = COMPETITIONS_CONFIG[:subdomain]
+  config.app_domain = COMPETITIONS_CONFIG[:app_domain]
+  config.action_mailer.default_url_options = { host: COMPETITIONS_CONFIG[:default_url_options][:host],
+                                               port: COMPETITIONS_CONFIG[:default_url_options][:port]
+                                             }
+  config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:perform_deliveries]
+  config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
+  config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -105,6 +105,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Time zone
-  config.time_zone = 'Central Time (US & Canada)'
+  config.time_zone = # e.g. 'Central Time (US & Canada)' # https://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html
   config.active_record.default_timezone = :local
 end

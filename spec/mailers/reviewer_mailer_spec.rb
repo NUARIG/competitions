@@ -25,6 +25,10 @@ RSpec.describe ReviewerMailer, type: :mailer do
     it 'includes a link to the grant page' do
       expect(mailer.body.encoded).to have_link grant.name, href: grant_url(grant)
     end
+
+    it 'includes a link to the application root url' do
+      expect(mailer.body).to have_link COMPETITIONS_CONFIG[:application_name], href: root_url
+    end
   end
 
   context 'unassignment' do

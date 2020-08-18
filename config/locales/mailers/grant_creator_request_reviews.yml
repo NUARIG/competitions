@@ -2,6 +2,6 @@ en:
   mailers:
     grant_creator_request_review:
         approved:
-          subject: 'CD2H Competitions - Approved Grant Creator Request'
+          subject: "%{application_name}: Approved Grant Creator Request"
         rejected:
-          subject: 'CD2H Competitions - Rejected Grant Creator Request'
+          subject: "%{application_name}: Rejected Grant Creator Request"

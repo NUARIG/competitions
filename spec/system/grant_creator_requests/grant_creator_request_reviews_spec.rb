@@ -21,7 +21,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
         expect(page).to have_field('First Name', disabled: true, with: requester.first_name)
         expect(page).to have_field('Last Name', disabled: true, with: requester.last_name)
         expect(page).to have_field('Email', disabled: true, with: requester.email)
-        expect(page).to have_field('How Do You Plan to Use Competitions?', disabled: true, with: open_request.request_comment)
+        expect(page).to have_field("How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}", disabled: true, with: open_request.request_comment)
         expect(page).to have_content 'Pending'
       end
     end
