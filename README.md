@@ -23,9 +23,7 @@ The following are required to install competitions:
 # Shibboleth IDP
   You will need an IDP for your staging and production instances which may be coordinated with your university or the NIH.
 
-  You can use One Login or Okta to set up an IDP for development.
-    - https://www.onelogin.com/developer-signup
-    - https://developer.okta.com/signup/
+  [One Login](https://www.onelogin.com/developer-signup) can be used to set up an IDP for development.
 
 # Installation
 
@@ -41,8 +39,9 @@ config/storage.yml
 ```
 
 ### config/competitions_config.yml
-https://github.com/apokalipto/devise_saml_authenticatable
 The application's configuration has been consolidated into this file. Here you will configure your instance's values for your mailers, saml authentication, and application variables. Keys, passwords, and secrets will be stored in /config/secrets.yml
+
+Further information on the configurations associated with the [devise_saml_authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable).
 
 ### config/database.yml
 You will need to configure your database connection. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2/configuring.html#configuring-a-database).
