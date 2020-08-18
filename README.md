@@ -82,8 +82,9 @@ amazon:
   bucket: <NAME_OF_YOUR_BUCKET>
 ```
 
-### config/environments
-Test and development environments are configured out of the box.
+### config/environments/*
+The test and development environment files are configured out of the box.
+
 The included staging and production environment files require the following to be configured:
   * storage
   * time_zone
