@@ -68,7 +68,7 @@ test:
     idp_entity_id: ''
     idp_entity_name: 'TEST'
     saml_default_user_key: 'email' # The user will be looked up by this key
-      This file maps the IDP SAML attributes with the User model.
+    # This file maps the IDP SAML attributes with the User model.
     attribute_map:  { 'email': 'email',
                       'firstName': 'first_name',
                       'lastName': 'last_name',
