@@ -5,7 +5,7 @@ class RegisteredUser < User
 
   after_initialize :set_uid, if: :new_record?
 
-  SAML_DOMAINS = COMPETITIONS_CONFIG[:blocked_emails]
+  SAML_DOMAINS = COMPETITIONS_CONFIG[:saml_domains]
   RESTRICTED_EMAIL_DOMAINS   = ['.xyz', '.top', '.website', '.space', '.online']
 
   validate  :cannot_register_with_saml_email

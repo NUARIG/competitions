@@ -2,7 +2,6 @@
 
 class SamlSessionsController < Devise::SamlSessionsController
   after_action :set_saml_session_index_on_session, only: :create
-  # skip_before_action :verify_authenticity_token, raise: false
   prepend_before_action :store_info_for_sp_initiated_logout, only: :destroy
   prepend_before_action :set_saml_session_index_on_current_user, only: :destroy
 

@@ -61,11 +61,11 @@ class ApplicationController < ActionController::Base
     # Permitted parameters for users in devise methods.
     def configure_permitted_parameters_for_devise_methods
       devise_parameter_sanitizer.permit(:sign_in) do |user_params|
-        user_params.permit(:uid, :email, :era_commons, :password)
+        user_params.permit(:email, :era_commons, :password)
       end
 
       devise_parameter_sanitizer.permit(:sign_up) do |user_params|
-        user_params.permit(:uid, :email, :password, :password_confirmation, :last_name, :first_name, :era_commons)
+        user_params.permit(:email, :password, :password_confirmation, :last_name, :first_name, :era_commons)
       end
 
       devise_parameter_sanitizer.permit(:account_update) do |user_params|
