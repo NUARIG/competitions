@@ -2,18 +2,33 @@
 
 Competitions is an open source tool to run NIH-style peer review of competitions, pilot projects, and research proposals in a cloud-based consortium-wide single sign-on platform.
 
-This repository contains a re-factored version of the [NITRO-Competitions](https://github.com/NUBIC/nitro-competitions) original code base which is currently running at Northwestern University Clinical and Translational Institute (NUCATS). It is work-progress, and intended primarily to enable a cloud-based implementtion in support of the [CTSA National Center for Data to Health (CD2H)](https://ctsa.ncats.nih.gov/cd2h/) operations.
+This repository contains a re-factored version of the [NITRO-Competitions](https://github.com/NUBIC/nitro-competitions) original code base which is currently running at Northwestern University Clinical and Translational Institute (NUCATS).
+With the support of the [CTSA National Center for Data to Health (CD2H)](https://ctsa.ncats.nih.gov/cd2h/), the new application supports a cloud-based implementation and SAML authentication.
+
 
 # Prerequisites
 
-Installing Competitions requires certain configurations.
-  * A shibboleth IDP for these configuration
-  * Storage should be configured locally or with AWS.
-    - It is possible to user other services, but more changes will be necessary.
+The following are required to install competitions:
+  * A shibboleth IDP
+  * Storage should be configured locally or with AWS
   * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
   * Postgres database
   * RVM installed on server
   * Capistrano for deployment
+
+
+# Compatibility
+
+  * Ruby:   2.6.6
+  * Rails:  5.2.4
+
+
+# Shibboleth IDP
+
+  You will need an IDP for your staging and production instances which may be coordinated with your university or the NIH.
+
+  [One Login](https://www.onelogin.com/developer-signup) can be used to set up an IDP for development.
+
 
 # Installation
 
@@ -29,8 +44,9 @@ config/storage.yml
 ```
 
 ### config/competitions_config.yml
-https://github.com/apokalipto/devise_saml_authenticatable
 The application's configuration has been consolidated into this file. Here you will configure your instance's values for your mailers, saml authentication, and application variables. Keys, passwords, and secrets will be stored in /config/secrets.yml
+
+Further information on the configurations associated with the [devise_saml_authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable).
 
 ### config/database.yml
 You will need to configure your database connection. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2/configuring.html#configuring-a-database).
@@ -50,7 +66,9 @@ Here you will find instance specific values for Capistrano deployment of the app
 If you are symlinking your instance's configuration files on your deployment server, these should be included under the linked_files in config/deploy_config.yml.
 
 ### config/storage.yml
-You will need to configure your instance's storage. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
+You will need to configure your instance's storage. The configurations for local or AWS storage are included. It is possible to use other services with further changes.
+
+For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
 ```
 local:
   service: Disk
@@ -68,14 +86,14 @@ amazon:
   bucket: <NAME_OF_YOUR_BUCKET>
 ```
 
-### config/environments
+### config/environments/*
+The test and development environment files are configured out of the box.
 
-Included are a test and development environment configured out of the box. There are also example environment files for staging and production included. These will need the following configured before they will work.
+The included staging and production environment files require the following to be configured:
   * storage
   * time_zone
 
 ### config/secrets.yml
-
 Keys, passwords, secrets, and other sensitive information in a secure file.
 
 You could use config/credentials.yml for this purpose also.
