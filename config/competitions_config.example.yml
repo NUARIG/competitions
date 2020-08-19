@@ -10,6 +10,7 @@ development:
     port: 3000 # e.g. '', 3000, etc.
   blocked_emails:
     - localhost
+    - blocked_email.edu
     # - <YOUR_INSTITUTIONAL_DOMAIN>
   mailer:
     mailer_address: # <APP_EMAIL_ADDRESS>

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe SamlUser, type: :model do
   it { is_expected.to respond_to(:system_admin) }
   it { is_expected.to respond_to(:email) }
   it { is_expected.to respond_to(:first_name) }
