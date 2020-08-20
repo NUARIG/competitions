@@ -44,6 +44,14 @@ class User < ApplicationRecord
 
   scope :order_by_last_name,    -> { order(last_name: :asc) }
 
+  def saml_user?
+    self.type === 'SamlUser'
+  end
+
+  def registered_user?
+    self.type === 'RegisteredUser'
+  end
+
   def get_role_by_grant(grant:)
     self.grant_permission_role ||= {}
     self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
