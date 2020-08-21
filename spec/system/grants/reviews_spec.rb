@@ -60,7 +60,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
           end
 
           scenario 'displays add reviewers link' do
-            expect(page).to have_link , href: grant_reviewers_path(grant)
+            expect(page).to have_link 'Add reviewers or assign reviews', href: grant_reviewers_path(grant)
           end
 
           scenario 'does not display reviews xls link' do

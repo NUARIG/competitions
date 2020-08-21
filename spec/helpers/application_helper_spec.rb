@@ -22,4 +22,80 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(excel_worksheet_reserved_characters.none?{ |char| prepared_sheet_name.include?(char)}).to be true
     end
   end
+
+  describe 'full_root_url' do
+    it 'constructs a full root url when given all segments' do
+      stub_const("COMPETITIONS_CONFIG", { subdomain: 'subdomain',
+                                          app_domain: 'domain.edu',
+                                          default_url_options: {
+                                              port: 123
+                                            }
+                                          })
+      expect(full_root_url).to eql 'https://subdomain.domain.edu:123/'
+    end
+
+    context 'subdomain' do
+      it 'can be nil' do
+        stub_const("COMPETITIONS_CONFIG", { subdomain: nil,
+                                            app_domain: 'domain.edu',
+                                            default_url_options: {
+                                                port: 123
+                                              }
+                                            })
+        expect(full_root_url).to eql 'https://domain.edu:123/'
+      end
+
+      it 'can be empty string' do
+        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
+                                            app_domain: 'domain.edu',
+                                            default_url_options: {
+                                                port: 123
+                                              }
+                                            })
+        expect(full_root_url).to eql 'https://domain.edu:123/'
+      end
+    end
+
+    context 'port' do
+      it 'can be nil' do
+        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
+                                            app_domain: 'localhost',
+                                            default_url_options: {
+                                                port: nil
+                                              }
+                                            })
+        expect(full_root_url).to eql 'https://localhost/'
+      end
+
+      it 'can be an empty string' do
+        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
+                                            app_domain: 'localhost',
+                                            default_url_options: {
+                                                port: ''
+                                              }
+                                            })
+        expect(full_root_url).to eql 'https://localhost/'
+      end
+
+      it 'can be a string' do
+        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
+                                            app_domain: 'localhost',
+                                            default_url_options: {
+                                                port: '123'
+                                              }
+                                            })
+        expect(full_root_url).to eql 'https://localhost:123/'
+      end
+
+      it 'can be an integer' do
+        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
+                                            app_domain: 'localhost',
+                                            default_url_options: {
+                                                port: 123
+                                              }
+                                            })
+        expect(full_root_url).to eql 'https://localhost:123/'
+      end
+    end
+  end
 end

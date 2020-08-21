@@ -5,13 +5,11 @@ module ApplicationHelper
 
   # VIEW HELPERS
   def full_root_url
-    subdomain = (COMPETITIONS_CONFIG[:subdomain] || "")
-    subdomain += "." unless subdomain.empty?
-    host = COMPETITIONS_CONFIG[:app_domain]
-    domain = [subdomain, host].join
-    port = (COMPETITIONS_CONFIG[:default_url_options][:port] || "").to_s
-    port = ":" + port unless port.empty?
-    url = 'https://' + domain + port + '/'
+    subdomain = "#{COMPETITIONS_CONFIG[:subdomain]}." unless COMPETITIONS_CONFIG[:subdomain].blank?
+    domain    = COMPETITIONS_CONFIG[:app_domain]
+    port      = ":#{COMPETITIONS_CONFIG[:default_url_options][:port]}" unless COMPETITIONS_CONFIG[:default_url_options][:port].to_s.empty?
+
+    "https://#{subdomain}#{domain}#{port}/"
   end
 
   # CALLOUTS
