@@ -88,7 +88,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
     scenario 'user sign in' do
       @user3 = create(:registered_user, email: 'user3@example.com', password: 'password')
       visit new_registered_user_session_path
-      find_field('Unique ID').set('user3@example.com')
+      find_field('Email').set('user3@example.com')
       find_field('Password').set('password')
       click_button 'Log in'
       expect(page).to have_content("#{@user3.first_name} #{@user3.last_name}")
