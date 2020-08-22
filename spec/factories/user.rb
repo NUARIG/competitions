@@ -10,7 +10,6 @@ FactoryBot.define do
     grant_creator               { false }
     current_sign_in_at          { Time.now }
     type                        { 'SamlUser' }
-    # session_index               { Faker::Lorem.characters }
 
     trait :saml do
       type                        { 'SamlUser' }

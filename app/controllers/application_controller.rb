@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   def authenticate_user!
     store_location_for(:registered_user, request.original_url)
     store_location_for(:saml_user, request.original_url)
-    unless (saml_user_signed_in? || registered_user_signed_in?)
+    unless user_signed_in?
       flash[:alert] = 'You need to sign in or sign up before continuing.'
       redirect_to login_index_url
     end
