@@ -14,7 +14,7 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
   context 'header text' do
     context 'applicant' do
       scenario 'displays MySubmissions link in the header' do
-        login_as(applicant, scope: :saml_user)
+        login_user(applicant)
 
         visit root_path
         expect(page).to have_link('MySubmissions', href: profile_submissions_path)
@@ -23,7 +23,7 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
 
     context 'user with no submissions' do
       scenario 'does not display MySubmissions link in the header' do
-        login_as(user, scope: :saml_user)
+        login_user(user)
 
         visit root_path
         expect(page).not_to have_link('MySubmissions', href: profile_submissions_path)
@@ -34,7 +34,7 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
   context '#index' do
     before(:each) do
       [submission, draft_submission]
-      login_as(applicant, scope: :saml_user)
+      login_user(applicant)
       visit profile_submissions_path
     end
 

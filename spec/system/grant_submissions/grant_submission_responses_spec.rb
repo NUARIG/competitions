@@ -34,7 +34,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
     describe 'as an applicant' do
       before(:each) do
-        login_as(applicant, scope: :saml_user)
+        login_user(applicant)
         visit grant_apply_path(grant)
         find_field('Your Project\'s Title', with: '').set(Faker::Lorem.sentence)
       end

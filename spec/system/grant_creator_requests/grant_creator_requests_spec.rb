@@ -11,7 +11,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
   describe '#index' do
     it 'only includes the open requests' do
       [open_request, approved_request, rejected_request]
-      login_as system_admin
+      login_user system_admin
       visit grant_creator_requests_path
       expect(page).to have_content full_name(open_request.requester)
       expect(page).to have_link href: grant_creator_request_review_path(open_request)
@@ -22,7 +22,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
   describe '#create' do
     before(:each) do
-      login_as(user, scope: :saml_user)
+      login_user(user)
       visit new_grant_creator_request_path
     end
 
@@ -47,7 +47,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
   describe '#update' do
     before(:each) do
-      login_as(open_request.requester, scope: :saml_user)
+      login_user(open_request.requester)
       visit grant_creator_request_path(open_request)
     end
 

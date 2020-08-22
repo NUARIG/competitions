@@ -37,7 +37,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context 'with submitted submission' do
         context 'system_admin' do
           before(:each) do
-            login_as(system_admin, scope: :saml_user)
+            login_user(system_admin)
           end
 
           scenario 'can visit the submissions index page' do
@@ -112,7 +112,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               review.save
               unreviewed_submission.save
 
-              login_as(grant_admin, scope: :saml_user)
+              login_user(grant_admin)
               visit grant_submissions_path(grant)
             end
 
@@ -140,7 +140,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         context 'grant_admin' do
           scenario 'can visit the submissions index page' do
-            login_as(grant_admin, scope: :saml_user)
+            login_user(grant_admin)
 
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
@@ -153,7 +153,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'editor' do
         scenario 'can visit the submissions index page' do
-          login_as(grant_editor, scope: :saml_user)
+          login_user(grant_editor)
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
@@ -166,7 +166,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'viewer' do
         scenario 'can visit the submissions index page' do
-          login_as(grant_viewer, scope: :saml_user)
+          login_user(grant_viewer)
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
@@ -180,7 +180,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context 'applicant' do
         before(:each) do
           other_submission
-          login_as(applicant, scope: :saml_user)
+          login_user(applicant)
 
           visit grant_submissions_path(grant)
         end
@@ -217,7 +217,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context 'with submitted submission' do
         context 'system_admin' do
           scenario 'can visit the submissions index page' do
-            login_as(system_admin, scope: :saml_user)
+            login_user(system_admin)
 
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
@@ -230,7 +230,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         context 'grant_admin' do
           scenario 'can visit the submissions index page' do
-            login_as(grant_admin, scope: :saml_user)
+            login_user(grant_admin)
 
             visit grant_submissions_path(grant)
             expect(page).to have_content submission.title
@@ -244,7 +244,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'editor' do
         scenario 'can visit the submissions index page' do
-          login_as(grant_editor, scope: :saml_user)
+          login_user(grant_editor)
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
@@ -257,7 +257,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'viewer' do
         scenario 'can visit the submissions index page' do
-          login_as(grant_viewer, scope: :saml_user)
+          login_user(grant_viewer)
 
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
@@ -272,7 +272,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     context 'search' do
       before(:each) do
         draft_submission
-        login_as(grant_admin, scope: :saml_user)
+        login_user(grant_admin)
       end
 
       scenario 'filters on applicant last name' do
@@ -297,7 +297,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     describe 'Published Open Grant', js: true do
       context 'applicant' do
         before(:each) do
-          login_as(new_applicant, scope: :saml_user)
+          login_user(new_applicant)
           visit grant_apply_path(grant)
         end
 
@@ -335,7 +335,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         before(:each) do
           submission.update_attribute(:state, 'draft')
           grant.questions.where(response_type: 'short_text').first.update_attribute(:is_mandatory, true)
-          login_as(applicant, scope: :saml_user)
+          login_user(applicant)
         end
 
         context 'draft submission' do
@@ -394,7 +394,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'editor' do
         before(:each) do
-          login_as(draft_grant.administrators.first, scope: :saml_user)
+          login_user(draft_grant.administrators.first)
           visit grant_apply_path(draft_grant)
         end
 
@@ -405,7 +405,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'applicant' do
         before(:each) do
-          login_as(new_applicant, scope: :saml_user)
+          login_user(new_applicant)
           visit grant_apply_path(draft_grant)
         end
 

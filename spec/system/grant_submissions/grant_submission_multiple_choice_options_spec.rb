@@ -12,7 +12,7 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
       @admin  = @grant.administrators.first
       @option = @grant.questions.find_by(response_type: 'pick_one').multiple_choice_options.first
 
-      login_as(@admin, scope: :saml_user)
+      login_user(@admin)
       visit edit_grant_form_path(@grant, @form)
     end
 

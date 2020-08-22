@@ -11,7 +11,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
 
     context 'system_admin' do
       before(:each) do
-        login_as(system_admin, scope: :registered_user)
+        login_user(system_admin)
 
         visit(edit_user_path(user))
       end
@@ -40,7 +40,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
 
     context 'user' do
       before(:each) do
-        login_as(user, scope: :registered_user)
+        login_user(user)
 
         visit(profile_path)
       end

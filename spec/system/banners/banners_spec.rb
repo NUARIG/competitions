@@ -6,14 +6,14 @@ include UsersHelper
 RSpec.describe 'Banners', type: :system do
   describe 'Index', js: true do
     before(:each) do
-      @banner             = create(:banner)
+      @banner = create(:banner)
       visit root_path
     end
 
     describe 'user should not have access' do
       before(:each) do
-        @user  = create(:saml_user)
-        login_as(@user, scope: :saml_user)
+        @user  = create(random_user)
+        login_user(@user)
       end
 
       context '#index' do
@@ -27,8 +27,8 @@ RSpec.describe 'Banners', type: :system do
 
     describe 'admin user' do
       before(:each) do
-        @system_admin_user  = create(:system_admin_saml_user)
-        login_as(@system_admin_user, scope: :saml_user)
+        @system_admin_user  = create(random_system_admin_user)
+        login_user(@system_admin_user)
         visit root_path
       end
 
@@ -198,8 +198,8 @@ RSpec.describe 'Banners', type: :system do
   describe 'PaperTrail', js: true, versioning: true do
     before(:each) do
       @banner = create(:banner)
-      @system_admin_user  = create(:system_admin_saml_user)
-      login_as(@system_admin_user, scope: :saml_user)
+      @system_admin_user  = create(random_system_admin_user)
+      login_user(@system_admin_user)
       visit edit_banner_path(@banner)
     end
 

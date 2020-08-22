@@ -15,7 +15,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
     context 'system admin' do
       before(:each) do
-        login_as(@system_admin, scope: :saml_user)
+        login_user(@system_admin)
         visit grants_path
       end
 
@@ -48,7 +48,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
     context 'admin' do
       before(:each) do
         @admin_user.update_attribute(:grant_creator, false)
-        login_as(@admin_user, scope: :saml_user)
+        login_user(@admin_user)
       end
 
       context 'who is not a grant_creator' do
@@ -128,7 +128,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
     context 'editor' do
       before(:each) do
-        login_as(@editor_user, scope: :saml_user)
+        login_user(@editor_user)
       end
 
       context 'who is not a grant_creator' do
@@ -173,7 +173,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
     context 'viewer' do
       before(:each) do
-        login_as(@viewer_user, scope: :saml_user)
+        login_user(@viewer_user)
       end
 
       context 'who is not a grant_creator' do

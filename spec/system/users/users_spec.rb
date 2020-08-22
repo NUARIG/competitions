@@ -31,7 +31,7 @@ RSpec.describe 'Users', type: :system, js: true  do
 
     context 'Sorts' do
       before(:each) do
-        login_as(@saml_system_admin, scope: :saml_user)
+        login_user(@saml_system_admin)
         visit users_path
 
         @saml_system_admin.update_attribute(:current_sign_in_at, 45.days.ago)
@@ -212,7 +212,7 @@ RSpec.describe 'Users', type: :system, js: true  do
     context 'user logged in' do
       scenario 'redirects to log in and displays error message' do
         registered_user = create(:registered_user)
-        login_as(registered_user, scope: :registered_user)
+        login_user(registered_user)
         visit profile_path
         expect(page).to have_content('Your Profile')
         expect(current_path).to eq(profile_path)

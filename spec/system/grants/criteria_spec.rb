@@ -8,7 +8,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
     let(:admin) { grant.administrators.first }
 
     before(:each) do
-      login_as(admin, scope: :saml_user)
+      login_user(admin)
       visit criteria_grant_path(grant)
     end
 

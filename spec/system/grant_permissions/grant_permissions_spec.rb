@@ -21,7 +21,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'grant editor user' do
     before(:each) do
-      login_as(@grant_editor, scope: :saml_user)
+      login_user(@grant_editor)
     end
 
     context '#index' do
@@ -99,7 +99,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'grant admin user' do
     before(:each) do
-      login_as(@grant_admin, scope: :saml_user)
+      login_user(@grant_admin)
       visit grant_grant_permissions_path(@grant)
     end
 
@@ -148,7 +148,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'grant viewer user' do
     before(:each) do
-      login_as(@grant_viewer, scope: :saml_user)
+      login_user(@grant_viewer)
     end
 
     context '#index' do
@@ -189,7 +189,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       @grant2_user       = create(:admin_grant_permission, grant: @grant2,
                                                            user: @unauthorized_user)
 
-      login_as(@unauthorized_user, scope: :saml_user)
+      login_user(@unauthorized_user)
     end
 
     scenario 'cannot access index page' do

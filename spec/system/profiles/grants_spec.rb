@@ -18,7 +18,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
   context 'header text' do
     context 'applicant' do
       scenario 'displays MyGrants link in the header' do
-        login_as grant_admin
+        login_user grant_admin
 
         visit root_path
         expect(page).to have_link('MyGrants', href: profile_grants_path)
@@ -27,7 +27,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
 
     context 'user with no submissions' do
       scenario 'does not display MyGrants link in the header' do
-        login_as user
+        login_user user
 
         visit root_path
         expect(page).not_to have_link('MyGrants', href: profile_grants_path)
@@ -39,7 +39,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
     context 'grant_admin' do
       before(:each) do
         [grant1_permission, grant2_viewer_permission, grant3_admin_permission]
-        login_as(grant_admin, scope: :saml_user)
+        login_user(grant_admin)
         visit profile_grants_path
       end
 

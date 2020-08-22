@@ -25,7 +25,7 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
     context 'reviewer' do
       scenario 'it displays link in the header' do
         grant1_review
-        login_as(reviewer, scope: :saml_user)
+        login_user(reviewer)
 
         visit root_path
         expect(page).to have_link('MyReviews', href: profile_reviews_path)
@@ -34,7 +34,7 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
 
     context 'non-reviewer' do
       scenario 'it does not display link in header' do
-        login_as(user, scope: :saml_user)
+        login_user(user)
         visit root_path
 
         expect(page).not_to have_link('MyReviews', href: profile_reviews_path)
@@ -48,7 +48,7 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
     grant2_review
     draft_grant_review
 
-    login_as(reviewer, scope: :saml_user)
+    login_user(reviewer)
     visit profile_reviews_path
   end
 

@@ -13,7 +13,7 @@ RSpec.describe 'Grants', type: :system do
 
     context 'grant admin user' do
       before(:each) do
-        login_as(@admin_user, scope: :saml_user)
+        login_user(@admin_user)
         visit edit_grant_path(@published_grant)
       end
 
@@ -39,7 +39,7 @@ RSpec.describe 'Grants', type: :system do
 
     context 'grant editor user' do
       before(:each) do
-        login_as(@editor_user, scope: :saml_user)
+        login_user(@editor_user)
         visit edit_grant_path(@published_grant)
       end
 
@@ -63,7 +63,7 @@ RSpec.describe 'Grants', type: :system do
 
     context 'grant viewer user' do
       before(:each) do
-        login_as(@viewer_user, scope: :saml_user)
+        login_user(@viewer_user)
         visit edit_grant_path(@published_grant)
       end
 
@@ -83,7 +83,7 @@ RSpec.describe 'Grants', type: :system do
 
     context 'grant admin user' do
       before(:each) do
-        login_as(@admin_user, scope: :saml_user)
+        login_user(@admin_user)
         visit edit_grant_path(@draft_grant)
       end
 
@@ -124,7 +124,7 @@ RSpec.describe 'Grants', type: :system do
 
     context 'grant editor user' do
       before(:each) do
-        login_as(@editor_user, scope: :saml_user)
+        login_user(@editor_user)
         visit edit_grant_path(@draft_grant)
       end
 

@@ -31,7 +31,7 @@ RSpec.describe 'grant_submission review requests', type: :request do
 
     context '#create' do
       before(:each) do
-        login_as grant_editor
+        login_user grant_editor
       end
 
       it 'mails the reviewer' do
@@ -50,7 +50,7 @@ RSpec.describe 'grant_submission review requests', type: :request do
 
     context '#destroy' do
       before(:each) do
-        login_as grant_editor
+        login_user grant_editor
       end
 
       it 'mails the reviewer' do

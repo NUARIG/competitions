@@ -13,7 +13,7 @@ RSpec.describe 'grant_submission review opt_out requests', type: :request do
                                   assigner: @assigner,
                                   reviewer: @reviewer)
 
-      login_as @reviewer
+      login_user @reviewer
     end
 
     it 'mails the assigner' do

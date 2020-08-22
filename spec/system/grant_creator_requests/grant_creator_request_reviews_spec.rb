@@ -12,7 +12,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
   describe '#show' do
     context 'system_administrator' do
       before(:each) do
-        login_as(system_admin, scope: :saml_user)
+        login_user(system_admin)
       end
 
       it 'shows the request' do
@@ -30,7 +30,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
   describe '#edit' do
     context 'system_administrator' do
       before(:each) do
-        login_as(system_admin, scope: :saml_user)
+        login_user(system_admin)
       end
 
       it 'can approve the request' do
