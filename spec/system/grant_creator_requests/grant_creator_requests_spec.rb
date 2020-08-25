@@ -2,11 +2,11 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
-  let(:system_admin)     { create(:system_admin_saml_user) }
+  let(:system_admin)     { create(random_system_admin_user) }
   let(:open_request)     { create(:grant_creator_request) }
   let(:approved_request) { create(:reviewed_approved_grant_creator_request) }
   let(:rejected_request) { create(:reviewed_rejected_grant_creator_request) }
-  let(:user)             { create(:saml_user) }
+  let(:user)             { create(random_user) }
 
   describe '#index' do
     it 'only includes the open requests' do

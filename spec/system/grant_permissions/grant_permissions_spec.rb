@@ -6,7 +6,7 @@ include UsersHelper
 RSpec.describe 'GrantPermissions', type: :system, js: true do
   before(:each) do
     @grant        = create(:grant_with_users)
-    @invalid_user = create(:saml_user)
+    @invalid_user = create(random_user)
 
     @grant_admin  = @grant.grant_permissions.role_admin.first.user
     @grant_editor = @grant.grant_permissions.role_editor.first.user
@@ -16,7 +16,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     @grant_editor_role = @grant.grant_permissions.role_editor.first
     @grant_viewer_role = @grant.grant_permissions.role_viewer.first
 
-    @unassigned_user   = create(:saml_user)
+    @unassigned_user   = create(random_user)
   end
 
   describe 'grant editor user' do
@@ -183,7 +183,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'unauthorized_user' do
     before(:each) do
-      @unauthorized_user = create(:saml_user)
+      @unauthorized_user = create(random_user)
 
       @grant2            = create(:grant)
       @grant2_user       = create(:admin_grant_permission, grant: @grant2,

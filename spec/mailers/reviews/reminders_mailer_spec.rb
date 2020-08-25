@@ -7,7 +7,7 @@ RSpec.describe ReminderMailer, type: :mailer do
     let(:grant_editor)  { grant.grant_permissions.role_editor.first.user }
     let(:submission)    { grant.submissions.first }
     let(:reviewer)      { grant.reviewers.first }
-    let(:user)          { create(:saml_user) }
+    let(:user)          { create(random_user) }
 
     let!(:review)       { create(:incomplete_review, assigner: grant_editor,
                                                     submission: submission,

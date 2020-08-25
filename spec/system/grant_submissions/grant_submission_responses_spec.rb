@@ -15,7 +15,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
   describe 'Published Open Grant', js: true do
     let(:grant)     { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-    let(:applicant) { create(:saml_user) }
+    let(:applicant) { create(random_user) }
 
     let(:draft_submission) { create(:draft_submission_with_responses, grant:      grant,
                                                                       form:       grant.form,

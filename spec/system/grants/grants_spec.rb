@@ -135,7 +135,7 @@ RSpec.describe 'Grants', type: :system, js: true do
   describe 'New' do
     before(:each) do
       @grant        = build(:new_grant)
-      @user         = create(:saml_user, system_admin: true)
+      @user         = create(random_user, system_admin: true)
       login_user(@user)
 
       visit new_grant_path
@@ -222,12 +222,12 @@ RSpec.describe 'Grants', type: :system, js: true do
   describe 'Policy' do
     before(:each) do
       @grant          = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-      @invalid_user   = create(:saml_user)
+      @invalid_user   = create(random_user)
       @grant_viewer   = @grant.grant_permissions.role_viewer.first.user
       @grant_editor   = @grant.grant_permissions.role_editor.first.user
       @grant_admin    = @grant.grant_permissions.role_admin.first.user
       @grant_reviewer = @grant.reviewers.first
-      @system_admin = create(:system_admin_saml_user)
+      @system_admin = create(random_system_admin_user)
 
       @grant_permission   = @grant.grant_permissions.role_editor.first
     end

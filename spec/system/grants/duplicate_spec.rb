@@ -10,7 +10,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
       @admin_user     = @grant.grant_permissions.role_admin.first.user
       @editor_user    = @grant.grant_permissions.role_editor.first.user
       @viewer_user    = @grant.grant_permissions.role_viewer.first.user
-      @system_admin   = create(:system_admin_saml_user)
+      @system_admin   = create(random_system_admin_user)
     end
 
     context 'system admin' do

@@ -9,7 +9,7 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
                                                                     form: grant2.form,
                                                                     applicant: applicant) }
   let(:applicant)        { submission.applicant }
-  let(:user)             { create(:saml_user) }
+  let(:user)             { create(random_user) }
 
   context 'header text' do
     context 'applicant' do

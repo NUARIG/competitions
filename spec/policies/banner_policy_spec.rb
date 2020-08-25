@@ -8,7 +8,7 @@ describe BannerPolicy do
     let(:banner) { create(:banner) }
 
     context 'with a system admin user' do
-      let(:user) { create(:system_admin_saml_user) }
+      let(:user) { create(random_system_admin_user) }
 
       # #Index is handled in the controller.
 
@@ -21,7 +21,7 @@ describe BannerPolicy do
     end
 
     context 'with a normal user' do
-      let(:user) { create(:saml_user) }
+      let(:user) { create(random_user) }
 
       it { is_expected.to forbid_action(:index) }
       it { is_expected.to forbid_action(:show) }

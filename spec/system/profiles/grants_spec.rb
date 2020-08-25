@@ -13,7 +13,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
                                                                    user: grant1.grant_permissions.role_admin.first.user) }
 
   let(:grant_admin)              { grant1_permission.user }
-  let(:user)                     { create(:saml_user) }
+  let(:user)                     { create(random_user) }
 
   context 'header text' do
     context 'applicant' do

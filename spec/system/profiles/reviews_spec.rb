@@ -19,7 +19,7 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
   let(:draft_grant_review)      { create(:scored_review_with_scored_mandatory_criteria_review, submission: draft_grant.submissions.first,
                                                                                           assigner: draft_grant.grant_permissions.role_admin.first.user,
                                                                                           reviewer: draft_grant_reviewer.reviewer)}
-  let(:user)               { create(:saml_user) }
+  let(:user)               { create(:registered_user) }
 
   describe 'header text' do
     context 'reviewer' do
@@ -36,7 +36,6 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
       scenario 'it does not display link in header' do
         login_user(user)
         visit root_path
-
         expect(page).not_to have_link('MyReviews', href: profile_reviews_path)
       end
     end

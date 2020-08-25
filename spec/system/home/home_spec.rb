@@ -11,7 +11,7 @@ RSpec.describe 'Home', type: :system do
       @completed_grant    = create(:completed_grant)
       @draft_grant        = create(:draft_open_grant)
       @discarded_grant    = create(:grant_with_users, discarded_at: 1.hour.ago)
-      @user               = create(:saml_user)
+      @user               = create(random_user)
       @admin_user         = @open_grant.administrators.first
       visit root_path
     end

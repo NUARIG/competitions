@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    current_saml_user  || current_registered_user
+    current_saml_user || current_registered_user
   end
 
   helper_method :current_user

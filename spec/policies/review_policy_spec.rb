@@ -9,10 +9,10 @@ RSpec.describe ReviewPolicy, type: :policy do
                                     reviewer: grant.reviewers.first,
                                     submission: grant.submissions.first) }
   let(:applicant)         { submission.applicant}
-  let(:logged_in_user)    { create(:saml_user) }
+  let(:logged_in_user)    { create(random_user) }
 
   context 'with a system admin user' do
-    let(:user) { create(:system_admin_saml_user) }
+    let(:user) { create(random_system_admin_user) }
 
     it { is_expected.not_to permit_action(:index) }
     it { is_expected.not_to permit_action(:new) }
@@ -104,7 +104,7 @@ RSpec.describe ReviewPolicy, type: :policy do
   end
 
   context 'with an logged in user with no role or submission' do
-    let(:user) { create(:saml_user) }
+    let(:user) { create(random_user) }
 
     it { is_expected.not_to permit_action(:index) }
     it { is_expected.not_to permit_action(:new) }

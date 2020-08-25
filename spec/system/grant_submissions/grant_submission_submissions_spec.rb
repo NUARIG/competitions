@@ -5,11 +5,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)            { grant.submissions.first }
   let(:applicant)             { submission.applicant }
-  let(:system_admin)          { create(:system_admin_saml_user) }
+  let(:system_admin)          { create(random_system_admin_user) }
   let(:grant_admin)           { grant.administrators.first }
   let(:grant_editor)          { grant.administrators.second }
   let(:grant_viewer)          { grant.administrators.third }
-  let(:new_applicant)         { create(:saml_user) }
+  let(:new_applicant)         { create(random_user) }
   let(:draft_submission)      { create(:draft_submission_with_responses,
                                          grant: grant,
                                          form: grant.form) }
