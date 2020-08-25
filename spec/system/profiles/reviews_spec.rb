@@ -41,44 +41,45 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
     end
   end
 
+  describe '#index' do
+    before(:each) do
+      grant1_review
+      grant2_review
+      draft_grant_review
 
-  before(:each) do
-    grant1_review
-    grant2_review
-    draft_grant_review
-
-    login_user(reviewer)
-    visit profile_reviews_path
-  end
-
-  context '#index' do
-    scenario 'it includes links to assigned reviews' do
-      expect(page).to have_text(grant1.name)
-      expect(page).to have_text(grant2.name)
-      expect(page).to have_text(draft_grant.name)
-      expect(page).to have_link('Incomplete', href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
-      expect(page).to have_link('Completed', href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
-      expect(page).not_to have_link('Completed', href: grant_submission_review_path(draft_grant, draft_grant.submissions.first, draft_grant_review))
-    end
-
-    scenario 'it can be filtered on grant name' do
-      find_field('Search by Grant Name', with: '').set('First')
-      click_button 'Search'
-
-      expect(page).to have_text grant1.name
-      expect(page).to have_link(href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
-      expect(page).not_to have_text grant2.name
-      expect(page).not_to have_link(href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
-    end
-
-    scenario 'it does not include reviews for discarded grants' do
-      grant1.discard
+      login_user(reviewer)
       visit profile_reviews_path
+    end
 
-      expect(page).not_to have_text(grant1.name)
-      expect(page).not_to have_link('Incomplete', href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
-      expect(page).to have_text(grant2.name)
-      expect(page).to have_link('Completed', href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
+    context '#index' do
+      scenario 'it includes links to assigned reviews' do
+        expect(page).to have_text(grant1.name)
+        expect(page).to have_text(grant2.name)
+        expect(page).to have_text(draft_grant.name)
+        expect(page).to have_link('Incomplete', href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
+        expect(page).to have_link('Completed', href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
+        expect(page).not_to have_link('Completed', href: grant_submission_review_path(draft_grant, draft_grant.submissions.first, draft_grant_review))
+      end
+
+      scenario 'it can be filtered on grant name' do
+        find_field('Search by Grant Name', with: '').set('First')
+        click_button 'Search'
+
+        expect(page).to have_text grant1.name
+        expect(page).to have_link(href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
+        expect(page).not_to have_text grant2.name
+        expect(page).not_to have_link(href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
+      end
+
+      scenario 'it does not include reviews for discarded grants' do
+        grant1.discard
+        visit profile_reviews_path
+
+        expect(page).not_to have_text(grant1.name)
+        expect(page).not_to have_link('Incomplete', href: grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
+        expect(page).to have_text(grant2.name)
+        expect(page).to have_link('Completed', href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
+      end
     end
   end
 end
