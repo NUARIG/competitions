@@ -27,7 +27,6 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
       scenario 'it displays link in the header' do
         grant1_review
         login_user(reviewer)
-
         visit root_path
         expect(page).to have_link('MyReviews', href: profile_reviews_path)
       end
