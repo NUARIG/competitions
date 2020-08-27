@@ -10,6 +10,7 @@ en:
           attributes:
             base:
               reviewed_submission_cannot_be_unsubmitted: This submission has already been scored and may not be edited.
+              may_not_delete_from_published_grant: Grant must be in Draft mode in order to delete a submission.
             responses:
               invalid: have highlighted errors.
     models:
