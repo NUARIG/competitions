@@ -8,6 +8,10 @@ development:
   default_url_options:
     host: 'localhost' # e.g. localhost, https://competitions_example.com, etc.
     port: 3000 # e.g. '', 3000, etc.
+  saml_domains:
+    - localhost
+    - blocked_email.edu
+    # - <YOUR_INSTITUTIONAL_DOMAIN>
   mailer:
     mailer_address: # <APP_EMAIL_ADDRESS>
     delivery_method: smtp # e.g. smtp
@@ -17,14 +21,14 @@ development:
   # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
   saml:
     idp_entity_id: ''
-    idp_entity_name: 'DEV'
+    idp_entity_name: 'DEVELOPMENT'
     saml_default_user_key: 'email' # The user will be looked up by this key
     # The following maps the IDP SAML attribute's names(left)
     #  with the User model attributes.
     attribute_map:  { 'email': 'email',
                       'firstName': 'first_name',
                       'lastName': 'last_name',
-                      'upn': 'upn'
+                      'uid': 'uid'
                     }
     sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
     assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'
@@ -58,6 +62,10 @@ test:
   default_url_options:
     host: 'localhost'
     port: 3000
+  saml_domains: # This is an array of domains that could be in the SAML user.
+    - localhost
+    - blocked_email.edu
+    # - <YOUR_INSTITUTIONAL_DOMAIN>
   mailer:
     mailer_address: # <APP_EMAIL_ADDRESS>
     delivery_method: test
@@ -72,7 +80,7 @@ test:
     attribute_map:  { 'email': 'email',
                       'firstName': 'first_name',
                       'lastName': 'last_name',
-                      'upn': 'upn'
+                      'uid': 'uid'
                     }
     sign_out_url: 'http://localhost:3000' # URL in your SP that the IDP should send users back to
     assertion_consumer_service_url: 'http://localhost:3000/users/saml/auth' # e.g. 'http://localhost:3000/users/saml/auth'

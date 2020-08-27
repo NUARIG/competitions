@@ -7,11 +7,11 @@ RSpec.describe 'GrantReviewers', type: :system do
                            max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
     let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
-    let(:user)         { create(:user) }
-    let(:unknown_user) { build(:user) }
+    let(:user)         { create(:saml_user) }
+    let(:unknown_user) { build(:saml_user) }
 
     before(:each) do
-      login_as(grant_admin)
+      login_as(grant_admin, scope: :saml_user)
       visit grant_reviewers_path(grant)
     end
 
@@ -30,11 +30,11 @@ RSpec.describe 'GrantReviewers', type: :system do
                                  max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
     let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
-    let(:user)         { create(:user) }
-    let(:unknown_user) { build(:user) }
+    let(:user)         { create(:saml_user) }
+    let(:unknown_user) { build(:saml_user) }
 
     before(:each) do
-      login_as(grant_admin)
+      login_as(grant_admin, scope: :saml_user)
       visit grant_reviewers_path(grant)
     end
 
@@ -68,12 +68,12 @@ RSpec.describe 'GrantReviewers', type: :system do
     let(:review)       { create(:review, assigner: grant_admin,
                                          reviewer: reviewer,
                                          submission: grant.submissions.first) }
-    let(:user)         { create(:user) }
-    let(:unknown_user) { build(:user) }
+    let(:user)         { create(:saml_user) }
+    let(:unknown_user) { build(:saml_user) }
 
     before(:each) do
       review
-      login_as(grant_admin)
+      login_as(grant_admin, scope: :saml_user)
       visit grant_reviewers_path(grant)
     end
 

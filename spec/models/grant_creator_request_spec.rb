@@ -57,8 +57,8 @@ RSpec.describe GrantCreatorRequest, type: :model do
 
   describe 'reviews' do
     let(:request)          { build(:grant_creator_request) }
-    let(:valid_reviewer)   { create(:system_admin_user) }
-    let(:invalid_reviewer) { create(:user) }
+    let(:valid_reviewer)   { create(:system_admin_saml_user) }
+    let(:invalid_reviewer) { create(:saml_user) }
 
     context 'valid reviews' do
       before(:each) do

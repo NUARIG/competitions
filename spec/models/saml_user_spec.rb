@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe SamlUser, type: :model do
   it { is_expected.to respond_to(:system_admin) }
   it { is_expected.to respond_to(:email) }
   it { is_expected.to respond_to(:first_name) }
@@ -10,8 +10,8 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:grant_creator) }
   it { is_expected.to respond_to(:era_commons) }
 
-  let(:user)       { FactoryBot.build(:user) }
-  let(:other_user) { create(:user, era_commons: Faker::Lorem.characters(number: 10)) }
+  let(:user)       { FactoryBot.build(:saml_user) }
+  let(:other_user) { create(:saml_user, era_commons: Faker::Lorem.characters(number: 10)) }
 
   describe '#initiations' do
     it 'sets default of system_admin boolean' do

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe PaperTrail::GrantReviewerVersion, type: :model, versioning: true do
   before(:each) do
     @grant          = create(:grant)
-    @reviewer       = create(:user)
+    @reviewer       = create(:saml_user)
     @grant_reviewer = create(:grant_reviewer, grant: @grant,
                                               reviewer: @reviewer)
   end

@@ -36,7 +36,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       context 'Admin' do
         before(:each) do
           @submission.reviews.destroy_all
-          login_as(@admin)
+          login_as(@admin, scope: :saml_user)
           visit grant_submission_reviews_path(@grant, @submission)
         end
 
@@ -49,7 +49,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
     context 'submission with reviews' do
       before(:each) do
-        login_as(@admin)
+        login_as(@admin, scope: :saml_user)
       end
 
       context 'incomplete review' do
@@ -116,7 +116,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe '#show', js: true do
     context 'grant_admin' do
       scenario 'includes a link to edit the review' do
-        login_as grant_admin
+        login_as(grant_admin, scope: :saml_user)
         visit grant_submission_review_path(grant, submission, review)
 
         expect(page).to have_link 'Edit', href: edit_grant_submission_review_path(grant, submission, review)
@@ -125,7 +125,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
     context 'grant_editor' do
       scenario 'includes a link to edit the review' do
-        login_as grant_editor
+        login_as(grant_editor, scope: :saml_user)
         visit grant_submission_review_path(grant, submission, review)
         expect(page).to have_link 'Edit', href: edit_grant_submission_review_path(grant, submission, review)
       end
@@ -133,7 +133,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
     context 'grant_viewer' do
       scenario 'does not include link to edit the review' do
-        login_as grant_viewer
+        login_as(grant_viewer, scope: :saml_user)
         visit grant_submission_review_path(grant, submission, review)
 
         expect(page).not_to have_link 'Edit', href: edit_grant_submission_review_path(grant, submission, review)
@@ -146,7 +146,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       scenario 'displays appropriate criteria comment field' do
         grant.criteria.first.update_attribute(:show_comment_field, true)
 
-        login_as review.reviewer
+        login_as(review.reviewer, scope: :saml_user)
         visit edit_grant_submission_review_path(grant, submission, review)
         expect(page).to have_selector("##{criterion_id_selector(grant.criteria.first)}-comment")
         expect(page).not_to have_selector("##{criterion_id_selector(grant.criteria.last)}-comment")
@@ -194,7 +194,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
     context 'success' do
       context 'grant_admin' do
         before(:each) do
-          login_as grant_admin
+          login_as(grant_admin, scope: :saml_user)
           visit edit_grant_submission_review_path(grant, submission, review)
         end
 
@@ -223,7 +223,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
     context 'reviewer' do
       before(:each) do
-        login_as reviewer
+        login_as(reviewer, scope: :saml_user)
         visit edit_grant_submission_review_path(grant, submission, review)
       end
 
@@ -270,7 +270,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
       before(:each) do
         grant.update_attribute(:max_reviewers_per_submission, 2)
-        login_as scored_review.reviewer
+        login_as(scored_review.reviewer, scope: :saml_user)
       end
 
       scenario 'displays errors if overall impact score is not scored' do
@@ -293,7 +293,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       scenario 'does not appear for assignment' do
         submission.reviews.delete_all
         submission.update_attribute(:state, 'draft')
-        login_as grant_admin
+        login_as(grant_admin, scope: :saml_user)
         visit grant_reviewers_path(grant)
 
         expect(page).not_to have_text submission.title
@@ -305,7 +305,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         review
         new_grant_reviewer.reviewer
 
-        login_as grant_admin
+        login_as(grant_admin, scope: :saml_user)
         visit grant_reviewers_path(grant)
       end
 
@@ -329,7 +329,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       before(:each) do
         review
         applicant_reviewer
-        login_as grant_admin
+        login_as(grant_admin, scope: :saml_user)
 
         visit grant_reviewers_path(grant)
       end

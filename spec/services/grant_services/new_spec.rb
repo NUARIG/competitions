@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'GrantServices' do
   describe 'New' do
     let(:new_grant)     { build(:grant) }
-    let(:grant_creator) { create(:grant_creator_user)}
+    let(:grant_creator) { create(:grant_creator_saml_user)}
 
     context 'success' do
       it 'creates a grant and its associations' do

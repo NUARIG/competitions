@@ -13,7 +13,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
                                                                    user: grant1.grant_permissions.role_admin.first.user) }
 
   let(:grant_admin)              { grant1_permission.user }
-  let(:user)                     { create(:user) }
+  let(:user)                     { create(:saml_user) }
 
   context 'header text' do
     context 'applicant' do
@@ -39,7 +39,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
     context 'grant_admin' do
       before(:each) do
         [grant1_permission, grant2_viewer_permission, grant3_admin_permission]
-        login_as grant_admin
+        login_as(grant_admin, scope: :saml_user)
         visit profile_grants_path
       end
 

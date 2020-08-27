@@ -4,7 +4,7 @@ RSpec.describe BannersController, type: :controller do
 
   describe 'with a logged in System Admin User' do
     before(:each) do
-      login_system_admin
+      login_system_admin_saml_user
     end
 
     let(:valid_attributes) {

@@ -6,7 +6,7 @@ RSpec.describe 'grant reviews reminders requests', type: :request do
   let(:grant_viewer)  { grant.grant_permissions.role_viewer.first.user }
   let(:submission)    { grant.submissions.first }
   let(:reviewer)      { grant.reviewers.first }
-  let(:user)          { create(:user) }
+  let(:user)          { create(:saml_user) }
 
   let!(:review)       { create(:incomplete_review, assigner: grant_editor,
                                                   submission: submission,

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe PaperTrail::UserVersion, type: :model, versioning: true do
   before(:each) do
-    @user = create(:user)
+    @user = create(:saml_user)
   end
 
   context 'metadata' do

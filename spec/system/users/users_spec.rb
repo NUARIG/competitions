@@ -6,164 +6,216 @@ include UsersHelper
 RSpec.describe 'Users', type: :system, js: true  do
   describe '#index' do
     before(:each) do
-      @user1         = create(:user, last_name: 'BBBB',
-                                     created_at: 65.minutes.ago,
-                                     current_sign_in_at: 65.minutes.ago)
-      @user2         = create(:user, last_name: 'AAAA',
-                                     created_at: 1.month.ago,
-                                     current_sign_in_at: 1.day.ago)
-      @grant_creator = create(:grant_creator_user, last_name: 'ZZZZ',
-                                                   created_at: 1.week.ago,
-                                                   current_sign_in_at: 1.month.ago)
-      @system_admin  = create(:system_admin_user, last_name: 'CCCC',
-                                                  created_at: 1.year.ago)
+      @saml_user1               = create(:saml_user, last_name: 'BBBB',
+                                          created_at: 65.minutes.ago,
+                                          current_sign_in_at: 65.minutes.ago)
+      @saml_user2               = create(:saml_user, last_name: 'AAAA',
+                                          created_at: 1.month.ago,
+                                          current_sign_in_at: 1.day.ago)
+      @saml_grant_creator       = create(:grant_creator_saml_user, last_name: 'ZZZZ',
+                                          created_at: 1.week.ago,
+                                          current_sign_in_at: 1.month.ago)
+      @saml_system_admin        = create(:system_admin_saml_user, last_name: 'CCCC',
+                                          created_at: 1.year.ago)
+      @registered_user          = create(:registered_user, last_name: 'RRRR',
+                                          created_at: 5.days.ago,
+                                          current_sign_in_at: 5.days.ago)
+      @registered_grant_creator = create(:grant_creator_registered_user, last_name: 'SSSS',
+                                          created_at: 2.months.ago,
+                                          current_sign_in_at: 2.month.ago)
+      @registered_system_admin  = create(:system_admin_registered_user, last_name: 'TTTT',
+                                          created_at: 1.year.ago,
+                                          current_sign_in_at: 1.year.ago)
+
     end
 
     context 'Sorts' do
       before(:each) do
-        login_as @system_admin
+        login_as(@saml_system_admin, scope: :saml_user)
         visit users_path
 
-        @system_admin.update_attribute(:current_sign_in_at, 45.days.ago)
-        @system_admin.save!
+        @saml_system_admin.update_attribute(:current_sign_in_at, 45.days.ago)
+        @saml_system_admin.save!
       end
 
       scenario 'default sort by current_sign_in_at' do
         visit users_path
         within 'tr.user:nth-child(1)' do
-          expect(page).to have_text "#{sortable_full_name(@user1)} #{@user1.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
         end
         within 'tr.user:nth-child(2)' do
-          expect(page).to have_text "#{sortable_full_name(@user2)} #{@user2.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
         end
         within 'tr.user:nth-child(3)' do
-          expect(page).to have_text "#{sortable_full_name(@grant_creator)} #{@grant_creator.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
         end
         within 'tr.user:nth-child(4)' do
-          expect(page).to have_text "#{sortable_full_name(@system_admin)} #{@system_admin.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
+        end
+        within 'tr.user:nth-child(5)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
+        end
+        within 'tr.user:nth-child(6)' do
+          expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
+        end
+        within 'tr.user:nth-child(7)' do
+          expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
         end
       end
 
       scenario 'reverse sort by current_sign_in_at' do
         visit users_path
         click_on('Last Access')
+        within 'tr.user:nth-child(7)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
+        end
+        within 'tr.user:nth-child(6)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
+        end
+        within 'tr.user:nth-child(5)' do
+          expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
+        end
         within 'tr.user:nth-child(4)' do
-          expect(page).to have_text "#{sortable_full_name(@user1)} #{@user1.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
         end
         within 'tr.user:nth-child(3)' do
-          expect(page).to have_text "#{sortable_full_name(@user2)} #{@user2.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
         end
         within 'tr.user:nth-child(2)' do
-          expect(page).to have_text "#{sortable_full_name(@grant_creator)} #{@grant_creator.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
         end
         within 'tr.user:nth-child(1)' do
-          expect(page).to have_text "#{sortable_full_name(@system_admin)} #{@system_admin.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
         end
       end
 
       scenario 'sort by created_at' do
-        @user1.update_attribute(:created_at, 3.weeks.ago)
-        @user2.update_attribute(:created_at, 1.day.ago)
-        @grant_creator.update_attribute(:created_at, 1.year.ago)
-        @system_admin.update_attribute(:created_at, 181.days.ago)
+        @saml_user1.update_attribute(:created_at, 3.weeks.ago)
+        @saml_user2.update_attribute(:created_at, 1.day.ago)
+        @saml_grant_creator.update_attribute(:created_at, 3.year.ago)
+        @saml_system_admin.update_attribute(:created_at, 181.days.ago)
+        @registered_user.update_attribute(:created_at, 8.days.ago)
+        @registered_grant_creator.update_attribute(:created_at, 3.month.ago)
+        @registered_system_admin.update_attribute(:created_at, 2.years.ago)
 
         visit users_path
         click_on('Joined')
+        within 'tr.user:nth-child(7)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
+        end
+        within 'tr.user:nth-child(6)' do
+          expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
+        end
+        within 'tr.user:nth-child(5)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
+        end
         within 'tr.user:nth-child(4)' do
-          expect(page).to have_text "#{sortable_full_name(@user2)} #{@user2.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
         end
         within 'tr.user:nth-child(3)' do
-          expect(page).to have_text "#{sortable_full_name(@user1)} #{@user1.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
         end
         within 'tr.user:nth-child(2)' do
-          expect(page).to have_text "#{sortable_full_name(@system_admin)} #{@system_admin.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
         end
         within 'tr.user:nth-child(1)' do
-          expect(page).to have_text "#{sortable_full_name(@grant_creator)} #{@grant_creator.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
         end
 
         click_on('Joined')
         within 'tr.user:nth-child(1)' do
-          expect(page).to have_text "#{sortable_full_name(@user2)} #{@user2.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
         end
         within 'tr.user:nth-child(2)' do
-          expect(page).to have_text "#{sortable_full_name(@user1)} #{@user1.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
         end
         within 'tr.user:nth-child(3)' do
-          expect(page).to have_text "#{sortable_full_name(@system_admin)} #{@system_admin.email}"
+          expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
         end
         within 'tr.user:nth-child(4)' do
-          expect(page).to have_text "#{sortable_full_name(@grant_creator)} #{@grant_creator.email}"
+          expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
+        end
+        within 'tr.user:nth-child(5)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
+        end
+        within 'tr.user:nth-child(6)' do
+          expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
+        end
+        within 'tr.user:nth-child(7)' do
+          expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
+        end
+      end
+
+
+      scenario 'sort by type' do
+        visit users_path
+        click_on('Type')
+        within 'tr.user:nth-child(1)' do
+          expect(page).to have_text 'RegisteredUser'
+        end
+        within 'tr.user:nth-child(2)' do
+          expect(page).to have_text 'RegisteredUser'
+        end
+        within 'tr.user:nth-child(3)' do
+          expect(page).to have_text 'RegisteredUser'
+        end
+
+        within 'tr.user:nth-child(4)' do
+          expect(page).to have_text 'SamlUser'
+        end
+        within 'tr.user:nth-child(5)' do
+          expect(page).to have_text 'SamlUser'
+        end
+        within 'tr.user:nth-child(6)' do
+          expect(page).to have_text 'SamlUser'
+        end
+        within 'tr.user:nth-child(7)' do
+          expect(page).to have_text 'SamlUser'
+        end
+
+        click_on('Type')
+        within 'tr.user:nth-child(1)' do
+          expect(page).to have_text 'SamlUser'
+        end
+        within 'tr.user:nth-child(2)' do
+          expect(page).to have_text 'SamlUser'
+        end
+        within 'tr.user:nth-child(3)' do
+          expect(page).to have_text 'SamlUser'
+        end
+        within 'tr.user:nth-child(4)' do
+          expect(page).to have_text 'SamlUser'
+        end
+
+        within 'tr.user:nth-child(5)' do
+          expect(page).to have_text 'RegisteredUser'
+        end
+        within 'tr.user:nth-child(6)' do
+          expect(page).to have_text 'RegisteredUser'
+        end
+        within 'tr.user:nth-child(7)' do
+          expect(page).to have_text 'RegisteredUser'
         end
       end
     end
   end
 
-  describe 'update' do
-    let(:user)          { create(:user, current_sign_in_at: Time.now) }
-    let(:system_admin)  { create(:system_admin_user) }
-    let(:other_user)    { create(:user) }
-
-    context 'system_admin' do
-      before(:each) do
-        login_as system_admin
-
-        visit(edit_user_path(user))
-      end
-
-      context 'success' do
-        scenario 'can edit a user' do
-          new_era_commons = Faker::Lorem.characters(number: 10)
-          find_field('eRA Commons').set(new_era_commons)
-          click_button 'Update'
-          expect(user.reload.era_commons).to eql new_era_commons
-          expect(page).to have_content "#{full_name(user)}'s profile has been updated."
-        end
-      end
-
-      context 'failure' do
-        scenario 'shows error on failure' do
-          other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update_attribute(:era_commons, other_user_era_commons)
-          visit(edit_user_path(user))
-          find_field('eRA Commons').set(other_user_era_commons)
-          click_button 'Update'
-          expect(page).to have_content 'eRA Commons has already been taken'
-        end
+  describe '#authenticate_user!' do
+    context 'user not logged in' do
+      scenario 'redirects to log in and displays error message' do
+        visit new_grant_path
+        expect(page).to have_content('You need to sign in or sign up before continuing.')
+        expect(current_path).to eq(login_index_path)
       end
     end
 
-    context 'user' do
-      before(:each) do
-        login_as user
-
-        visit(profile_path)
-      end
-
-      context 'success' do
-        scenario 'can edit own profile' do
-          new_era_commons = Faker::Lorem.characters(number: 10)
-          find_field('eRA Commons').set(new_era_commons)
-          click_button 'Update'
-          expect(user.reload.era_commons).to eql new_era_commons
-          expect(page).to have_content 'Your profile has been updated.'
-        end
-
-        scenario 'cannot edit another user profile' do
-          visit(edit_user_path(other_user))
-          expect(page).to have_content 'You are not authorized to perform this action.'
-        end
-      end
-
-      context 'failure' do
-        scenario 'shows error on failure' do
-          other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update_attribute(:era_commons, other_user_era_commons)
-          visit(profile_path)
-          find_field('eRA Commons').set(other_user_era_commons)
-          click_button 'Update'
-          expect(page).to have_content 'eRA Commons has already been taken'
-        end
+    context 'user logged in' do
+      scenario 'redirects to log in and displays error message' do
+        registered_user = create(:registered_user)
+        login_as(registered_user, scope: :registered_user)
+        visit profile_path
+        expect(page).to have_content('Your Profile')
+        expect(current_path).to eq(profile_path)
       end
     end
   end

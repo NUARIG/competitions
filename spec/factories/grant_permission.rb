@@ -3,11 +3,11 @@
 FactoryBot.define do
   factory :grant_permission, class: 'GrantPermission' do
     association :grant, factory: :grant
-    association :user, factory: :user
+    association :user, factory: :saml_user
     role { 'admin' }
 
     trait :admin do
-      association :user, factory: :grant_creator_user
+      association :user, factory: :grant_creator_saml_user
     end
 
     trait :editor do

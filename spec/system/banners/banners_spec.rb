@@ -12,8 +12,8 @@ RSpec.describe 'Banners', type: :system do
 
     describe 'user should not have access' do
       before(:each) do
-        @user  = create(:user)
-        login_as @user
+        @user  = create(:saml_user)
+        login_as(@user, scope: :saml_user)
       end
 
       context '#index' do
@@ -27,9 +27,8 @@ RSpec.describe 'Banners', type: :system do
 
     describe 'admin user' do
       before(:each) do
-        @system_admin_user  = create(:system_admin_user)
-        login_as @system_admin_user
-
+        @system_admin_user  = create(:system_admin_saml_user)
+        login_as(@system_admin_user, scope: :saml_user)
         visit root_path
       end
 
@@ -199,8 +198,8 @@ RSpec.describe 'Banners', type: :system do
   describe 'PaperTrail', js: true, versioning: true do
     before(:each) do
       @banner = create(:banner)
-      @system_admin_user  = create(:system_admin_user)
-      login_as @system_admin_user
+      @system_admin_user  = create(:system_admin_saml_user)
+      login_as(@system_admin_user, scope: :saml_user)
       visit edit_banner_path(@banner)
     end
 

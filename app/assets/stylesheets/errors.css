@@ -1,0 +1,60 @@
+.field_with_errors input,
+.field_with_errors select,
+.field_with_errors textarea {
+  border: 0.25em solid red;
+  font-weight: bold;
+}
+
+#errorExplanation,
+#error_explanation {
+  border: 3px solid red;
+  padding: 0.85em;
+  padding-bottom: 0;
+  margin-bottom: 1em;
+}
+
+#errorExplanation h2,
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 0.25em 0.25em 0.25em 1.5em;
+  font-size: 0.9em;
+  margin: -7px;
+  margin-bottom: 0;
+}
+
+#errorExplanation p {
+  color: #333333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li,
+#error_explanation ul li {
+  font-size: 0.9em;
+  list-style: square;
+}
+
+div.notice {
+  color: green;
+  border: 1px solid green;
+  font-size: 1.25em;
+}
+
+div.alert {
+  color: maroon;
+  border: 1px solid maroon;
+  font-size: 1.25em;
+}
+
+span.warning,
+span.required {
+  font-weight: bold;
+  color: maroon;
+}
+
+label.error {
+  color: maroon;
+  border: 1px solid maroon;
+  font-size: 1em;
+}

@@ -11,7 +11,7 @@ RSpec.describe 'Home', type: :system do
       @completed_grant    = create(:completed_grant)
       @draft_grant        = create(:draft_open_grant)
       @discarded_grant    = create(:grant_with_users, discarded_at: 1.hour.ago)
-      @user               = create(:user)
+      @user               = create(:saml_user)
       @admin_user         = @open_grant.administrators.first
       visit root_path
     end
@@ -31,7 +31,7 @@ RSpec.describe 'Home', type: :system do
 
       context 'logged in user' do
         scenario 'displays user name and profile link' do
-          login_as @user
+          login_as(@user, scope: :saml_user)
           visit root_path
           expect(page).to have_link full_name(@user), href: '#'
           page.find('#logged-in').hover
@@ -40,7 +40,7 @@ RSpec.describe 'Home', type: :system do
       end
 
       scenario 'does not display help log in link' do
-        login_as @user
+        login_as(@user, scope: :saml_user)
         visit root_path
         expect(page).to have_link 'Help'
         page.find('#help').hover
@@ -77,7 +77,7 @@ RSpec.describe 'Home', type: :system do
     describe 'edit grant link logic' do
       before(:each) do
         @second_open_grant = create(:grant_with_users)
-        login_as @admin_user
+        login_as(@admin_user, scope: :saml_user)
         visit root_path
       end
 

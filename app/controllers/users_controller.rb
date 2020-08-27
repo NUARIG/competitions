@@ -46,6 +46,11 @@ class UsersController < ApplicationController
     user_params = [:era_commons]
     user_params << %i[system_admin grant_creator] if current_user.system_admin?
 
-    params.require(:user).permit(user_params)
+    case @user.type
+    when 'SamlUser'
+      params.require(:user).permit(user_params)
+    when 'RegisteredUser'
+      params.require(:user).permit(user_params + [:first_name, :last_name, :email])
+    end
   end
 end

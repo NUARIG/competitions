@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe PaperTrail::GrantCreatorRequestVersion, type: :model, versioning: true do
   before(:each) do
-    @user    = create(:user)
+    @user    = create(:saml_user)
     @request = create(:grant_creator_request, requester: @user)
   end
 
