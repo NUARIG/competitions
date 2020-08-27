@@ -16,10 +16,10 @@
     %ul.menu
       %li
         = link_to 'Edit Your Profile', profile_path
-      - if current_user.type === 'RegisteredUser'
+      - if current_user.registered_user?
         %li
           = link_to 'Log Out', destroy_registered_user_session_path, method: :delete
-      - if current_user.type === 'SamlUser'
+      - if current_user.saml_user?
         %li
           = link_to 'Log Out', destroy_saml_user_session_path, method: :delete
 - else

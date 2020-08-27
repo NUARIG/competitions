@@ -2,6 +2,18 @@
 
 require 'rails_helper'
 
+RSpec.shared_examples "a restricted domain" do
+  describe "restricted_domain_email" do
+    it 'checks for restricted domains' do
+      user.email = restricted_domain_email
+      expect(user).not_to be_valid
+      expect(user.errors).to include :email
+      expect(user.errors.messages[:email]).to eq ['domain is blocked from registering.']
+    end
+  end
+end
+
+
 RSpec.describe RegisteredUser, type: :model do
   it { is_expected.to respond_to(:system_admin) }
   it { is_expected.to respond_to(:email) }
@@ -25,18 +37,26 @@ RSpec.describe RegisteredUser, type: :model do
   end
 
   describe '#validations' do
-    it 'validates presence of email' do
-      user.email = nil
-      expect(user).not_to be_valid
-      expect(user.errors).to include :email
-    end
+    describe 'checks for restricted domains in email' do
+      it_behaves_like 'a restricted domain' do
+        let(:restricted_domain_email) { 'dummy@email.xyz' }
+      end
 
-    it 'checks for restricted domains' do
-      user.email = 'dummy@space.space'
-      expect(user).not_to be_valid
-      expect(user.errors).to include :email
-      expect(user.errors.messages[:email]).to eq ['domain is blocked from registering.']
+      it_behaves_like 'a restricted domain' do
+        let(:restricted_domain_email) { 'dummy@email.top' }
+      end
 
+      it_behaves_like 'a restricted domain' do
+        let(:restricted_domain_email) { 'dummy@email.website' }
+      end
+
+      it_behaves_like 'a restricted domain' do
+        let(:restricted_domain_email) { 'dummy@email.space' }
+      end
+
+      it_behaves_like 'a restricted domain' do
+        let(:restricted_domain_email) { 'dummy@email.online' }
+      end
     end
 
     it 'checks for saml email domains' do
@@ -44,6 +64,12 @@ RSpec.describe RegisteredUser, type: :model do
       expect(user).not_to be_valid
       expect(user.errors).to include :email
       expect(user.errors.messages[:email]).to eq ['Please log in with your institutional ID.']
+    end
+
+    it 'validates presence of email' do
+      user.email = nil
+      expect(user).not_to be_valid
+      expect(user.errors).to include :email
     end
 
     it 'validates presence of first_name' do
