@@ -35,7 +35,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
     context 'submission with no reviews' do
       context 'Admin' do
         before(:each) do
-          @submission.reviews.delete_all
+          @submission.reviews.destroy_all
           login_as(@admin)
           visit grant_submission_reviews_path(@grant, @submission)
         end

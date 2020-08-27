@@ -216,28 +216,54 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'with submitted submission' do
         context 'system_admin' do
-          scenario 'can visit the submissions index page' do
+          before(:each) do
             login_as(system_admin)
+          end
 
+          scenario 'can visit the submissions index page' do
             visit grant_submissions_path(grant)
+
             expect(page).to have_content submission.title
             expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
           end
+
+          scenario 'can delete a submission' do
+            unscored_review.save
+            visit grant_submissions_path(grant)
+
+            accept_alert do
+              click_link 'Delete', href: grant_submission_path(grant, submission)
+            end
+            expect(page).to have_text 'Submission was deleted'
+          end
         end
 
         context 'grant_admin' do
-          scenario 'can visit the submissions index page' do
-            login_as(grant_admin)
+          before(:each) do
+           login_as(grant_admin)
+          end
 
+          scenario 'can visit the submissions index page' do
             visit grant_submissions_path(grant)
+
             expect(page).to have_content submission.title
             expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+
+          scenario 'can delete a submission' do
+            unscored_review.save
+
+            visit grant_submissions_path(grant)
+            accept_alert do
+              click_link 'Delete', href: grant_submission_path(grant, submission)
+            end
+            expect(page).to have_text 'Submission was deleted'
           end
         end
       end
