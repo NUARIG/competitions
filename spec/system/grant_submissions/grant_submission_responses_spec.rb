@@ -15,7 +15,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
   describe 'Published Open Grant', js: true do
     let(:grant)     { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-    let(:applicant) { create(:user) }
+    let(:applicant) { create(:saml_user) }
 
     let(:draft_submission) { create(:draft_submission_with_responses, grant:      grant,
                                                                       form:       grant.form,
@@ -34,7 +34,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
     describe 'as an applicant' do
       before(:each) do
-        login_as(applicant)
+        login_as(applicant, scope: :saml_user)
         visit grant_apply_path(grant)
         find_field('Your Project\'s Title', with: '').set(Faker::Lorem.sentence)
       end

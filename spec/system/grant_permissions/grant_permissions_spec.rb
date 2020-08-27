@@ -6,7 +6,7 @@ include UsersHelper
 RSpec.describe 'GrantPermissions', type: :system, js: true do
   before(:each) do
     @grant        = create(:grant_with_users)
-    @invalid_user = create(:user)
+    @invalid_user = create(:saml_user)
 
     @grant_admin  = @grant.grant_permissions.role_admin.first.user
     @grant_editor = @grant.grant_permissions.role_editor.first.user
@@ -16,12 +16,12 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     @grant_editor_role = @grant.grant_permissions.role_editor.first
     @grant_viewer_role = @grant.grant_permissions.role_viewer.first
 
-    @unassigned_user   = create(:user)
+    @unassigned_user   = create(:saml_user)
   end
 
   describe 'grant editor user' do
     before(:each) do
-      login_as(@grant_editor)
+      login_as(@grant_editor, scope: :saml_user)
     end
 
     context '#index' do
@@ -99,7 +99,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'grant admin user' do
     before(:each) do
-      login_as(@grant_admin)
+      login_as(@grant_admin, scope: :saml_user)
       visit grant_grant_permissions_path(@grant)
     end
 
@@ -148,7 +148,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'grant viewer user' do
     before(:each) do
-      login_as @grant_viewer
+      login_as(@grant_viewer, scope: :saml_user)
     end
 
     context '#index' do
@@ -183,13 +183,13 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
   describe 'unauthorized_user' do
     before(:each) do
-      @unauthorized_user = create(:user)
+      @unauthorized_user = create(:saml_user)
 
       @grant2            = create(:grant)
       @grant2_user       = create(:admin_grant_permission, grant: @grant2,
                                                            user: @unauthorized_user)
 
-      login_as(@unauthorized_user)
+      login_as(@unauthorized_user, scope: :saml_user)
     end
 
     scenario 'cannot access index page' do

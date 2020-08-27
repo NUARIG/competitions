@@ -16,7 +16,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
     describe 'submenu links' do
       context 'admin' do
         before(:each) do
-          login_as(admin)
+          login_as(admin, scope: :saml_user)
           visit grant_reviews_path(grant)
         end
 
@@ -75,7 +75,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
 
       context 'editor' do
         before(:each) do
-          login_as(editor)
+          login_as(editor, scope: :saml_user)
           visit path
         end
 
@@ -92,7 +92,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
 
       context 'viewer' do
         before(:each) do
-          login_as(viewer)
+          login_as(viewer, scope: :saml_user)
           visit path
         end
 
@@ -108,7 +108,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
 
     describe 'search' do
       before(:each) do
-        login_as admin
+        login_as(admin, scope: :saml_user)
       end
 
       context 'reset search link' do

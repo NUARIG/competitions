@@ -8,15 +8,20 @@ RSpec.describe Grants::PublicDecorator do
   end
 
   context 'user with no roles' do
-    before(:each) do
-      @user = create(:user)
-      sign_in @user
-      @decorated_open_grant = Grants::PublicDecorator.decorate(@open_grant)
-    end
+    context 'saml user' do
+      before(:each) do
+        @user = create(:saml_user)
+        sign_in(@user)
+        @decorated_open_grant = Grants::PublicDecorator.decorate(@open_grant)
+      end
 
-    it 'does not generate an edit link' do
-      expect(@decorated_open_grant.edit_menu_link).not_to have_css("li#edit-grant_#{@open_grant.id}")
-      expect(@decorated_open_grant.edit_menu_link).not_to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
+      it 'does not generate an edit link' do
+        expect(@decorated_open_grant.edit_menu_link).not_to have_css("li#edit-grant_#{@open_grant.id}")
+        expect(@decorated_open_grant.edit_menu_link).not_to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
+      end
+    end
+    context 'registered user' do
+      pending 'does not generate an edit link'
     end
   end
 

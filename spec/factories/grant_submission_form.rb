@@ -3,8 +3,8 @@ FactoryBot.define do
 
   factory :grant_submission_form, class: 'GrantSubmission::Form' do
     association             :grant, factory: :grant
-    association             :form_created_by, factory: :user
-    association             :form_updated_by, factory: :user
+    association             :form_created_by, factory: :saml_user
+    association             :form_updated_by, factory: :saml_user
     submission_instructions { Faker::Lorem.sentence }
 
     trait :with_section do

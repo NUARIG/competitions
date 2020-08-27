@@ -1,25 +1,21 @@
 .grid-x
   .cell
+    - disabled = !@user.registered_user?
     .grid-x
       .cell.small-12.medium-2
         = f.label :first_name
       .cell.small-12.medium-10
-        = f.text_field :first_name, disabled: @user, class: 'small-12 medium-4'
+        = f.text_field :first_name, disabled: disabled, class: 'small-12 medium-4'
     .grid-x
       .cell.small-12.medium-2
         = f.label :last_name
       .cell.small-12.medium-10
-        = f.text_field :last_name, disabled: @user, class: 'small-12 medium-4'
+        = f.text_field :last_name, disabled: disabled, class: 'small-12 medium-4'
     .grid-x
       .cell.small-12.medium-2
         = f.label :email
       .cell.small-12.medium-10
-        = f.text_field :email, disabled: @user, class: 'small-12 medium-4'
-    .grid-x
-      .cell.small-12.medium-2
-        = f.label :upn
-      .cell.small-12.medium-10
-        = f.text_field :upn, disabled: @user, class: 'small-12 medium-4'
+        = f.text_field :email, disabled: true, class: 'small-12 medium-4'
     .grid-x
       .cell.small-12.medium-2
         = f.label :era_commons
@@ -27,7 +23,6 @@
         = f.text_field :era_commons, class: 'small-12 medium-4'
     .grid-x
       .cell.small-12.medium-2
-        = f.label :user_type
       .cell.small-12.medium-10
         - if current_user.system_admin?
           = render partial: 'users/admin_checkboxes', locals: { f: f, user: @user } if current_user.system_admin?

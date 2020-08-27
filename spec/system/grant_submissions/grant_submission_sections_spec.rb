@@ -8,7 +8,7 @@ RSpec.describe 'GrantSubmission::Sections', type: :system do
       @section = @form.sections.first
       @admin   = @grant.administrators.first
 
-      login_as(@admin)
+      login_as(@admin, scope: :saml_user)
       visit edit_grant_form_path(@grant, @form)
     end
 

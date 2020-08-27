@@ -30,28 +30,34 @@ RSpec.describe GrantDecorator do
 
     describe '#menu_links' do
       context 'user with no roles' do
-        before(:each) do
-          @user = create(:user)
-          sign_in @user
-          @decorated_open_grant = GrantDecorator.decorate(@open_grant)
+        context 'saml_user' do
+          before(:each) do
+            @user = create(:saml_user)
+            sign_in(@user)
+            @decorated_open_grant = GrantDecorator.decorate(@open_grant)
+          end
+
+          it 'generates a show menu link' do
+            expect(@decorated_open_grant.show_menu_link).to have_css("li#show-grant_#{@open_grant.id}")
+            expect(@decorated_open_grant.show_menu_link).to have_css("a#show-grant_#{@open_grant.id}-link", text: 'RFA')
+          end
+
+          it 'does not generate an edit menu link' do
+            expect(@decorated_open_grant.edit_menu_link).not_to have_css("li#edit-grant_#{@open_grant.id}")
+            expect(@decorated_open_grant.edit_menu_link).not_to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
+          end
         end
 
-        it 'generates a show menu link' do
-          expect(@decorated_open_grant.show_menu_link).to have_css("li#show-grant_#{@open_grant.id}")
-          expect(@decorated_open_grant.show_menu_link).to have_css("a#show-grant_#{@open_grant.id}-link", text: 'RFA')
+        context 'registered_user' do
+          pending 'generates a show menu link'
+          pending 'does not generate an edit menu link'
         end
-
-        it 'does not generate an edit menu link' do
-          expect(@decorated_open_grant.edit_menu_link).not_to have_css("li#edit-grant_#{@open_grant.id}")
-          expect(@decorated_open_grant.edit_menu_link).not_to have_css("a#edit-grant_#{@open_grant.id}-link", text: 'Edit')
-        end
-
       end
 
       context 'grant admin user' do
         before(:each) do
           @admin_user = @open_grant.grant_permissions.role_admin.first.user
-          sign_in @admin_user
+          sign_in(@admin_user)
           @decorated_open_grant = GrantDecorator.decorate(@open_grant)
         end
 

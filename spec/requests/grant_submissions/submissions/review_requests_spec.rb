@@ -22,7 +22,7 @@ RSpec.describe 'grant_submission review requests', type: :request do
   let(:review)       { create(:review, submission: submission,
                                        assigner: grant.grant_permissions.role_admin.first.user,
                                        reviewer: reviewer) }
-  let(:invalid_user) { create(:user) }
+  let(:invalid_user) { create(:saml_user) }
 
   context 'mailers' do
     before(:example) do
