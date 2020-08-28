@@ -80,7 +80,7 @@
                     = link_to 'Switch to Draft', unsubmit_grant_submission_path(@grant, submission), method: :patch, title: 'Allow for editing'
                 - if current_user.get_role_by_grant(grant: @grant) == 'admin' && !@grant.published?
                   %div.delete
-                    = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'small', confirm: 'Are you sure?'
+                    = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'This will delete the submission and its assigned reviews. Are you sure?'}, class: 'small'
             %td
               = date_time_separate_lines(submission.user_updated_at)
             - if current_user.get_role_by_grant(grant: @grant)

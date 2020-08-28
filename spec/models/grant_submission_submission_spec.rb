@@ -44,6 +44,65 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     end
   end
 
+  describe '#methods' do
+    let!(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+    let!(:submission)   { grant.submissions.first }
+    let(:grant_admin)   { grant.grant_permissions.role_admin.first.user }
+    let(:scored_review) { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                                       assigner:   grant_admin,
+                                                                                       reviewer:   grant.reviewers.first) }
+    let(:incomplete_review) { create(:incomplete_review, submission: submission,
+                                                     assigner: grant_admin,
+                                                     reviewer: grant.reviewers.first) }
+
+    context 'published grant' do
+      describe '#destroy' do
+        it 'may not be destroyed' do
+          expect do
+            submission.destroy
+          end.not_to change{ GrantSubmission::Submission.count }
+          expect(submission.errors[:base]).to include I18n.t('activerecord.errors.models.grant_submission/submission.attributes.base.may_not_delete_from_published_grant')
+        end
+
+        it 'does not destroy reviews' do
+          incomplete_review.save
+          expect do
+            submission.destroy
+          end.not_to change{ Review.count }
+        end
+      end
+    end
+
+    context 'draft grant' do
+      before(:each) do
+        grant.update(state: 'draft')
+      end
+
+      describe '#destroy' do
+        context 'with reviews' do
+          context 'scored review' do
+            it 'may be deleted' do
+              scored_review.save
+              expect do
+                submission.destroy
+              end.to change{GrantSubmission::Submission.count}.by(-1).and change{Review.count}.by(-1)
+            end
+          end
+
+          context 'incomplete review' do
+            it 'may be deleted' do
+              incomplete_review.save
+
+              expect do
+                submission.destroy
+              end.to change{GrantSubmission::Submission.count}.by(-1).and change{Review.count}.by(-1)
+            end
+          end
+        end
+      end
+    end
+  end
+
   describe 'unsubmit' do
     let(:grant)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let(:submission)        { grant.submissions.first }
