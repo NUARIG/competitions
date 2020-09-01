@@ -8,6 +8,6 @@
   %td
     = date_mmddyyyy(user.created_at)
   %td
-    = time_ago_in_words(user.current_sign_in_at)
+    = time_ago_in_words(user.current_sign_in_at || user.created_at)
   %td
     = link_to 'Edit', edit_user_path(user)
