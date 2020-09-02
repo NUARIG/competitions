@@ -4,6 +4,10 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Users', type: :system, js: true  do
+
+  SAMLUSER_TEXT = 'SAML User'
+  REGISTEREDUSER_TEXT = 'Registered User'
+
   describe '#index' do
     before(:each) do
       @saml_user1               = create(:saml_user, last_name: 'BBBB',
@@ -26,7 +30,6 @@ RSpec.describe 'Users', type: :system, js: true  do
       @registered_system_admin  = create(:system_admin_registered_user, last_name: 'TTTT',
                                           created_at: 1.year.ago,
                                           current_sign_in_at: 1.year.ago)
-
     end
 
     context 'Sorts' do
@@ -38,54 +41,68 @@ RSpec.describe 'Users', type: :system, js: true  do
         @saml_system_admin.save!
       end
 
-      scenario 'default sort by current_sign_in_at' do
-        visit users_path
-        within 'tr.user:nth-child(1)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
+      context 'current_sign_in_at' do
+        before(:each) do
+          @unconfirmed_registered_user  = create(:registered_user, last_name: 'VVV',
+                                                                   created_at: 5.minutes.ago,
+                                                                   current_sign_in_at: nil)
         end
-        within 'tr.user:nth-child(2)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
-        end
-        within 'tr.user:nth-child(3)' do
-          expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
-        end
-        within 'tr.user:nth-child(4)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
-        end
-        within 'tr.user:nth-child(5)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
-        end
-        within 'tr.user:nth-child(6)' do
-          expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
-        end
-        within 'tr.user:nth-child(7)' do
-          expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
-        end
-      end
 
-      scenario 'reverse sort by current_sign_in_at' do
-        visit users_path
-        click_on('Last Access')
-        within 'tr.user:nth-child(7)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
+        scenario 'default sort by current_sign_in_at, unconfirmed last' do
+          visit users_path
+          within 'tr.user:nth-child(1)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
+          end
+          within 'tr.user:nth-child(2)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
+          end
+          within 'tr.user:nth-child(3)' do
+            expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
+          end
+          within 'tr.user:nth-child(4)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
+          end
+          within 'tr.user:nth-child(5)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
+          end
+          within 'tr.user:nth-child(6)' do
+            expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
+          end
+          within 'tr.user:nth-child(7)' do
+            expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
+          end
+          within 'tr.user:nth-child(8)' do
+            expect(page).to have_text "#{sortable_full_name(@unconfirmed_registered_user)} #{@unconfirmed_registered_user.email}"
+          end
         end
-        within 'tr.user:nth-child(6)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
-        end
-        within 'tr.user:nth-child(5)' do
-          expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
-        end
-        within 'tr.user:nth-child(4)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
-        end
-        within 'tr.user:nth-child(3)' do
-          expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
-        end
-        within 'tr.user:nth-child(2)' do
-          expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
-        end
-        within 'tr.user:nth-child(1)' do
-          expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
+
+        scenario 'reverse sort by current_sign_in_at, unconfirmed last' do
+          visit users_path
+          click_on(I18n.t('activerecord.attributes.user.current_sign_in_at'))
+          within 'tr.user:nth-child(8)' do
+            expect(page).to have_text "#{sortable_full_name(@unconfirmed_registered_user)} #{@unconfirmed_registered_user.email}"
+          end
+          within 'tr.user:nth-child(7)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_user1)} #{@saml_user1.email}"
+          end
+          within 'tr.user:nth-child(6)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
+          end
+          within 'tr.user:nth-child(5)' do
+            expect(page).to have_text "#{sortable_full_name(@registered_user)} #{@registered_user.email}"
+          end
+          within 'tr.user:nth-child(4)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_grant_creator)} #{@saml_grant_creator.email}"
+          end
+          within 'tr.user:nth-child(3)' do
+            expect(page).to have_text "#{sortable_full_name(@saml_system_admin)} #{@saml_system_admin.email}"
+          end
+          within 'tr.user:nth-child(2)' do
+            expect(page).to have_text "#{sortable_full_name(@registered_grant_creator)} #{@registered_grant_creator.email}"
+          end
+          within 'tr.user:nth-child(1)' do
+            expect(page).to have_text "#{sortable_full_name(@registered_system_admin)} #{@registered_system_admin.email}"
+          end
         end
       end
 
@@ -146,55 +163,71 @@ RSpec.describe 'Users', type: :system, js: true  do
         end
       end
 
-
-      scenario 'sort by type' do
-        visit users_path
-        click_on('Type')
-        within 'tr.user:nth-child(1)' do
-          expect(page).to have_text 'RegisteredUser'
-        end
-        within 'tr.user:nth-child(2)' do
-          expect(page).to have_text 'RegisteredUser'
-        end
-        within 'tr.user:nth-child(3)' do
-          expect(page).to have_text 'RegisteredUser'
+      context 'user type' do
+        before(:each) do
+          @unconfirmed_registered_user = create(:registered_user, last_name: 'VVV',
+                                                                  created_at: 5.minutes.ago,
+                                                                  current_sign_in_at: nil)
         end
 
-        within 'tr.user:nth-child(4)' do
-          expect(page).to have_text 'SamlUser'
-        end
-        within 'tr.user:nth-child(5)' do
-          expect(page).to have_text 'SamlUser'
-        end
-        within 'tr.user:nth-child(6)' do
-          expect(page).to have_text 'SamlUser'
-        end
-        within 'tr.user:nth-child(7)' do
-          expect(page).to have_text 'SamlUser'
-        end
+        scenario 'sort by type' do
+          visit users_path
+          click_on(I18n.t('activerecord.attributes.user.type'))
 
-        click_on('Type')
-        within 'tr.user:nth-child(1)' do
-          expect(page).to have_text 'SamlUser'
-        end
-        within 'tr.user:nth-child(2)' do
-          expect(page).to have_text 'SamlUser'
-        end
-        within 'tr.user:nth-child(3)' do
-          expect(page).to have_text 'SamlUser'
-        end
-        within 'tr.user:nth-child(4)' do
-          expect(page).to have_text 'SamlUser'
-        end
+          within 'tr.user:nth-child(1)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+          end
+          within 'tr.user:nth-child(2)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+          end
+          within 'tr.user:nth-child(3)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+          end
 
-        within 'tr.user:nth-child(5)' do
-          expect(page).to have_text 'RegisteredUser'
-        end
-        within 'tr.user:nth-child(6)' do
-          expect(page).to have_text 'RegisteredUser'
-        end
-        within 'tr.user:nth-child(7)' do
-          expect(page).to have_text 'RegisteredUser'
+          within 'tr.user:nth-child(4)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+            expect(page).to have_text "#{sortable_full_name(@unconfirmed_registered_user)}"
+          end
+          within 'tr.user:nth-child(5)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+          within 'tr.user:nth-child(6)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+          within 'tr.user:nth-child(7)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+          within 'tr.user:nth-child(8)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+
+          click_on(I18n.t('activerecord.attributes.user.type'))
+          within 'tr.user:nth-child(1)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+          within 'tr.user:nth-child(2)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+          within 'tr.user:nth-child(3)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+          within 'tr.user:nth-child(4)' do
+            expect(page).to have_text SAMLUSER_TEXT
+          end
+
+          within 'tr.user:nth-child(5)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+          end
+          within 'tr.user:nth-child(6)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+          end
+          within 'tr.user:nth-child(7)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+          end
+          within 'tr.user:nth-child(8)' do
+            expect(page).to have_text REGISTEREDUSER_TEXT
+            expect(page).to have_text "#{sortable_full_name(@unconfirmed_registered_user)}"
+          end
         end
       end
     end
