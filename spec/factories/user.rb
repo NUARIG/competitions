@@ -12,14 +12,14 @@ FactoryBot.define do
     type                        { 'SamlUser' }
 
     trait :saml do
-      type                        { 'SamlUser' }
-      session_index               { Faker::Lorem.characters }
+      type                      { 'SamlUser' }
+      session_index             { Faker::Lorem.characters }
     end
 
     trait :registered do
-      confirmed_at                { Time.now }
-      type                        { 'RegisteredUser' }
-      password                    { 'password' }
+      confirmed_at              { Time.now }
+      type                      { 'RegisteredUser' }
+      password                  { 'password' }
     end
 
     trait :system_admin do
