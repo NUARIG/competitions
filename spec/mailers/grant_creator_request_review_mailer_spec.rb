@@ -16,7 +16,7 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
     end
 
     it 'includes a link to the grants page' do
-      expect(mailer.body).to have_link 'http://localhost:3000/profile/grants', href: profile_grants_url
+      expect(mailer.body).to have_link profile_grants_url.to_s, href: profile_grants_url
     end
 
     it 'includes a link to the application root url' do
