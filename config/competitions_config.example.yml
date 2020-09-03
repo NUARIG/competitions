@@ -13,7 +13,7 @@ development:
     - blocked_email.edu
     # - <YOUR_INSTITUTIONAL_DOMAIN>
   mailer:
-    mailer_address: # <APP_EMAIL_ADDRESS>
+    email: # <APP_EMAIL_ADDRESS>
     delivery_method: smtp # e.g. smtp
     raise_delivery_errors: false # Default is false. If true, configure the external email server for immediate delivery.
     perform_deliveries: true # Default is true. Determines whether deliveries are carried out when the deliver method is invoked on the Mail message.
@@ -67,7 +67,7 @@ test:
     - blocked_email.edu
     # - <YOUR_INSTITUTIONAL_DOMAIN>
   mailer:
-    mailer_address: # <APP_EMAIL_ADDRESS>
+    email: # <APP_EMAIL_ADDRESS>
     delivery_method: test
     raise_delivery_errors:
     perform_deliveries:
