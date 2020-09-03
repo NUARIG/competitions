@@ -42,7 +42,12 @@ class User < ApplicationRecord
 
   validates_uniqueness_of :era_commons, unless: -> { era_commons.blank? }
 
-  scope :order_by_last_name,    -> { order(last_name: :asc) }
+  scope :order_by_last_name,                          -> { order(last_name: :asc) }
+  scope :sort_by_type_nulls_last_asc,                 -> { order(Arel.sql('type ASC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END')) }
+  scope :sort_by_type_nulls_last_desc,                -> { order(Arel.sql('type DESC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END')) }
+  scope :sort_by_current_sign_in_at_nulls_last_asc,   -> { order('current_sign_in_at ASC NULLS LAST') }
+  scope :sort_by_current_sign_in_at_nulls_last_desc,  -> { order('current_sign_in_at DESC NULLS LAST') }
+
 
   def saml_user?
     self.type === 'SamlUser'

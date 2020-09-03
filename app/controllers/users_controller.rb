@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   def index
     authorize User, :index?
     @q = User.all.ransack(params[:q])
-    @q.sorts = 'current_sign_in_at desc' if @q.sorts.empty?
+    @q.sorts = 'current_sign_in_at_nulls_last desc' if @q.sorts.empty?
     @pagy, @users = pagy(@q.result, i18n_key: 'activerecord.models.user')
   end
 

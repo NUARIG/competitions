@@ -6,8 +6,10 @@ en:
         last_name: Last Name
         email: Email
         uid: Unique ID
-        era_commons: 'eRA Commons'
-        user_type: User Type
+        era_commons: eRA Commons
+        type: User Type
+        created_at: Date Joined
+        current_sign_in_at: Last Access
     errors:
       models:
         user:
