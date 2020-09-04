@@ -10,8 +10,14 @@ development:
     port: 3000 # e.g. '', 3000, etc.
   saml_domains:
     - localhost
-    - blocked_email.edu
     # - <YOUR_INSTITUTIONAL_DOMAIN>
+  restricted_domains:
+    - '.xyz'
+    - '.top'
+    - '.website'
+    - '.space'
+    - '.online'
+    # - <ANY OTHER EXTENSIONS YOU WOULD LIKE TO INCLUDE>
   mailer:
     email: # <APP_EMAIL_ADDRESS>
     delivery_method: smtp # e.g. smtp
@@ -66,6 +72,13 @@ test:
     - localhost
     - blocked_email.edu
     # - <YOUR_INSTITUTIONAL_DOMAIN>
+  restricted_domains:
+    - '.xyz'
+    - '.top'
+    - '.website'
+    - '.space'
+    - '.online'
+    # - <ANY OTHER EXTENSIONS YOU WOULD LIKE TO INCLUDE>
   mailer:
     email: # <APP_EMAIL_ADDRESS>
     delivery_method: test
