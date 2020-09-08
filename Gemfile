@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '~> 5.2.4'
+gem 'rails', '~> 6.0.3.2'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -82,7 +82,7 @@ group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet'
+  # gem 'bullet'
   gem 'i18n-debug'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rubocop'
