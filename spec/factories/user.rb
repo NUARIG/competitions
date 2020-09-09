@@ -26,6 +26,7 @@ FactoryBot.define do
       type                      { 'RegisteredUser' }
       password                  { Faker::Lorem.characters(number: rand(Devise.password_length)) }
       confirmed_at              { nil }
+      confirmation_token        { Faker::Lorem.characters(number: rand(10...15)) }
       current_sign_in_at        { nil }
     end
 
