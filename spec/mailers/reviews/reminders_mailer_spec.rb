@@ -24,7 +24,7 @@ RSpec.describe ReminderMailer, type: :mailer do
       end
 
       it 'addresses the reviewer by their full name' do
-        expect(mailer.body.encoded).to include "Dear #{reviewer.first_name} #{CGI.escapeHTML(reviewer.last_name)}"
+        expect(mailer.body.encoded).to include "Dear #{reviewer.first_name} #{reviewer.last_name}"
       end
 
       it 'includes a link to the grant' do

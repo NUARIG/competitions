@@ -8,7 +8,6 @@
   = link_to 'return to the log in page', login_index_path
   = '.'
 = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-  = render "devise/shared/error_messages", resource: resource
   #login_fields
     %div
       = f.label :first_name

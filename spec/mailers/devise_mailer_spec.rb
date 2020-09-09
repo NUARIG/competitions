@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Devise::Mailer, type: :mailer do
   describe 'devise mailers' do
     describe 'confirmation instructions' do
-      let(:user) { create(:registered_user, email: 'unconfirmed@test.com', confirmed_at: nil, confirmation_token: '1234567890') }
+      let(:user) { create(:unconfirmed_user) }
       let(:mail) { Devise::Mailer.confirmation_instructions(user, user.confirmation_token) }
 
       it 'renders the password reset instructions email' do
