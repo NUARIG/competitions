@@ -73,18 +73,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
     end
   end
 
-  describe 'sign up new user' do
-    scenario 'sign up new user with devise interface' do
-      visit new_registered_user_registration_path
-      find_field('First Name').set('FirstName')
-      find_field('Last Name').set('LastName')
-      find_field('Email').set('email@example.com')
-      find_field('Password').set('password')
-      find_field('Password confirmation').set('password')
-      click_button 'Sign up'
-      expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
-    end
-
+  describe 'sign in registered user' do
     scenario 'user sign in' do
       @user3 = create(:registered_user, email: 'user3@example.com', password: 'password')
       visit new_registered_user_session_path
