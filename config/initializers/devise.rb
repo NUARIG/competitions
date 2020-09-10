@@ -168,7 +168,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  # config.password_length = 6..128
+  config.password_length = COMPETITIONS_CONFIG[:devise][:registerable][:password][:min_length]..COMPETITIONS_CONFIG[:devise][:registerable][:password][:max_length]
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
@@ -178,7 +178,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 4.hours
+  config.timeout_in = COMPETITIONS_CONFIG[:devise][:session][:timeout_in_hours].hours
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
@@ -298,7 +298,7 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
-  config.saml_sign_out_success_url = COMPETITIONS_CONFIG[:saml][:sign_out_url]
+  config.saml_sign_out_success_url = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:sign_out_url]
 
   # ==> Configuration for :saml_authenticatable
   # Create user if the user does not exist. (Default is false)
@@ -309,7 +309,7 @@ Devise.setup do |config|
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = COMPETITIONS_CONFIG[:saml][:saml_default_user_key].to_sym
+  config.saml_default_user_key = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:default_user_key].to_sym
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
@@ -348,14 +348,14 @@ Devise.setup do |config|
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
     # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
-    settings.assertion_consumer_service_url     = COMPETITIONS_CONFIG[:saml][:assertion_consumer_service_url]
-    settings.assertion_consumer_service_binding = COMPETITIONS_CONFIG[:saml][:assertion_consumer_service_binding]
-    settings.name_identifier_format             = COMPETITIONS_CONFIG[:saml][:name_identifier_format]
-    settings.issuer                             = COMPETITIONS_CONFIG[:saml][:issuer]
-    settings.authn_context                      = COMPETITIONS_CONFIG[:saml][:authn_context]
-    settings.idp_slo_target_url                 = COMPETITIONS_CONFIG[:saml][:idp_slo_target_url]
-    settings.idp_sso_target_url                 = COMPETITIONS_CONFIG[:saml][:idp_sso_target_url]
+    settings.assertion_consumer_service_url     = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:assertion_consumer_service_url]
+    settings.assertion_consumer_service_binding = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:assertion_consumer_service_binding]
+    settings.name_identifier_format             = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:name_identifier_format]
+    settings.issuer                             = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:issuer]
+    settings.authn_context                      = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:authn_context]
+    settings.idp_slo_target_url                 = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_slo_target_url]
+    settings.idp_sso_target_url                 = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_sso_target_url]
     settings.idp_cert                           = Rails.application.secrets[:idp_cert]
-    settings.security                           = COMPETITIONS_CONFIG[:saml][:idp_security]
+    settings.security                           = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_security]
   end
 end
