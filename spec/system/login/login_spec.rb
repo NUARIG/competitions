@@ -24,7 +24,7 @@ RSpec.describe 'Login', type: :system do
     end
 
     scenario 'login page has SAML ID login button' do
-      expect(page).to have_selector(:link_or_button, "#{COMPETITIONS_CONFIG[:saml][:idp_entity_name]} ID")
+      expect(page).to have_selector(:link_or_button, "#{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}")
     end
 
     scenario 'login page has Registered Account login button' do
