@@ -23,6 +23,20 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe 'title_tag_content' do
+    before(:each) do
+      stub_const("COMPETITIONS_CONFIG", { application_name: 'TEST' })
+    end
+
+    it 'returns just application_name when not passed page_title' do
+      expect(title_tag_content).to eql 'TEST'
+    end
+
+    it 'returns provided page_title with application_name' do
+      expect(title_tag_content(page_title: 'Page Name')).to eql 'Page Name | TEST'
+    end
+  end
+
   describe 'full_root_url' do
     it 'constructs a full root url when given all segments' do
       stub_const("COMPETITIONS_CONFIG", { subdomain: 'subdomain',
