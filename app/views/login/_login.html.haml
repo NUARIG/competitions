@@ -1,4 +1,4 @@
 %h3
   = "Login using:"
-= link_to "#{COMPETITIONS_CONFIG[:saml][:idp_entity_name]} ID",  new_saml_user_session_path, class: 'button'
+= link_to "#{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}",  new_saml_user_session_path, class: 'button'
 = link_to 'Registered Account',  new_registered_user_session_url, class: 'button'
