@@ -3,10 +3,8 @@
 development:
   application_name: 'Competitions' # or replace with <YOUR_APPLICATION_NAME>
   contact_email: # <APP_EMAIL_ADDRESS>
-  app_domain: 'localhost' # e.g. 'localhost', 'example.edu', etc.
-  subdomain: '' # e.g. '', 'competitions', etc.
   default_url_options:
-    host: 'localhost' # e.g. localhost, https://competitions_example.com, etc.
+    host: 'localhost' # e.g. localhost, competitions.example.edu, example.edu, etc.
     port: 3000 # e.g. '', 3000, etc.
   devise:
     session:
@@ -68,8 +66,6 @@ development:
 test:
   application_name: 'Competitions' # or replace with <YOUR_APPLICATION_NAME>
   contact_email: # <APP_EMAIL_ADDRESS>
-  app_domain:  'localhost'
-  subdomain: ''
   default_url_options:
     host: 'localhost'
     port: 3000
