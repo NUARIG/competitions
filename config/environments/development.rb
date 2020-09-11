@@ -32,11 +32,6 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-
-  config.action_mailer.perform_caching = false
-
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -65,21 +60,17 @@ Rails.application.configure do
   config.time_zone = 'Central Time (US & Canada)'
   config.active_record.default_timezone = :local
 
+  config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:raise_delivery_errors]
 
   # Mailcatcher - download at https://mailcatcher.me/
-  config.subdomain = COMPETITIONS_CONFIG[:subdomain]
-  config.app_domain = COMPETITIONS_CONFIG[:app_domain]
   config.action_mailer.default_url_options = { host: COMPETITIONS_CONFIG[:default_url_options][:host],
-                                               port: COMPETITIONS_CONFIG[:default_url_options][:port]
-                                             }
+                                               port: COMPETITIONS_CONFIG[:default_url_options][:port] }
   config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
   config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
-
-  # config.action_mailer.default_url_options = { host: config.app_domain, port: 3000 }
 
   # Bullet
   config.after_initialize do
