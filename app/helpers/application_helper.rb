@@ -3,15 +3,6 @@
 module ApplicationHelper
   include Pagy::Frontend
 
-  # VIEW HELPERS
-  def full_root_url
-    subdomain = "#{COMPETITIONS_CONFIG[:subdomain]}." unless COMPETITIONS_CONFIG[:subdomain].blank?
-    domain    = COMPETITIONS_CONFIG[:app_domain]
-    port      = ":#{COMPETITIONS_CONFIG[:default_url_options][:port]}" unless COMPETITIONS_CONFIG[:default_url_options][:port].to_s.empty?
-
-    "https://#{subdomain}#{domain}#{port}/"
-  end
-
   # CALLOUTS
   def foundation_alert_class_for(flash_type)
     flash_type.to_s == 'notice' ? 'success' : flash_type
@@ -37,7 +28,7 @@ module ApplicationHelper
 
   # Returns the full title on a per-page basis.
   def title_tag_content(page_title: '')
-    base_title = 'Competitions'
+    base_title = COMPETITIONS_CONFIG[:application_name]
     page_title.empty? ? base_title : "#{page_title} | #{base_title}"
   end
 
@@ -78,16 +69,6 @@ module ApplicationHelper
     # TODO: Update/Create Policy for admins, etc.
     #       Using multiple arguments with Pundit
     @user # && !Pundit.policy(current_user, @user).update?
-  end
-
-  def sortable_header(column, title = nil)
-    column = column.to_s
-    title ||= column.titleize
-    is_sorting_column = (column == sort_column)
-    direction = is_sorting_column && sort_direction == 'asc' ? 'desc' : 'asc'
-    url = url_for params.to_unsafe_hash.merge({:sort_column => column, :sort_direction => direction})
-    content_tag(:th, title, class: is_sorting_column ? "sorting_#{sort_direction}" : 'sorting',
-                onClick: "document.location.href='#{url}';".html_safe)
   end
 
   def form_table_row(f, attr, &field)

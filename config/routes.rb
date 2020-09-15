@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :registered_users
-  devise_for :saml_users, controllers: { saml_sessions: 'saml_sessions' }
+  devise_for :registered_users, controllers: {
+                                  confirmations:  'registered_users/confirmations',
+                                  passwords:      'registered_users/passwords',
+                                  registrations:  'registered_users/registrations'
+                                }
+  devise_for :saml_users, path: 'users',
+                          controllers: { saml_sessions: 'saml_sessions' }
 
   resources :users,               only: %i[index edit update]
 
