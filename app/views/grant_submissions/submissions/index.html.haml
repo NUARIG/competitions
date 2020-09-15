@@ -41,23 +41,23 @@
               Scores
         %tr
           %th
-            = sort_link(@q, :applicant_last_name, 'Applicant')
+            = sort_link(@q, :applicant_last_name, 'Applicant',{}, {title: 'Sort on Applicant'})
           %th
-            = sort_link(@q, :title, 'Title')
+            = sort_link(@q, :title, 'Title',{}, {title: 'Sort on Title'})
           %th
-            = sort_link(@q, :state, 'State')
+            = sort_link(@q, :state, 'State',{}, {title: 'Sort on State'})
           %th
-            = sort_link(@q, :user_updated_at, 'Updated')
+            = sort_link(@q, :user_updated_at, 'Updated',{}, {title: 'Sort on Updated'})
           - if current_user.get_role_by_grant(grant: @grant)
             %th
               Reviews
             %th
 
               %span{ title: 'Average of scored reviews - scored first' }
-                = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact')
+                = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact',{}, {title: 'Sort on Overal Impact Score'})
             %th
               %span{ title: 'Average of scored Criteria - scored first' }
-                = sort_link(@q, :composite_score_nulls_last, 'Composite')
+                = sort_link(@q, :composite_score_nulls_last, 'Composite',{}, {title: 'Sort on Composite Score'})
 
       %tbody
         - @submissions.each do |submission|
@@ -80,7 +80,7 @@
                     = link_to 'Switch to Draft', unsubmit_grant_submission_path(@grant, submission), method: :patch, title: 'Allow for editing'
                 - if current_user.get_role_by_grant(grant: @grant) == 'admin' && !@grant.published?
                   %div.delete
-                    = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'Are you sure?'}, class: 'small', confirm: 'Are you sure?'
+                    = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'This will delete the submission and its assigned reviews. Are you sure?'}, class: 'small'
             %td
               = date_time_separate_lines(submission.user_updated_at)
             - if current_user.get_role_by_grant(grant: @grant)

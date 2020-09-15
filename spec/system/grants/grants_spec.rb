@@ -14,7 +14,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       @draft_grant            = create(:draft_grant)
       draft_grant_permission  = create(:admin_grant_permission, user: @admin_user, grant: @draft_grant)
 
-      login_as(@admin_user)
+      login_as(@admin_user, scope: :saml_user)
       visit grants_path
     end
 
@@ -39,7 +39,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         @grant          = create(:grant_with_users)
         @admin_user     = @grant.grant_permissions.role_admin.first.user
 
-        login_as(@admin_user)
+        login_as(@admin_user, scope: :saml_user)
         visit edit_grant_path(@grant)
       end
 
@@ -74,7 +74,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         @grant          = create(:grant_with_users)
         @editor_user     = @grant.grant_permissions.role_editor.first.user
 
-        login_as(@editor_user)
+        login_as(@editor_user, scope: :saml_user)
         visit edit_grant_path(@grant)
       end
 
@@ -109,7 +109,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         @grant          = create(:grant_with_users)
         @viewer_user     = @grant.grant_permissions.role_viewer.first.user
 
-        login_as(@viewer_user)
+        login_as(@viewer_user, scope: :saml_user)
         visit edit_grant_path(@grant)
       end
 
@@ -135,8 +135,8 @@ RSpec.describe 'Grants', type: :system, js: true do
   describe 'New' do
     before(:each) do
       @grant        = build(:new_grant)
-      @user         = create(:user, system_admin: true)
-      login_as(@user)
+      @user         = create(:saml_user, system_admin: true)
+      login_as(@user, scope: :saml_user)
 
       visit new_grant_path
 
@@ -181,7 +181,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     let(:admin_user) { grant.grant_permissions.role_admin.first.user }
 
     before(:each) do
-      login_as admin_user
+      login_as(admin_user, scope: :saml_user)
     end
 
     scenario 'published grant with submissions cannot be discarded' do
@@ -222,12 +222,12 @@ RSpec.describe 'Grants', type: :system, js: true do
   describe 'Policy' do
     before(:each) do
       @grant          = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-      @invalid_user   = create(:user)
+      @invalid_user   = create(:saml_user)
       @grant_viewer   = @grant.grant_permissions.role_viewer.first.user
       @grant_editor   = @grant.grant_permissions.role_editor.first.user
       @grant_admin    = @grant.grant_permissions.role_admin.first.user
       @grant_reviewer = @grant.reviewers.first
-      @system_admin = create(:system_admin_user)
+      @system_admin = create(:system_admin_saml_user)
 
       @grant_permission   = @grant.grant_permissions.role_editor.first
     end
@@ -262,7 +262,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'system admin' do
       before(:each) do
-        login_as @system_admin
+        login_as(@system_admin, scope: :saml_user)
       end
 
       scenario 'can access edit pages' do
@@ -287,7 +287,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'invalid user' do
       before(:each) do
-        login_as @invalid_user
+        login_as(@invalid_user, scope: :saml_user)
       end
 
       scenario 'user without access cannot access edit pages' do
@@ -306,7 +306,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant editor' do
       before(:each) do
-        login_as @grant_editor
+        login_as(@grant_editor, scope: :saml_user)
       end
 
       scenario 'can access show page' do
@@ -333,7 +333,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     context 'grant editor who is also grant_creator' do
       before(:each) do
         @grant_editor.update_attribute(:grant_creator, true)
-        login_as @grant_editor
+        login_as(@grant_editor, scope: :saml_user)
       end
 
       scenario 'can duplicate a grant' do
@@ -344,7 +344,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant viewer' do
       before(:each) do
-        login_as @grant_viewer
+        login_as(@grant_viewer, scope: :saml_user)
       end
 
       scenario 'can access show page' do
@@ -375,7 +375,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant reviewer' do
       before(:each) do
-        login_as @grant_reviewer
+        login_as(@grant_reviewer, scope: :saml_user)
       end
 
       scenario 'can view grant in draft mode' do

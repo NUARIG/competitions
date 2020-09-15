@@ -18,7 +18,8 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  # Set this email value in config/competitions_config.yml
+  config.mailer_sender = COMPETITIONS_CONFIG[:mailer][:email]
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -41,7 +42,7 @@ Devise.setup do |config|
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
   # config.authentication_keys = [:email]
-  config.authentication_keys = [:upn]
+  config.authentication_keys = [:uid]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -53,12 +54,12 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
-  config.case_insensitive_keys = [:email, :upn]
+  config.case_insensitive_keys = [:email, :uid]
 
   # Configure which authentication keys should have whitespace stripped.
   # These keys will have whitespace before and after removed upon creating or
   # modifying a user and when used to authenticate or find a user. Default is :email.
-  config.strip_whitespace_keys = [:email, :upn]
+  config.strip_whitespace_keys = [:email, :uid]
 
   # Tell if authentication through request.params is enabled. True by default.
   # It can be set to an array that will enable params authentication only for the
@@ -167,7 +168,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  # config.password_length = 6..128
+  config.password_length = COMPETITIONS_CONFIG[:devise][:registerable][:password][:min_length]..COMPETITIONS_CONFIG[:devise][:registerable][:password][:max_length]
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
@@ -177,7 +178,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 4.hours
+  config.timeout_in = COMPETITIONS_CONFIG[:devise][:session][:timeout_in_hours].hours
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
@@ -297,8 +298,7 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
-
-  config.saml_sign_out_success_url = Rails.application.credentials.dig(Rails.env.to_sym, :sign_out_url)
+  config.saml_sign_out_success_url = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:sign_out_url]
 
   # ==> Configuration for :saml_authenticatable
   # Create user if the user does not exist. (Default is false)
@@ -309,7 +309,7 @@ Devise.setup do |config|
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = :email
+  config.saml_default_user_key = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:default_user_key].to_sym
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
@@ -326,6 +326,9 @@ Devise.setup do |config|
   # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
   # by setting this to a custom reader class, or use the default.
   config.idp_entity_id_reader = DeviseSamlAuthenticatable::CompetitionsIdpEntityIdReader
+
+  # https://github.com/apokalipto/devise_saml_authenticatable#attribute-map-initializer
+  config.saml_attribute_map_resolver = DeviseSamlAuthenticatable::CompetitionsAttributeMapResolver
 
   # You can set a handler object that takes the response for a failed SAML request and the strategy,
   # and implements a #handle method. This method can then redirect the user, return error messages, etc.
@@ -345,13 +348,14 @@ Devise.setup do |config|
   # Configure with your SAML settings (see ruby-saml's README for more information: https://github.com/onelogin/ruby-saml).
   config.saml_configure do |settings|
     # assertion_consumer_service_url is required starting with ruby-saml 1.4.3: https://github.com/onelogin/ruby-saml#updating-from-142-to-143
-    settings.assertion_consumer_service_url     = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_url)
-    settings.assertion_consumer_service_binding = Rails.application.credentials.dig(Rails.env.to_sym, :una_assertion_consumer_service_binding)
-    settings.name_identifier_format             = Rails.application.credentials.dig(Rails.env.to_sym, :una_name_identifier_format)
-    settings.issuer                             = Rails.application.credentials.dig(Rails.env.to_sym, :una_issuer)
-    settings.authn_context                      = Rails.application.credentials.dig(Rails.env.to_sym, :una_authn_context)
-    settings.idp_slo_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_slo_target_url)
-    settings.idp_sso_target_url                 = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_sso_target_url)
-    settings.idp_cert                           = Rails.application.credentials.dig(Rails.env.to_sym, :una_idp_cert)
+    settings.assertion_consumer_service_url     = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:assertion_consumer_service_url]
+    settings.assertion_consumer_service_binding = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:assertion_consumer_service_binding]
+    settings.name_identifier_format             = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:name_identifier_format]
+    settings.issuer                             = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:issuer]
+    settings.authn_context                      = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:authn_context]
+    settings.idp_slo_target_url                 = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_slo_target_url]
+    settings.idp_sso_target_url                 = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_sso_target_url]
+    settings.idp_cert                           = Rails.application.secrets[:idp_cert]
+    settings.security                           = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_security]
   end
 end

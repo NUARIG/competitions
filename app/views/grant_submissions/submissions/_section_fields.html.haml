@@ -14,6 +14,10 @@
 
             = ff.label(ffn, simple_format(ff.object.question.text), class: "required-#{is_mandatory}")
 
+            - unless ff.object.question.instruction.blank?
+              .instructions
+                = ff.object.question.instruction
+
             = render partial: "grant_submissions/submissions/responses/#{ff.object.question.response_type}_response", locals: { f: f, ff: ff, ffn: ffn }
           - else
             = ff.object.formatted_response_value

@@ -12,12 +12,12 @@
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           .score_value
-            = f.radio_button('overall_impact_score', value, { id: "overall-#{value}", required: true } )
-            = f.label "#{value}", { class: 'button', for: "overall-#{value}" }
+            = f.radio_button('overall_impact_score', value, { id: "overall-#{value}", required: true, disabled: disabled } )
+            = f.label "#{value}", { class: 'button', for: "overall-#{value}", disabled: disabled }
         %label.scoring-guidance
           Poor
   #overall_comment.comment.grid-x
     .cell.small-12.medium-3
-      = f.label :overall_impact_comment
+      = f.label :overall_impact_comment, disabled: disabled
     .cell.small-12.medium-9
-      = f.text_area :overall_impact_comment
+      = f.text_area :overall_impact_comment, disabled: disabled

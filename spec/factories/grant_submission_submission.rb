@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :grant_submission_submission, class: 'GrantSubmission::Submission' do
     association     :grant, factory: :grant
     association     :form,  factory: :grant_submission_form
-    association     :applicant, factory: :user
+    association     :applicant, factory: :saml_user
     title           { Faker::Lorem.sentence }
     state           { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
     user_updated_at { Time.now }

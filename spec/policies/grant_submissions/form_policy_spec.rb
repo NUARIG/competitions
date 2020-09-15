@@ -40,7 +40,7 @@ describe GrantSubmission::FormPolicy, type: :policy do
 
   context 'with user not having a role on the grant' do
     context 'system_admin user' do
-      let(:user) { create(:system_admin_user) }
+      let(:user) { create(:system_admin_saml_user) }
 
       it { is_expected.to permit_action(:update) }
       it { is_expected.to permit_action(:edit) }
@@ -50,7 +50,7 @@ describe GrantSubmission::FormPolicy, type: :policy do
     end
 
     context 'user' do
-      let(:user) { create(:user) }
+      let(:user) { create(:saml_user) }
 
       it { is_expected.not_to permit_action(:update) }
       it { is_expected.not_to permit_action(:edit) }

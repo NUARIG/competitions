@@ -5,11 +5,30 @@ FactoryBot.define do
     first_name                  { Faker::Name.first_name }
     last_name                   { Faker::Name.last_name }
     sequence(:email)            { |n| Faker::Internet.email(name: "user#{n}")  }
-    upn                         { email }
+    uid                         { email }
     system_admin                { false }
     grant_creator               { false }
-    session_index               { Faker::Lorem.characters }
     current_sign_in_at          { Time.now }
+    type                        { 'SamlUser' }
+
+    trait :saml do
+      type                      { 'SamlUser' }
+      session_index             { Faker::Lorem.characters }
+    end
+
+    trait :registered do
+      confirmed_at              { Time.now }
+      type                      { 'RegisteredUser' }
+      password                  { Faker::Lorem.characters(number: rand(Devise.password_length)) }
+    end
+
+    trait :unconfirmed do
+      type                      { 'RegisteredUser' }
+      password                  { Faker::Lorem.characters(number: rand(Devise.password_length)) }
+      confirmed_at              { nil }
+      confirmation_token        { Faker::Lorem.characters(number: rand(10...15)) }
+      current_sign_in_at        { nil }
+    end
 
     trait :system_admin do
       system_admin { true }
@@ -19,7 +38,12 @@ FactoryBot.define do
       grant_creator { true }
     end
 
-    factory :system_admin_user,  traits: %i[system_admin]
-    factory :grant_creator_user, traits: %i[grant_creator]
+    factory :saml_user, parent: :user, class: 'SamlUser', traits: %i[saml]
+    factory :registered_user, parent: :user, class: 'RegisteredUser', traits: %i[registered]
+    factory :unconfirmed_user, parent: :user, class: 'RegisteredUser', traits: %i[unconfirmed]
+    factory :system_admin_saml_user, parent: :user, class: 'SamlUser', traits: %i[saml system_admin]
+    factory :grant_creator_saml_user, parent: :user, class: 'SamlUser', traits: %i[saml grant_creator]
+    factory :system_admin_registered_user, parent: :user, class: 'RegisteredUser',  traits: %i[registered system_admin]
+    factory :grant_creator_registered_user, parent: :user, class: 'RegisteredUser', traits: %i[registered grant_creator]
   end
 end

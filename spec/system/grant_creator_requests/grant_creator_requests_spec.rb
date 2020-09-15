@@ -2,11 +2,11 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
-  let(:system_admin)     { create(:system_admin_user) }
+  let(:system_admin)     { create(:system_admin_saml_user) }
   let(:open_request)     { create(:grant_creator_request) }
   let(:approved_request) { create(:reviewed_approved_grant_creator_request) }
   let(:rejected_request) { create(:reviewed_rejected_grant_creator_request) }
-  let(:user)             { create(:user) }
+  let(:user)             { create(:saml_user) }
 
   describe '#index' do
     it 'only includes the open requests' do
@@ -22,13 +22,13 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
   describe '#create' do
     before(:each) do
-      login_as user
+      login_as(user, scope: :saml_user)
       visit new_grant_creator_request_path
     end
 
     context 'success' do
       it 'accepts a valid request' do
-        page.fill_in 'How Do You Plan to Use Competitions?', with: Faker::Lorem.sentence
+        page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: Faker::Lorem.sentence
         click_button 'Request Grant Creation Access'
         expect(page).to have_content 'Your request has been sent. You will be notified after review.'
         expect(current_path).to eq(profile_path)
@@ -47,13 +47,13 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
   describe '#update' do
     before(:each) do
-      login_as open_request.requester
+      login_as(open_request.requester, scope: :saml_user)
       visit grant_creator_request_path(open_request)
     end
 
     context 'success' do
       it 'accepts a valid request' do
-        page.fill_in 'How Do You Plan to Use Competitions?', with: "Updated #{Faker::Lorem.sentence}"
+        page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: "Updated #{Faker::Lorem.sentence}"
         click_button 'Re-submit This Grant Creation Access Request'
         expect(page).to have_content 'Your request has been updated. You will be notified after review.'
         expect(current_path).to eq(profile_path)
@@ -62,7 +62,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
     context 'failure' do
       it 'rejects an incomplete request' do
-        page.fill_in 'How Do You Plan to Use Competitions?', with: ''
+        page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: ''
         click_button 'Re-submit This Grant Creation Access Request'
         expect(page).to have_content 'Comment is required'
       end

@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe 'review requests', type: :request do
 
   let(:grant_creator_request) { create(:grant_creator_request) }
-  let(:grant_creator)         { create(:grant_creator_user) }
-  let(:system_admin_user)     { create(:system_admin_user) }
-  let(:another_user)          { create(:user) }
+  let(:grant_creator)         { create(:grant_creator_saml_user) }
+  let(:system_admin_user)     { create(:system_admin_saml_user) }
+  let(:another_user)          { create(:saml_user) }
 
   context '#index' do
     context 'system_admin' do
@@ -114,7 +114,7 @@ RSpec.describe 'review requests', type: :request do
                                                     params: { id: grant_creator_request.id, grant_creator_request: { status: 'approved' } })
             expect(ActionMailer::Base.deliveries.size).to eq(1)
             email = (ActionMailer::Base.deliveries).first
-            expect(email.subject).to eq('CD2H Competitions - Approved Grant Creator Request')
+            expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Approved Grant Creator Request")
           end
         end
 
@@ -124,7 +124,7 @@ RSpec.describe 'review requests', type: :request do
                                                     params: { id: grant_creator_request.id, grant_creator_request: { status: 'rejected' } })
             expect(ActionMailer::Base.deliveries.size).to eq(1)
             email = (ActionMailer::Base.deliveries).first
-            expect(email.subject).to eq('CD2H Competitions - Rejected Grant Creator Request')
+            expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Rejected Grant Creator Request")
           end
         end
 

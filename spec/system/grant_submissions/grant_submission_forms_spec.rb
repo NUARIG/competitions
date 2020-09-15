@@ -18,7 +18,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
 
     context 'grant admin' do
       before(:each) do
-        login_as(@admin)
+        login_as(@admin, scope: :saml_user)
         visit edit_grant_form_path(@draft_grant, @form)
       end
 
@@ -108,7 +108,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
 
     context 'grant viewer' do
       before(:each) do
-        login_as(@viewer)
+        login_as(@viewer, scope: :saml_user)
         visit edit_grant_form_path(@draft_grant, @form)
       end
 
@@ -129,7 +129,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
   describe 'Published Grant with submissions Edit form', js: true do
     before(:each) do
       @open_grant = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-      login_as(@open_grant.grant_permissions.role_admin.first.user)
+      login_as(@open_grant.grant_permissions.role_admin.first.user, scope: :saml_user)
       visit edit_grant_form_path(@open_grant, @open_grant.form)
     end
 
@@ -143,7 +143,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
   describe 'Published Grant without submissions Edit form', js: true do
     before(:each) do
       @published_grant = create(:published_open_grant_with_users)
-      login_as(@published_grant.grant_permissions.role_admin.first.user)
+      login_as(@published_grant.grant_permissions.role_admin.first.user, scope: :saml_user)
       visit edit_grant_form_path(@published_grant, @published_grant.form)
     end
 

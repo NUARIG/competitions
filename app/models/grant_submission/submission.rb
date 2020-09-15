@@ -6,6 +6,7 @@ module GrantSubmission
     attr_accessor :user_submitted_state
     after_validation :set_state, on: [:create, :update],
                                  if: -> { user_submitted_state.present? && errors.none? }
+    before_destroy :abort_or_prepare_destroy, prepend: true
 
     self.table_name = 'grant_submission_submissions'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
@@ -21,8 +22,7 @@ module GrantSubmission
                                 class_name: 'GrantSubmission::Response',
                                 foreign_key: 'grant_submission_submission_id',
                                 inverse_of: :submission
-    has_many :reviews,          dependent: :destroy,
-                                foreign_key: 'grant_submission_submission_id',
+    has_many :reviews,          foreign_key: 'grant_submission_submission_id',
                                 inverse_of: :submission
     has_many :reviewers,        through: :reviews,
                                 source: :reviewer
@@ -91,6 +91,15 @@ module GrantSubmission
       self.update_attribute(:composite_score, calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
     end
 
+    def abort_or_prepare_destroy
+      if self.grant.published?
+        prevent_delete_from_published_grant
+        throw(:abort)
+      else
+        prepare_submission_destroy
+      end
+    end
+
     private
 
     def set_state
@@ -99,6 +108,19 @@ module GrantSubmission
 
     def can_be_unsubmitted?
       errors.add(:base, :reviewed_submission_cannot_be_unsubmitted) if self.reviews.completed.any?
+    end
+
+    def prevent_delete_from_published_grant
+      errors.add(:base, :may_not_delete_from_published_grant)
+    end
+
+    def prepare_submission_destroy
+      # bypasses Review recalculate score callbacks
+      #   to avoid "can't modify frozen hash" error
+      self.reviews.each do |review|
+        review.criteria_reviews.destroy_all
+        review.delete
+      end
     end
   end
 end

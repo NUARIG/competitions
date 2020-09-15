@@ -1,0 +1,27 @@
+# Each server needs its own configuration to be uploaded to its server.
+default: &default
+  adapter: postgresql
+test: &TEST
+  <<: *default
+  host: # localhost
+  database: # <TEST_DATABASE_NAME>
+  username: # <TEST_DATABASE_USERNAME>
+  password: # <TEST_DATABASE_PASSWORD>
+development:
+  <<: *default
+  host: # localhost
+  database: # <DATABASE_NAME>
+  username: # <DATABASE_USERNAME>
+  password: # <DATABASE_PASSWORD>
+# staging:
+  # <<: *default
+  # host:
+  # database:
+  # username:
+  # password:
+# production:
+  # <<: *default
+  # host:
+  # database:
+  # username:
+  # password:

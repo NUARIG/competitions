@@ -1,0 +1,5 @@
+en:
+  mailers:
+    reminder:
+        grant_reviews:
+          subject: 'Reminder: Please review submissions to %{grant_name}'

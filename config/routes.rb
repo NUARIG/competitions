@@ -1,11 +1,19 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users, controllers: { saml_sessions: 'saml_sessions' }
+  devise_for :registered_users, controllers: {
+                                  confirmations:  'registered_users/confirmations',
+                                  passwords:      'registered_users/passwords',
+                                  registrations:  'registered_users/registrations'
+                                }
+  devise_for :saml_users, path: 'users',
+                          controllers: { saml_sessions: 'saml_sessions' }
 
   resources :users,               only: %i[index edit update]
 
   root to: 'home#index'
+
+  resources :login, only: :index
 
   resources :banners,             except: %i[show]
 
@@ -17,7 +25,9 @@ Rails.application.routes.draw do
     resources :grant_permissions, except: :show,        controller: 'grant_permissions'
     resource  :duplicate,         only: %i[new create], controller: 'grants/duplicate'
     resource  :state,             only: :update,        controller: 'grants/state'
-    resources :reviews,           only: :index,         controller: 'grants/reviews'
+    resources :reviews,           only: :index,         controller: 'grants/reviews' do
+      get 'reminders',            to: 'grants/reviews/reminders#index', on: :collection
+    end
     member do
       get   'criteria',           to: 'grants/criteria#index',   as: :criteria
       patch 'criteria/update',    to: 'grants/criteria#update',  as: :update_criteria

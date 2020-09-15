@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  attr_accessor Devise.saml_session_index_key.to_sym
   attr_accessor :grant_permission_role
 
-  devise :saml_authenticatable, :trackable, :timeoutable
+  devise :trackable, :timeoutable
+
+  USER_TYPES = ["SamlUser", "RegisteredUser"]
+
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
                   meta:     { user_id: :id } # added for convenience
 
@@ -31,7 +33,7 @@ class User < ApplicationRecord
   has_many   :grant_creator_requests, foreign_key: :requester_id,
                                       inverse_of: :requester
 
-  validates :upn,               presence: true,
+  validates :uid,               presence: true,
                                 uniqueness: true
   validates :email,             presence: true,
                                 uniqueness: true
@@ -40,15 +42,29 @@ class User < ApplicationRecord
 
   validates_uniqueness_of :era_commons, unless: -> { era_commons.blank? }
 
-  scope :order_by_last_name,    -> { order(last_name: :asc) }
+  scope :order_by_last_name,                          -> { order(last_name: :asc) }
+  scope :sort_by_type_nulls_last_asc,                 -> { order(Arel.sql('type ASC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END')) }
+  scope :sort_by_type_nulls_last_desc,                -> { order(Arel.sql('type DESC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END')) }
+  scope :sort_by_current_sign_in_at_nulls_last_asc,   -> { order('current_sign_in_at ASC NULLS LAST') }
+  scope :sort_by_current_sign_in_at_nulls_last_desc,  -> { order('current_sign_in_at DESC NULLS LAST') }
 
-  # https://github.com/apokalipto/devise_saml_authenticatable/issues/151
-  def authenticatable_salt
-    self.read_attribute(Devise.saml_session_index_key.to_sym) if self.read_attribute(Devise.saml_session_index_key.to_sym).present?
+
+  def saml_user?
+    self.type === 'SamlUser'
+  end
+
+  def registered_user?
+    self.type === 'RegisteredUser'
   end
 
   def get_role_by_grant(grant:)
     self.grant_permission_role ||= {}
     self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
+  end
+
+  # https://github.com/varvet/pundit/issues/478#issuecomment-371737216
+  # Needed so that subclasses inherit the policy from User class.
+  def self.policy_class
+    UserPolicy
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_31_152614) do
+ActiveRecord::Schema.define(version: 2020_07_27_160003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -340,7 +340,6 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
     t.string "state", null: false
     t.datetime "user_updated_at"
     t.datetime "discarded_at"
-    t.datetime "applicant_last_updated_at"
     t.decimal "average_overall_impact_score", precision: 5, scale: 2
     t.decimal "composite_score", precision: 5, scale: 2
     t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
@@ -407,6 +406,7 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.datetime "reminded_at"
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
     t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"
@@ -425,7 +425,6 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.boolean "system_admin", default: false, null: false
     t.string "email", default: "", null: false
     t.string "first_name"
     t.string "last_name"
@@ -438,9 +437,20 @@ ActiveRecord::Schema.define(version: 2020_03_31_152614) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
+    t.boolean "system_admin", default: false, null: false
     t.boolean "grant_creator", default: false, null: false
-    t.string "upn", default: "", null: false
+    t.string "uid", default: "", null: false
+    t.string "type"
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

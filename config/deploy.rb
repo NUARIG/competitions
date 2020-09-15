@@ -7,7 +7,7 @@ set :application, DEPLOY_CONFIG['application']
 set :repo_url,    DEPLOY_CONFIG['repository']
 
 set :rvm_type, :system
-set :rvm_ruby_version, 'ruby-2.6.5'
+set :rvm_ruby_version, 'ruby-2.6.6'
 
 set :passenger_restart_with_touch, true
 
@@ -33,8 +33,7 @@ set :log_level, :debug
 set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "/etc/competitions/database.yml"
-set :linked_files, %w{config/master.key config/attribute-map.yml}
+set :linked_files, DEPLOY_CONFIG['linked_files']
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"

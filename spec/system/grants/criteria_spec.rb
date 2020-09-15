@@ -8,7 +8,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
     let(:admin) { grant.administrators.first }
 
     before(:each) do
-      login_as(admin)
+      login_as(admin, scope: :saml_user)
       visit criteria_grant_path(grant)
     end
 
@@ -66,6 +66,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
         expect do
           click_button 'Save'
         end.not_to change{grant.criteria.count}
+        sleep(0.5)
         expect(page).to have_content 'Must have at least one review criteria.'
       end
 

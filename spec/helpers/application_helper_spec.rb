@@ -22,4 +22,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(excel_worksheet_reserved_characters.none?{ |char| prepared_sheet_name.include?(char)}).to be true
     end
   end
+
+  describe 'title_tag_content' do
+    before(:each) do
+      stub_const("COMPETITIONS_CONFIG", { application_name: 'TEST' })
+    end
+
+    it 'returns just application_name when not passed page_title' do
+      expect(title_tag_content).to eql 'TEST'
+    end
+
+    it 'returns provided page_title with application_name' do
+      expect(title_tag_content(page_title: 'Page Name')).to eql 'Page Name | TEST'
+    end
+  end
 end

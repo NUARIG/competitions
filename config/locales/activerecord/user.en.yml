@@ -5,9 +5,14 @@ en:
         first_name: First Name
         last_name: Last Name
         email: Email
-        upn: Unique ID
-        era_commons: 'eRA Commons'
-        user_type: User Type
+        uid: Unique ID
+        era_commons: eRA Commons
+        type: User Type
+        created_at: Date Joined
+        current_sign_in_at: Last Access
+      registered_user:
+        <<: *user
+        uid: Email
     errors:
       models:
         user:

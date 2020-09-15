@@ -13,8 +13,8 @@ en:
               pending_request: 'You currently have a request pending. An administrator will review your request shortly.'
               reviewer_is_not_system_admin: 'Reviewer is not authorized to review this request.'
             request_comment:
-              is_blank: 'Please explain how you plan to use Competitions.'
+              is_blank: "Please explain how you plan to use %{application_name}."
   helpers:
     label:
       grant_creator_request:
-        request_comment: 'How Do You Plan to Use Competitions?'
+        request_comment: "How Do You Plan to Use %{application_name}?"

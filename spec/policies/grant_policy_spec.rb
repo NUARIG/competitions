@@ -117,7 +117,7 @@ describe GrantPolicy do
 
     context 'with user not having a role on the grant' do
       context 'system_admin user' do
-        let(:user) { create(:system_admin_user) }
+        let(:user) { create(:system_admin_saml_user) }
 
         it 'allows system_admin access to all grants' do
           expect(scope.to_a).to include(@draft_grant_with_users_without_permission)
@@ -136,7 +136,7 @@ describe GrantPolicy do
       end
 
       context 'user' do
-        let(:user) { create(:user) }
+        let(:user) { create(:saml_user) }
 
         it 'grant editor allowed only public grants for index' do
           expect(scope.to_a).to include(@published_not_yet_open_grant_without_permission)
@@ -202,7 +202,7 @@ describe GrantPolicy do
 
     context 'with user not having a role on the grant' do
       context 'system_admin user' do
-        let(:user) { create(:system_admin_user) }
+        let(:user) { create(:system_admin_saml_user) }
 
         it { is_expected.to permit_action(:show) }
         it { is_expected.to permit_action(:new) }
@@ -213,7 +213,7 @@ describe GrantPolicy do
       end
 
       context 'user' do
-        let(:user) { create(:user) }
+        let(:user) { create(:saml_user) }
 
         it { is_expected.to permit_action(:show) }
 
@@ -230,7 +230,7 @@ describe GrantPolicy do
     subject { described_class.new(user, grant)}
 
     context 'logged in user' do
-      let(:user) { create(:user) }
+      let(:user) { create(:saml_user) }
 
       context 'grant closing today' do
         let(:grant) { create(:published_open_grant, submission_close_date: Date.today) }
