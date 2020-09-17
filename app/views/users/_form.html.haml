@@ -33,6 +33,7 @@
           Grant Creator
         - else
           = link_to 'Request Grant Creation Permission', new_grant_creator_request_path if current_user == @user
-.actions
-  = f.submit 'Update', class: 'button'
+    .grid-x
+      .cell.small-12.medium-offset-2.actions
+        = f.submit 'Update', class: 'button'
 
