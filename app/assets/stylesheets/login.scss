@@ -1,0 +1,47 @@
+@import 'settings';
+
+main.login,
+main.registrations,
+main.confirmations,
+main.passwords {
+  display: grid;
+  grid-template-rows: auto;
+  justify-items: center;
+  margin: 1em 0em;
+
+  .cell {
+    text-align: center;
+  }
+
+  .instructions,
+  #fields label {
+    color: $dark-gray;
+    font-size: .85em;
+    margin-bottom: .5em;
+    text-transform: uppercase;
+  }
+
+  #registered-user-links {
+    font-size: .95em;
+    padding: 1em;
+  }
+}
+
+main.login {
+  .saml-log-in {
+    font-weight: bold;
+  }
+
+  .or {
+    color: $medium-gray;
+    padding: 1em;
+    :before,
+    :after {
+      position: absolute;
+      content: ' ';
+      border-top: 1px solid red;
+      top: 50%;
+      width: 41%;
+    }
+  }
+}
