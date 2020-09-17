@@ -1,15 +1,23 @@
-<h2>Resend confirmation instructions</h2>
+<div class="grid-container grid-container-padded">
+  <div class="grid-x grid-padding-x align-center">
+    <div class="cell align-center-middle">
+      <h3>Resend Confirmation</h2>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+      <div class="cell">
+        <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+          <div id="fields">
+            <div class="field">
+              <%= f.label :email %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+            </div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+            <div class="actions">
+              <%= f.submit "Resend confirmation instructions", class: 'button expanded' %>
+            </div>
+          <% end %>
+
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
