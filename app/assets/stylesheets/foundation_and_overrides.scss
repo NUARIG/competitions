@@ -55,16 +55,6 @@
 // @include motion-ui-transitions;
 // @include motion-ui-animations;
 
-.button {
-  background-color: #5fbb7e;
-  &.success {
-    &.hollow {
-      border-color: #5fbb7e;
-      color: #5fbb7e;
-    }
-  }
-}
-
 .help-text {
   color: $dark-gray;
   padding-left: 0.15em;
