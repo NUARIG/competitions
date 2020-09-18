@@ -35,6 +35,7 @@ The following are required to install competitions:
 Configure the following files with your instance's attributes and store the files on the server.
 
 ```
+app/stylesheets/_settings.scss
 config/environments/*
 config/competitions_config.yml
 config/database.yml
@@ -42,6 +43,11 @@ config/deploy_config.yml
 config/secrets.yml
 config/storage.yml
 ```
+
+### app/stylesheets/\_settings.scss
+Competitions uses the [Foundation 6 framework](https://get.foundation/sites/docs/).
+
+A default [\_settings.scss file](https://get.foundation/sites/docs/sass.html#the-settings-file) example is included. Customize for your institution as needed (e.g. `foundation-palette`).
 
 ### config/competitions_config.yml
 The application's configuration has been consolidated into this file. Here you will configure your instance's values for your mailers, saml authentication, and application variables. Keys, passwords, and secrets will be stored in /config/secrets.yml
