@@ -27,7 +27,7 @@
               = f.email_field :email, required: true
             .cell
               = f.label :password
-              = f.password_field :password, required: true
+              = f.password_field :password, required: true, placeholder: "#{(COMPETITIONS_CONFIG[:devise][:registerable][:password][:min_length])} characters minimum"
             .cell
               = f.label :password_confirmation
               = f.password_field :password_confirmation, required: true
