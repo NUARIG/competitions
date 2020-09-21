@@ -9,19 +9,20 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
   let(:registered_user)   { create(:registered_user) }
   let(:unconfirmed_user)  { create(:unconfirmed_user) }
 
+  signup_button_text = 'Create My Account'
+
   before(:each) do
     visit new_registered_user_registration_path
   end
 
   describe 'Registration' do
     scenario 'valid information may register' do
-      # visit new_registered_user_registration_path
       find_field('First Name').set('FirstName')
       find_field('Last Name').set('LastName')
       find_field('Email').set('email@example.com')
       find_field('Password').set(valid_password)
       find_field('Password confirmation').set(valid_password)
-      click_button 'Sign up'
+      click_button signup_button_text
       expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
     end
 
@@ -32,7 +33,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Email').set(registered_user.email)
         find_field('Password').set(saml_user.email)
         find_field('Password confirmation').set(valid_password)
-        click_button 'Sign up'
+        click_button signup_button_text
         expect(page).to have_content 'Email has already been taken'
       end
 
@@ -42,7 +43,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Email').set(registered_user.email)
         find_field('Password').set(valid_password)
         find_field('Password confirmation').set(valid_password)
-        click_button 'Sign up'
+        click_button signup_button_text
         expect(page).to have_content 'Email has already been taken'
       end
 
@@ -52,7 +53,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Email').set(unconfirmed_user.uid)
         find_field('Password').set(valid_password)
         find_field('Password confirmation').set(valid_password)
-        click_button 'Sign up'
+        click_button signup_button_text
         expect(page).to have_content 'Email has already been taken'
       end
     end
@@ -71,7 +72,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Password').set(short_password)
         find_field('Password confirmation').set(short_password)
 
-        click_button 'Sign up'
+        click_button signup_button_text
         expect(page).to have_content 'Password is too short'
       end
 
@@ -81,7 +82,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Password').set(long_password)
         find_field('Password confirmation').set(long_password)
 
-        click_button 'Sign up'
+        click_button signup_button_text
         expect(page).to have_content 'Password is too long'
       end
     end
