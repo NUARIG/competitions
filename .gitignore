@@ -35,6 +35,9 @@
 /config/secrets.yml
 /config/storage.yml
 
+# Ignore Foundation _settings file
+/app/assets/stylesheets/_settings.scss
+
 # Rspec
 /spec/examples.txt
 /coverage
