@@ -3,7 +3,8 @@
 main.login,
 main.registrations,
 main.confirmations,
-main.passwords {
+main.passwords,
+main.sessions {
   display: grid;
   grid-template-rows: auto;
   justify-items: center;
@@ -24,6 +25,12 @@ main.passwords {
   #registered-user-links {
     font-size: .95em;
     padding: 1em;
+  }
+}
+
+main.sessions {
+  .callout {
+    min-width: 33.33%;
   }
 }
 
