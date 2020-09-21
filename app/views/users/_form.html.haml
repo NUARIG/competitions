@@ -1,6 +1,6 @@
 .grid-x
   .cell
-    - disabled = !@user.registered_user?
+    - disabled = @user.saml_user?
     .grid-x
       .cell.small-12.medium-2
         = f.label :first_name
