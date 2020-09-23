@@ -14,8 +14,6 @@ FactoryBot.define do
     max_submissions_per_reviewer { 1 }
     review_open_date             { 30.days.from_now }
     review_close_date            { 40.days.from_now }
-    panel_date                   { 50.days.from_now }
-    panel_location               { Faker::Address.full_address }
 
     after(:create) do |grant|
       create(:mandatory_criterion, grant: grant)

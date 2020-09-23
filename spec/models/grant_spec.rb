@@ -16,8 +16,6 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:max_submissions_per_reviewer) }
   it { is_expected.to respond_to(:review_open_date) }
   it { is_expected.to respond_to(:review_close_date) }
-  it { is_expected.to respond_to(:panel_date) }
-  it { is_expected.to respond_to(:panel_location) }
   it { is_expected.to respond_to(:discarded_at) }
 
   let(:grant) { build(:grant) }
