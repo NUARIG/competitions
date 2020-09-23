@@ -117,10 +117,6 @@ class Grant < ApplicationRecord
   validates_date :review_close_date,
                  after: :review_open_date,
                  after_message: 'must be after the review opening date.'
-  validates_date :panel_date,
-                 after: :submission_close_date,
-                 after_message: 'must be after the submission close date.',
-                 if: :panel_date?
 
   validate      :requires_one_criteria,      on: :update,
                                              if: -> () { criteria.all?(&:marked_for_destruction?) || criteria.empty? }

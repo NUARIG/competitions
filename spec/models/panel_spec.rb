@@ -28,6 +28,31 @@ RSpec.describe Panel, type: :model do
         expect(panel).not_to be_valid
         expect(panel.errors).to include(:start_datetime)
       end
+
+      it 'requires start_datetime to be after grant submission_close_date' do
+        panel.start_datetime = panel.grant.submission_close_date - 1.hour
+        expect(panel).not_to be_valid
+        expect(panel.errors).to include(:start_datetime)
+      end
+
+      it 'require start_datetime if end_dateime is set' do
+        panel.start_datetime = nil
+        expect(panel).not_to be_valid
+        expect(panel.errors).to include(:start_datetime)
+      end
+
+      it 'require end_datetime if start_dateime is set' do
+        panel.end_datetime = nil
+        expect(panel).not_to be_valid
+        expect(panel.errors).to include(:start_datetime)
+      end
+
+      it 'does not require end_datetime and start_dateime to be set' do
+        panel.start_datetime = nil
+        panel.end_datetime = nil
+        expect(panel).to be_valid
+      end
+
     end
   end
 end
