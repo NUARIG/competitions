@@ -51,7 +51,7 @@ RSpec.describe GrantPermission, type: :model do
     it 'prevents deletion of last admin' do
       admin_grant_permission.save
       viewer_grant_permission.save
-      viewer_grant_permission.update_attributes(role: 'admin')
+      viewer_grant_permission.update(role: 'admin')
       expect{viewer_grant_permission.destroy}.to change{grant.grant_permissions.count}.by -1
       expect{admin_grant_permission.destroy}.not_to change{grant.grant_permissions.count}
     end

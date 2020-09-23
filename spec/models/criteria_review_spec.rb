@@ -63,7 +63,7 @@ RSpec.describe CriteriaReview, type: :model do
       it 'requires score to be from the correct grant' do
         @other_grant    = create(:grant)
         @other_criteria = create(:criterion, grant: @other_grant)
-        @criteria_review.update_attribute(:criterion, @other_criteria)
+        @criteria_review.update(criterion: @other_criteria)
         expect(@criteria_review).not_to be_valid
         expect(@criteria_review.errors.messages[:base]).to eq ["'#{@criteria_review.criterion.name} (ID: #{@criteria_review.criterion.id}) is not a valid criterion for this grant."]
       end

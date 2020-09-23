@@ -20,13 +20,13 @@ RSpec.describe GrantCreatorRequest, type: :model do
     end
 
     it 'disallows request from system_admin' do
-      request.requester.update_attribute(:system_admin, true)
+      request.requester.update(system_admin: true)
       expect(request).not_to be_valid
       expect(request.errors[:base]).to include I18n.t('activerecord.errors.models.grant_creator_request.attributes.base.is_system_admin')
     end
 
     it 'disallows request from grant_creator' do
-      request.requester.update_attribute(:grant_creator, true)
+      request.requester.update(grant_creator: true)
       expect(request).not_to be_valid
       expect(request.errors[:base]).to include I18n.t('activerecord.errors.models.grant_creator_request.attributes.base.has_grant_creator_access')
     end
@@ -37,7 +37,7 @@ RSpec.describe GrantCreatorRequest, type: :model do
     end
 
     it 'allows request from user with an exisiting rejected request' do
-      request.update_attribute(:status, 'rejected')
+      request.update(status: 'rejected')
       request.save
       expect(FactoryBot.build(:grant_creator_request, requester: request.requester)).to be_valid
     end
@@ -72,7 +72,7 @@ RSpec.describe GrantCreatorRequest, type: :model do
 
       it 'sets requester grant_creator boolean to false when rejected' do
         expect(request.requester.grant_creator).to be false
-        request.update_attribute(:status, 'rejected')
+        request.update(status: 'rejected')
         expect(request.requester.grant_creator).to be false
       end
 
@@ -85,7 +85,7 @@ RSpec.describe GrantCreatorRequest, type: :model do
 
       it 'sets requester grant_creator boolean to false when pending' do
         expect(request.requester.grant_creator).to be false
-        request.update_attribute(:status, 'pending')
+        request.update(status: 'pending')
         expect(request.requester.grant_creator).to be false
       end
     end

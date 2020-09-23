@@ -35,12 +35,12 @@ gem 'devise_saml_authenticatable', git: 'https://github.com/apokalipto/devise_sa
 
 gem 'draper'
 gem 'pundit'
-gem 'rubyzip', '~> 1.3.0'
+gem 'rubyzip' #, '~> 1.3.0'
 
 # frontend
 gem 'font-awesome-rails'
 gem 'foundation-datepicker-rails'
-gem 'foundation-rails'
+gem 'foundation-rails', '~> 6.5.1.0'
 gem 'friendly_id', '~> 5.2.4'
 gem 'haml-rails', '~> 1.0'
 gem 'jquery-rails', '>= 4.3.5'
@@ -75,7 +75,12 @@ group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'puma', '~> 3.12'
-  gem 'rspec-rails'
+
+  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: 'main'
+  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core'
+  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations'
+  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks'
+  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support'
 end
 
 group :development do
@@ -84,7 +89,7 @@ group :development do
   gem 'binding_of_caller'
   # gem 'bullet'
   gem 'i18n-debug'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen' #, '>= 3.0.5', '< 3.2'
   gem 'rubocop'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -99,7 +104,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '>= 2.15'
+  gem 'capybara'
   gem 'factory_bot_rails'
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'pundit-matchers', '~> 1.6.0'

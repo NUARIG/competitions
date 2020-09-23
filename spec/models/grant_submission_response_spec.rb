@@ -33,30 +33,30 @@ RSpec.describe GrantSubmission::Response, type: :model do
       context 'is_mandatory' do
         context 'draft submission' do
           it 'does not require response when question is_mandatory' do
-            string_val_response.question.update_attribute(:is_mandatory, true)
-            string_val_response.update_attribute(:string_val, '')
+            string_val_response.question.update(is_mandatory: true)
+            string_val_response.update(string_val: '')
             expect(string_val_response).to be_valid
           end
         end
 
         context 'submitted submission' do
           it 'requires response when question is_mandatory' do
-            string_val_response.update_attribute(:submission, submitted_submission)
-            string_val_response.question.update_attribute(:is_mandatory, true)
-            string_val_response.update_attribute(:string_val, '')
+            string_val_response.update(submission: submitted_submission)
+            string_val_response.question.update(is_mandatory: true)
+            string_val_response.update(string_val: '')
             expect(string_val_response).not_to be_valid
           end
         end
       end
 
       it 'requires response to be to a question from its grant' do
-        string_val_response.update_attribute(:grant_submission_question_id, other_grant.form.questions.where(response_type: 'short_text').first.id)
+        string_val_response.update(grant_submission_question_id: other_grant.form.questions.where(response_type: 'short_text').first.id)
         expect(string_val_response).not_to be_valid
         expect(string_val_response.errors).to include(:grant_submission_question_id)
       end
 
       it 'validates length' do
-        string_val_response.update_attribute(:string_val, Faker::Lorem.characters(number: 256))
+        string_val_response.update(string_val: Faker::Lorem.characters(number: 256))
         expect(string_val_response).not_to be_valid
         expect(string_val_response.errors).to include(:string_val)
       end
@@ -95,24 +95,24 @@ RSpec.describe GrantSubmission::Response, type: :model do
       context 'is_mandatory' do
         context 'draft submission' do
           it 'does not require response when question is_mandatory' do
-            text_val_response.question.update_attribute(:is_mandatory, true)
-            text_val_response.update_attribute(:string_val, '')
+            text_val_response.question.update(is_mandatory: true)
+            text_val_response.update(string_val: '')
             expect(text_val_response).to be_valid
           end
         end
 
         context 'submitted submission' do
           it 'requires response when question is_mandatory' do
-            text_val_response.update_attribute(:submission, submitted_submission)
-            text_val_response.question.update_attribute(:is_mandatory, true)
-            text_val_response.update_attribute(:string_val, '')
+            text_val_response.update(submission: submitted_submission)
+            text_val_response.question.update(is_mandatory: true)
+            text_val_response.update(string_val: '')
             expect(text_val_response).not_to be_valid
           end
         end
       end
 
       it 'requires response to be to a question from its grant' do
-        text_val_response.update_attribute(:grant_submission_question_id, other_grant.form.questions.where(response_type: 'long_text').first.id)
+        text_val_response.update(grant_submission_question_id: other_grant.form.questions.where(response_type: 'long_text').first.id)
         expect(text_val_response).not_to be_valid
         expect(text_val_response.errors).to include(:grant_submission_question_id)
       end
@@ -153,24 +153,24 @@ RSpec.describe GrantSubmission::Response, type: :model do
       context 'is_mandatory' do
         context 'draft submission' do
           it 'does not require response when question is_mandatory' do
-            number_response.question.update_attribute(:is_mandatory, true)
-            number_response.update_attribute(:string_val, '')
+            number_response.question.update(is_mandatory: true)
+            number_response.update(string_val: '')
             expect(number_response).to be_valid
           end
         end
 
         context 'submitted submission' do
           it 'requires response when question is_mandatory' do
-            number_response.update_attribute(:submission, submitted_submission)
-            number_response.question.update_attribute(:is_mandatory, true)
-            number_response.update_attribute(:string_val, '')
+            number_response.update(submission: submitted_submission)
+            number_response.question.update(is_mandatory: true)
+            number_response.update(string_val: '')
             expect(number_response).not_to be_valid
           end
         end
       end
 
       it 'requires response to be to a question from its grant' do
-        number_response.update_attribute(:grant_submission_question_id, other_grant.form.questions.where(response_type: 'number').first.id)
+        number_response.update(grant_submission_question_id: other_grant.form.questions.where(response_type: 'number').first.id)
         expect(number_response).not_to be_valid
         expect(number_response.errors).to include(:grant_submission_question_id)
       end
@@ -213,17 +213,17 @@ RSpec.describe GrantSubmission::Response, type: :model do
       context 'is_mandatory' do
         context 'draft submission' do
           it 'does not require response when question is_mandatory' do
-            pick_one_response.question.update_attribute(:is_mandatory, true)
-            pick_one_response.update_attribute(:string_val, '')
+            pick_one_response.question.update(is_mandatory: true)
+            pick_one_response.update(string_val: '')
             expect(pick_one_response).to be_valid
           end
         end
 
         context 'submitted submission' do
           it 'requires response when question is_mandatory' do
-            pick_one_response.update_attribute(:submission, submitted_submission)
-            pick_one_response.question.update_attribute(:is_mandatory, true)
-            pick_one_response.update_attribute(:string_val, '')
+            pick_one_response.update(submission: submitted_submission)
+            pick_one_response.question.update(is_mandatory: true)
+            pick_one_response.update(string_val: '')
             expect(pick_one_response).not_to be_valid
           end
         end
@@ -262,32 +262,32 @@ RSpec.describe GrantSubmission::Response, type: :model do
       context 'is_mandatory' do
         context 'draft submission' do
           it 'does not require response when question is_mandatory' do
-            date_response.question.update_attribute(:is_mandatory, true)
-            date_response.update_attribute(:string_val, '')
+            date_response.question.update(is_mandatory: true)
+            date_response.update(string_val: '')
             expect(date_response).to be_valid
           end
         end
 
         context 'submitted submission' do
           it 'requires response when question is_mandatory' do
-            date_response.update_attribute(:submission, submitted_submission)
-            date_response.question.update_attribute(:is_mandatory, true)
-            date_response.update_attribute(:string_val, '')
+            date_response.update(submission: submitted_submission)
+            date_response.question.update(is_mandatory: true)
+            date_response.update(string_val: '')
             expect(date_response).not_to be_valid
           end
         end
 
         it 'requires a response to be a date' do
-          date_response.submission.update_attribute(:state, 'submitted')
-          date_response.question.update_attribute(:is_mandatory, true)
-          date_response.update_attribute(:datetime_val, 'abcdef')
+          date_response.submission.update(state: 'submitted')
+          date_response.question.update(is_mandatory: true)
+          date_response.update(datetime_val: 'abcdef')
           expect(date_response).not_to be_valid
           expect(date_response.errors).to include(:datetime_val_date_optional_time_magik)
         end
       end
 
       it 'requires response to be to a question from its grant' do
-        date_response.update_attribute(:grant_submission_question_id, other_grant.form.questions.where(response_type: 'number').first.id)
+        date_response.update(grant_submission_question_id: other_grant.form.questions.where(response_type: 'number').first.id)
         expect(date_response).not_to be_valid
         expect(date_response.errors).to include(:grant_submission_question_id)
       end
@@ -304,9 +304,14 @@ RSpec.describe GrantSubmission::Response, type: :model do
     let(:grant)                { create(:open_grant_with_users_and_form_and_submission_and_reviewer)}
     let(:file_upload_question) { create(:file_upload_question, section: grant.form.sections.first,
                                                                display_order: grant.form.questions.pluck(:display_order).max + 1) }
+
     context '#validations' do
       context 'valid file type upload' do
-        let(:file_upload_response) { build(:valid_file_upload_response, submission: grant.submissions.first,
+        before(:each) do
+          grant.submissions.first.update(state: 'draft')
+        end
+
+        let(:file_upload_response) { create(:valid_file_upload_response, submission: grant.submissions.first,
                                                                         question: file_upload_question) }
 
         it 'validates response with a attached file' do
@@ -315,18 +320,23 @@ RSpec.describe GrantSubmission::Response, type: :model do
         end
 
         it 'requires a files size below 15MB' do
-          expect(file_upload_response).to be_valid
           allow(file_upload_response.document).to receive_message_chain(:filename, :extension_with_delimiter).and_return('.pdf')
           allow(file_upload_response.document).to receive_message_chain(:blob, :byte_size).and_return(16.megabytes)
           expect(file_upload_response).not_to be_valid
+          expect(file_upload_response.errors.messages[:document].first).to include('is larger than 15MB')
         end
       end
 
       context 'invalid file type upload' do
+        before(:each) do
+          grant.submissions.first.update(state: 'draft')
+        end
+
         let(:file_upload_response) { build(:invalid_file_upload_response, submission: grant.submissions.first,
                                                                           question: file_upload_question) }
 
         it 'validates response an invalid attached file' do
+          byebug
           expect(file_upload_response).not_to be_valid
         end
       end

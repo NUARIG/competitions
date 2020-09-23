@@ -44,7 +44,7 @@ class GrantSubmission::Form < ApplicationRecord
   #   in the db and new records to be created.
   # It then re-orders from 1 to clean things up. This allows database
   # constraints on uniqueness of display order.
-  def update_attributes_safe_display_order(params)
+  def update_safe_display_order(params)
 
     reorder = ->(relation, offset) do
       return if relation.size == 0

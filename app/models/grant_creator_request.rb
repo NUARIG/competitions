@@ -51,9 +51,9 @@ class GrantCreatorRequest < ApplicationRecord
   def update_user_grant_creator_attribute
     case status
     when 'approved'
-      requester.update_attribute(:grant_creator, true)
+      requester.update(grant_creator: true)
     else
-      requester.update_attribute(:grant_creator, false)
+      requester.update(grant_creator: false)
     end
   end
 end

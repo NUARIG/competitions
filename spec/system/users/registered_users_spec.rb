@@ -19,7 +19,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       context 'success' do
         scenario 'can edit a user' do
           new_era_commons = Faker::Lorem.characters(number: 10)
-          find_field('eRA Commons').set(new_era_commons)
+          page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
           expect(user.reload.era_commons).to eql new_era_commons
           expect(page).to have_content "#{full_name(user)}'s profile has been updated."
@@ -29,9 +29,9 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       context 'failure' do
         scenario 'shows error on failure' do
           other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update_attribute(:era_commons, other_user_era_commons)
+          other_user.update(era_commons: other_user_era_commons)
           visit(edit_user_path(user))
-          find_field('eRA Commons').set(other_user_era_commons)
+          page.fill_in 'eRA Commons', with: other_user_era_commons
           click_button 'Update'
           expect(page).to have_content 'eRA Commons has already been taken'
         end
@@ -48,7 +48,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       context 'success' do
         scenario 'can edit own profile' do
           new_era_commons = Faker::Lorem.characters(number: 10)
-          find_field('eRA Commons').set(new_era_commons)
+          page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
           expect(user.reload.era_commons).to eql new_era_commons
           expect(page).to have_content 'Your profile has been updated.'
@@ -63,9 +63,9 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       context 'failure' do
         scenario 'shows error on failure' do
           other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update_attribute(:era_commons, other_user_era_commons)
+          other_user.update(era_commons: other_user_era_commons)
           visit(profile_path)
-          find_field('eRA Commons').set(other_user_era_commons)
+          page.fill_in 'eRA Commons', with: other_user_era_commons
           click_button 'Update'
           expect(page).to have_content 'eRA Commons has already been taken'
         end
@@ -76,11 +76,11 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
   describe 'sign up new user' do
     scenario 'sign up new user with devise interface' do
       visit new_registered_user_registration_path
-      find_field('First Name').set('FirstName')
-      find_field('Last Name').set('LastName')
-      find_field('Email').set('email@example.com')
-      find_field('Password').set('password')
-      find_field('Password confirmation').set('password')
+      page.fill_in 'First Name', with: 'FirstName'
+      page.fill_in 'Last Name', with: 'LastName'
+      page.fill_in 'Email', with: 'email@example.com'
+      page.fill_in 'Password', with: 'password'
+      page.fill_in 'Password confirmation', with: 'password'
       click_button 'Sign up'
       expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
     end
@@ -88,8 +88,8 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
     scenario 'user sign in' do
       @user3 = create(:registered_user, email: 'user3@example.com', password: 'password')
       visit new_registered_user_session_path
-      find_field('Email').set('user3@example.com')
-      find_field('Password').set('password')
+      page.fill_in 'Email', with: 'user3@example.com'
+      page.fill_in 'Password', with: 'password'
       click_button 'Log in'
       expect(page).to have_content("#{@user3.first_name} #{@user3.last_name}")
     end
