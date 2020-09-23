@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_22_200511) do
+ActiveRecord::Schema.define(version: 2020_09_23_154405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -374,8 +374,6 @@ ActiveRecord::Schema.define(version: 2020_09_22_200511) do
     t.integer "max_submissions_per_reviewer"
     t.date "review_open_date"
     t.date "review_close_date"
-    t.date "panel_date"
-    t.text "panel_location"
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
