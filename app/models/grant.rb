@@ -28,6 +28,7 @@ class Grant < ApplicationRecord
 
   has_one    :form,             class_name: 'GrantSubmission::Form',
                                 foreign_key: :grant_id
+  has_one    :panel,            foreign_key: :grant_id
   has_many   :grant_reviewers
   has_many   :reviewers,        through: :grant_reviewers
 
