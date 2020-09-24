@@ -129,8 +129,7 @@ module GrantSubmission
         validate_length_if_short_text_response
       when 'file_upload'
         if document.attached?
-          validate_attachment_size_if_file_upload_response
-          validate_attachment_type_if_file_upload_response
+          validate_attachment_size_if_file_upload_response && validate_attachment_type_if_file_upload_response
         end
       end
     end

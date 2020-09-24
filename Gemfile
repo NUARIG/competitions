@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '~> 6.0.3.2'
+gem 'rails', '~> 6.0.3.3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -77,10 +77,10 @@ group :development, :test do
   gem 'puma', '~> 3.12'
 
   gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: 'main'
-  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core'
-  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations'
-  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks'
-  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support'
+  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core', branch: 'main'
+  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations', branch: 'main'
+  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks', branch: 'main'
+  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support', branch: 'main'
 end
 
 group :development do
