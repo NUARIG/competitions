@@ -47,7 +47,7 @@
     = f.text_field :submission_close_date, value: date_mmddyyyy(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
 
 %h3
-  Panel and Reviews
+  Review Settings
 .grid-x.grid-padding-y
   .cell
     = f.label :review_guidance, 'Review Guidance'
@@ -73,15 +73,6 @@
     = f.label :review_close_date, 'Review Close Date', class: 'middle'
   .cell.small-12.medium-9
     = f.text_field :review_close_date, value: date_mmddyyyy(grant.review_close_date), disabled: disable_fields, class: 'small-12 medium-4'
-.grid-x
-  .cell.small-12.medium-3
-    = f.label :panel_date, 'Panel Date', class: 'middle'
-  .cell.small-12.medium-9
-    = f.text_field :panel_date, value: date_mmddyyyy(grant.panel_date), disabled: disable_fields, class: 'small-12 medium-4'
-.grid-x
-  .cell
-    = f.label :panel_location, 'Panel Location'
-    = f.text_area :panel_location, cols: 15, rows: 5, disabled: disable_fields, placeholder: 'Required if Panel Day is set. Use TBD if unknown.'
 
 - unless disable_fields
   .grid-x

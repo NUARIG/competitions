@@ -127,7 +127,6 @@ RSpec.describe 'Grants', type: :system, js: true do
         expect(page).to have_field 'Maximum Submissions / Reviewer', disabled: true
         expect(page).to have_field 'Review Open Date', disabled: true
         expect(page).to have_field 'Review Close Date', disabled: true
-        expect(page).to have_field 'Panel Location', disabled: true
       end
     end
   end
@@ -150,7 +149,6 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Maximum Submissions / Reviewer', with: @grant.max_submissions_per_reviewer
       page.fill_in 'Review Open Date', with: @grant.review_open_date
       page.fill_in 'Review Close Date', with: @grant.review_close_date
-      page.fill_in 'Panel Location', with: @grant.panel_location
     end
 
     scenario 'valid form submission creates permissions' do
