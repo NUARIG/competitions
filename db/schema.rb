@@ -382,7 +382,7 @@ ActiveRecord::Schema.define(version: 2020_09_23_154405) do
   end
 
   create_table "panels", force: :cascade do |t|
-    t.bigint "grant_id"
+    t.bigint "grant_id", null: false
     t.datetime "start_datetime"
     t.datetime "end_datetime"
     t.text "instructions"
