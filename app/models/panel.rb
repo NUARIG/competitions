@@ -9,6 +9,6 @@ class Panel < ApplicationRecord
   validate :start_is_after_submission_deadline, if: :start_datetime?
 
   def start_is_after_submission_deadline
-    errors.add(:start_datetime, message: 'must be after the submission close date.') if start_datetime > grant.submission_close_date
+    errors.add(:start_datetime, message: 'must be after the submission close date.') if start_datetime < grant.submission_close_date.end_of_day
   end
 end
