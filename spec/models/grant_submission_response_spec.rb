@@ -328,6 +328,10 @@ RSpec.describe GrantSubmission::Response, type: :model do
       end
 
       context 'invalid file type upload' do
+        before(:each) do
+          grant.submissions.first.update(state: 'draft')
+        end
+
         let(:file_upload_response) { build(:invalid_file_upload_response, submission: grant.submissions.first,
                                                                           question: file_upload_question) }
 
