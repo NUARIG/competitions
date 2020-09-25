@@ -81,15 +81,17 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       page.fill_in 'Email', with: 'email@example.com'
       page.fill_in 'Password', with: 'password'
       page.fill_in 'Password confirmation', with: 'password'
-      click_button 'Sign up'
+      click_button 'Create My Account'
       expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
     end
+  end
 
+  describe 'sign in registered user' do
     scenario 'user sign in' do
       @user3 = create(:registered_user, email: 'user3@example.com', password: 'password')
-      visit new_registered_user_session_path
-      page.fill_in 'Email', with: 'user3@example.com'
-      page.fill_in 'Password', with: 'password'
+      visit login_index_path
+      page.fill_in('registered_user_uid', with: @user3.email)
+      page.fill_in('registered_user_password', with: 'password')
       click_button 'Log in'
       expect(page).to have_content("#{@user3.first_name} #{@user3.last_name}")
     end

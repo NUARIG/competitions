@@ -19,7 +19,15 @@ FactoryBot.define do
     trait :registered do
       confirmed_at              { Time.now }
       type                      { 'RegisteredUser' }
-      password                  { 'password' }
+      password                  { Faker::Lorem.characters(number: rand(Devise.password_length)) }
+    end
+
+    trait :unconfirmed do
+      type                      { 'RegisteredUser' }
+      password                  { Faker::Lorem.characters(number: rand(Devise.password_length)) }
+      confirmed_at              { nil }
+      confirmation_token        { Faker::Lorem.characters(number: rand(10...15)) }
+      current_sign_in_at        { nil }
     end
 
     trait :system_admin do
@@ -32,6 +40,7 @@ FactoryBot.define do
 
     factory :saml_user, parent: :user, class: 'SamlUser', traits: %i[saml]
     factory :registered_user, parent: :user, class: 'RegisteredUser', traits: %i[registered]
+    factory :unconfirmed_user, parent: :user, class: 'RegisteredUser', traits: %i[unconfirmed]
     factory :system_admin_saml_user, parent: :user, class: 'SamlUser', traits: %i[saml system_admin]
     factory :grant_creator_saml_user, parent: :user, class: 'SamlUser', traits: %i[saml grant_creator]
     factory :system_admin_registered_user, parent: :user, class: 'RegisteredUser',  traits: %i[registered system_admin]

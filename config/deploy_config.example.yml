@@ -9,6 +9,7 @@ deployer_roles: # Capistrano roles
   # - web
 deploy_to: # <TARGET_DIRECTORY_ON_DEPLOYMENT_SERVER>
 linked_files: # <ARRAY_OF_SYMLINKED_FILES>
+  # - app/assets/stylesheets/_settings
   # - config/master.key
   # - config/attribute-map.yml
   # - config/competitions_config.yml

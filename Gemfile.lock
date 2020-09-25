@@ -9,10 +9,10 @@ GIT
 
 GIT
   remote: https://github.com/apokalipto/devise_saml_authenticatable
-  revision: fc398ff221cd2d88f4a82b229765ce490f13933a
-  ref: fc398ff
+  revision: 09221d59e434bc947327e478a388013a70add4f7
+  ref: 09221d5
   specs:
-    devise_saml_authenticatable (1.5.0)
+    devise_saml_authenticatable (1.6.1)
       devise (> 2.0.0)
       ruby-saml (~> 1.7)
 

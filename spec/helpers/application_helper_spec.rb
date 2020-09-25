@@ -23,79 +23,17 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe 'full_root_url' do
-    it 'constructs a full root url when given all segments' do
-      stub_const("COMPETITIONS_CONFIG", { subdomain: 'subdomain',
-                                          app_domain: 'domain.edu',
-                                          default_url_options: {
-                                              port: 123
-                                            }
-                                          })
-      expect(full_root_url).to eql 'https://subdomain.domain.edu:123/'
+  describe 'title_tag_content' do
+    before(:each) do
+      stub_const("COMPETITIONS_CONFIG", { application_name: 'TEST' })
     end
 
-    context 'subdomain' do
-      it 'can be nil' do
-        stub_const("COMPETITIONS_CONFIG", { subdomain: nil,
-                                            app_domain: 'domain.edu',
-                                            default_url_options: {
-                                                port: 123
-                                              }
-                                            })
-        expect(full_root_url).to eql 'https://domain.edu:123/'
-      end
-
-      it 'can be empty string' do
-        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
-                                            app_domain: 'domain.edu',
-                                            default_url_options: {
-                                                port: 123
-                                              }
-                                            })
-        expect(full_root_url).to eql 'https://domain.edu:123/'
-      end
+    it 'returns just application_name when not passed page_title' do
+      expect(title_tag_content).to eql 'TEST'
     end
 
-    context 'port' do
-      it 'can be nil' do
-        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
-                                            app_domain: 'localhost',
-                                            default_url_options: {
-                                                port: nil
-                                              }
-                                            })
-        expect(full_root_url).to eql 'https://localhost/'
-      end
-
-      it 'can be an empty string' do
-        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
-                                            app_domain: 'localhost',
-                                            default_url_options: {
-                                                port: ''
-                                              }
-                                            })
-        expect(full_root_url).to eql 'https://localhost/'
-      end
-
-      it 'can be a string' do
-        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
-                                            app_domain: 'localhost',
-                                            default_url_options: {
-                                                port: '123'
-                                              }
-                                            })
-        expect(full_root_url).to eql 'https://localhost:123/'
-      end
-
-      it 'can be an integer' do
-        stub_const("COMPETITIONS_CONFIG", { subdomain: '',
-                                            app_domain: 'localhost',
-                                            default_url_options: {
-                                                port: 123
-                                              }
-                                            })
-        expect(full_root_url).to eql 'https://localhost:123/'
-      end
+    it 'returns provided page_title with application_name' do
+      expect(title_tag_content(page_title: 'Page Name')).to eql 'Page Name | TEST'
     end
   end
 end

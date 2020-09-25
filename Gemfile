@@ -31,7 +31,7 @@ gem 'redis', '~> 4.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'devise', '>= 4.7.1'
-gem 'devise_saml_authenticatable', git: 'https://github.com/apokalipto/devise_saml_authenticatable', ref: 'fc398ff'
+gem 'devise_saml_authenticatable', git: 'https://github.com/apokalipto/devise_saml_authenticatable', ref: '09221d5'
 
 gem 'draper'
 gem 'pundit'

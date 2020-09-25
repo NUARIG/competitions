@@ -10,6 +10,9 @@ en:
         type: User Type
         created_at: Date Joined
         current_sign_in_at: Last Access
+      registered_user:
+        <<: *user
+        uid: Email
     errors:
       models:
         user:

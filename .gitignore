@@ -11,15 +11,13 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
-# Ignore all logfiles and tempfiles.
+# Ignore all log files, storage files, and temp files.
 /log/*
+/storage/*
 /tmp/*
 !/log/.keep
-!/tmp/.keep
-
-# Ignore uploaded files in development
-/storage/*
 !/storage/.keep
+!/tmp/.keep
 
 /node_modules
 /yarn-error.log
@@ -36,6 +34,9 @@
 /config/deploy_config.yml
 /config/secrets.yml
 /config/storage.yml
+
+# Ignore Foundation _settings file
+/app/assets/stylesheets/_settings.scss
 
 # Rspec
 /spec/examples.txt
