@@ -119,6 +119,10 @@ module GrantSubmission
       self.submission.submitted? && (!self.submission.changed? || self.submission.changes.keys.include?('state'))
     end
 
+    def changed_for_autosave?
+      super || document.changed_for_autosave? if document.attached?
+    end
+
     private
 
     def validate_by_response_type
