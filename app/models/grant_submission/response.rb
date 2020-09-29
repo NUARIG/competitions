@@ -56,7 +56,7 @@ module GrantSubmission
     def remove_document=(val)
       remove_document = val # allows clearing file inputs to persist across validation errors
       if val == 1 || val == "1"
-        document.purge
+        document = nil
       end
     end
 
@@ -156,7 +156,7 @@ module GrantSubmission
         errors.add(:document, :file_too_large, question: question.text,
                                                allowed_file_size: READABLE_MAXIMUM_DOCUMENT_FILE_SIZE,
                                                uploaded_file_size: (document.byte_size.to_f/(1.megabyte)).round(1))
-        document.purge
+        document = nil
       end
     end
 
@@ -164,7 +164,7 @@ module GrantSubmission
       if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(document.filename.extension_with_delimiter)
         errors.add(:document, :excluded_mime_type, question: question.text,
                                                    allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
-        document.purge
+        document = nil
       end
     end
 
