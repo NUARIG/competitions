@@ -50,20 +50,18 @@ module GrantSubmission
     validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
     validate :attachment_is_valid,   if: -> { document.attached? }
 
+
+    after_save :purge_document
+
     include DateOptionalTime
     has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
 
-    def remove_document=(val)
-      remove_document = val # allows clearing file inputs to persist across validation errors
-      if val == 1 || val == "1"
-        document = nil
+    def purge_document
+      if remove_document == '1'
+        document.purge
       end
     end
-
-    def remove_document
-      remove_document ||= nil
-    end
-
+    
     def add_date_optional_time_error(datetime_comp)
       errors.add(self.class.date_optional_time_attribute(:datetime_val), "^#{question.text} must be a valid Date in the format MM/DD/YYYY")
     end
