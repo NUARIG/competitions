@@ -1,0 +1,23 @@
+- content_for(:page_title, "Panel - #{@grant.name}")
+
+%h1
+  = @grant.name
+
+%h2
+  Review Panel
+
+%p
+  Lorem ipusm dolor sum. Introductory information about the panel.
+
+%p
+  %ul
+    %li
+      if reviewer
+      %ul
+        %li
+          = render 'reviewers'
+    %li
+      else
+      %ul
+        %li
+          = render 'admins'
