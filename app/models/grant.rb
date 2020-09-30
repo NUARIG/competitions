@@ -158,6 +158,13 @@ class Grant < ApplicationRecord
     errors.add(:base, 'Must have at least one review criteria.')
   end
 
+  # def admins, def editors, def viewers
+  GrantPermission::ROLES.each do |_,role|
+    define_method "#{role.pluralize}".to_sym do
+      grant_permissions.send("role_#{role}").to_a.map(&:user)
+    end
+  end
+
   private
 
   def set_default_state
