@@ -6,7 +6,7 @@ include UsersHelper
 RSpec.describe 'GrantsDuplicate', type: :system, js: true do
   describe 'Duplicate' do
     before(:each) do
-      @grant          = create(:grant_with_users)
+      @grant          = create(:grant_with_users, :with_panel)
       @admin_user     = @grant.grant_permissions.role_admin.first.user
       @editor_user    = @grant.grant_permissions.role_editor.first.user
       @viewer_user    = @grant.grant_permissions.role_viewer.first.user
@@ -41,6 +41,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
               .and change{ GrantSubmission::Section.count}.by(@grant.form.sections.count)
               .and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
               .and change{ GrantSubmission::Question.count}.by(@grant.questions.count)
+              .and change{ Panel.count}.by(1)
         expect(page).to have_content('Current Publish Status: Draft')
       end
     end

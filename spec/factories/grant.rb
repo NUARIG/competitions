@@ -104,6 +104,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_panel do
+      after(:create) do |grant|
+        panel = create(:panel,  grant: grant)
+      end
+    end
+
     trait :bypass_validations do
       to_create { |grant| grant.save(validate: false) }
     end
@@ -128,7 +134,7 @@ FactoryBot.define do
     factory :draft_grant_with_users,                        traits: %i[draft with_users with_users_and_submission_form]
     factory :completed_grant_with_users,                    traits: %i[completed with_users]
 
-    factory :open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published open with_users_and_submission_form with_submission with_reviewer]
-    factory :draft_open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[draft open with_users_and_submission_form with_submission with_reviewer]
+    factory :open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published open with_users_and_submission_form with_submission with_reviewer with_panel]
+    factory :draft_open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[draft open with_users_and_submission_form with_submission with_reviewer with_panel]
   end
 end
