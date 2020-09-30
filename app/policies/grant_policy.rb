@@ -26,23 +26,23 @@ class GrantPolicy < ApplicationPolicy
   end
 
   def create?
-    user.system_admin? || user.grant_creator?
+     user.present? && user.system_admin? || user.grant_creator?
   end
 
   def new?
-    create?
+    user.present? && create?
   end
 
   def update?
-    grant_editor_access?
+    user.present? && grant_editor_access?
   end
 
   def edit?
-    grant_viewer_access?
+    user.present? && grant_viewer_access?
   end
 
   def destroy?
-    grant_admin_access?
+    user.present? && grant_admin_access?
   end
 
   def duplicate?
