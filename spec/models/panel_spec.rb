@@ -80,28 +80,28 @@ RSpec.describe Panel, type: :model do
   end
 
   describe '#methods' do
-    context '#panel_mode?' do
+    context '#is_open?' do
       context 'open panel' do
         it 'is true' do
-          expect(open_panel.in_panel_mode?).to be true
+          expect(open_panel.is_open?).to be true
         end
       end
 
       context 'before start_datetime' do
         it 'is false' do
-          expect(before_panel.in_panel_mode?).to be false
+          expect(before_panel.is_open?).to be false
         end
       end
 
       context 'after end_datetime' do
         it 'is false' do
-          expect(after_panel.in_panel_mode?).to be false
+          expect(after_panel.is_open?).to be false
         end
       end
 
       context 'no panel dates' do
         it 'is false' do
-          expect(no_panel.in_panel_mode?).to be false
+          expect(no_panel.is_open?).to be false
         end
       end
     end

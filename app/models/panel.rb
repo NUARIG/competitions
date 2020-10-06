@@ -19,7 +19,7 @@ class Panel < ApplicationRecord
 
   validate :start_is_after_submission_deadline, if: :start_datetime?
 
-  def in_panel_mode?
+  def is_open?
     return false if !start_datetime? || !end_datetime?
     DateTime.now.between?(start_datetime, end_datetime)
   end
