@@ -10,7 +10,8 @@ class Panel < ApplicationRecord
                                           message: 'is required if start is provided.'
 
   validates_datetime :start_datetime, before: :end_datetime,
-                                      if: -> { start_datetime? || end_datetime? }
+                                      if: -> { start_datetime? || end_datetime? },
+                                      before_message: 'must be before End Date/Time'
 
   validates_uniqueness_of :grant
   validates :meeting_link,  if: -> { meeting_link? },
