@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.describe GrantServices do
   describe 'DuplicateDependencies' do
     before(:each) do
-      @original_grant = create(:grant_with_users, :with_panel)
-      @new_grant      = create(:grant, duplicate: true,
-                                             name: 'New Name',
-                                             slug: 'NewShort')
+      @original_grant = create(:grant_with_users)
+      @new_grant      = create(:grant,  duplicate: true,
+                                        name: 'New Name',
+                                        slug: 'NewShort')
       @invalid_grant  = build(:grant, name: '')
     end
 

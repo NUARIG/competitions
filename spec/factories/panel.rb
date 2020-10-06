@@ -7,7 +7,7 @@ FactoryBot.define do
     meeting_link      { Faker::Internet.url(host: 'zoom-teams.io', scheme: 'https')}
     meeting_location  { Faker::Address.full_address }
 
-    trait :in_panel_mode do
+    trait :open do
       association       :grant, factory: :published_closed_grant_with_users
       start_datetime    { 1.hour.ago      }
       end_datetime      { 1.hour.from_now }
@@ -25,15 +25,15 @@ FactoryBot.define do
       end_datetime      { 1.hour.ago  }
     end
 
-    trait :no_panel_mode do
+    trait :no_panel_dates do
       start_datetime    { nil }
       end_datetime      { nil }
     end
 
-    factory :open_panel,      traits: %i[in_panel_mode]
+    factory :open_panel,      traits: %i[open]
     factory :closed_panel,    traits: %i[before_start_datetime]
     factory :before_panel,    traits: %i[before_start_datetime]
     factory :after_panel,     traits: %i[after_end_datetime]
-    factory :no_panel_dates,  traits: %i[no_panel_mode]
+    factory :no_panel_dates,  traits: %i[no_panel_dates]
   end
 end

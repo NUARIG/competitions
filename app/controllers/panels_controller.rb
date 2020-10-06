@@ -1,5 +1,6 @@
 class PanelsController < ApplicationController
   before_action :set_grant_and_panel
+  before_action :set_submissions, only: :show
 
   def show
     authorize @panel
@@ -17,7 +18,7 @@ class PanelsController < ApplicationController
       flash[:notice] = 'Panel information successfully updated.'
       redirect_to edit_grant_panel_path(@grant)
     else
-      flash[:alert] = @panel.errors.full_messages
+      flash.now[:alert] = @panel.errors.full_messages
       render :edit
     end
   end
@@ -27,6 +28,10 @@ class PanelsController < ApplicationController
   def set_grant_and_panel
     @grant = Grant.kept.friendly.find(params[:grant_id])
     @panel = @grant.panel
+  end
+
+  def set_submissions
+    @submissions = @grant.submissions.reviewed.with_applicant
   end
 
   def panel_params

@@ -2,11 +2,15 @@
 
 class PanelPolicy < GrantPolicy
   def show?
-    user.present? && grant_viewer_access? || user_is_grant_reviewer?
+    user.present? && (user_is_grant_reviewer? || grant_viewer_access?)
   end
 
   def edit?
     user.present? && grant_editor_access?
+  end
+
+  def update?
+    edit?
   end
 
   private
@@ -16,6 +20,6 @@ class PanelPolicy < GrantPolicy
   end
 
   def grant
-    panel.grant
+    record.grant
   end
 end

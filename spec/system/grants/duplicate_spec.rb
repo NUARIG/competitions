@@ -6,7 +6,7 @@ include UsersHelper
 RSpec.describe 'GrantsDuplicate', type: :system, js: true do
   describe 'Duplicate' do
     before(:each) do
-      @grant          = create(:grant_with_users, :with_panel)
+      @grant          = create(:grant_with_users)
       @admin_user     = @grant.grant_permissions.role_admin.first.user
       @editor_user    = @grant.grant_permissions.role_editor.first.user
       @viewer_user    = @grant.grant_permissions.role_viewer.first.user

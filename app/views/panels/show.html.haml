@@ -5,19 +5,10 @@
 
 %h2
   Review Panel
+%strong
+  CHANGE THIS LOGIC
 
-%p
-  Lorem ipusm dolor sum. Introductory information about the panel.
-
-%p
-  %ul
-    %li
-      if reviewer
-      %ul
-        %li
-          = render 'reviewers'
-    %li
-      else
-      %ul
-        %li
-          = render 'admins'
+- if @grant.reviewers.include?(current_user)
+  = render 'reviewers'
+- else
+  = render 'admins'

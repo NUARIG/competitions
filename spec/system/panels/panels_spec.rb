@@ -83,6 +83,48 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
     end
 
+    context 'meeting_link' do
+      before(:each) do
+        login_as admin, scope: admin.type.underscore.to_sym
+        visit edit_grant_panel_path(grant)
+      end
+
+      scenario 'requires https' do
+        page.fill_in 'Meeting Link', with: Faker::Internet.url(scheme: 'http')
+        click_button button_text
+        expect(page).to have_content 'not a valid secure URL'
+      end
+    end
+
+    context 'dates' do
+      before(:each) do
+        login_as admin, scope: admin.type.underscore.to_sym
+        visit edit_grant_panel_path(grant)
+      end
+
+      context 'start_datetime' do
+        scenario 'required to be before grant submission_close_date' do
+          invalid_start = (grant.submission_close_date - 1.day).at_noon
+          expect do
+            page.fill_in 'Start Date/Time', with: (invalid_start).strftime("%m/%d/%Y %H:%M%P")
+            click_button button_text
+          end.not_to change{grant.panel.start_datetime}
+          expect(page).to have_content I18n.t('activerecord.errors.models.panel.attributes.start_datetime.before_submission_deadline')
+        end
+
+        scenario 'required to be before end_datetime' do
+          invalid_start = Date.tomorrow.at_noon
+          invalid_end   = Date.today.at_noon
+          expect do
+            page.fill_in 'Start Date/Time', with: invalid_start.strftime("%m/%d/%Y %H:%M%P")
+            page.fill_in 'End Date/Time', with:   invalid_end.strftime("%m/%d/%Y %H:%M%P")
+            click_button button_text
+          end.not_to change{grant.panel.start_datetime}
+          expect(page).to have_content 'must be before End Date/Time'
+        end
+      end
+    end
+
     context 'paper_trail', versioning: true do
       scenario 'it tracks whodunnit' do
         login_as editor, scope: editor.type.underscore.to_sym
