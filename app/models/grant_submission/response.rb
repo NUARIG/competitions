@@ -1,5 +1,6 @@
 module GrantSubmission
   class Response < ApplicationRecord
+    include DateOptionalTime
     include WithSubmissionState
 
     attr_accessor :remove_document
@@ -31,8 +32,9 @@ module GrantSubmission
                                         foreign_key: 'grant_submission_multiple_choice_option_id',
                                         inverse_of: :responses,
                                         optional: true
-
     has_one_attached :document
+
+    has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
 
     validates_presence_of   :submission, :question
     validates_inclusion_of  :grant_submission_question_id,
@@ -49,19 +51,20 @@ module GrantSubmission
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
     validate :attachment_is_valid,   if: -> { document.attached? }
+    validate :attachment_not_removed_on_submit, if: -> () { question.response_type == 'file_upload' && submission&.user_submitted_state == 'submitted' && remove_document == '1' }
 
+    after_save :purge_document, if: -> () { question.response_type == 'file_upload' }
 
-    after_save :purge_document
-
-    include DateOptionalTime
-    has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
+    def attachment_not_removed_on_submit
+      errors.add(:document, 'is required for submission.') if (question.is_mandatory?)
+    end
 
     def purge_document
       if remove_document == '1'
         document.purge
       end
     end
-    
+
     def add_date_optional_time_error(datetime_comp)
       errors.add(self.class.date_optional_time_attribute(:datetime_val), "^#{question.text} must be a valid Date in the format MM/DD/YYYY")
     end
