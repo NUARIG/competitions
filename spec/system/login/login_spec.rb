@@ -8,8 +8,8 @@ RSpec.describe 'Login', type: :system do
   describe 'Home page', js: true do
     scenario 'home page login link navigates to login page' do
       visit root_path
-      expect(page).to have_link 'Login'
-      click_link 'Login'
+      expect(page).to have_link 'Log in'
+      click_link 'Log in'
       expect(current_path).to eq(login_index_path)
     end
   end
@@ -19,16 +19,13 @@ RSpec.describe 'Login', type: :system do
       visit login_index_path
     end
 
-    scenario 'login page has proper text' do
-      expect(page).to have_text 'Login using:'
-    end
-
     scenario 'login page has SAML ID login button' do
-      expect(page).to have_selector(:link_or_button, "#{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}")
+      expect(page).to have_selector(:link_or_button, "With #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}")
     end
 
-    scenario 'login page has Registered Account login button' do
-      expect(page).to have_selector(:link_or_button, 'Registered Account')
+    scenario 'login page has Registered Account login form' do
+      expect(page).to have_selector('#registered_user_uid')
+      expect(page).to have_selector('#registered_user_password')
     end
   end
 end
