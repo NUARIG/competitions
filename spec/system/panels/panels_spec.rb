@@ -83,6 +83,21 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
     end
 
+    context 'instructions' do
+      before(:each) do
+        login_as admin, scope: admin.type.underscore.to_sym
+        visit edit_grant_panel_path(grant)
+      end
+
+      scenario 'updates' do
+        new_instructions = Faker::Lorem.sentence(word_count: 8)
+        fill_in_trix_editor('panel_instructions', with: new_instructions)
+        click_button button_text
+        expect(page).to have_content 'Panel information successfully updated.'
+        expect(grant.panel.instructions).to have_content new_instructions
+      end
+    end
+
     context 'meeting_link' do
       before(:each) do
         login_as admin, scope: admin.type.underscore.to_sym
