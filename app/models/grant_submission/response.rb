@@ -134,7 +134,8 @@ module GrantSubmission
         validate_length_if_short_text_response
       when 'file_upload'
         if document.attached?
-          validate_attachment_size_if_file_upload_response && validate_attachment_type_if_file_upload_response
+          validate_attachment_type_if_file_upload_response
+          validate_attachment_size_if_file_upload_response
         end
       end
     end
@@ -157,16 +158,16 @@ module GrantSubmission
     end
 
     def validate_attachment_size_if_file_upload_response
-      if document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
+      if self.document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
         errors.add(:document, :file_too_large, question: question.text,
                                                allowed_file_size: READABLE_MAXIMUM_DOCUMENT_FILE_SIZE,
-                                               uploaded_file_size: (document.byte_size.to_f/(1.megabyte)).round(1))
+                                               uploaded_file_size: (self.document.byte_size.to_f/(1.megabyte)).round(1))
         document = nil
       end
     end
 
     def validate_attachment_type_if_file_upload_response
-      if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(document.filename.extension_with_delimiter)
+      if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(self.document.filename.extension_with_delimiter)
         errors.add(:document, :excluded_mime_type, question: question.text,
                                                    allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
         document = nil
@@ -190,10 +191,5 @@ module GrantSubmission
     def attachment_is_valid
       errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
-
-    # TODO: This will be needed in Rails 6.
-    # def changed_for_autosave?
-    #   super || file.changed_for_autosave?
-    # end
   end
 end

@@ -335,7 +335,7 @@ RSpec.describe GrantSubmission::Response, type: :model do
         let(:file_upload_response) { build(:invalid_file_upload_response, submission: grant.submissions.first,
                                                                           question: file_upload_question) }
 
-        it 'validates response an invalid attached file' do
+        it 'validates response with an invalid attached file' do
           expect(file_upload_response).not_to be_valid
           expect(file_upload_response.errors.messages[:document].first).to include('must be a PDF or Word file.')
         end
@@ -343,12 +343,16 @@ RSpec.describe GrantSubmission::Response, type: :model do
     end
 
     context '#methods' do
+      before(:each) do
+        grant.submissions.first.update(state: 'draft')
+      end
+
       let(:file_upload_response) { create(:valid_file_upload_response, submission: grant.submissions.first,
                                                                       question: file_upload_question) }
 
       it 'removes attached file when remove_document is 1' do
-        file_upload_response.remove_document = 1
-        file_upload_response.remove_document
+        file_upload_response.remove_document = '1'
+        file_upload_response.save
         expect(file_upload_response.document.attached?).to be false
       end
 
