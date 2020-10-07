@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class PanelPolicy < GrantPolicy
+class PanelPolicy < ApplicationPolicy
+  include GrantRoleAccess
+
   def show?
     user.present? && (user_is_grant_reviewer? || grant_viewer_access?)
   end
