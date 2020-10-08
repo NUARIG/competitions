@@ -35,7 +35,7 @@ gem 'devise_saml_authenticatable', '~> 1.6.1'
 
 gem 'draper'
 gem 'pundit'
-gem 'rubyzip' #, '~> 1.3.0'
+gem 'rubyzip', '~> 2.3.0'
 
 # frontend
 gem 'font-awesome-rails'
@@ -89,7 +89,7 @@ group :development do
   gem 'binding_of_caller'
   # gem 'bullet'
   gem 'i18n-debug'
-  gem 'listen' #, '>= 3.0.5', '< 3.2'
+  gem 'listen', '~> 3.2.1'
   gem 'rubocop'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
