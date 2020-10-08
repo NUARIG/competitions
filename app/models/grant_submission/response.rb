@@ -127,7 +127,7 @@ module GrantSubmission
         if document.attached?
           validate_attachment_type_if_file_upload_response
           validate_attachment_size_if_file_upload_response
-          validate_attachment_not_removed_on_submit
+          validate_attachment_not_removed_on_submit if submission&.user_submitted_state == 'submitted'
         end
       end
     end
@@ -169,9 +169,7 @@ module GrantSubmission
     end
 
     def validate_attachment_not_removed_on_submit
-      if submission&.user_submitted_state == 'submitted' &&
-         remove_document == '1' &&
-         question.is_mandatory?
+      if question.is_mandatory? && remove_document == '1'
         errors.add(:document, 'is required for submission.')
       end
     end
