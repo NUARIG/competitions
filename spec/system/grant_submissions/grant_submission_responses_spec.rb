@@ -47,9 +47,6 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
         end
 
         scenario 'accepts a file_upload response' do
-          # find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
-          # find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-          # find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
           page.fill_in('Short Text Question', with: Faker::Lorem.sentence, currently_with: '' )
           page.fill_in('Number Question', with: Faker::Number.number(digits: 10), currently_with: '' )
           page.fill_in('Long Text Question', with: Faker::Lorem.paragraph_by_chars(number: 100), currently_with: '' )

@@ -1,7 +1,6 @@
 module GrantSubmission
   class Response < ApplicationRecord
-    include DateOptionalTime
-    include WithSubmissionState
+  include WithSubmissionState
 
     attr_accessor :remove_document
 
@@ -34,8 +33,6 @@ module GrantSubmission
                                         optional: true
     has_one_attached :document
 
-    has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
-
     validates_presence_of   :submission, :question
     validates_inclusion_of  :grant_submission_question_id,
                             in: -> (it) { it.submission.form.questions.pluck(:id) }
@@ -51,18 +48,16 @@ module GrantSubmission
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
     validate :attachment_is_valid,   if: -> { document.attached? }
-    validate :attachment_not_removed_on_submit, if: -> () { question.response_type == 'file_upload' && submission&.user_submitted_state == 'submitted' && remove_document == '1' }
+    # validate :attachment_not_removed_on_submit, if: -> { question.response_type == 'file_upload' && submission&.user_submitted_state == 'submitted' && remove_document == '1' }
 
-    after_save :purge_document, if: -> () { question.response_type == 'file_upload' }
+    after_save :purge_document, if: -> { question.response_type == 'file_upload' && remove_document == '1' }
 
-    def attachment_not_removed_on_submit
-      errors.add(:document, 'is required for submission.') if (question.is_mandatory?)
-    end
+    # adds a response-type-speciific validation
+    include DateOptionalTime
+    has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
 
     def purge_document
-      if remove_document == '1'
-        document.purge
-      end
+      document.purge
     end
 
     def add_date_optional_time_error(datetime_comp)
@@ -120,10 +115,6 @@ module GrantSubmission
       self.submission.submitted? && (!self.submission.changed? || self.submission.changes.keys.include?('state'))
     end
 
-    def changed_for_autosave?
-      super || document.changed_for_autosave? if document.attached?
-    end
-
     private
 
     def validate_by_response_type
@@ -136,12 +127,17 @@ module GrantSubmission
         if document.attached?
           validate_attachment_type_if_file_upload_response
           validate_attachment_size_if_file_upload_response
+          validate_attachment_not_removed_on_submit
         end
       end
     end
 
     def response_if_mandatory
       errors.add(form_field_name, :blank, question: question.text) if response_value.blank?
+    end
+
+    def attachment_is_valid
+      errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
 
     def validate_number_if_number_response
@@ -162,7 +158,6 @@ module GrantSubmission
         errors.add(:document, :file_too_large, question: question.text,
                                                allowed_file_size: READABLE_MAXIMUM_DOCUMENT_FILE_SIZE,
                                                uploaded_file_size: (self.document.byte_size.to_f/(1.megabyte)).round(1))
-        document = nil
       end
     end
 
@@ -170,7 +165,14 @@ module GrantSubmission
       if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(self.document.filename.extension_with_delimiter)
         errors.add(:document, :excluded_mime_type, question: question.text,
                                                    allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
-        document = nil
+      end
+    end
+
+    def validate_attachment_not_removed_on_submit
+      if submission&.user_submitted_state == 'submitted' &&
+         remove_document == '1' &&
+         question.is_mandatory?
+        errors.add(:document, 'is required for submission.')
       end
     end
 
@@ -186,10 +188,6 @@ module GrantSubmission
           nil
         end
       end
-    end
-
-    def attachment_is_valid
-      errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
   end
 end

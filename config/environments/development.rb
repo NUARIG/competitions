@@ -61,10 +61,6 @@ Rails.application.configure do
   config.time_zone = 'Central Time (US & Canada)'
   config.active_record.default_timezone = :local
 
-  # Don't care if the mailer can't send.
-  # config.action_mailer.raise_delivery_errors = false
-  # config.action_mailer.perform_caching = false
-
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -77,11 +73,11 @@ Rails.application.configure do
   config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
   config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
 
-  # Bullet
-  # config.after_initialize do
-  #   Bullet.enable = true
-  #   Bullet.bullet_logger = true
-  #   Bullet.console = true
-  #   Bullet.add_footer = true
-  # end
+  Bullet
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.add_footer = true
+  end
 end

@@ -75,19 +75,13 @@ group :development, :test do
   gem 'awesome_print'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'puma', '~> 3.12'
-
-  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: 'main'
-  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core', branch: 'main'
-  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations', branch: 'main'
-  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks', branch: 'main'
-  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support', branch: 'main'
 end
 
 group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  # gem 'bullet'
+  gem 'bullet'
   gem 'i18n-debug'
   gem 'listen', '~> 3.2.1'
   gem 'rubocop'
@@ -112,6 +106,12 @@ group :test do
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
+
+  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: 'main'
+  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core', branch: 'main'
+  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations', branch: 'main'
+  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks', branch: 'main'
+  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support', branch: 'main'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
