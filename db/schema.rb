@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_23_154405) do
+ActiveRecord::Schema.define(version: 2020_09_29_181017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -379,6 +379,19 @@ ActiveRecord::Schema.define(version: 2020_09_23_154405) do
     t.datetime "updated_at", null: false
     t.index ["discarded_at"], name: "index_grants_on_discarded_at"
     t.index ["slug"], name: "index_grants_on_slug"
+  end
+
+  create_table "panel_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_panel_versions_on_grant_id"
+    t.index ["item_id"], name: "index_panel_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_panel_versions_on_whodunnit"
   end
 
   create_table "panels", force: :cascade do |t|

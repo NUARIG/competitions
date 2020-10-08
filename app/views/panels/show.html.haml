@@ -1,0 +1,14 @@
+- content_for(:page_title, "Panel - #{@grant.name}")
+
+%h1
+  = @grant.name
+
+%h2
+  Review Panel
+%strong
+  CHANGE THIS LOGIC
+
+- if @grant.reviewers.include?(current_user)
+  = render 'reviewers'
+- else
+  = render 'admins'

@@ -19,9 +19,10 @@ module GrantSubmissions
     def new
       @grant = Grant.kept
                     .friendly
-                    .includes(form:
+                    .includes( form:
                                 { sections:
-                                  {questions: :multiple_choice_options} } )
+                                  { questions: :multiple_choice_options} } )
+                    .with_reviewers.with_panel
                     .find(params[:grant_id])
       @grant = GrantDecorator.new(@grant)
       set_submission
@@ -85,7 +86,7 @@ module GrantSubmissions
     private
 
     def set_grant
-      @grant = Grant.kept.friendly.find(params[:grant_id])
+      @grant = Grant.kept.friendly.with_reviewers.with_panel.find(params[:grant_id])
     end
 
     def submission_redirect(grant, submission)

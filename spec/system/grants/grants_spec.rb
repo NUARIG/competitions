@@ -57,7 +57,6 @@ RSpec.describe 'Grants', type: :system, js: true do
         expect(PaperTrail).to be_enabled
         fill_in 'grant_name', with: 'New_Name'
         click_button 'Update'
-
         expect(page).to have_content 'Grant was successfully updated.'
         expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
       end
@@ -171,6 +170,74 @@ RSpec.describe 'Grants', type: :system, js: true do
       click_button 'Save as Draft'
       expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       expect(GrantPermission.all.count).to eql(grant_permission_count)
+    end
+  end
+
+  describe 'Show' do
+    let(:grant)     { create(:published_open_grant_with_users, :with_reviewer) }
+    let(:applicant) { create(:user) }
+    let(:reviewer)  { grant.reviewers.first }
+    let(:admin)     { grant.admins.first }
+    let(:editor)    { grant.editors.first }
+    let(:viewer)    { grant.viewers.first }
+
+    context 'panel information' do
+      it 'does not display dates to anonymous users' do
+        visit grant_path(grant)
+        expect(page).not_to have_content 'Panel Start'
+        expect(page).not_to have_content 'Panel End'
+      end
+
+      it 'does not display dates to logged in user' do
+        visit grant_path(grant)
+        expect(page).not_to have_content 'Panel Start'
+        expect(page).not_to have_content 'Panel End'
+      end
+
+      it 'displays dates to reviewer' do
+        login_as reviewer, scope: reviewer.type.underscore.to_sym
+        visit grant_path(grant)
+        expect(page).to have_content 'Panel Start'
+        expect(page).to have_content grant.panel.start_datetime
+        expect(page).to have_content 'Panel End'
+        expect(page).to have_content grant.panel.end_datetime
+      end
+
+      it 'displays dates to grant admin' do
+        login_as admin, scope: admin.type.underscore.to_sym
+        visit grant_path(grant)
+        expect(page).to have_content 'Panel Start'
+        expect(page).to have_content grant.panel.start_datetime
+        expect(page).to have_content 'Panel End'
+        expect(page).to have_content grant.panel.end_datetime
+      end
+
+      it 'displays dates to grant admin' do
+        login_as editor, scope: editor.type.underscore.to_sym
+        visit grant_path(grant)
+        expect(page).to have_content 'Panel Start'
+        expect(page).to have_content grant.panel.start_datetime
+        expect(page).to have_content 'Panel End'
+        expect(page).to have_content grant.panel.end_datetime
+      end
+
+      it 'displays dates to grant viewer' do
+        login_as viewer, scope: viewer.type.underscore.to_sym
+        visit grant_path(grant)
+        expect(page).to have_content 'Panel Start'
+        expect(page).to have_content grant.panel.start_datetime
+        expect(page).to have_content 'Panel End'
+        expect(page).to have_content grant.panel.end_datetime
+      end
+
+      it 'does not display dates if not are defined' do
+        grant.panel.update(start_datetime: nil, end_datetime: nil)
+        login_as viewer, scope: viewer.type.underscore.to_sym
+        visit grant_path(grant)
+
+        expect(page).not_to have_content 'Panel Start'
+        expect(page).not_to have_content 'Panel End'
+      end
     end
   end
 

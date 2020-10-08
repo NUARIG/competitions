@@ -139,6 +139,7 @@ class Grant < ApplicationRecord
   scope :unassigned_submissions, lambda { |*args| where('submission_reviews_count < :max_reviewers', { :max_reviewers => args.first || 2 }) }
   scope :with_reviewers,     -> { includes(:reviewers) }
   scope :with_reviews,       -> { includes(:reviews) }
+  scope :with_panel,         -> { includes(:panel) }
 
   def is_discardable?
     SOFT_DELETABLE_STATES.include?(state) ? true : send("#{state}_discardable?")
@@ -156,6 +157,13 @@ class Grant < ApplicationRecord
   def requires_one_criteria
     criteria.each { |c| c.reload if c.marked_for_destruction? }
     errors.add(:base, 'Must have at least one review criteria.')
+  end
+
+  # def admins, def editors, def viewers
+  GrantPermission::ROLES.each do |_,role|
+    define_method "#{role.pluralize}".to_sym do
+      grant_permissions.send("role_#{role}").to_a.map(&:user)
+    end
   end
 
   private

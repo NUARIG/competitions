@@ -61,6 +61,7 @@ module GrantSubmission
     scope :sort_by_composite_score_nulls_last_asc,  -> { order(Arel.sql("composite_score = 0 nulls last, composite_score ASC")) }
     scope :sort_by_composite_score_nulls_last_desc, -> { order(Arel.sql("composite_score = 0 nulls last, composite_score DESC")) }
 
+    scope :reviewed,            -> { where("average_overall_impact_score > 0") }
 
     # TODO: available? to...edit? delete?
     def available?

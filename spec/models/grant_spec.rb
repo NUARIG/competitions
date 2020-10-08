@@ -287,4 +287,39 @@ RSpec.describe Grant, type: :model do
     end
 
   end
+
+  describe '#methods' do
+    let(:grant)     { create(:published_open_grant_with_users, :with_reviewer) }
+    let(:new_user)  { create(:user) }
+
+    context 'roles' do
+      context '#admins' do
+        it 'returns admins' do
+          expect(grant.admins.count).to eql 1
+          grant.grant_permissions.create(grant: grant, user: new_user, role: 'admin')
+          expect(grant.admins.count).to eql 2
+          expect(grant.admins.last.id).to eql new_user.id
+        end
+      end
+
+      context '#editors' do
+        it 'returns editors' do
+          expect(grant.editors.count).to eql 1
+          grant.grant_permissions.create(grant: grant, user: new_user, role: 'editor')
+          expect(grant.editors.count).to eql 2
+          expect(grant.editors.last.id).to eql new_user.id
+        end
+      end
+
+      context '#viewers' do
+        it 'returns viewers' do
+          expect(grant.viewers.count).to eql 1
+          grant.grant_permissions.create(grant: grant, user: new_user, role: 'viewer')
+          expect(grant.viewers.count).to eql 2
+          expect(grant.viewers.last.id).to eql new_user.id
+        end
+      end
+
+    end
+  end
 end

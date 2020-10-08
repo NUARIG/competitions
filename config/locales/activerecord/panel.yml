@@ -1,0 +1,18 @@
+en:
+  activerecord:
+    attributes:
+      panel: &panel
+        end_datetime: End Date/Time
+        meeting_link: Meeting Link
+        meeting_location: Meeting Location
+        start_datetime: Start Date/Time
+    errors:
+      models:
+        panel:
+          attributes:
+            start_datetime:
+              before_submission_deadline: 'must be after the submission close date.'
+  helpers:
+    label:
+      panel:
+        <<: *panel
