@@ -61,20 +61,33 @@ RSpec.describe Panel, type: :model do
     end
 
     context 'meeting_link' do
-      it 'requires a valid secure url' do
-        panel.meeting_link = 'invalid'
-        expect(panel).not_to be_valid
-        expect(panel.errors.full_messages).to include 'Meeting Link is not a valid secure URL.'
-        panel.meeting_link = 'ftp://abc.com/'
-        expect(panel).not_to be_valid
-        expect(panel.errors.full_messages).to include 'Meeting Link is not a valid secure URL.'
-        panel.meeting_link = 'http://abc.com/'
-        expect(panel).not_to be_valid
-        expect(panel.errors.full_messages).to include 'Meeting Link is not a valid secure URL.'
-        panel.meeting_link = 'https://abc.com/'
-        expect(panel).to be_valid
-        panel.meeting_link = 'https://college.zoom.us/z/123456789'
-        expect(panel).to be_valid
+      context 'requires a valid secure url' do
+        it 'may not be a string' do
+          panel.meeting_link = 'invalid'
+          is_invalid_meeting_link(panel: panel)
+        end
+
+        it 'may not be ftp' do
+          panel.meeting_link = 'ftp://abc.com/'
+          is_invalid_meeting_link(panel: panel)
+        end
+
+        it 'may not be http' do
+          panel.meeting_link = 'http://abc.com/'
+          is_invalid_meeting_link(panel: panel)
+        end
+      end
+
+      context 'valid secure url' do
+        it 'validates url' do
+          panel.meeting_link = 'https://abc.com/'
+          expect(panel).to be_valid
+        end
+
+        it 'validates full path url' do
+          panel.meeting_link = 'https://college.zoom.us/z/123456789'
+          expect(panel).to be_valid
+        end
       end
     end
   end
@@ -106,4 +119,10 @@ RSpec.describe Panel, type: :model do
       end
     end
   end
+
+  def is_invalid_meeting_link(panel:)
+    expect(panel).not_to be_valid
+    expect(panel.errors.full_messages).to include 'Meeting Link is not a valid secure URL.'
+  end
+
 end
