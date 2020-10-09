@@ -190,8 +190,14 @@ RSpec.describe Review, type: :model do
         expect(review.review_period_closed?).to be false
       end
 
+      it 'returns false when review_close_date is today' do
+        allow_any_instance_of(Grant).to receive(:review_close_date).and_return(Date.today)
+        expect(review.review_period_closed?).to be false
+      end
+
+
       it 'returns true when review_close_date has passed' do
-        allow_any_instance_of(Grant).to receive(:review_close_date).and_return(1.minute.ago)
+        allow_any_instance_of(Grant).to receive(:review_close_date).and_return(Date.yesterday.beginning_of_day)
         expect(review.review_period_closed?).to be true
       end
     end
