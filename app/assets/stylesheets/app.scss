@@ -97,6 +97,10 @@ th {
   vertical-align: bottom;
 }
 
+td {
+  vertical-align: top;
+}
+
 // submission labels contain paragraphs
 //   see: grant_submission_responses.scss
 main:not(.submissions) label.required-true:after {
