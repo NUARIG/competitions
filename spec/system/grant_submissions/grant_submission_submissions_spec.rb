@@ -419,7 +419,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'editor' do
         before(:each) do
-          login_as(draft_grant.administrators.first, scope: :saml_user)
+          login_user(draft_grant.admins.first)
           visit grant_apply_path(draft_grant)
         end
 
