@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.11.0"
+lock "~> 3.14.1"
 
 DEPLOY_CONFIG = YAML.load(File.open('config/deploy_config.yml'))
 
