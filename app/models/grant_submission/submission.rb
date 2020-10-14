@@ -84,11 +84,11 @@ module GrantSubmission
     end
 
     def set_average_overall_impact_score
-      self.update_attribute(:average_overall_impact_score, calculate_average_score(reviews.to_a.map(&:overall_impact_score)))
+      self.update(average_overall_impact_score: calculate_average_score(reviews.to_a.map(&:overall_impact_score)))
     end
 
     def set_composite_score
-      self.update_attribute(:composite_score, calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
+      self.update(composite_score: calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
     end
 
     def abort_or_prepare_destroy
@@ -103,7 +103,8 @@ module GrantSubmission
     private
 
     def set_state
-      self.update_attribute(:state, user_submitted_state)
+      # self.update(state: user_submitted_state)
+      self.state = user_submitted_state
     end
 
     def can_be_unsubmitted?

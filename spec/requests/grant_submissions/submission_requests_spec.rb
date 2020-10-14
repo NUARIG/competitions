@@ -9,7 +9,7 @@ RSpec.describe 'grant_submission requests', type: :request do
   context '#show' do
     context 'submitted' do
       before(:each) do
-        submission.update_attribute(:state, 'submitted')
+        submission.update(state: 'submitted')
       end
 
       context 'kept' do
@@ -34,7 +34,7 @@ RSpec.describe 'grant_submission requests', type: :request do
 
     context 'draft' do
       before(:each) do
-        submission.update_attribute(:state, 'draft')
+        submission.update(state: 'draft')
       end
 
       context 'kept' do

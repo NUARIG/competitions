@@ -7,12 +7,12 @@ module GrantSubmissionFormServices
           # copy the original form to new form
           original_form = original_grant.form
           new_form      = original_form.dup
-          new_form.update_attributes!(grant_id: new_grant.id)
+          new_form.update!(grant_id: new_grant.id)
           # loop through the sections
           original_form.sections.each do |original_section|
             new_section = original_section.dup
             # assign section to new_form
-            new_section.update_attributes!(grant_submission_form_id: new_form.id)
+            new_section.update!(grant_submission_form_id: new_form.id)
             # loop through the questions
             original_section.questions.each do |question|
               new_question = question.dup
@@ -22,7 +22,7 @@ module GrantSubmissionFormServices
                 new_question.save!(:validate => false)
                 question.multiple_choice_options.each do |option|
                   new_option = option.dup
-                  new_option.update_attributes!(grant_submission_question_id: new_question.id)
+                  new_option.update!(grant_submission_question_id: new_question.id)
                 end
               else
                 new_question.save!

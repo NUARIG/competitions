@@ -47,7 +47,7 @@ class GrantCreatorRequestsController < ApplicationController
 
   def update
     authorize @grant_creator_request
-    if @grant_creator_request.update_attributes(grant_creator_request_params)
+    if @grant_creator_request.update(grant_creator_request_params)
       flash[:success] = 'Your request has been updated. You will be notified after review.'
       redirect_to profile_path
     else

@@ -117,7 +117,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
 
     context 'with no reviews' do
       it 'may be unsubmitted' do
-        submission.update_attribute(:state, GrantSubmission::Submission::SUBMISSION_STATES[:draft])
+        submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
         expect(submission).to be_valid
       end
     end
