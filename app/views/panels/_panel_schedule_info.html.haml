@@ -1,0 +1,16 @@
+- if @panel.is_open?
+  %div.callout.success
+    %p
+      This section will be available to reviewers until #{will_close_at_string(panel: @panel)}.
+- elsif @panel.start_datetime > DateTime.now
+  .callout.primary
+    %strong
+      Panel has not begun
+    %p
+      This section will be available to reviewers at #{will_open_at_string(panel: @panel)}. Please visit or refresh then.
+- else
+  .callout.alert
+    %strong
+      Panel has closed
+    %p
+      This panel has closed and is no longer accessible to reviewers.
