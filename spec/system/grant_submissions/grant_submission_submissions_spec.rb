@@ -11,26 +11,26 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant_viewer)          { grant.administrators.third }
   let(:new_applicant)         { create(:saml_user) }
   let(:draft_submission)      { create(:draft_submission_with_responses,
-                                         grant: grant,
-                                         form: grant.form) }
+                                        grant: grant,
+                                        form: grant.form) }
   let(:draft_grant)           { create(:draft_grant) }
   let(:other_submission)      { create(:grant_submission_submission, grant: grant) }
   let(:review)                { create(:scored_review_with_scored_mandatory_criteria_review,
-                                         submission: submission,
-                                         assigner: grant_admin,
-                                         reviewer: grant.reviewers.first) }
+                                        submission: submission,
+                                        assigner: grant_admin,
+                                        reviewer: grant.reviewers.first) }
   let(:new_reviewer)          { create(:grant_reviewer, grant: grant) }
   let(:new_review)            { create(:scored_review_with_scored_mandatory_criteria_review,
-                                         submission: submission,
-                                         assigner: grant_admin,
-                                         reviewer: new_reviewer.reviewer) }
+                                        submission: submission,
+                                        assigner: grant_admin,
+                                        reviewer: new_reviewer.reviewer) }
   let(:unscored_review)       { create(:incomplete_review,
-                                         submission: submission,
-                                         assigner: grant_admin,
-                                         reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
+                                        submission: submission,
+                                        assigner: grant_admin,
+                                        reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
   let(:unreviewed_submission) { create(:submission_with_responses,
-                                    grant: grant,
-                                    form: grant.form) }
+                                        grant: grant,
+                                        form: grant.form) }
 
   context '#index' do
     context 'published grant' do
@@ -110,15 +110,17 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           context 'with multiple submissions' do
             before(:each) do
               review.save
-              unreviewed_submission.save
+              unreviewed_submission.update(user_updated_at: submission.user_updated_at + 1.minute)
 
               login_as(grant_admin, scope: :saml_user)
               visit grant_submissions_path(grant)
             end
 
-            scenario 'sorts overall_impact by scored submissions to top' do
+            scenario 'default sort by submission user_updated_at desc' do
               expect(page.find(".average", match: :first)).to have_text '-'
+            end
 
+            scenario 'sorts overall_impact by scored submissions to top' do
               click_link('Overall Impact')
               expect(page.find(".average", match: :first)).to have_text submission.average_overall_impact_score
 
@@ -127,8 +129,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             end
 
             scenario 'sorts composite_score by scored submissions to top' do
-              expect(page.find(".composite", match: :first)).to have_text '-'
-
               click_link('Composite')
               expect(page.find(".composite", match: :first)).to have_text submission.composite_score
 
