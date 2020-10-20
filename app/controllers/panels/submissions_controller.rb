@@ -2,7 +2,6 @@ module Panels
   class SubmissionsController < ApplicationController
     before_action :set_grant
     before_action :set_panel
-    before_action :set_submission
     before_action :set_submission,  only: :show
 
     before_action :authorize_panel
@@ -13,6 +12,7 @@ module Panels
     end
 
     def show
+      render :show
     end
 
     private
