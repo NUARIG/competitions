@@ -74,7 +74,7 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
 
       context 'draft' do
         it 'does not change status' do
-          submission.update_attribute(:state, GrantSubmission::Submission::SUBMISSION_STATES[:draft])
+          submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
           patch unsubmit_grant_submission_path(grant_id: grant.id, id: submission.id)
           follow_redirect!
           expect(response.body).to include(draft_unsubmit_message)

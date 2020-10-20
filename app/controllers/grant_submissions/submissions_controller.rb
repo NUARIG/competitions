@@ -42,7 +42,7 @@ module GrantSubmissions
       @submission.user_submitted_state = params[:state]
 
       if @submission.save
-        @submission.update_attribute(:user_updated_at, Time.now)
+        @submission.update(user_updated_at: Time.now)
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
         submission_redirect(@grant, @submission)
       else
@@ -60,7 +60,7 @@ module GrantSubmissions
 
       if @submission.update(submission_params)
         @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
-        @submission.update_attribute(:user_updated_at, Time.now)
+        @submission.update(user_updated_at: Time.now)
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'

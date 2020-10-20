@@ -77,7 +77,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       context 'complete review' do
         before(:each) do
           @submission_review.grant_criteria.each do |criterion|
-            criterion.update_attribute(:show_comment_field, true)
+            criterion.update(show_comment_field: true, is_mandatory: false)
             create(:scored_criteria_review, criterion: criterion,
                                             review: @submission_review,
                                             score: random_score)
@@ -85,11 +85,10 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           @submission_review.update(overall_impact_score: random_score)
 
           @unscored_criterion = @submission_review.criteria_reviews.first
-          @unscored_criterion.update_attribute(:score, nil)
-          @unscored_criterion.update_attribute(:comment, 'Commented criterion.')
+          @unscored_criterion.update(score: nil)
+          @unscored_criterion.update(comment: 'Commented criterion.')
 
           @uncommented_criterion = @submission_review.criteria_reviews.last.criterion
-
           visit grant_submission_reviews_path(@grant, @submission)
         end
 
@@ -144,7 +143,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe '#edit', js: true do
     context 'frontend' do
       scenario 'displays appropriate criteria comment field' do
-        grant.criteria.first.update_attribute(:show_comment_field, true)
+        grant.criteria.first.update(show_comment_field: true)
 
         login_as(review.reviewer, scope: :saml_user)
         visit edit_grant_submission_review_path(grant, submission, review)
@@ -240,7 +239,6 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       context 'foundation form abide feedback' do
         scenario 'provides feedback when a required criterion score is not scored' do
           # login_as reviewer
-          # visit edit_grant_submission_review_path(grant, submission, review)
           click_button 'Submit Your Review'
           expect(page).not_to have_text 'Review was successfully updated.'
           grant.criteria.each do |criterion|
@@ -269,7 +267,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
                                                                                          reviewer: new_grant_reviewer.reviewer)}
 
       before(:each) do
-        grant.update_attribute(:max_reviewers_per_submission, 2)
+        grant.update(max_reviewers_per_submission: 2)
         login_as(scored_review.reviewer, scope: :saml_user)
       end
 
@@ -285,14 +283,14 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
   describe '#create', js: true do
     before(:each) do
-      grant.update_attribute(:max_reviewers_per_submission, 2)
+      grant.update(max_reviewers_per_submission: 2)
       applicant           = submission.applicant
     end
 
     context 'draft submission' do
       scenario 'does not appear for assignment' do
         submission.reviews.delete_all
-        submission.update_attribute(:state, 'draft')
+        submission.update(state: 'draft')
         login_as(grant_admin, scope: :saml_user)
         visit grant_reviewers_path(grant)
 

@@ -37,7 +37,7 @@ RSpec.describe 'Users', type: :system, js: true  do
         login_as(@saml_system_admin, scope: :saml_user)
         visit users_path
 
-        @saml_system_admin.update_attribute(:current_sign_in_at, 45.days.ago)
+        @saml_system_admin.update(current_sign_in_at: 45.days.ago)
         @saml_system_admin.save!
       end
 
@@ -107,13 +107,13 @@ RSpec.describe 'Users', type: :system, js: true  do
       end
 
       scenario 'sort by created_at' do
-        @saml_user1.update_attribute(:created_at, 3.weeks.ago)
-        @saml_user2.update_attribute(:created_at, 1.day.ago)
-        @saml_grant_creator.update_attribute(:created_at, 3.year.ago)
-        @saml_system_admin.update_attribute(:created_at, 181.days.ago)
-        @registered_user.update_attribute(:created_at, 8.days.ago)
-        @registered_grant_creator.update_attribute(:created_at, 3.month.ago)
-        @registered_system_admin.update_attribute(:created_at, 2.years.ago)
+        @saml_user1.update(created_at: 3.weeks.ago)
+        @saml_user2.update(created_at: 1.day.ago)
+        @saml_grant_creator.update(created_at: 3.year.ago)
+        @saml_system_admin.update(created_at: 181.days.ago)
+        @registered_user.update(created_at: 8.days.ago)
+        @registered_grant_creator.update(created_at: 3.month.ago)
+        @registered_system_admin.update(created_at: 2.years.ago)
 
         visit users_path
         click_on('Joined')

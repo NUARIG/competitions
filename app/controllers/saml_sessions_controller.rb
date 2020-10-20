@@ -12,6 +12,6 @@ class SamlSessionsController < Devise::SamlSessionsController
   end
 
   def set_saml_session_index_on_current_user
-    current_user.update_attribute(Devise.saml_session_index_key, session[Devise.saml_session_index_key])
+    current_user.update(Devise.saml_session_index_key session[Devise.saml_session_index_key])
   end
 end

@@ -1,6 +1,6 @@
 module GrantSubmission
   class Response < ApplicationRecord
-    include WithSubmissionState
+  include WithSubmissionState
 
     attr_accessor :remove_document
 
@@ -31,7 +31,6 @@ module GrantSubmission
                                         foreign_key: 'grant_submission_multiple_choice_option_id',
                                         inverse_of: :responses,
                                         optional: true
-
     has_one_attached :document
 
     validates_presence_of   :submission, :question
@@ -49,19 +48,16 @@ module GrantSubmission
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
     validate :attachment_is_valid,   if: -> { document.attached? }
+    # validate :attachment_not_removed_on_submit, if: -> { question.response_type == 'file_upload' && submission&.user_submitted_state == 'submitted' && remove_document == '1' }
 
+    after_save :purge_document, if: -> { question.response_type == 'file_upload' && remove_document == '1' }
+
+    # adds a response-type-speciific validation
     include DateOptionalTime
     has_date_optional_time(datetime_comp: :datetime_val, has_time_comp: :boolean_val)
 
-    def remove_document=(val)
-      remove_document = val # allows clearing file inputs to persist across validation errors
-      if val == 1 || val == "1"
-        document.purge
-      end
-    end
-
-    def remove_document
-      remove_document ||= nil
+    def purge_document
+      document.purge
     end
 
     def add_date_optional_time_error(datetime_comp)
@@ -129,14 +125,19 @@ module GrantSubmission
         validate_length_if_short_text_response
       when 'file_upload'
         if document.attached?
-          validate_attachment_size_if_file_upload_response
           validate_attachment_type_if_file_upload_response
+          validate_attachment_size_if_file_upload_response
+          validate_attachment_not_removed_on_submit if submission&.user_submitted_state == 'submitted'
         end
       end
     end
 
     def response_if_mandatory
       errors.add(form_field_name, :blank, question: question.text) if response_value.blank?
+    end
+
+    def attachment_is_valid
+      errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
     end
 
     def validate_number_if_number_response
@@ -153,19 +154,23 @@ module GrantSubmission
     end
 
     def validate_attachment_size_if_file_upload_response
-      if document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
+      if self.document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
         errors.add(:document, :file_too_large, question: question.text,
                                                allowed_file_size: READABLE_MAXIMUM_DOCUMENT_FILE_SIZE,
-                                               uploaded_file_size: (document.byte_size.to_f/(1.megabyte)).round(1))
-        document.purge
+                                               uploaded_file_size: (self.document.byte_size.to_f/(1.megabyte)).round(1))
       end
     end
 
     def validate_attachment_type_if_file_upload_response
-      if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(document.filename.extension_with_delimiter)
+      if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(self.document.filename.extension_with_delimiter)
         errors.add(:document, :excluded_mime_type, question: question.text,
                                                    allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
-        document.purge
+      end
+    end
+
+    def validate_attachment_not_removed_on_submit
+      if question.is_mandatory? && remove_document == '1'
+        errors.add(:document, 'is required for submission.')
       end
     end
 
@@ -182,14 +187,5 @@ module GrantSubmission
         end
       end
     end
-
-    def attachment_is_valid
-      errors.add(:document, :not_a_file_upload, question: question) unless question.response_type == 'file_upload'
-    end
-
-    # TODO: This will be needed in Rails 6.
-    # def changed_for_autosave?
-    #   super || file.changed_for_autosave?
-    # end
   end
 end

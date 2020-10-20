@@ -81,6 +81,7 @@ RSpec.describe 'GrantReviewers', type: :system do
       scenario 'reviewer can be deleted' do
         accept_alert do
           click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+          sleep 0.5
         end
         expect(page).to have_content "Reviewer and their reviews have been deleted for this grant."
       end
@@ -137,6 +138,7 @@ RSpec.describe 'GrantReviewers', type: :system do
         grant_reviewer = GrantReviewer.find_by(grant: grant, reviewer: reviewer)
         accept_alert do
           click_link('Remove', href: grant_reviewer_path(grant, grant_reviewer))
+          sleep 0.5
         end
         expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
         expect(grant_reviewer.versions.last.whodunnit).to be grant_admin.id
