@@ -64,3 +64,15 @@ label {
   color: $black;
   font-size: 1.15em;
 }
+
+html, body {
+  height: 100%;
+}
+
+main {
+  padding: 1em;
+}
+
+h1 ~ h2 {
+  margin-top: 0;
+}

@@ -1,3 +1,5 @@
+@import 'settings';
+
 .grid-container {
   header {
     .top-bar-left {
@@ -99,6 +101,9 @@ th {
 
 td {
   vertical-align: top;
+  ul.menu a {
+    padding-top: 0.25em;
+  }
 }
 
 // submission labels contain paragraphs
@@ -140,4 +145,21 @@ trix-editor + p.help-text {
 a.icon-24px {
   position: relative;
   bottom: 2px;
+}
+
+// grant header
+h1#grant-name {
+  font-size: 1.25em;
+  font-weight: bold;
+  line-height: 1em;
+  a {
+    color: $black;
+  }
+}
+
+h2#section {
+  font-size: 1.65em;
+  a {
+    color: $black;
+  }
 }
