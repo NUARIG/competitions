@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :grant_submission_submission, class: 'GrantSubmission::Submission' do
-    association     :grant, factory: :grant
-    association     :form,  factory: :grant_submission_form
+    association     :grant, factory: :grant_with_users
+    form           { grant.form }
     association     :applicant, factory: :saml_user
     title           { Faker::Lorem.sentence }
     state           { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
@@ -41,8 +41,21 @@ FactoryBot.define do
       end
     end
 
+    trait :with_review do
+      after(:create) do |submission|
+        grant     = submission.grant
+        assigner  = grant.admins.first.present? ? grant.admins.first : create(:grant_permission, grant: grant).user
+        reviewer  = create(:grant_reviewer, grant: grant).reviewer
+        review    = create(:scored_review_with_scored_mandatory_criteria_review,  submission: submission,
+                                                                                  assigner: assigner,
+                                                                                  reviewer: reviewer,
+                                                                                  created_at: grant.review_close_date - 1.hour)
+      end
+    end
+
     factory :submission_with_responses,       traits: %i[with_responses]
     factory :draft_submission,                traits: %i[draft]
     factory :draft_submission_with_responses, traits: %i[draft with_responses]
+    factory :reviewed_submission,             traits: %i[with_responses with_review]
   end
 end
