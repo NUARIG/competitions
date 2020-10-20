@@ -60,4 +60,9 @@ describe PanelPolicy do
     it { is_expected.not_to permit_actions(%i[show edit update]) }
   end
 
+  context 'applicant' do
+    let(:user) { grant.applicants.first }
+
+    it { is_expected.not_to permit_actions(%i[show edit update]) }
+  end
 end
