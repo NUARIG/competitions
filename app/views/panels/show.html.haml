@@ -18,7 +18,5 @@
 
 = render 'panel_schedule_info'
 
-- if user_has_grant_viewer_access
-  = render 'panel_content'
-- elsif @panel.is_open?
+- if user_has_grant_viewer_access || @panel.is_open?
   = render 'panel_content'
