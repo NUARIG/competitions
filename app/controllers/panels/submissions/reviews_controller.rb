@@ -10,7 +10,7 @@ module Panels
       skip_after_action :verify_policy_scoped, only: :index
 
       def index
-        @panel.is_open? ? authorize(@panel, :show?) : authorize(@panel, :edit?)
+        authorize @panel, :view_content?
         @q              = Review.kept.completed.with_criteria_reviews.with_reviewer.by_submission(@submission).ransack(params[:q])
         @q.sorts        = 'overall_impact_score asc' if @q.sorts.empty?
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')

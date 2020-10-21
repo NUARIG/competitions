@@ -40,7 +40,6 @@ RSpec.describe 'Panel Submission Reviews', type: :system, js: true do
         expect(page).to have_content full_name(reviewer2)
       end
 
-
       scenario 'does not include incomplete review' do
         expect(page).not_to have_content full_name(reviewer3)
       end

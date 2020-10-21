@@ -15,15 +15,11 @@ module Panels
     end
 
     def show
-      @panel.is_open? ? authorize(@panel, :show?) : authorize(@panel, :edit?)
+      authorize @panel, :view_content?
       render :show
     end
 
     private
-
-    # def user_not_authorized
-    #   redirect_to grant_panel_path(@grant)
-    # end
 
     def set_grant
       @grant = Grant.kept.friendly.find(params[:grant_id])
