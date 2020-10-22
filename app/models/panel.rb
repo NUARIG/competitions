@@ -1,4 +1,6 @@
 class Panel < ApplicationRecord
+  include Discard::Model
+
   has_paper_trail versions: { class_name: 'PaperTrail::PanelVersion' },
                   meta:     { grant_id: :grant_id }
 

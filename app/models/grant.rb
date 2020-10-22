@@ -10,11 +10,13 @@ class Grant < ApplicationRecord
   include Discard::Model
 
   after_discard do
+    panel.discard
     submissions.discard_all
     reviews.discard_all
   end
 
   after_undiscard do
+    panel.undiscard
     submissions.undiscard_all
     reviews.undiscard_all
   end
