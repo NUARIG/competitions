@@ -65,7 +65,7 @@ RSpec.describe Review, type: :model do
       end
 
       it 'prevents a draft submission from being reviewed' do
-        submission.update_attribute(:state, 'draft')
+        submission.update(state: 'draft')
         expect(review).not_to be_valid
         expect(review.errors).to include(:submission)
       end
@@ -124,7 +124,7 @@ RSpec.describe Review, type: :model do
       end
 
       it 'includes non-mandatory scores in criterion average score' do
-        scored_review_with_criteria_reviews.criteria.first.update_attributes(is_mandatory: false)
+        scored_review_with_criteria_reviews.criteria.first.update(is_mandatory: false)
         scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
         expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
       end
@@ -133,8 +133,8 @@ RSpec.describe Review, type: :model do
         review = scored_review_with_criteria_reviews
         expect do
           updated_criterion = review.criteria.where(is_mandatory: true).first
-          updated_criterion.update_attribute(:is_mandatory, false)
-          CriteriaReview.find_by(review: review, criterion: updated_criterion).update_attribute(:score, nil)
+          updated_criterion.update(is_mandatory: false)
+          CriteriaReview.find_by(review: review, criterion: updated_criterion).update(score: nil)
         end.to (change{review.scored_criteria_scores.count}.by(-1))
       end
     end

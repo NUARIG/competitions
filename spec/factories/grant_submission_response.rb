@@ -41,6 +41,8 @@ FactoryBot.define do
       document { Rack::Test::UploadedFile.new('spec/support/file_upload/text_file.txt', 'text/plain') }
     end
 
+
+
     factory :string_val_response,          traits: %i[string_val]
     factory :text_val_response,            traits: %i[text_val]
     factory :number_response,              traits: %i[number]

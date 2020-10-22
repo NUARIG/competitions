@@ -47,9 +47,9 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
         end
 
         scenario 'accepts a file_upload response' do
-          find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
-          find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-          find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
+          page.fill_in('Short Text Question', with: Faker::Lorem.sentence, currently_with: '' )
+          page.fill_in('Number Question', with: Faker::Number.number(digits: 10), currently_with: '' )
+          page.fill_in('Long Text Question', with: Faker::Lorem.paragraph_by_chars(number: 100), currently_with: '' )
           page.attach_file(file_upload_question.text, Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'))
           click_button 'Submit'
           expect(page).to have_content successfully_submitted_submission_message
@@ -59,7 +59,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
       context 'invalid submission' do
         context 'single question' do
           scenario 'requires response mandatory short_text question' do
-            short_text_question.update_attribute(:is_mandatory, true)
+            short_text_question.update(is_mandatory: true)
 
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
@@ -69,7 +69,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
           end
 
           scenario 'requires response mandatory long_text question' do
-            long_text_question.update_attribute(:is_mandatory, true)
+            long_text_question.update(is_mandatory: true)
 
             find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
@@ -79,7 +79,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
           end
 
           scenario 'requires response mandatory pick_one question' do
-            multiple_choice_question.update_attribute(:is_mandatory, true)
+            multiple_choice_question.update(is_mandatory: true)
 
             find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
@@ -91,7 +91,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
           context 'number' do
             scenario 'requires response mandatory number question' do
-              number_question.update_attribute(:is_mandatory, true)
+              number_question.update(is_mandatory: true)
               find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
               click_button 'Submit'
@@ -143,7 +143,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
           context 'file_upload' do
             scenario 'requires a file_upload response' do
-              file_upload_question.update_attribute(:is_mandatory, true)
+              file_upload_question.update(is_mandatory: true)
               find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
               find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
@@ -186,7 +186,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
         context 'submitting' do
           before(:each) do
-            short_text_question.update_attribute(:is_mandatory, true)
+            short_text_question.update(is_mandatory: true)
           end
 
           scenario 'throws error when no answer for required short text' do
@@ -214,7 +214,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
         context 'updating' do
           before(:each) do
-            short_text_question.update_attribute(:is_mandatory, true)
+            short_text_question.update(is_mandatory: true)
             visit(edit_grant_submission_path(grant, draft_submission))
           end
 

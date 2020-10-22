@@ -266,7 +266,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
 
     scenario 'draft grant can be soft deleted' do
-      grant.update_attributes!(state: 'draft')
+      grant.update!(state: 'draft')
       visit edit_grant_path(grant)
       click_link 'Delete'
       page.driver.browser.switch_to.alert.accept
@@ -275,7 +275,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
 
     scenario 'completed grant cannot be discarded' do
-      grant.update_attributes!(state: 'completed')
+      grant.update!(state: 'completed')
       visit edit_grant_path(grant)
       click_link 'Delete'
       page.driver.browser.switch_to.alert.accept
@@ -305,20 +305,22 @@ RSpec.describe 'Grants', type: :system, js: true do
       end
 
       scenario 'can view published not yet open grant' do
-        @grant.update_attribute(:submission_open_date, DateTime.tomorrow)
+        @grant.submission_open_date = DateTime.tomorrow
+        @grant.save(validate: false)
         visit grant_path(@grant)
         expect(page).not_to have_content authorization_error_text
         expect(page).to have_text 'This Grant is Not Currently Accepting Submissions'
       end
 
       scenario 'cannot view draft grant' do
-        @grant.update_attribute(:state, 'draft')
+        @grant.update(state: 'draft')
         visit grant_path(@grant)
         expect(page).to have_content authorization_error_text
       end
 
       scenario 'cannot view closed grant' do
-        @grant.update_attribute(:submission_close_date, DateTime.yesterday)
+        @grant.submission_close_date = DateTime.yesterday
+        @grant.save(validate: false)
         visit grant_path(@grant)
         expect(page).to have_content authorization_error_text
       end
@@ -397,7 +399,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant editor who is also grant_creator' do
       before(:each) do
-        @grant_editor.update_attribute(:grant_creator, true)
+        @grant_editor.update(grant_creator: true)
         login_as(@grant_editor, scope: :saml_user)
       end
 
@@ -444,13 +446,13 @@ RSpec.describe 'Grants', type: :system, js: true do
       end
 
       scenario 'can view grant in draft mode' do
-        @grant.update_attribute(:state, 'draft')
+        @grant.update(state: 'draft')
         visit grant_path(@grant)
         expect(page).not_to have_content authorization_error_text
       end
 
       scenario 'can view closed grant' do
-        @grant.update_attribute(:submission_close_date, DateTime.yesterday)
+        @grant.update(submission_close_date: DateTime.yesterday)
         visit grant_path(@grant)
         expect(page).not_to have_content authorization_error_text
       end

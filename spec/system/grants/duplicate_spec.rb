@@ -48,7 +48,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
     context 'admin' do
       before(:each) do
-        @admin_user.update_attribute(:grant_creator, false)
+        @admin_user.update(grant_creator: false)
         login_as(@admin_user, scope: :saml_user)
       end
 
@@ -61,7 +61,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
       context 'who is a grant_creator' do
         before(:each) do
-          @admin_user.update_attribute(:grant_creator, true)
+          @admin_user.update(grant_creator: true)
           visit profile_grants_path
         end
 
@@ -134,7 +134,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
       context 'who is not a grant_creator' do
         before(:each) do
-          @editor_user.update_attribute(:grant_creator, false)
+          @editor_user.update(grant_creator: false)
         end
 
         scenario 'does not see the Duplicate link' do
@@ -145,7 +145,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
       context 'who is a grant_creator' do
         before(:each) do
-          @editor_user.update_attribute(:grant_creator, true)
+          @editor_user.update(grant_creator: true)
         end
 
         scenario 'sees Duplicate link' do
@@ -179,7 +179,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
       context 'who is not a grant_creator' do
         before(:each) do
-          @viewer_user.update_attribute(:grant_creator, false)
+          @viewer_user.update(grant_creator: false)
         end
 
         scenario 'does not see the Duplicate link' do
@@ -190,7 +190,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
       context 'who is not a grant_creator' do
         before(:each) do
-          @viewer_user.update_attribute(:grant_creator, true)
+          @viewer_user.update(grant_creator: true)
         end
 
         scenario 'does not see the Duplicate link' do

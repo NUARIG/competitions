@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :grant_reviewer do
-    association :grant,    factory: :grant
-    association :reviewer, factory: :saml_user
+    grant { create(:grant) }
+    reviewer { create(:saml_user) }
   end
 end

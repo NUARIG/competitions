@@ -90,7 +90,7 @@ test:
     saml_authenticatable: # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
       idp_entity_id: ''
       idp_entity_name: 'TEST ID'
-      saml_default_user_key: 'email' # The user will be looked up by this key
+      default_user_key: 'email' # The user will be looked up by this key
       # The following maps your IDP SAML attribute's names (left)
       #  with the User model attributes (right).
       attribute_map:  { 'email': 'email',
