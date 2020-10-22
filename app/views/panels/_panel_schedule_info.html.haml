@@ -1,0 +1,22 @@
+- if @panel.start_datetime.blank?
+  .callout.primary
+    %strong
+      Panel is not scheduled
+    %p
+      This grant has not scheduled a panel.
+- elsif @panel.is_open?
+  .callout.success
+    %p
+      This section will be available to reviewers until #{will_close_at_string(panel: @panel)}.
+- elsif @panel.start_datetime > DateTime.now
+  .callout.warning
+    %strong
+      Panel has not started
+    %p
+      This section will be available to reviewers at #{will_open_at_string(panel: @panel)}. Please visit or refresh then.
+- else
+  .callout.alert
+    %strong
+      Panel has ended
+    %p
+      This panel has ended and is no longer accessible to reviewers.

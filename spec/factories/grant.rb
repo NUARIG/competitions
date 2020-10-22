@@ -93,7 +93,8 @@ FactoryBot.define do
         applicant = create(:saml_user)
         create(:submission_with_responses, grant: grant,
                                            form: grant.form,
-                                           applicant: applicant)
+                                           applicant: applicant,
+                                           user_updated_at: grant.submission_close_date - 1.minute)
 
       end
     end
@@ -116,14 +117,14 @@ FactoryBot.define do
 
     factory :new_grant,                                     traits: %i[new]
     factory :new_grant_with_users,                          traits: %i[new with_users]
-    factory :draft_grant,                                   traits: %i[draft with_users_and_submission_form with_reviewer]
+    factory :draft_grant,                                   traits: %i[draft with_users_and_submission_form with_reviewer with_panel]
     factory :published_grant,                               traits: %i[published]
     factory :open_grant_with_users,                         traits: %i[published open with_users]
     factory :closed_grant_with_users,                       traits: %i[closed with_users]
     factory :published_open_grant,                          traits: %i[published open]
     factory :published_open_grant_with_users,               traits: %i[published open with_users_and_submission_form with_panel]
     factory :published_closed_grant,                        traits: %i[published closed]
-    factory :published_closed_grant_with_users,             traits: %i[published closed with_users]
+    factory :published_closed_grant_with_users,             traits: %i[published closed with_users_and_submission_form with_submission with_reviewer with_panel]
     factory :published_not_yet_open_grant,                  traits: %i[published not_yet_open]
     factory :published_not_yet_open_grant_with_users,       traits: %i[published not_yet_open with_users]
     factory :completed_grant,                               traits: %i[completed closed]
@@ -136,5 +137,6 @@ FactoryBot.define do
 
     factory :open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published open with_users_and_submission_form with_submission with_reviewer with_panel]
     factory :draft_open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[draft open with_users_and_submission_form with_submission with_reviewer with_panel]
+    factory :closed_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published closed with_users_and_submission_form with_submission with_reviewer with_panel]
   end
 end

@@ -1,0 +1,19 @@
+.card#grant-dates
+  %h5.card-divider
+    Average Scores
+  .card-section
+    %dl
+      %dt{ title: 'Average of all scored criterion' }
+        Composite:
+      %dd{ title: 'Average of all scored criterion' }
+        = submission.composite_score
+      %dt{ title: 'Average of all Overall Impact Scores' }
+        Average Overall Impact:
+      %dd{ title: 'Average of all Overall Impact Scores' }
+        = submission.average_overall_impact_score
+    %hr
+    %h5.text-center
+      - if section == 'submission'
+        = link_to 'View All Reviews', grant_panel_submission_reviews_path(grant, submission)
+      - else
+        = link_to 'Back to Submission', grant_panel_submission_path(grant, submission)

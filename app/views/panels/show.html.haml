@@ -1,14 +1,22 @@
 - content_for(:page_title, "Panel - #{@grant.name}")
+- user_has_grant_viewer_access = policy(@panel).grant_viewer_access?
 
-%h1
-  = @grant.name
-
-%h2
+%h1#grant-name
+  = link_to @grant.name, grant_path(@grant)
+%h2#section
   Review Panel
-%strong
-  CHANGE THIS LOGIC
 
-- if @grant.reviewers.include?(current_user)
-  = render 'reviewers'
-- else
-  = render 'admins'
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if user_has_grant_viewer_access
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      Panel
+
+= render 'panel_schedule_info'
+
+- if policy(@panel).view_content?
+  = render 'panel_content'

@@ -15,6 +15,10 @@ class PanelPolicy < ApplicationPolicy
     edit?
   end
 
+  def view_content?
+    record.is_open? ? show? : edit?
+  end
+
   private
 
   def panel
