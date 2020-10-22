@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :grant_submission_submission, class: 'GrantSubmission::Submission' do
-    association     :grant, factory: :grant_with_users
-    form           { grant.form }
+    grant           { create(:grant_with_users) }
+    form            { grant.form }
     association     :applicant, factory: :saml_user
     title           { Faker::Lorem.sentence }
     state           { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
