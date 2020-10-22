@@ -19,9 +19,8 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       context 'success' do
         scenario 'can edit a user' do
           new_era_commons = Faker::Lorem.characters(number: 10)
-          find_field('eRA Commons').set(new_era_commons)
+          page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
-          expect(user.reload.era_commons).to eql new_era_commons
           expect(page).to have_content "#{full_name(user)}'s profile has been updated."
         end
       end
@@ -29,9 +28,9 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       context 'failure' do
         scenario 'shows error on failure' do
           other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update_attribute(:era_commons, other_user_era_commons)
+          other_user.update(era_commons: other_user_era_commons)
           visit(edit_user_path(user))
-          find_field('eRA Commons').set(other_user_era_commons)
+          page.fill_in 'eRA Commons', with: other_user_era_commons
           click_button 'Update'
           expect(page).to have_content 'eRA Commons has already been taken'
         end
@@ -48,7 +47,7 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       context 'success' do
         scenario 'can edit own profile' do
           new_era_commons = Faker::Lorem.characters(number: 10)
-          find_field('eRA Commons').set(new_era_commons)
+          page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
           expect(user.reload.era_commons).to eql new_era_commons
           expect(page).to have_content 'Your profile has been updated.'
@@ -63,9 +62,9 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       context 'failure' do
         scenario 'shows error on failure' do
           other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update_attribute(:era_commons, other_user_era_commons)
+          other_user.update(era_commons: other_user_era_commons)
           visit(profile_path)
-          find_field('eRA Commons').set(other_user_era_commons)
+          page.fill_in 'eRA Commons', with: other_user_era_commons
           click_button 'Update'
           expect(page).to have_content 'eRA Commons has already been taken'
         end

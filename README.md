@@ -20,7 +20,7 @@ The following are required to install competitions:
 # Compatibility
 
   * Ruby:   2.6.6
-  * Rails:  5.2.4
+  * Rails:  6.0.3.4
 
 
 # Shibboleth IDP
@@ -55,7 +55,7 @@ The application's configuration has been consolidated into this file. Here you w
 Further information on the configurations associated with the [devise_saml_authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable).
 
 ### config/database.yml
-You will need to configure your database connection. For more details please see the rails docs (https://guides.rubyonrails.org/v5.2/configuring.html#configuring-a-database).
+You will need to configure your database connection. For more details please see the rails docs (https://guides.rubyonrails.org/v6.0.3.4/configuring.html#configuring-a-database).
 ```
 development:
   adapter: # postgresql
@@ -74,7 +74,7 @@ If you are symlinking your instance's configuration files on your deployment ser
 ### config/storage.yml
 You will need to configure your instance's storage. The configurations for local or AWS storage are included. It is possible to use other services with further changes.
 
-For more details please see the rails docs (https://guides.rubyonrails.org/v5.2.0/active_storage_overview.html#setup).
+For more details please see the rails docs (https://guides.rubyonrails.org/v6.0.3.4/active_storage_overview.html#setup).
 ```
 local:
   service: Disk
@@ -103,4 +103,4 @@ The included staging and production environment files require the following to b
 Keys, passwords, secrets, and other sensitive information in a secure file.
 
 You could use config/credentials.yml for this purpose also.
-https://guides.rubyonrails.org/5_2_release_notes.html#credentials
+https://guides.rubyonrails.org/security.html#environmental-security

@@ -211,7 +211,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
     context 'draft grant' do
       before(:each) do
-        grant.update_attributes(state: 'draft')
+        grant.update(state: 'draft')
       end
 
       context 'with submitted submission' do
@@ -341,7 +341,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'requires a title' do
           short_text_question = grant.questions.where(response_type: 'short_text').first
-          short_text_question.update_attribute(:is_mandatory, true)
+          short_text_question.update(is_mandatory: true)
 
           find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
           find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
@@ -358,12 +358,15 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context '#update' do
         before(:each) do
-          submission.update_attribute(:state, 'draft')
-          grant.questions.where(response_type: 'short_text').first.update_attribute(:is_mandatory, true)
+          grant.questions.where(response_type: 'short_text').first.update(is_mandatory: true)
           login_as(applicant, scope: :saml_user)
         end
 
         context 'draft submission' do
+          before(:each) do
+            submission.update(state: 'draft')
+          end
+
           scenario 'can visit edit path for draft submission' do
             visit edit_grant_submission_path(grant, submission)
             expect(page).to have_content 'Editing Application'
@@ -393,7 +396,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           end
 
           scenario 'can submit a valid submission' do
-            grant.questions.where(response_type: 'short_text').first.update_attribute(:is_mandatory, true)
+            grant.questions.where(response_type: 'short_text').first.update(is_mandatory: true)
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set(Faker::Lorem.sentence)
             click_button 'Submit'
@@ -404,7 +407,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         context 'submitted submission' do
           scenario 'cannot vist edit path for submitted submission' do
-            submission.update_attribute(:state, 'submitted')
             visit edit_grant_submission_path(grant, submission)
             expect(page).to have_content 'You are not authorized to perform this action'
           end

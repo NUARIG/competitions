@@ -12,7 +12,7 @@ module GrantSubmissions
       @form = GrantSubmission::Form.find(params[:id])
 
       authorize @form
-      if @form.available? && @form.update_attributes_safe_display_order(form_params)
+      if @form.available? && @form.update_safe_display_order(form_params)
         @form.updated_id = current_user.id
         @form.touch
         flash[:notice] = 'Submission Form successfully updated'
