@@ -11,16 +11,15 @@
     = stylesheet_link_tag     wicked_pdf_asset_base64("pdf")
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
-  %body
-    %div.grid-container
-      %div.grid-x.grid-margin-x.grid-margin-y
-        = render 'layouts/header'
+  %body.grid-container
+    .grid-x.grid-margin-x.grid-margin-y
+      = render 'layouts/header'
 
-      %div.grid-x.grid-margin-x.grid-margin-y
-        %main.cell{class: "#{controller_name}"}
-          = render 'layouts/flash'
+    #content.grid-x.grid-margin-x.grid-margin-y
+      %main.cell{ class: controller_name }
+        = render 'layouts/flash'
 
-          = yield
+        = yield
 
-      %div.grid-x.grid-margin-x.grid-margin-y
-        = render 'layouts/footer'
+    #footer.grid-x.grid-margin-x.grid-margin-y
+      = render 'layouts/footer'
