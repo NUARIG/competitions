@@ -139,11 +139,10 @@ RSpec.describe Grant, type: :model do
     end
   end
 
-  describe 'SoftDeletable' do
+  describe 'Discard' do
     it 'cannot be destroyed' do
       expect{grant.destroy}.to raise_error(SoftDeleteException, 'Grants must be discarded.')
     end
-
 
     context 'published open grant' do
       let(:published_open_grant) { create(:published_open_grant) }
@@ -204,30 +203,40 @@ RSpec.describe Grant, type: :model do
     end
 
     context 'draft grant' do
-      let(:draft_grant) { create(:grant, :draft, :with_users_and_submission_form, :with_submission, :with_reviewer) }
+      let(:draft_grant) { create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer) }
       let(:submission)  { review.submission }
-      let(:review)      { create(:review, submission: draft_grant.submissions.first,
-                                          assigner: draft_grant.grant_permissions.role_admin.first.user,
-                                          reviewer: draft_grant.reviewers.first) }
+      let!(:review)      { create(:review, submission: draft_grant.submissions.first,
+                                          assigner:   draft_grant.admins.first,
+                                          reviewer:   draft_grant.reviewers.first) }
+      let(:panel)        { draft_grant.panel }
 
-      before(:each) do
-        review
-      end
+      context 'discarding' do
+        it 'is discardable' do
+          expect(draft_grant.is_discardable?).to be true
+          expect(draft_grant.errors.messages[:base]).to be_empty
+        end
 
-      it 'is discardable' do
-        expect(draft_grant.is_discardable?).to be true
-        expect(draft_grant.errors.messages[:base]).to be_empty
-      end
+        it 'is not accepting_submissions?' do
+          expect(draft_grant.accepting_submissions?).to be false
+        end
 
-      it 'is not accepting_submissions?' do
-        expect(draft_grant.accepting_submissions?).to be false
-      end
+        it 'discards associated submission' do
+          expect do
+            draft_grant.discard
+          end.to change{submission.reload.discarded_at}
+        end
 
-      it 'discards associated submission and review' do
-        expect do
-          draft_grant.discard
-        end.to change{review.reload.discarded_at}
-           .and change{submission.reload.discarded_at}
+        it 'discards associated review' do
+          expect do
+            draft_grant.discard
+          end.to change{review.reload.discarded_at}
+        end
+
+        it 'discards associated panel' do
+          expect do
+            draft_grant.discard
+          end.to change{panel.reload.discarded_at}
+        end
       end
 
       context '#validations' do
@@ -256,6 +265,13 @@ RSpec.describe Grant, type: :model do
             draft_grant.undiscard
           end.to change{review.reload.discarded_at}.to(nil)
              .and change{Review.kept.count}.by 1
+        end
+
+        it 'undiscards panel' do
+          expect do
+            draft_grant.undiscard
+          end.to change{panel.reload.discarded_at}.to(nil)
+             .and change{Panel.kept.count}.by 1
         end
       end
     end

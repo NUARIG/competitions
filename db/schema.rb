@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_29_181017) do
+ActiveRecord::Schema.define(version: 2020_10_22_183946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -403,6 +403,8 @@ ActiveRecord::Schema.define(version: 2020_09_29_181017) do
     t.text "meeting_location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_panels_on_discarded_at"
     t.index ["grant_id"], name: "index_panels_on_grant_id"
   end
 
