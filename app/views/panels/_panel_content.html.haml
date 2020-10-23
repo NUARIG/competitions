@@ -1,12 +1,14 @@
+%h4
+  Reviewed Submissions
 
 - if @submissions.none?
   %p
     There are no reviewed submissions for this grant.
 - else
-  %p
-    Below is a list of reviewed, completed submissions.
 
   %table.stackable
+    %caption
+      Below is a list of reviewed, completed submissions.
     %thead
       %tr
         %th{colspan: 3}

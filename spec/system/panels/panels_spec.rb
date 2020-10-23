@@ -186,6 +186,42 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
     end
 
+    context 'metadata' do
+      scenario 'instructions' do
+        visit grant_panel_path(grant)
+        expect(page).to have_content grant.panel.instructions
+      end
+
+      context 'meeting_location' do
+        scenario 'displays when set' do
+          visit grant_panel_path(grant)
+          expect(page.has_css?('.location')).to be true
+          expect(page).to have_content grant.panel.meeting_location.html_safe
+        end
+
+        scenario 'excluded when not set' do
+          grant.panel.update(meeting_location: nil)
+          visit grant_panel_path(grant)
+          expect(page.has_css?('.location')).to be false
+          expect(page).not_to have_content 'Location:'
+        end
+      end
+
+      context 'meeting_link' do
+        scenario 'displays when set' do
+          visit grant_panel_path(grant)
+          expect(page.has_css?('.link')).to be true
+          expect(page).to have_link grant.panel.meeting_link, href: grant.panel.meeting_link
+        end
+
+        scenario 'excluded when not set' do
+          grant.panel.update(meeting_link: nil)
+          visit grant_panel_path(grant)
+          expect(page.has_css?('.link')).to be false
+        end
+      end
+    end
+
     context 'submissions' do
       scenario 'does not include draft submission' do
         draft_submission.save

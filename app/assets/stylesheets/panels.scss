@@ -1,3 +1,18 @@
-// Place all the styles related to the Panels controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+main.panels {
+  #metadata {
+    #instructions,
+    #meeting {
+      padding-bottom: 1.5rem
+    }
+    #meeting {
+      font-size: .95rem;
+    }
+  }
+  table {
+    caption {
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+  }
+}
