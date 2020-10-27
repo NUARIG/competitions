@@ -7,7 +7,7 @@ FactoryBot.define do
     association     :applicant, factory: :saml_user
     title           { Faker::Lorem.sentence }
     state           { GrantSubmission::Submission::SUBMISSION_STATES[:submitted] }
-    user_updated_at { Time.now }
+    user_updated_at { grant.submission_close_date - 1.hour }
 
     trait :draft do
       state           { GrantSubmission::Submission::SUBMISSION_STATES[:draft] }
