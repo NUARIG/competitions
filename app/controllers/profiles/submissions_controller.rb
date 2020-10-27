@@ -1,6 +1,5 @@
 module Profiles
   class SubmissionsController < ApplicationController
-
     def index
       @q = current_user.submissions.kept.ransack(params[:q])
       @q.sorts = 'created_at desc' if @q.sorts.empty?
