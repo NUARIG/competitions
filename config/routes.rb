@@ -58,7 +58,8 @@ Rails.application.routes.draw do
 
   resource :profile, only: %i[show update] do
     resources :grants,      only: :index, controller: 'profiles/grants'
-    resources :reviews,      only: :index, controller: 'profiles/reviews'
-    resources :submissions,      only: :index, controller: 'profiles/submissions'
+    resources :reviews,     only: :index, controller: 'profiles/reviews'
+    resources :submissions, only: :index, controller: 'profiles/submissions'
+    resources :panels,      only: :index, controller: 'profiles/panels'
   end
 end
