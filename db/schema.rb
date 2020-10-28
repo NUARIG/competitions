@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_08_200328) do
+ActiveRecord::Schema.define(version: 2020_10_22_183946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -374,13 +374,38 @@ ActiveRecord::Schema.define(version: 2020_09_08_200328) do
     t.integer "max_submissions_per_reviewer"
     t.date "review_open_date"
     t.date "review_close_date"
-    t.date "panel_date"
-    t.text "panel_location"
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["discarded_at"], name: "index_grants_on_discarded_at"
     t.index ["slug"], name: "index_grants_on_slug"
+  end
+
+  create_table "panel_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_id"], name: "index_panel_versions_on_grant_id"
+    t.index ["item_id"], name: "index_panel_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_panel_versions_on_whodunnit"
+  end
+
+  create_table "panels", force: :cascade do |t|
+    t.bigint "grant_id", null: false
+    t.datetime "start_datetime"
+    t.datetime "end_datetime"
+    t.text "instructions"
+    t.string "meeting_link"
+    t.text "meeting_location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_panels_on_discarded_at"
+    t.index ["grant_id"], name: "index_panels_on_grant_id"
   end
 
   create_table "review_versions", force: :cascade do |t|
@@ -460,5 +485,6 @@ ActiveRecord::Schema.define(version: 2020_09_08_200328) do
   add_foreign_key "grant_permissions", "users"
   add_foreign_key "grant_submission_forms", "grants"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
+  add_foreign_key "panels", "grants"
   add_foreign_key "reviews", "grant_submission_submissions"
 end

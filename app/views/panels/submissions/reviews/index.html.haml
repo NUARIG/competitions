@@ -1,0 +1,116 @@
+- content_for(:page_title, "Panel - Submission Reviews - #{@grant.name}")
+- user_has_grant_viewer_access = policy(@panel).grant_viewer_access?
+
+%h1#grant-name
+  = link_to @grant.name, grant_path(@grant)
+%h2#section
+  = link_to 'Review Panel', grant_panel_path(@grant)
+
+.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if user_has_grant_viewer_access
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      = link_to 'Panel', grant_panel_path(@grant)
+    %li
+      = link_to 'Submission', grant_panel_submission_path(@grant, @submission)
+    %li
+      Reviews
+
+%h3
+  Submission Reviews
+
+.grid-x.grid-margin-x
+  .cell.small-12.medium-9
+    %h4
+      = @submission.title
+    %h5
+      Applicant:
+      = full_name(@submission.applicant)
+
+  .cell.small-12.medium-3
+    = render partial: 'panels/submissions/card', locals: { submission: @submission, section: 'reviews', grant: @grant }
+
+.grid-x.grid-margin-x
+  .small-12.cell
+    %h4
+      Summary of Reviews
+
+    %div.pagy-header
+      != pagy_info(@pagy)
+      - unless params[:q].nil? || params[:q].values.all?(&:blank?)
+        \-
+        = link_to 'Reset sort', request.path
+
+    %table.hover.stack
+      %thead
+        %tr
+          %th
+            = sort_link(@q, :reviewer_last_name, 'Reviewer',{}, {title: 'Sort on Reviewer'})
+          %th
+            = sort_link(@q, :overall_impact,{}, { title: 'Sort on Overall Impact Score'} )
+          %th
+            Composite
+          - @grant.criteria.each do |criterion|
+            %th
+              = criterion.name
+      %tbody
+        = render @reviews
+
+    .grid-container
+      %h5
+        Scores and Comments
+
+    - @grant.criteria.each do |criterion|
+      .grid-x.grid-y.criterion
+        .row
+          .cell.small-12
+            %h5{id: "criterion-#{criterion.id}"}
+              = criterion.name
+        .row
+          .cell.small-12.reviews
+            - @reviews.each do |review|
+              .grid-x.grid-margin-x.review{id: "review-#{review.id}" }
+                .cell.small-12.medium-2.large-2.reviewer.text-right
+                  = full_name(review.reviewer)
+                .cell.small-12.medium-1.large-2.score
+                  - scored_criterion = review.criteria_reviews.to_a.detect {|score| score.criterion_id == criterion.id}
+                  .row{id: "criterion-#{criterion.id}-score"}
+                    - if scored_criterion.score.present?
+                      = scored_criterion.score
+                    - else
+                      %span{ title: 'No Score' }
+                        NS
+                .cell.small-12.medium-9.large-8.comment
+                  - if scored_criterion.comment.present?
+                    .row{id: "criterion-#{criterion.id}-comment"}
+                      = simple_format(scored_criterion.comment)
+        %hr
+
+    .grid-x.grid-padding-y
+      .cell.small-12
+        %h4#overall-impact
+          Overall Impact Scores and Comments
+
+        #overall-impact.grid-x.grid-y
+          .row
+            .cell.small-12.reviews
+              - @reviews.each do |review|
+                .grid-x.grid-margin-x.review
+                  .cell.small-12.medium-2.reviewer.text-right
+                    = full_name(review.reviewer)
+                  .cell.small-12.medium-10.responses
+                    .grid-y
+                      .row
+                        = review.overall_impact_score
+                      .row
+                        = review.overall_impact_comment
+
+    %h6
+      = link_to 'Return to Submission', grant_panel_submission_path(@grant, @submission)
+    %h6
+      = link_to 'Return to Panel', grant_panel_path(@grant)
+

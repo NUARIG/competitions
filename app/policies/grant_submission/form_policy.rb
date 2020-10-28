@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-class GrantSubmission::FormPolicy < GrantPolicy
+class GrantSubmission::FormPolicy < ApplicationPolicy
+  include GrantRoleAccess
 
   def update?
-    super
+    user.present? && grant_editor_access?
   end
 
   def edit?

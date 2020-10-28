@@ -20,7 +20,7 @@
 // @include foundation-accordion;
 // @include foundation-accordion-menu;
 // @include foundation-badge;
-// @include foundation-breadcrumbs;
+@include foundation-breadcrumbs;
 @include foundation-button-group;
 @include foundation-callout;
 @include foundation-card;
@@ -63,4 +63,16 @@
 label {
   color: $black;
   font-size: 1.15em;
+}
+
+html, body {
+  height: 100%;
+}
+
+main {
+  padding: 1em;
+}
+
+h1 ~ h2 {
+  margin-top: 0;
 }

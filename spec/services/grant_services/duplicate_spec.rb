@@ -6,9 +6,9 @@ RSpec.describe GrantServices do
   describe 'DuplicateDependencies' do
     before(:each) do
       @original_grant = create(:grant_with_users)
-      @new_grant      = create(:grant, duplicate: true,
-                                             name: 'New Name',
-                                             slug: 'NewShort')
+      @new_grant      = create(:grant,  duplicate: true,
+                                        name: 'New Name',
+                                        slug: 'NewShort')
       @invalid_grant  = build(:grant, name: '')
     end
 
@@ -43,6 +43,20 @@ RSpec.describe GrantServices do
         expect do
           GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @new_grant)
         end.to (change{GrantSubmission::Form.count}.by (1))
+      end
+
+      context 'panels' do
+        it 'duplicates panel for valid new grant' do
+          expect do
+            GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @new_grant)
+          end.to (change{Panel.count}.by (1))
+        end
+
+        it 'clears dates from duplicated panel' do
+          GrantServices::DuplicateDependencies.call(original_grant: @original_grant, new_grant: @new_grant)
+          expect(Panel.last.start_datetime).to be nil
+          expect(Panel.last.end_datetime).to be nil
+        end
       end
     end
 

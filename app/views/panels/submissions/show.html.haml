@@ -1,0 +1,36 @@
+- content_for(:page_title, "Review Panel - Submission - #{@grant.name}")
+- user_has_grant_viewer_access = policy(@panel).grant_viewer_access?
+
+%h1#grant-name
+  = link_to @grant.name, grant_path(@grant)
+%h2#section
+  = link_to 'Review Panel', grant_panel_path(@grant)
+
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if user_has_grant_viewer_access
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      = link_to 'Panel', grant_panel_path(@grant)
+    %li
+      Submission
+
+.grid-x.grid-margin-x
+  .cell.small-12.medium-9
+    %h3
+      Submission
+    %h4
+      = @submission.title
+    %h5
+      Applicant:
+      = full_name(@submission.applicant)
+
+  .cell.small-12.medium-3
+    = render partial: 'card', locals: { grant: @grant, submission: @submission, section: 'submission' }
+
+.grid-x.grid-margin-x
+  .cell.small-12.medium-9
+    = render partial: 'shared/submission_responses', locals: { submission: @submission }
