@@ -1,5 +1,4 @@
 - content_for(:page_title, 'My Panels')
-- @pagy = @pagy_a
 
 %h3
   = yield(:page_title)
@@ -21,7 +20,7 @@
       = f.submit 'Search', class: 'button'
       = link_to 'Reset', profile_grants_path, class: 'button clear secondary'
 
-  = render partial: 'shared/pagy_header'
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy_a }
 
   %table
     %thead

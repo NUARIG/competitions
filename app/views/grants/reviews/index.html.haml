@@ -39,7 +39,7 @@
     There were no assigned reviews found.
 
 - else
-  = render 'shared/pagy_header', locals: { pagy: @pagy }
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
   %table.hover
     %thead
