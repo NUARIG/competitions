@@ -11,7 +11,7 @@
     %p
       No Banners were found.
   -else
-    = render 'shared/pagy_header', locals: { pagy: @pagy }
+    = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
     = render partial: 'banners/sortable_table', locals: { q: @q, banners: @banners }
 

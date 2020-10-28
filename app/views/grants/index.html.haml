@@ -19,7 +19,7 @@
     No grants were found.
 - else
 
-  = render 'shared/pagy_header', locals: { pagy: @pagy}
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy}
 
   = render partial: 'grants/sortable_table', locals: { q: @q, grants: @grants }
 

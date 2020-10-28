@@ -1,5 +1,5 @@
 %div.pagy-header
-  != pagy_info(@pagy)
+  != pagy_info(pagy)
   - unless params[:q].nil? || params[:q].values.all?(&:blank?)
     \-
     = link_to 'Reset search', request.path

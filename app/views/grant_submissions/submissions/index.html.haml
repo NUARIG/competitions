@@ -30,7 +30,7 @@
           = f.submit 'Search', class: 'button'
           = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
 
-    = render 'shared/pagy_header', locals: { pagy: @pagy }
+    = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
     %table#grant-submissions
       %thead

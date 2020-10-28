@@ -45,7 +45,7 @@
               This submission must be completed before it can be reviewed.
         - else
 
-          = render 'shared/pagy_header', locals: { pagy: @pagy }
+          = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
           %table.hover.stack
             %thead
