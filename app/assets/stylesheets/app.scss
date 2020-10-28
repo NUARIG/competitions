@@ -1,5 +1,24 @@
 @import 'settings';
 
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#content {
+  flex: 1 0 auto;
+  padding: 1em;
+}
+
+#footer {
+  flex-shrink: 0;
+  padding: 0 1em;
+}
+
 .grid-container {
   header {
     .top-bar-left {
