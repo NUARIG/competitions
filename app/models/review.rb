@@ -79,7 +79,7 @@ class Review < ApplicationRecord
 
   def review_period_closed?
     # TODO: enforce grant.review_open_date ?
-    Time.now > grant.review_close_date
+    Time.now > grant.review_close_date.end_of_day
   end
 
   private

@@ -41,9 +41,10 @@
     %tbody
       - @reviews.each do |review|
         - grant_published = review.grant.published?
+        - review_complete = review.is_complete?
         %tr
           %td
-            = link_to_if grant_published, (review.is_complete? ? 'Completed' : 'Incomplete'), grant_submission_review_path(review.grant, review.submission, review)
+            = link_to_if grant_published, (review_complete ? 'Completed' : 'Incomplete'), (review_complete ? grant_submission_review_path(review.grant, review.submission, review) : edit_grant_submission_review_path(review.grant, review.submission, review))
           %td
             = review.grant.name
             = "(unpublished)" unless grant_published

@@ -1,0 +1,47 @@
+%h4
+  Reviewed Submissions
+
+- if @submissions.none?
+  %p
+    There are no reviewed submissions for this grant.
+- else
+
+  %table.stackable
+    %caption
+      Below is a list of reviewed, completed submissions.
+    %thead
+      %tr
+        %th{colspan: 3}
+        %th{colspan: 2}
+          Average Scores
+      %tr
+        %th{width: 200}
+          = sort_link(@q, :applicant_last_name, 'Applicant')
+        %th
+          = sort_link(@q, :title, 'Submission')
+        %th{width: 150}
+          Reviews
+        %th{ width: 140 }
+          %abbr{ title: 'Sort on Average from Scored Reviews' }
+            = sort_link(@q, :average_overall_impact_score, 'Overall Impact')
+        %th{ width: 130 }
+          %abbr{ title: 'Sort on Average of all Scored Criteria' }
+            = sort_link(@q, :composite_score, 'Composite')
+    %tbody
+    - @submissions.each do |submission|
+      - review_data = review_data(submission)
+      %tr.submission{ data: { submission: submission.id } }
+        %td.applicant{ data: { applicant: submission.applicant.id } }
+          = sortable_full_name(submission.applicant)
+        %td.title{ data: { title: submission.id } }
+          = link_to submission.title, grant_panel_submission_path(@grant, submission)
+        %td.reviews
+          = link_to 'Review'.pluralize(review_data.completed_review_count), grant_panel_submission_reviews_path(@grant, submission)
+          = surround '(', ')' do
+            #{review_data.completed_review_count}
+        %td.overall-impact{ data: { overall: { impact: submission.id } } }
+          %abbr{ title: 'Average Overal Impact Score from Scored Reviews' }
+            = review_data.overall_impact_average
+        %td.composite{ data: { composite: submission.id } }
+          %abbr{ title: 'Average of Scored Criteria' }
+            = review_data.composite_score

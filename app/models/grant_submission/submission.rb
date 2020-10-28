@@ -16,6 +16,7 @@ module GrantSubmission
     belongs_to :form,           class_name: 'GrantSubmission::Form',
                                 foreign_key: 'grant_submission_form_id',
                                 inverse_of: :submissions
+    has_many :sections,         through: :form
     belongs_to :applicant,      class_name: 'User',
                                 foreign_key: 'created_id'
     has_many :responses,        dependent: :destroy,
@@ -46,7 +47,7 @@ module GrantSubmission
                                    if: -> () { will_save_change_to_attribute?('state', from: SUBMISSION_STATES[:submitted],
                                                                                        to: SUBMISSION_STATES[:draft]) }
 
-    scope :eager_loading,       -> {includes({:responses => [:question]}, :children)}
+    scope :with_responses,      -> { includes( form: [sections: [questions: [responses: :multiple_choice_option]]] ) }
 
     scope :order_by_created_at, -> { order(created_at: :desc) }
     scope :by_grant,            -> (grant) { where(grant_id: grant.id) }
@@ -61,6 +62,7 @@ module GrantSubmission
     scope :sort_by_composite_score_nulls_last_asc,  -> { order(Arel.sql("composite_score = 0 nulls last, composite_score ASC")) }
     scope :sort_by_composite_score_nulls_last_desc, -> { order(Arel.sql("composite_score = 0 nulls last, composite_score DESC")) }
 
+    scope :reviewed,            -> { where("average_overall_impact_score > 0") }
 
     # TODO: available? to...edit? delete?
     def available?

@@ -15,6 +15,7 @@ module GrantsHelper
         'Submissions'     => grant_submissions_path(grant),
         'Reviewers'       => grant_reviewers_path(grant),
         'Reviews'         => grant_reviews_path(grant),
+        'Panel'           => edit_grant_panel_path(grant),
         'Permissions'     => grant_grant_permissions_path(grant) }
     when 'viewer'
       { 'View'            => grant_path(grant),

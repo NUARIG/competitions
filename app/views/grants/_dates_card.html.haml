@@ -15,3 +15,15 @@
         Submission Close Date:
       %dd
         = grant.submission_close_date
+      - if current_user.present? && grant.panel.start_datetime? && (current_user.get_role_by_grant(grant: grant).present? || grant.reviewers.include?(current_user))
+        %dt
+          Panel Start:
+        %dd
+          = grant.panel.start_datetime
+        %dt.secondary
+          Panel End:
+        %dd
+          = grant.panel.end_datetime
+        %hr
+        .text-center
+          = link_to 'View Panel', grant_panel_path(grant)

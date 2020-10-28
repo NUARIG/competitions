@@ -17,6 +17,7 @@ module GrantServices
 
           GrantSubmissionFormServices::Duplicate.call(original_grant: original_grant, new_grant: new_grant)
 
+          PanelServices::Duplicate.call(original_grant: original_grant, new_grant: new_grant)
         end
         OpenStruct.new(success?: true)
       rescue ActiveRecord::RecordInvalid => invalid

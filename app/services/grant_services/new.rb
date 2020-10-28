@@ -12,6 +12,8 @@ module GrantServices
         GrantSubmissionFormServices::New.call(grant: grant, user: user)
         # Create starter criteria
         CriterionServices::New.call(grant: grant)
+        # Create starter panel
+        Panel.create!(grant: grant)
       end
       OpenStruct.new(success?: true)
     rescue ActiveRecord::RecordInvalid => invalid

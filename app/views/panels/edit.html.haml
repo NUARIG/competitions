@@ -1,0 +1,69 @@
+- content_for(:page_title, "Edit Panel - #{@grant.name}")
+
+%h1
+  = @grant.name
+
+= render 'shared/grant_state', { grant: @grant }
+
+= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
+.tabs-panel.is-active
+  = form_with(model: [@grant, @panel], method: :patch, local: true) do |f|
+    %h3
+      Meeting Information
+
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label     :meeting_location
+      .cell.small-12.medium-9
+        = f.text_area :meeting_location, cols: 15, rows: 4
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label       :meeting_link
+      .cell.small-12.medium-9
+        = f.url_field  :meeting_link, aria: { 'described-by': 'link-help' }
+        %p.help-text#link-help
+          e.g. secure (https) link to videoconference service
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :instructions
+      .cell.small-12.medium-9
+        = f.hidden_field  :instructions, id: :panel_instructions
+        %trix-editor(input='panel_instructions')
+
+
+    %h3
+      Panel Time
+
+    %p
+      During this timeframe Reviewers will have access to all Reviews and Submissions. Start and end times are required.
+      = succeed "." do
+        = link_to 'Panel page', grant_panel_path(@grant)
+
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :start_datetime
+      .cell.small-12.medium-3
+        = f.text_field :start_datetime, value: @panel.start_datetime&.strftime('%m/%d/%Y %l:%M%P')
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :end_datetime
+      .cell.small-12.medium-3
+        = f.text_field :end_datetime, value: @panel.end_datetime&.strftime('%m/%d/%Y %l:%M%P')
+
+    .grid-x
+      .cell.small-12
+        = f.submit 'Update Panel Information', class: 'button'
+
+:javascript
+  $(function() {
+    $('#panel_start_datetime, #panel_end_datetime').fdatepicker({
+      format: 'mm/dd/yyyy h:iia',
+      formatText: 'mm/dd/yyyy h:iia',
+      linkFormat: 'mm/dd/yyyy h:iia',
+      disableDblClickSelection: true,
+      minuteStep: 30,
+      pickTime: true,
+      nonMilitaryTime: true
+    });
+  });

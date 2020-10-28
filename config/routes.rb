@@ -47,13 +47,19 @@ Rails.application.routes.draw do
       end
     end
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers'
+    resource :panel,              only: %i[show edit update], on: :member, controller: 'panels' do
+      resources :submissions,     only: %i[index show], controller: 'panels/submissions' do
+        resources :reviews,       only: %i[index show], controller: 'panels/submissions/reviews'
+      end
+    end
 
     get 'apply', to: 'grant_submissions/submissions#new', as: :apply
   end
 
   resource :profile, only: %i[show update] do
     resources :grants,      only: :index, controller: 'profiles/grants'
-    resources :reviews,      only: :index, controller: 'profiles/reviews'
-    resources :submissions,      only: :index, controller: 'profiles/submissions'
+    resources :reviews,     only: :index, controller: 'profiles/reviews'
+    resources :submissions, only: :index, controller: 'profiles/submissions'
+    resources :panels,      only: :index, controller: 'profiles/panels'
   end
 end
