@@ -1,26 +1,23 @@
 - content_for(:page_title, "#{@grant.name}")
 
-.grid-x.grid-margin-x
-  .small-12.cell#title
-    %h1.name{class: @grant.name_length_class}
-      = @grant.name
+%h1#grant-home
+  = @grant.name
+
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Home', root_path
+    %li
+      Grant Home
+    - if current_user&.get_role_by_grant(grant: @grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+
 
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
     = render partial: 'dates_card', locals: { grant: @grant }
   .small-12.medium-9.cell#rfa
-    %h4
-      RFA
     = @grant.rfa.html_safe
 
     = render 'apply_button', grant: @grant
-
-    %hr
-
-    %ul.menu.simple#user-links
-      %li
-        = link_to 'View Open Grants', root_path
-
-    %ul.menu.simple#admin-links
-      = @grant.edit_menu_link if current_user.present?
-
