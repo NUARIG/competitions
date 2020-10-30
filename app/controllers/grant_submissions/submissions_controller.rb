@@ -3,7 +3,6 @@ module GrantSubmissions
     before_action :set_grant, except: :new
 
     def index
-      @grant   = GrantDecorator.new(@grant)
       @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
       @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
       @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
@@ -12,7 +11,6 @@ module GrantSubmissions
     def show
       set_submission
       authorize @submission
-      @grant = GrantDecorator.new(@grant)
       render 'show'
     end
 
@@ -24,7 +22,6 @@ module GrantSubmissions
                                   { questions: :multiple_choice_options} } )
                     .with_reviewers.with_panel
                     .find(params[:grant_id])
-      @grant = GrantDecorator.new(@grant)
       set_submission
       authorize @submission
       render 'new'
