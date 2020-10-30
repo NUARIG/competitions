@@ -28,7 +28,6 @@ module GrantSubmissions
     end
 
     def edit
-      @grant = GrantDecorator.new(@grant)
       set_submission
       authorize @submission
       render 'edit'
