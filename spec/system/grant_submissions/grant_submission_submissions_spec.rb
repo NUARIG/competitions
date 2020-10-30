@@ -245,6 +245,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           before(:each) do
            login_as(grant_admin, scope: :saml_user)
           end
+
           scenario 'can visit the submissions index page' do
             visit grant_submissions_path(grant)
 
@@ -369,7 +370,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           scenario 'can visit edit path for draft submission' do
             visit edit_grant_submission_path(grant, submission)
-            expect(page).to have_content 'Editing Application'
+            expect(page).to have_content 'Edit Your Submission'
             expect(page).to have_current_path edit_grant_submission_path(grant, submission)
           end
 
@@ -438,6 +439,68 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can not visit apply page' do
           expect(page).to have_content 'You are not authorized to perform this action.'
+        end
+      end
+    end
+  end
+
+  context 'show' do
+    context 'applicant' do
+      context 'draft' do
+        before(:each) do
+          login_user draft_submission.applicant
+          visit grant_submission_path(draft_submission.grant, draft_submission)
+        end
+
+        it 'displays proper headers' do
+          expect(page).to have_content 'Your Submission'
+          expect(page).to have_content draft_submission.title
+        end
+
+        it 'includes link to edit' do
+          expect(page).to have_content 'Edit This Submission'
+        end
+      end
+
+      context 'submitted' do
+        before(:each) do
+          login_user submission.applicant
+          visit grant_submission_path(grant, submission)
+        end
+
+        it 'does not include link to edit' do
+          expect(page).not_to have_content 'Edit This Submission'
+        end
+      end
+    end
+
+    context 'admin' do
+      before(:each) do
+        login_user grant_admin
+      end
+
+      context 'draft' do
+        before(:each) do
+          visit grant_submission_path(draft_submission.grant, draft_submission)
+        end
+
+        it 'displays proper headers' do
+          expect(page).to have_content 'Submission'
+          expect(page).to have_content draft_submission.title
+        end
+
+        it 'does not include link to edit' do
+          expect(page).not_to have_content 'Edit This Submission'
+        end
+      end
+
+      context 'submitted' do
+        before(:each) do
+          visit grant_submission_path(grant, submission)
+        end
+
+        it 'does not include link to edit' do
+          expect(page).not_to have_content 'Edit This Submission'
         end
       end
     end

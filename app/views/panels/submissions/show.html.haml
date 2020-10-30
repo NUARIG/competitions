@@ -9,6 +9,8 @@
 .small-12.cell
   %ul.breadcrumbs
     %li
+      = link_to 'Home', root_path
+    %li
       = link_to 'Grant Home', grant_path(@grant)
     - if user_has_grant_viewer_access
       %li

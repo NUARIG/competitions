@@ -1,16 +1,27 @@
 - content_for(:page_title, "Apply to #{@grant.name}")
 
-.grid-x.grid-margin-x
-  .small-12.cell#title
-    %h1.name{class: @grant.name_length_class}
-      = @grant.name
+%h1#grant-name
+  = link_to @grant.name, grant_path(@grant)
+%h2#section
+  Apply
+
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Home', root_path
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if current_user&.get_role_by_grant(grant: @grant).present?
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      Apply
+
 
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
     = render partial: 'grants/dates_card', locals: { grant: @grant }
   .small-12.medium-9.cell#rfa
-    %h4
-      Apply
     - unless @submission.form.submission_instructions.empty?
       = @submission.form.submission_instructions.html_safe
 

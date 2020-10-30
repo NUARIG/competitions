@@ -18,7 +18,6 @@ class GrantsController < ApplicationController
     if authorize @grant
       draft_banner
     end
-    @grant = GrantDecorator.new(@grant)
   end
 
   # GET /grants/new

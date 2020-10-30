@@ -79,7 +79,7 @@
     .actions
       - if grant.new_record? || grant.draft?
         = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed', disabled: disable_fields
-        = link_to 'Cancel', grants_path, class: 'button secondary clear'
+        = link_to 'Cancel', profile_grants_path, class: 'button secondary clear'
       - else
         = f.submit 'Update', class: 'button'
         = link_to 'Cancel', grant, class: 'button secondary clear'

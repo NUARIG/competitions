@@ -1,16 +1,29 @@
-- content_for(:page_title, "Submissions - #{@grant.name}")
+- title_text = current_user.get_role_by_grant(grant: @grant) ? 'Submissions' : 'Your Submissions'
+- content_for(:page_title, "title_text - #{@grant.name}")
 
-%h1
-  = @grant.name
+%h1#grant-name
+  = link_to @grant.name, grant_path(@grant)
+%h2#section
+  = title_text
 
-= render 'shared/grant_state', { grant: @grant }
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Home', root_path
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if current_user.get_role_by_grant(grant: @grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      Submissions
 
-= render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+- if current_user.get_role_by_grant(grant: @grant)
+  = render 'shared/grant_state', { grant: @grant }
+
+  = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %h3
-    Submissions
-
   - if @submissions.none?
     - if current_user.get_role_by_grant(grant: @grant)
       %p
@@ -19,16 +32,16 @@
       %p
         You have no submissions to this grant.
   - else
-
-    = search_form_for @q, url: grant_submissions_path(@grant) do |f|
-      .grid-x.grid-margin-x.medium-margin-collapse
-        .small-12.medium-4.cell
-          = f.label :applicant_last_name_or_title_cont, 'Search Applicant Last Name or Project Title', class: 'text-left middle'
-        .small-12.medium-3.cell
-          = f.search_field :applicant_last_name_or_title_cont
-        .small-12.medium-3.cell
-          = f.submit 'Search', class: 'button'
-          = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
+    - if current_user.get_role_by_grant(grant: @grant)
+      = search_form_for @q, url: grant_submissions_path(@grant) do |f|
+        .grid-x.grid-margin-x.medium-margin-collapse
+          .small-12.medium-4.cell
+            = f.label :applicant_last_name_or_title_cont, 'Search Applicant Last Name or Project Title', class: 'text-left middle'
+          .small-12.medium-3.cell
+            = f.search_field :applicant_last_name_or_title_cont
+          .small-12.medium-3.cell
+            = f.submit 'Search', class: 'button'
+            = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
 
     = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
