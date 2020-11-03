@@ -9,7 +9,7 @@
   .grid-x.grid-padding-x.text-center
     .cell.small-12
       %p
-        Competitions is powered by the Northwestern University Clinical and Translational Sciences Institute
+        #{COMPETITIONS_CONFIG[:application_name]} is powered by the Northwestern University Clinical and Translational Sciences Institute
         = surround '(', ')' do
           = link_to 'NUCATS', 'http://nucats.northwestern.edu/'
         and is supported in part by the National Institutes of Health
