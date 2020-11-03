@@ -24,18 +24,27 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
+  #submenu.top-bar
+    .top-bar-left
+      %ul.menu
+        %li.menu-text
+          = link_to 'View Panel', grant_panel_path(@grant)
+
   = form_with(model: [@grant, @panel], method: :patch, local: true) do |f|
-    %h3
-      Meeting Information
 
     .grid-x
+      .cell
+        %p
+          %em
+            A panel is when reviewers convene to review all submissions and decide who will be awarded the grant. All fields are optional.
+    .grid-x
       .cell.small-12.medium-3
-        = f.label     :meeting_location
+        = f.label     :meeting_location, 'Location'
       .cell.small-12.medium-9
         = f.text_area :meeting_location, cols: 15, rows: 4
     .grid-x
       .cell.small-12.medium-3
-        = f.label       :meeting_link
+        = f.label       :meeting_link, 'Link'
       .cell.small-12.medium-9
         = f.url_field  :meeting_link, aria: { 'described-by': 'link-help' }
         %p.help-text#link-help
@@ -48,11 +57,11 @@
         %trix-editor(input='panel_instructions')
 
 
-    %h3
+    %h4
       Panel Time
 
     %p
-      During this timeframe Reviewers will have access to all Reviews and Submissions. Start and end times are required.
+      During this timeframe Reviewers will have access to Reviews and Submissions. Start and end times are required.
       = succeed "." do
         = link_to 'Panel page', grant_panel_path(@grant)
 

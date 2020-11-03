@@ -36,14 +36,15 @@
           - if policy(@grant).grant_editor_access? && @grant.reviews.incomplete.any?
             %li
               = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete reviews on this grant.' }
-    = search_form_for @q, url: grant_reviews_path(@grant) do |f|
-      .top-bar-right
+    = search_form_for @q, url: grant_reviews_path(@grant), class: 'top-bar-right' do |f|
+      .text-right
         %ul.menu
           %li.search
             = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont, placeholder: 'Applicant or Reviewer'
           %li.search
             = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Applicant'
-
+        .reset
+          = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
 
 - if params[:q].nil? && @reviews.empty?
   %p

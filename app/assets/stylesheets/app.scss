@@ -51,6 +51,8 @@ body {
   main {
     #submenu {
       background: none;
+      display: flex;
+      align-items: start;
       padding: 0;
       .menu {
         background: none;
@@ -63,10 +65,30 @@ body {
           text-decoration: underline;
         }
       }
+      .top-bar-left {
+        ul.menu {
+          li:first-of-type {
+            padding-left: 0rem;
+            a {
+              padding-left: 0rem;
+            }
+          }
+        }
+        form {
+          margin-left: 1em;
+          padding: 0;
+        }
+      }
       .top-bar-right {
         .menu {
           input {
             margin: 0;
+          }
+        }
+        .reset {
+          .button {
+            margin-bottom: 0;
+            padding-bottom: 0;
           }
         }
       }

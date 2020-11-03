@@ -1,6 +1,4 @@
 class GrantPermissionsController < ApplicationController
-
-  before_action :set_grant_and_grant_permissions, only: :index
   before_action :set_grant, except: :index
   before_action :set_grant_permission, only: %i[edit update destroy]
   before_action :authorize_grant_editor, except: %[index]
@@ -8,6 +6,8 @@ class GrantPermissionsController < ApplicationController
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
+    @grant = Grant.kept.includes(grant_permissions: :user).friendly.find(params[:grant_id])
+    @pagy, @grant_permissions = pagy(@grant.grant_permissions, i18n_key: 'activerecord.models.grant_permission')
     authorize_grant_viewer
   end
 
@@ -75,11 +75,6 @@ class GrantPermissionsController < ApplicationController
 
   def set_grant
     @grant = Grant.kept.friendly.find(params[:grant_id])
-  end
-
-  def set_grant_and_grant_permissions
-    @grant = Grant.kept.includes(:grant_permissions).friendly.find(params[:grant_id])
-    @grant_permissions = @grant.grant_permissions
   end
 
   def set_grant_permission
