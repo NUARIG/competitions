@@ -304,7 +304,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       scenario 'filters on applicant last name' do
         visit grant_submissions_path(grant)
         expect(page).to have_content sortable_full_name(draft_submission.applicant)
-        find_field('Search Applicant Last Name or Project Title').set(applicant.last_name)
+        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: applicant.last_name
         click_button 'Search'
         expect(page).not_to have_content sortable_full_name(draft_submission.applicant)
       end
@@ -312,7 +312,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       scenario 'filters on application title' do
         visit grant_submissions_path(grant)
         expect(page).to have_content draft_submission.title
-        find_field('Search Applicant Last Name or Project Title').set(submission.title.truncate_words(2, omission: ''))
+        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
         expect(page).not_to have_content draft_submission.title
       end
