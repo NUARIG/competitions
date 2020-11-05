@@ -18,20 +18,22 @@ RSpec.describe 'Grants', type: :system do
       end
 
       scenario 'current status and change status button are shown' do
-        expect(page).to have_content 'Current Publish Status: Published'
-        expect(page).to have_selector(:link_or_button, 'Switch to Draft')
+        expect(page).to have_selector '#grant-state .current', text: 'Published'
+        # expect(page).to have_content 'Current Publish Status: Published'
+        expect(page).to have_link 'Switch to Draft'
       end
 
       scenario 'can change status to draft' do
-        click_button 'Switch to Draft'
+        click_link 'Switch to Draft'
         expect(current_path).to eq(edit_grant_path(@published_grant))
-        expect(page).to have_content 'Current Publish Status: Draft'
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
+        # expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Publish status was changed to draft.'
       end
 
       scenario 'displays error on failure' do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
-        click_button 'Switch to Draft'
+        click_link 'Switch to Draft'
         expect(current_path).to eq(edit_grant_path(@published_grant))
         expect(page).to have_content 'Status change failed. This grant is still in published mode.'
       end
@@ -44,19 +46,20 @@ RSpec.describe 'Grants', type: :system do
       end
 
       scenario 'current status and change status button are shown' do
-        expect(page).to have_content 'Current Publish Status: Published'
-        expect(page).to have_selector(:link_or_button, 'Switch to Draft')
+        expect(page).to have_selector '#grant-state .current', text: 'Published'
+        expect(page).to have_link 'Switch to Draft'
       end
 
       scenario 'can change status to draft' do
-        click_button 'Switch to Draft'
-        expect(page).to have_content 'Current Publish Status: Draft'
+        click_link 'Switch to Draft'
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
+        # expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Publish status was changed to draft.'
       end
 
       scenario 'displays error on failure' do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
-        click_button 'Switch to Draft'
+        click_link 'Switch to Draft'
         expect(page).to have_content 'Status change failed. This grant is still in published mode.'
       end
     end
@@ -67,9 +70,9 @@ RSpec.describe 'Grants', type: :system do
         visit edit_grant_path(@published_grant)
       end
 
-      scenario 'current status and change status button are shown' do
-        expect(page).to have_content 'Current Publish Status: Published'
-        expect(page).not_to have_selector(:link_or_button, 'Switch to Draft')
+      scenario 'current status and change status button are not shown' do
+        expect(page).not_to have_selector '#grant-state .current', text: 'Published'
+        expect(page).not_to have_link 'Switch to Draft'
       end
     end
   end
@@ -88,26 +91,28 @@ RSpec.describe 'Grants', type: :system do
       end
 
       scenario 'current status and change status button are shown' do
-        expect(page).to have_content 'Current Publish Status: Draft'
-        expect(page).to have_selector(:link_or_button, 'Publish this Grant')
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
+        # expect(page).to have_content 'Current Publish Status: Draft'
+        expect(page).to have_link 'Publish this Grant'
       end
 
       scenario 'cannot change status to published without questions' do
         @draft_grant.questions.each { |q| q.destroy! }
-        click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Draft'
+        click_link 'Publish this Grant'
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
+        # expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Status change failed.'
       end
 
       scenario 'can change status to published with at least one question' do
-        click_button 'Publish this Grant'
+        click_link 'Publish this Grant'
         expect(current_path).to eq(grant_path(@draft_grant))
         expect(page).to have_content 'Publish status was changed to published'
       end
 
       scenario 'displays error on failure' do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
-        click_button 'Publish this Grant'
+        click_link 'Publish this Grant'
         expect(page).to have_content 'Status change failed. This grant is still in draft mode.'
       end
 
@@ -117,7 +122,7 @@ RSpec.describe 'Grants', type: :system do
         click_link 'Add a Section'
         click_button 'Save'
         expect(page).to have_content 'Section Title is required.'
-        click_button 'Publish this Grant'
+        click_link 'Publish this Grant'
         expect(page).to have_content 'Publish status was changed to published'
       end
     end
@@ -129,26 +134,28 @@ RSpec.describe 'Grants', type: :system do
       end
 
       scenario 'current status and change status button are shown' do
-        expect(page).to have_content 'Current Publish Status: Draft'
-        expect(page).to have_selector(:link_or_button, 'Publish this Grant')
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
+        # expect(page).to have_content 'Current Publish Status: Draft'
+        expect(page).to have_link 'Publish this Grant'
       end
 
       scenario 'cannot change status to published without question' do
         @draft_grant.questions.each { |q| q.destroy! }
-        click_button 'Publish this Grant'
-        expect(page).to have_content 'Current Publish Status: Draft'
+        click_link 'Publish this Grant'
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
+        # expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Status change failed.'
       end
 
       scenario 'can change status to published with at least one question' do
-        click_button 'Publish this Grant'
+        click_link 'Publish this Grant'
         expect(current_path).to eq(grant_path(@draft_grant))
         expect(page).to have_content 'Publish status was changed to published'
       end
 
       scenario 'displays error on failure' do
         allow_any_instance_of(Grant).to receive(:update).and_return(false)
-        click_button 'Publish this Grant'
+        click_link 'Publish this Grant'
         expect(page).to have_content 'Status change failed. This grant is still in draft mode.'
       end
     end
