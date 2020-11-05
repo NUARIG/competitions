@@ -44,7 +44,6 @@ module GrantSubmissions
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'new'
       end
@@ -61,7 +60,6 @@ module GrantSubmissions
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'edit'
       end
