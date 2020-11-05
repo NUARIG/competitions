@@ -23,10 +23,13 @@ Rails.application.routes.draw do
   end
 
   resources :grants do
-    resources :grant_permissions, except: :show,        controller: 'grant_permissions'
-    resource  :duplicate,         only: %i[new create], controller: 'grants/duplicate'
-    resource  :state,             only: :update,        controller: 'grants/state'
-    resources :reviews,           only: :index,         controller: 'grants/reviews' do
+    resources :grant_permissions, except: :show,            controller: 'grant_permissions'
+    resource  :duplicate,         only: %i[new create],     controller: 'grants/duplicate'
+    resource  :state,             only: %i[publish draft],  controller: 'grants/state' do
+      get 'publish',  on: :member
+      get 'draft',    on: :member
+    end
+    resources :reviews,           only: :index,             controller: 'grants/reviews' do
       get 'reminders',            to: 'grants/reviews/reminders#index', on: :collection
     end
     member do

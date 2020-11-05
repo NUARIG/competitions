@@ -1,0 +1,9 @@
+%h1#grant-name
+  = link_to grant.name, grant_path(grant)
+#subheader.grid-x
+  .cell.small-12.medium-8
+    %h2
+      = section_title
+  - unless current_user.get_role_by_grant(grant: grant).nil? ||current_user.get_role_by_grant(grant: grant) == 'viewer'
+    .cell.small-12.medium-4.medium-text-right
+      = render 'shared/grant_state', { grant: @grant }
