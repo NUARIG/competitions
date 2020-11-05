@@ -1,25 +1,20 @@
 - content_for(:page_title, "Edit Panel - #{@grant.name}")
 
-%h1#grant-name
-  = link_to @grant.name, grant_path(@grant)
-%h2#section
-  Edit Panel
+= render 'shared/grant_header', { grant: @grant, section_title: 'Edit Panel' }
 
-.small-12.cell
-  %ul.breadcrumbs
-    %li
-      = link_to 'Home', root_path
-    %li
-      = link_to 'Grant Home', grant_path(@grant)
-    %li
-      = link_to 'Edit', edit_grant_path(@grant)
-    %li
-      = link_to 'Panel', grant_panel_path(@grant)
-    %li
-      Edit
-
-
-= render 'shared/grant_state', { grant: @grant }
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
+      %li
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        = link_to 'Panel', grant_panel_path(@grant)
+      %li
+        Edit
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 

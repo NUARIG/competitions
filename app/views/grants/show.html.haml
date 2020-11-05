@@ -2,6 +2,10 @@
 
 %h1#grant-home
   = @grant.name
+- if policy(@grant).update?
+  #sub-header.grid-x
+    .cell.small-12
+      = render 'shared/grant_state', { grant: @grant }
 
 .small-12.cell
   %ul.breadcrumbs
