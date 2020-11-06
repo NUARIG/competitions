@@ -1,10 +1,7 @@
 - title_text = current_user.get_role_by_grant(grant: @grant) ? 'Submissions' : 'Your Submissions'
-- content_for(:page_title, "title_text - #{@grant.name}")
+- content_for(:page_title, "#{title_text} - #{@grant.name}")
 
-%h1#grant-name
-  = link_to @grant.name, grant_path(@grant)
-%h2#section
-  = title_text
+= render 'shared/grant_header', { grant: @grant, section_title: title_text }
 
 .small-12.cell
   %ul.breadcrumbs
@@ -17,9 +14,6 @@
         = link_to 'Edit', edit_grant_path(@grant)
     %li
       Submissions
-
-- if current_user.get_role_by_grant(grant: @grant)
-  = render 'shared/grant_state', { grant: @grant }
 
   = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
@@ -116,5 +110,4 @@
               %span{title: 'Average of Scored Criteria'}
                 = review_data.composite_score
 
-
-    != pagy_foundation_nav(@pagy)
+  != pagy_foundation_nav(@pagy)

@@ -1,28 +1,27 @@
 - title_text = "Edit #{current_user == @submission.applicant ? 'Your Submission' : 'Submission'}"
 - content_for(:page_title, "#{title_text} - #{@grant.name}")
 
-%h1#grant-name
-  = link_to @grant.name, grant_path(@grant)
-%h2#section
-  = title_text
+= render 'shared/grant_header', { grant: @grant, section_title: title_text }
 
-.small-12.cell
-  %ul.breadcrumbs
-    %li
-      = link_to 'Home', root_path
-    %li
-      = link_to 'Grant Home', grant_path(@grant)
-    - if current_user.get_role_by_grant(grant: @grant)
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
       %li
-        = link_to 'Edit', edit_grant_path(@grant)
-    %li
-      = link_to 'Submission', grant_submission_path(@grant, @submission)
-    %li
-      Edit
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      - if current_user.get_role_by_grant(grant: @grant)
+        %li
+          = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        = link_to title_text, grant_submission_path(@grant, @submission)
+      %li
+        Edit
 
 .grid-x.grid-margin-x
-  %aside.small-12.medium-3.cell
-    = render partial: 'grants/dates_card', locals: { grant: @grant }
-  .small-12.medium-9.cell#rfa
+  .cell.small-12.medium-3
+    %aside
+      = render partial: 'grants/dates_card', locals: { grant: @grant }
+  #rfa.small-12.medium-9.cell
     = grant_form_for [@grant, @submission], url: grant_submission_url(@grant, @submission), html: {multipart: true} do |f|
       = render partial: 'form', locals: { f: f }

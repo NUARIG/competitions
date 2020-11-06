@@ -1,10 +1,7 @@
 - content_for(:page_title, "Edit - #{@grant.name}")
 - disable_fields = !policy(@grant).update?
 
-%h1#grant-name
-  = link_to @grant.name, grant_path(@grant)
-%h2#section
-  Edit
+= render 'shared/grant_header', { grant: @grant, section_title: 'Edit' }
 
 .small-12.cell
   %ul.breadcrumbs
@@ -14,9 +11,6 @@
       = link_to 'Grant Home', grant_path(@grant)
     %li
       Edit
-
-
-= render 'shared/grant_state', { grant: @grant }
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 

@@ -102,23 +102,23 @@ header {
     }
 
     // Edit
-    #grant-state,
-    #grant-state form {
-      font-size: 1.15em;
-      margin: 1rem 0;
-      form.grant-state {
-        display: inline-block;
-        .button {
-          margin: 0;
+    #grant-state {
+      font-weight: bold;
+      padding-top: 0.6rem;
+      .button.current {
+        &:hover {
+          cursor: default;
+        }
+      }
+      .button.warning {
+        &:hover a {
+          color: $white;
         }
       }
     }
     #grant-info .tabs-title {
       &.is-active {
         background-color: #e6e6e6;
-      }
-      a {
-        font-size: .95em;
       }
     }
   }

@@ -15,7 +15,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
     context 'system admin' do
       before(:each) do
-        login_as(@system_admin, scope: :saml_user)
+        login_user @system_admin
         visit grants_path
       end
 
@@ -42,7 +42,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
               .and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
               .and change{ GrantSubmission::Question.count}.by(@grant.questions.count)
               .and change{ Panel.count}.by(1)
-        expect(page).to have_content('Current Publish Status: Draft')
+        expect(page).to have_selector '#grant-state .current', text: 'Draft'
       end
     end
 
@@ -116,7 +116,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           expect do
             click_button('Save as Draft')
           end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
-          expect(page).to have_content('Current Publish Status: Draft')
+          expect(page).to have_selector '#grant-state .current', text: 'Draft'
         end
 
         scenario 'invalid grant.id redirects home' do
@@ -167,7 +167,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           expect do
             click_button('Save as Draft')
           end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
-          expect(page).to have_content('Current Publish Status: Draft')
+          expect(page).to have_selector '#grant-state .current', text: 'Draft'
         end
       end
     end

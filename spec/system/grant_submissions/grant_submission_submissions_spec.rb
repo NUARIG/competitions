@@ -179,7 +179,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'applicant' do
         before(:each) do
-          other_submission
+          other_submission.save
           login_as(applicant, scope: :saml_user)
 
           visit grant_submissions_path(grant)
