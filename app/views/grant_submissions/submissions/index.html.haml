@@ -81,15 +81,12 @@
           %td
             %div.status{data: {status: submission.id} }
               = submission.state.titleize
-            - if current_user.get_role_by_grant(grant: @grant) != 'viewer' && current_user != applicant
-              %div.administer.small{data: { status: submission.id} }
-                - if submission.draft?
-                  = link_to 'Edit', edit_grant_submission_path(@grant, submission)
-                - elsif submission.submitted?
-                  = link_to 'Switch to Draft', unsubmit_grant_submission_path(@grant, submission), method: :patch, title: 'Allow for editing'
-              - if current_user.get_role_by_grant(grant: @grant) == 'admin' && !@grant.published?
-                %div.delete
-                  = link_to 'Delete', grant_submission_path(@grant, submission), method: :delete, data: { confirm: 'This will delete the submission and its assigned reviews. Are you sure?'}, class: 'small'
+              - if current_user.get_role_by_grant(grant: @grant).nil?
+                = render 'submission_applicant_links', { grant: @grant, submission: submission }
+              - else
+                = render 'submission_administrator_links', { grant: @grant, submission: submission }
+
+
           %td
             = date_time_separate_lines(submission.user_updated_at)
           - if current_user.get_role_by_grant(grant: @grant)
