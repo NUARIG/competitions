@@ -1,0 +1,3 @@
+- if submission.draft?
+  %div.manage.small{data: { status: submission.id} }
+    = link_to 'Edit', edit_grant_submission_path(grant, submission)
