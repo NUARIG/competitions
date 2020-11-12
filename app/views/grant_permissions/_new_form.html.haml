@@ -1,9 +1,10 @@
-.grid-x
-  = f.label :user_id, 'Grant User\'s Email'
-  = f.collection_select :user_id, users, :id, :email, prompt: true
-.grid-x
-  = f.label :role, 'Grant Role'
-  = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
+.grid-x.grid-padding-x
+  .cell.small-12.medium-6
+    = f.label :user_id, 'Email Address'
+    = f.select(:user_id, users.map{ |u| [u.email, u.id] }, { include_blank: true })
+  .cell.small-12.medium-4
+    = f.label :role, 'Grant Role'
+    = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
 .grid-x
   .actions
     = f.hidden_field :grant_id, value: grant.id
