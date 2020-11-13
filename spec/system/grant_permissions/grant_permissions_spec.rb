@@ -109,6 +109,11 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
           expect(page).to have_content(@select2_user.email)
         end
 
+        scenario 'select2 requires at least one character entered' do
+          select2_open label: 'Email Address'
+          expect(page).to have_content('Please enter 1 or more characters')
+        end
+
         scenario 'select2 limits dropdown options with' do
           select2_open label: 'Email Address'
           select2_search 'zzzzzzzzzz', from: 'Email Address'
