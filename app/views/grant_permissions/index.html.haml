@@ -1,35 +1,39 @@
-- content_for(:page_title, "Edit - #{@grant.name}")
+- content_for(:page_title, "Edit Permissions - #{@grant.name}")
 
-%h1#grant-name
-  = link_to @grant.name, grant_path(@grant)
-%h2#section
-  Permissions
+= render 'shared/grant_header', { grant: @grant, section_title: 'Edit Permissions' }
 
-.small-12.cell
-  %ul.breadcrumbs
-    %li
-      = link_to 'Home', root_path
-    %li
-      = link_to 'Grant Home', grant_path(@grant)
-    %li
-      = link_to 'Edit', edit_grant_path(@grant)
-    %li
-      Permissions
-
-= render 'shared/grant_state', { grant: @grant }
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
+      %li
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        Permissions
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %p
-    - if policy(@grant).grant_editor_access?
-      = link_to 'Add new permission', new_grant_grant_permission_path(@grant)
+  - if policy(@grant).grant_editor_access?
+    #submenu.top-bar
+      .top-bar-left
+        %ul.menu
+          %li.menu-text
+            Actions:
+          %li
+            = link_to 'Grant access to another user', new_grant_grant_permission_path(@grant)
 
   - unless @grant_permissions.present?
     %p
       No roles have been assigned on this grant.
   - else
-    %table
+
+    = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
+
+    %table.hover
       %thead
         %tr
           %th

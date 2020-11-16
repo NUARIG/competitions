@@ -31,13 +31,33 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:unreviewed_submission) { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form) }
+  let(:admin_submission)      { create(:submission_with_responses,
+                                        grant: grant,
+                                        form: grant.form,
+                                        applicant: grant_admin,
+                                        created_at: grant.submission_close_date - 1.hour) }
+  let(:editor_submission)     { create(:submission_with_responses,
+                                        grant: grant,
+                                        form: grant.form,
+                                        applicant: grant_editor,
+                                        created_at: grant.submission_close_date - 1.hour) }
+  let(:viewer_submission)     { create(:submission_with_responses,
+                                        grant: grant,
+                                        form: grant.form,
+                                        applicant: grant_viewer,
+                                        created_at: grant.submission_close_date - 1.hour) }
+
+  def not_authorized_text
+    'You are not authorized to perform this action.'
+  end
 
   context '#index' do
     context 'published grant' do
       context 'with submitted submission' do
         context 'system_admin' do
           before(:each) do
-            login_as(system_admin, scope: :saml_user)
+            login_user system_admin
+            visit grant_submissions_path(grant)
           end
 
           scenario 'can visit the submissions index page' do
@@ -49,15 +69,14 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
           end
 
-          context 'with reviews' do
-            scenario 'submission with no review shows dashes' do
-              visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
-              expect(overall).to have_text '-'
-              expect(composite).to have_text '-'
-            end
+          scenario 'submission with no review shows dashes' do
+            overall   = page.find("td[data-overall-impact='#{submission.id}']")
+            composite = page.find("td[data-composite='#{submission.id}']")
+            expect(overall).to have_text '-'
+            expect(composite).to have_text '-'
+          end
 
+          context 'with reviews' do
             scenario 'submission with one review shows scores' do
               review.save
               visit grant_submissions_path(grant)
@@ -112,7 +131,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               review.save
               unreviewed_submission.update(user_updated_at: submission.user_updated_at + 1.minute)
 
-              login_as(grant_admin, scope: :saml_user)
+              login_user grant_admin
               visit grant_submissions_path(grant)
             end
 
@@ -136,25 +155,63 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               expect(page.find(".composite", match: :first)).to have_text submission.composite_score
             end
           end
+
+          context 'administrator submissions' do
+            before(:each) do
+              admin_submission.save
+              editor_submission.save
+              viewer_submission.save
+              visit grant_submissions_path(grant)
+            end
+
+            scenario 'published grant includes proper submission delete links' do
+              expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+            end
+          end
+        end
+      end
+
+      context 'grant_admin' do
+        before(:each) do
+          login_user grant_admin
+          visit grant_submissions_path(grant)
         end
 
-        context 'grant_admin' do
-          scenario 'can visit the submissions index page' do
-            login_as(grant_admin, scope: :saml_user)
+        scenario 'can visit the submissions index page' do
+          login_user grant_admin
 
+          expect(page).to have_content submission.title
+          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+          expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+        end
+
+        context 'administrator submissions' do
+          before(:each) do
+            admin_submission.save
+            editor_submission.save
+            viewer_submission.save
             visit grant_submissions_path(grant)
-            expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+          end
+
+          scenario 'includes proper submission delete links' do
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
           end
         end
       end
 
       context 'editor' do
-        scenario 'can visit the submissions index page' do
-          login_as(grant_editor, scope: :saml_user)
+        before(:each) do
+          login_user grant_editor
+        end
 
+        scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
           expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
@@ -162,12 +219,27 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
         end
+
+        context 'administrator submissions' do
+          before(:each) do
+            admin_submission.save
+            editor_submission.save
+            viewer_submission.save
+            visit grant_submissions_path(grant)
+          end
+
+          scenario 'published grant includes proper submission delete links' do
+            has_no_submission_delete_links(grant, submission, admin_submission, editor_submission, viewer_submission)
+          end
+        end
       end
 
       context 'viewer' do
-        scenario 'can visit the submissions index page' do
-          login_as(grant_viewer, scope: :saml_user)
+        before(:each) do
+          login_user grant_viewer
+        end
 
+        scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
           expect(page).not_to have_link 'Assign Reviews', href: grant_submission_reviews_path(grant, submission)
@@ -175,36 +247,69 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
         end
+
+        context 'administrator submissions' do
+          before(:each) do
+            admin_submission.save
+            editor_submission.save
+            viewer_submission.save
+            visit grant_submissions_path(grant)
+          end
+
+          scenario 'published grant includes proper submission delete links' do
+            has_no_submission_delete_links(grant, submission, admin_submission, editor_submission, viewer_submission)
+          end
+        end
       end
 
       context 'applicant' do
         before(:each) do
-          other_submission
-          login_as(applicant, scope: :saml_user)
+          other_submission.save
+          login_user applicant
 
           visit grant_submissions_path(grant)
         end
 
-        scenario 'includes link to own submission' do
-          expect(page).to have_content submission.title
+        context 'submitted submission' do
+          scenario 'includes link to own submission' do
+            expect(page).to have_content submission.title
+          end
+
+          scenario 'does not have admin links' do
+            expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+
+          scenario 'does not include other applicant submission' do
+            expect(page).not_to have_content other_submission.title
+          end
+
+          scenario 'does not include score columns' do
+            expect(page).not_to have_content 'Reviews'
+            expect(page).not_to have_content 'Overall Impact'
+            expect(page).not_to have_content 'Composite'
+          end
         end
 
-        scenario 'does not have admin links' do
-          expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-          expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
-          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-          expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-          expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
-        end
+        context 'draft submission' do
+          before(:each) do
+            submission.update(state: 'draft')
+            visit grant_submissions_path(grant)
+          end
 
-        scenario 'does not include other applicant submission' do
-          expect(page).not_to have_content other_submission.title
-        end
+          scenario 'includes edit links' do
+            expect(page).to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+          end
 
-        scenario 'does not include score columns' do
-          expect(page).not_to have_content 'Reviews'
-          expect(page).not_to have_content 'Overall Impact'
-          expect(page).not_to have_content 'Composite'
+          scenario 'does not have admin links' do
+            expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
         end
       end
     end
@@ -217,7 +322,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context 'with submitted submission' do
         context 'system_admin' do
           before(:each) do
-            login_as(system_admin, scope: :saml_user)
+            login_user system_admin
           end
 
           scenario 'can visit the submissions index page' do
@@ -233,45 +338,78 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           scenario 'can delete a submission' do
             unscored_review.save
             visit grant_submissions_path(grant)
-
             accept_alert do
               click_link 'Delete', href: grant_submission_path(grant, submission)
             end
             expect(page).to have_text 'Submission was deleted'
           end
-        end
 
-        context 'grant_admin' do
-          before(:each) do
-           login_as(grant_admin, scope: :saml_user)
-          end
-
-          scenario 'can visit the submissions index page' do
-            visit grant_submissions_path(grant)
-
-            expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-            expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
-          end
-
-          scenario 'can delete a submission' do
-            unscored_review.save
-
-            visit grant_submissions_path(grant)
-            accept_alert do
-              click_link 'Delete', href: grant_submission_path(grant, submission)
+          context 'administrator submissions' do
+            before(:each) do
+              admin_submission.save
+              editor_submission.save
+              viewer_submission.save
+              visit grant_submissions_path(grant)
             end
-            expect(page).to have_text 'Submission was deleted'
+
+            scenario 'draft grant includes proper submission delete links' do
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+            end
           end
         end
       end
 
-      context 'editor' do
-        scenario 'can visit the submissions index page' do
-          login_as(grant_editor, scope: :saml_user)
+      context 'grant_admin' do
+          before(:each) do
+           login_user grant_admin
+          end
 
+          scenario 'can visit the submissions index page' do
+            visit grant_submissions_path(grant)
+
+            expect(page).to have_content submission.title
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+
+          scenario 'can delete a submission' do
+            unscored_review.save
+
+            visit grant_submissions_path(grant)
+            accept_alert do
+              click_link 'Delete', href: grant_submission_path(grant, submission)
+            end
+            expect(page).to have_text 'Submission was deleted'
+          end
+
+          context 'administrator submissions' do
+            before(:each) do
+              admin_submission.save
+              editor_submission.save
+              viewer_submission.save
+              visit grant_submissions_path(grant)
+            end
+
+            scenario 'includes proper submission delete links' do
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
+              expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+            end
+          end
+      end
+
+      context 'editor' do
+        before(:each) do
+          login_user grant_editor
+        end
+
+        scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
           expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
@@ -279,12 +417,27 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
         end
+
+        context 'administrator submissions' do
+          before(:each) do
+            admin_submission.save
+            editor_submission.save
+            viewer_submission.save
+            visit grant_submissions_path(grant)
+          end
+
+          scenario 'includes proper submission delete links' do
+            has_no_submission_delete_links(grant, submission, admin_submission, editor_submission, viewer_submission)
+          end
+        end
       end
 
       context 'viewer' do
-        scenario 'can visit the submissions index page' do
-          login_as(grant_viewer, scope: :saml_user)
+        before(:each) do
+          login_user grant_viewer
+        end
 
+        scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
           expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
@@ -292,19 +445,40 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
         end
+
+        context 'administrator submissions' do
+          before(:each) do
+            admin_submission.save
+            editor_submission.save
+            viewer_submission.save
+            visit grant_submissions_path(grant)
+          end
+
+          scenario 'draft grant includes proper submission delete links' do
+            has_no_submission_delete_links(grant, submission, admin_submission, editor_submission, viewer_submission)
+          end
+        end
+      end
+
+      context 'applicant' do
+        scenario 'cannot visit submissions page' do
+          login_user applicant
+          visit grant_submissions_path(grant)
+          expect(page).to have_text not_authorized_text
+        end
       end
     end
 
     context 'search' do
       before(:each) do
         draft_submission
-        login_as(grant_admin, scope: :saml_user)
+        login_user grant_admin
       end
 
       scenario 'filters on applicant last name' do
         visit grant_submissions_path(grant)
         expect(page).to have_content sortable_full_name(draft_submission.applicant)
-        find_field('Search Applicant Last Name or Project Title').set(applicant.last_name)
+        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: applicant.last_name
         click_button 'Search'
         expect(page).not_to have_content sortable_full_name(draft_submission.applicant)
       end
@@ -312,7 +486,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       scenario 'filters on application title' do
         visit grant_submissions_path(grant)
         expect(page).to have_content draft_submission.title
-        find_field('Search Applicant Last Name or Project Title').set(submission.title.truncate_words(2, omission: ''))
+        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
         expect(page).not_to have_content draft_submission.title
       end
@@ -323,12 +497,12 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     describe 'Published Open Grant', js: true do
       context 'applicant' do
         before(:each) do
-          login_as(new_applicant, scope: :saml_user)
+          login_user new_applicant
           visit grant_apply_path(grant)
         end
 
         scenario 'can visit apply page' do
-          expect(page).not_to have_content 'You are not authorized to perform this action.'
+          expect(page).not_to have_content not_authorized_text
         end
 
         scenario 'can submit a valid submission' do
@@ -360,7 +534,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context '#update' do
         before(:each) do
           grant.questions.where(response_type: 'short_text').first.update(is_mandatory: true)
-          login_as(applicant, scope: :saml_user)
+          login_user applicant
         end
 
         context 'draft submission' do
@@ -409,7 +583,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         context 'submitted submission' do
           scenario 'cannot vist edit path for submitted submission' do
             visit edit_grant_submission_path(grant, submission)
-            expect(page).to have_content 'You are not authorized to perform this action'
+            expect(page).to have_content not_authorized_text
           end
         end
       end
@@ -427,18 +601,18 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'can visit apply page' do
-          expect(page).not_to have_content 'You are not authorized to perform this action.'
+          expect(page).not_to have_content not_authorized_text
         end
       end
 
       context 'applicant' do
         before(:each) do
-          login_as(new_applicant, scope: :saml_user)
+          login_user new_applicant
           visit grant_apply_path(draft_grant)
         end
 
         scenario 'can not visit apply page' do
-          expect(page).to have_content 'You are not authorized to perform this action.'
+          expect(page).to have_content not_authorized_text
         end
       end
     end
@@ -504,5 +678,12 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
     end
+  end
+
+  def has_no_submission_delete_links(grant, submission, admin_submission, editor_submission, viewer_submission)
+    expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+    expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
+    expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
+    expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
   end
 end

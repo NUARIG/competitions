@@ -1,5 +1,8 @@
 #grant-state
-  %strong
-    Current Publish Status:
-  = grant.state.capitalize
-  = render 'grants/state/form', { grant: grant } unless current_user.get_role_by_grant(grant: grant) == 'viewer'
+  .current.button.clear.small{ class: "#{grant.state}" }
+    = grant.state.capitalize
+  .button.warning.small
+    - if grant.published?
+      = link_to 'Switch to Draft Mode', draft_grant_state_path(grant)
+    - else
+      = link_to 'Publish this Grant', publish_grant_state_path(grant)

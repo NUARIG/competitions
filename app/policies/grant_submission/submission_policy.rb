@@ -21,17 +21,11 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     end
 
     def resolve
-      if user.system_admin? || check_grant_access(%i[admin editor viewer])
-        GrantSubmission::Submission.includes(:applicant, :reviews, :criteria_reviews).where(grant_id: @grant.id)
+      if user.in?(@grant.administrators) || user.system_admin?
+        GrantSubmission::Submission.includes(:applicant, :reviews).where(grant_id: @grant.id)
       else
         scope.where(applicant: user)
       end
-    end
-
-    def check_grant_access(role_list)
-      user.id.in?(GrantPermission.where(role: role_list)
-                                 .where(grant: grant)
-                                 .pluck(:user_id))
     end
   end
 
@@ -56,7 +50,7 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def destroy?
-    !grant.published? && (grant_admin_access?)
+    grant_admin_access? && (submission.applicant.in?(@grant.administrators) || !grant.published?)
   end
 
   def unsubmit?

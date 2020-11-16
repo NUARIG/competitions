@@ -1,30 +1,25 @@
-- content_for(:page_title, "Add User Permissions for #{@grant.name}")
+- content_for(:page_title, "New Permission for #{@grant.name}")
 
-%h1#grant-name
-  = link_to @grant.name, grant_path(@grant)
-%h2#section
-  New Permission
+= render 'shared/grant_header', { grant: @grant, section_title: 'New Permission' }
 
-.small-12.cell
-  %ul.breadcrumbs
-    %li
-      = link_to 'Home', root_path
-    %li
-      = link_to 'Grant Home', grant_path(@grant)
-    %li
-      = link_to 'Edit', edit_grant_path(@grant)
-    %li
-      = link_to 'Permissions', grant_grant_permissions_path(@grant)
-    %li
-      New Permission
-
-= render 'shared/grant_state', { grant: @grant }
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
+      %li
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        = link_to 'Permissions', grant_grant_permissions_path(@grant)
+      %li
+        New Permission
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %h2
-    = yield(:page_title)
+
   %p
     = link_to 'Back to Permissions', grant_grant_permissions_path
   %ul
@@ -40,7 +35,8 @@
       %strong
         Viewer
       = "- View grant and its submissions and reviews."
-.grid-x
-  .cell
-    = form_with model: [@grant, @grant_permission], local: true do |f|
-      = render 'new_form', f: f, grant: @grant, users: @users
+
+  .grid-x
+    .cell
+      = form_with model: [@grant, @grant_permission], local: true do |f|
+        = render 'new_form', f: f, grant: @grant, users: @users

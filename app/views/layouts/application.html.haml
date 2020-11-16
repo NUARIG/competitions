@@ -12,8 +12,7 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
   %body.grid-container
-    .grid-x.grid-margin-x.grid-margin-y
-      = render 'layouts/header'
+    = render 'layouts/header'
 
     #content.grid-x.grid-margin-x.grid-margin-y
       %main.cell{ class: controller_name }

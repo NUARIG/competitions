@@ -45,7 +45,6 @@ class GrantPolicy < ApplicationPolicy
     user.system_admin? || (user.grant_creator? && grant_editor_access?)
   end
 
-
   private
 
   def grant

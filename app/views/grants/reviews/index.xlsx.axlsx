@@ -1,9 +1,10 @@
-base_headers = ["Reviewer",
-                 "Applicant",
-                 "Submission Title",
-                 "Overall Impact Score",
-                 "Overall Impact Comment",
-                 "Composite Score"]
+base_headers = ["Review Status",
+                "Reviewer",
+                "Applicant",
+                "Submission Title",
+                "Overall Impact Score",
+                "Overall Impact Comment",
+                "Composite Score"]
 criteria_headers = []
 @criteria.each do |criterion|
                     criteria_headers << criterion.name
@@ -23,6 +24,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
 
   review_column_widths = []
   @reviews.each_with_index do |review, row_index|
+    review_is_complete = review.is_complete?
     submission = review.submission
     review.criteria_reviews
 
@@ -31,28 +33,28 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       criteria_review_score = review.criteria_reviews
                                  .to_a
                                  .detect { |score| score.criterion_id == criterion.id }
-      review_columns << (criteria_review_score.nil? ? 'NS' : criteria_review_score.score)
+      review_columns << ((!review_is_complete) ? '' : criteria_review_score.nil? ? 'NS' : criteria_review_score.score)
       review_column_widths << 15
       if criterion.show_comment_field?
-        review_columns << (criteria_review_score.comment.nil? ? '' : criteria_review_score.comment)
+        review_columns << (!review_is_complete || criteria_review_score.comment.nil? ? '' : criteria_review_score.comment)
         review_column_widths << 45
       end
     end
 
-    row = sheet.add_row [
-                         sortable_full_name(review.reviewer),       # A
-                         sortable_full_name(submission.applicant),  # B
-                         submission.title,                          # C
-                         (review.overall_impact_score ||= 0),       # D
-                         (review.overall_impact_comment || ''),     # E
-                         review.composite_score                     # F
-                        ].concat(review_columns)                    # G...
+    row = sheet.add_row [(review_is_complete ? 'Complete' : 'Incomplete'), # A
+                         sortable_full_name(review.reviewer),               # B
+                         sortable_full_name(submission.applicant),          # C
+                         submission.title,                                  # D
+                         (review.overall_impact_score ||= '0'),             # E
+                         (review.overall_impact_comment || ''),             # F
+                         review.composite_score ||= '0'                     # G
+                        ].concat(review_columns)                            # H...
     sheet.add_hyperlink(:location => grant_submission_review_url(@grant, submission, review),
-                        :ref => "A#{row_index + 2}") # account for header row
-    row.cells[0].style = link_style
+                        :ref => "B#{row_index + 2}") # account for header row
+    row.cells[1].style = link_style
     sheet.add_hyperlink(:location => grant_submission_url(@grant, submission),
-                        :ref => "C#{row_index + 2}")
-    row.cells[2].style = link_style
+                        :ref => "D#{row_index + 2}")
+    row.cells[3].style = link_style
   end
-  sheet.column_widths(nil, nil, 45, 15, 45, 15, *review_column_widths)
+  sheet.column_widths(20, 20, 20, 45, 15, 45, 15, *review_column_widths)
 end
