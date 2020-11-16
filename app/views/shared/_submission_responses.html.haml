@@ -1,0 +1,2 @@
+- submission.form.sections.sort_by(&:display_order).each do |section|
+  = render partial: 'grant_submissions/sections/show', locals: { submission:  submission, form: submission.form, section: section }

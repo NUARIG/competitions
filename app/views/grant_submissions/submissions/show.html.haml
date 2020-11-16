@@ -1,7 +1,25 @@
-.grid-x.grid-margin-x
-  .small-12.cell#title
-    %h1.name{class: @grant.name_length_class}
-      = @grant.name
+- title_text = "#{current_user == @submission.applicant ? 'Your Submission' : 'Submission'}"
+- content_for(:page_title, "#{title_text} - #{@grant.name}")
+
+%h1#grant-name
+  = link_to @grant.name, grant_path(@grant)
+%h2#section
+  = title_text
+
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Home', root_path
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if current_user.get_role_by_grant(grant: @grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      = link_to 'Apply', grant_apply_path(@grant)
+    %li
+      Submission
+
 
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
@@ -9,12 +27,13 @@
 
   .small-12.medium-9.cell#rfa
     %h4
-      Application:
       = @submission.title
     %h5
       Submitted By:
       = "#{@submission.applicant.first_name} #{@submission.applicant.last_name}"
 
+    - if current_user == @submission.applicant && @submission.draft?
+      = link_to 'Edit This Submission', edit_grant_submission_path(@grant, @submission), class: 'hollow button secondary'
     - if @submission.reviewers.include?(current_user)
       - review = find_review_by_submission_and_reviewer(@submission, current_user)
       %p

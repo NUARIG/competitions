@@ -14,7 +14,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       @draft_grant            = create(:draft_grant)
       draft_grant_permission  = create(:admin_grant_permission, user: @admin_user, grant: @draft_grant)
 
-      login_as(@admin_user, scope: :saml_user)
+      login_user @admin_user
       visit grants_path
     end
 
@@ -39,7 +39,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         @grant          = create(:grant_with_users)
         @admin_user     = @grant.grant_permissions.role_admin.first.user
 
-        login_as(@admin_user, scope: :saml_user)
+        login_user @admin_user
         visit edit_grant_path(@grant)
       end
 
@@ -57,7 +57,6 @@ RSpec.describe 'Grants', type: :system, js: true do
         expect(PaperTrail).to be_enabled
         fill_in 'grant_name', with: 'New_Name'
         click_button 'Update'
-
         expect(page).to have_content 'Grant was successfully updated.'
         expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
       end
@@ -74,7 +73,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         @grant          = create(:grant_with_users)
         @editor_user     = @grant.grant_permissions.role_editor.first.user
 
-        login_as(@editor_user, scope: :saml_user)
+        login_user @editor_user
         visit edit_grant_path(@grant)
       end
 
@@ -109,7 +108,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         @grant          = create(:grant_with_users)
         @viewer_user     = @grant.grant_permissions.role_viewer.first.user
 
-        login_as(@viewer_user, scope: :saml_user)
+        login_user @viewer_user
         visit edit_grant_path(@grant)
       end
 
@@ -127,7 +126,6 @@ RSpec.describe 'Grants', type: :system, js: true do
         expect(page).to have_field 'Maximum Submissions / Reviewer', disabled: true
         expect(page).to have_field 'Review Open Date', disabled: true
         expect(page).to have_field 'Review Close Date', disabled: true
-        expect(page).to have_field 'Panel Location', disabled: true
       end
     end
   end
@@ -136,7 +134,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     before(:each) do
       @grant        = build(:new_grant)
       @user         = create(:saml_user, system_admin: true)
-      login_as(@user, scope: :saml_user)
+      login_user @user
 
       visit new_grant_path
 
@@ -150,7 +148,6 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Maximum Submissions / Reviewer', with: @grant.max_submissions_per_reviewer
       page.fill_in 'Review Open Date', with: @grant.review_open_date
       page.fill_in 'Review Close Date', with: @grant.review_close_date
-      page.fill_in 'Panel Location', with: @grant.panel_location
     end
 
     scenario 'valid form submission creates permissions' do
@@ -176,12 +173,177 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
   end
 
+  describe 'Show' do
+    let(:grant)     { create(:published_open_grant_with_users, :with_reviewer) }
+    let(:applicant) { create(:user) }
+    let(:reviewer)  { grant.reviewers.first }
+    let(:admin)     { grant.admins.first }
+    let(:editor)    { grant.editors.first }
+    let(:viewer)    { grant.viewers.first }
+
+    context 'panel information' do
+      it 'does not display dates to anonymous users' do
+        visit grant_path(grant)
+        expect(page).not_to have_content 'Panel Start'
+        expect(page).not_to have_content 'Panel End'
+      end
+
+      it 'does not display dates to logged in user' do
+        visit grant_path(grant)
+        expect(page).not_to have_content 'Panel Start'
+        expect(page).not_to have_content 'Panel End'
+      end
+
+      context 'reviewer' do
+        before(:each) do
+          login_user reviewer
+        end
+
+        it 'displays dates to reviewer' do
+          visit grant_path(grant)
+          expect(page).to have_content 'Panel Start'
+          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content 'Panel End'
+          expect(page).to have_content grant.panel.end_datetime
+        end
+
+        it 'displays panel link' do
+          visit grant_path(grant)
+          expect(page).to have_link 'View Panel', href: grant_panel_path(grant)
+        end
+
+        context 'undefined dates' do
+          before(:each) do
+            grant.panel.update(start_datetime: nil, end_datetime: nil)
+            visit grant_path(grant)
+          end
+
+          it 'does not display dates' do
+            expect(page).not_to have_content 'Panel Start'
+            expect(page).not_to have_content 'Panel End'
+          end
+
+          it 'does not displays links' do
+            expect(page).not_to have_link 'Set Panel Time', href: edit_grant_panel_path(grant)
+          end
+        end
+      end
+
+      context 'grant admin' do
+        before(:each) do
+          login_user admin
+        end
+
+        it 'displays dates' do
+          visit grant_path(grant)
+
+          expect(page).to have_content 'Panel Start'
+          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content 'Panel End'
+          expect(page).to have_content grant.panel.end_datetime
+        end
+
+        it 'displays panel link' do
+          visit grant_path(grant)
+          expect(page).to have_link 'View Panel', href: grant_panel_path(grant)
+        end
+
+        context 'undefined dates' do
+          before(:each) do
+            grant.panel.update(start_datetime: nil, end_datetime: nil)
+            visit grant_path(grant)
+          end
+
+          it 'does not display dates' do
+            expect(page).not_to have_content 'Panel Start'
+            expect(page).not_to have_content 'Panel End'
+          end
+
+          it 'displays panel edit link' do
+            expect(page).to have_link 'Set Panel Time', href: edit_grant_panel_path(grant)
+          end
+        end
+      end
+
+      context 'grant editor' do
+        before(:each) do
+          login_user editor
+        end
+
+        it 'displays dates' do
+          visit grant_path(grant)
+
+          expect(page).to have_content 'Panel Start'
+          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content 'Panel End'
+          expect(page).to have_content grant.panel.end_datetime
+        end
+
+        it 'displays panel link' do
+          visit grant_path(grant)
+          expect(page).to have_link 'View Panel', href: grant_panel_path(grant)
+        end
+
+        context 'undefined dates' do
+          before(:each) do
+            grant.panel.update(start_datetime: nil, end_datetime: nil)
+            visit grant_path(grant)
+          end
+
+          it 'does not display dates' do
+            expect(page).not_to have_content 'Panel Start'
+            expect(page).not_to have_content 'Panel End'
+          end
+
+          it 'displays panel edit link' do
+            expect(page).to have_link 'Set Panel Time', href: edit_grant_panel_path(grant)
+          end
+        end
+      end
+
+      context 'grant viewer' do
+        before(:each) do
+          login_user viewer
+          visit grant_path(grant)
+        end
+
+        it 'displays dates' do
+          expect(page).to have_content 'Panel Start'
+          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content 'Panel End'
+          expect(page).to have_content grant.panel.end_datetime
+        end
+
+        it 'displays panel link' do
+          visit grant_path(grant)
+          expect(page).to have_link 'View Panel', href: grant_panel_path(grant)
+        end
+
+        context 'undefined dates' do
+          before(:each) do
+            grant.panel.update(start_datetime: nil, end_datetime: nil)
+            visit grant_path(grant)
+          end
+
+          it 'does not display dates' do
+            expect(page).not_to have_content 'Panel Start'
+            expect(page).not_to have_content 'Panel End'
+          end
+
+          it 'displays panel edit link' do
+            expect(page).to have_link 'Set Panel Time', href: edit_grant_panel_path(grant)
+          end
+        end
+      end
+    end
+  end
+
   describe 'Discard' do
     let(:grant)      { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let(:admin_user) { grant.grant_permissions.role_admin.first.user }
 
     before(:each) do
-      login_as(admin_user, scope: :saml_user)
+      login_user admin_user
     end
 
     scenario 'published grant with submissions cannot be discarded' do
@@ -264,7 +426,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'system admin' do
       before(:each) do
-        login_as(@system_admin, scope: :saml_user)
+        login_user @system_admin
       end
 
       scenario 'can access edit pages' do
@@ -289,7 +451,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'invalid user' do
       before(:each) do
-        login_as(@invalid_user, scope: :saml_user)
+        login_user @invalid_user
       end
 
       scenario 'user without access cannot access edit pages' do
@@ -308,7 +470,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant editor' do
       before(:each) do
-        login_as(@grant_editor, scope: :saml_user)
+        login_user @grant_editor
       end
 
       scenario 'can access show page' do
@@ -335,7 +497,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     context 'grant editor who is also grant_creator' do
       before(:each) do
         @grant_editor.update(grant_creator: true)
-        login_as(@grant_editor, scope: :saml_user)
+        login_user @grant_editor
       end
 
       scenario 'can duplicate a grant' do
@@ -346,7 +508,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant viewer' do
       before(:each) do
-        login_as(@grant_viewer, scope: :saml_user)
+        login_user @grant_viewer
       end
 
       scenario 'can access show page' do
@@ -377,7 +539,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'grant reviewer' do
       before(:each) do
-        login_as(@grant_reviewer, scope: :saml_user)
+        login_user @grant_reviewer
       end
 
       scenario 'can view grant in draft mode' do

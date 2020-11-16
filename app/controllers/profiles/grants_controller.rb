@@ -1,6 +1,5 @@
 module Profiles
   class GrantsController < ApplicationController
-
     def index
       @q = current_user.editable_grants.kept.ransack(params[:q])
       @q.sorts = 'publish_date desc' if @q.sorts.empty?

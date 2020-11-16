@@ -1,14 +1,26 @@
-- content_for(:page_title, "Edit User Permissions")
+- content_for(:page_title, 'Edit User Permission')
 
-%h1
-  = @grant.name
+= render 'shared/grant_header', { grant: @grant, section_title: yield(:page_title) }
 
-= render 'shared/grant_state', { grant: @grant }
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
+      %li
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        = link_to 'Permissions', grant_grant_permissions_path(@grant)
+      %li
+        Edit Permission
+
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %h2
+  %h3
     = "Edit #{full_name(@grant_permission.user)}'s Permission"
 
   .grid-x

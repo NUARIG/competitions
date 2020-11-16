@@ -1,15 +1,23 @@
 - content_for(:page_title, "Reviews - #{@grant.name}")
 
-%h1
-  = @grant.name
 
-= render 'shared/grant_state', { grant: @grant }
+= render 'shared/grant_header', { grant: @grant, section_title: 'Reviews' }
+
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
+      %li
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        Reviews
 
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %h2
-    Reviews
   #submenu.top-bar
     - if @reviews.any? || policy(@grant).grant_editor_access?
       .top-bar-left
@@ -25,21 +33,22 @@
           - if policy(@grant).grant_editor_access? && @grant.reviews.incomplete.any?
             %li
               = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete reviews on this grant.' }
-    = search_form_for @q, url: grant_reviews_path(@grant) do |f|
-      .top-bar-right
+    = search_form_for @q, url: grant_reviews_path(@grant), class: 'top-bar-right' do |f|
+      .text-right
         %ul.menu
           %li.search
             = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont, placeholder: 'Applicant or Reviewer'
           %li.search
             = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Applicant'
-
+        .reset
+          = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
 
 - if params[:q].nil? && @reviews.empty?
   %p
     There were no assigned reviews found.
 
 - else
-  = render 'shared/pagy_header', locals: { pagy: @pagy }
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
   %table.hover
     %thead

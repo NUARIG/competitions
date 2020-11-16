@@ -1,19 +1,32 @@
 - content_for(:page_title, 'Duplicate Grant')
 
-%h1
-  Create a grant based on
-  = @grant.name
+%h1#grant-name
+  = link_to @grant.name, grant_path(@original_grant)
+%h2#section
+  Duplicate
 
-%p
-  Duplicating a grant copies information from the previous grant so you don't need to start from scratch.
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Home', root_path
+    %li
+      = link_to 'Grant Home', grant_path(@original_grant)
+    %li
+      = link_to 'Edit', edit_grant_path(@original_grant)
+    %li
+      Duplicate
 
-%p
-  Once you update and save, all questions, criteria, and roles will be copied from
-  = link_to "#{@grant.name}", grant_path(params[:grant_id])
+.grid-x.grid-margin-x
+  .small-12.cell
+    %p
+      Duplicating a grant copies information from the previous grant so you don't need to start from scratch.
 
+    %p
+      Once you update and save, all questions, criteria, panel instructions, and roles will be copied from
+      = link_to "#{@grant.name}", grant_path(params[:grant_id])
 
-%p
-  You can change or delete anything.
+    %p
+      You can change or delete anything.
 
-= form_with model: @grant, url: grant_duplicate_path, local: true do |f|
-  = render 'grants/form', f: f, grant: @grant, disable_fields: false
+    = form_with model: @grant, url: grant_duplicate_path, local: true do |f|
+      = render 'grants/form', f: f, grant: @grant, disable_fields: false

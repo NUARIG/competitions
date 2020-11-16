@@ -1,3 +1,28 @@
+@import 'settings';
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  flex-shrink: 0;
+}
+
+#content {
+  flex: 1 0 auto;
+  padding: 1em;
+}
+
+#footer {
+  flex-shrink: 0;
+  padding: 0 1em;
+}
+
 .grid-container {
   header {
     .top-bar-left {
@@ -30,6 +55,8 @@
   main {
     #submenu {
       background: none;
+      display: flex;
+      align-items: start;
       padding: 0;
       .menu {
         background: none;
@@ -42,10 +69,30 @@
           text-decoration: underline;
         }
       }
+      .top-bar-left {
+        ul.menu {
+          li:first-of-type {
+            padding-left: 0rem;
+            a {
+              padding-left: 0rem;
+            }
+          }
+        }
+        form {
+          margin-left: 1em;
+          padding: 0;
+        }
+      }
       .top-bar-right {
         .menu {
           input {
             margin: 0;
+          }
+        }
+        .reset {
+          .button {
+            margin-bottom: 0;
+            padding-bottom: 0;
           }
         }
       }
@@ -55,30 +102,23 @@
     }
 
     // Edit
-    #grant-state,
-    #grant-state form {
-      font-size: 1.15em;
-      margin: 1rem 0;
-      form.grant-state {
-        display: inline-block;
-        .button {
-          margin: 0;
+    #grant-state {
+      font-weight: bold;
+      padding-top: 0.6rem;
+      .button.current {
+        &:hover {
+          cursor: default;
+        }
+      }
+      .button.warning {
+        &:hover a {
+          color: $white;
         }
       }
     }
     #grant-info .tabs-title {
       &.is-active {
         background-color: #e6e6e6;
-      }
-      a {
-        font-size: .95em;
-      }
-    }
-
-    thead tr {
-      th {
-        font-size: .85em;
-        vertical-align: bottom;
       }
     }
   }
@@ -99,7 +139,16 @@
 }
 
 th {
+  font-size: .85em;
   text-align: left;
+  vertical-align: bottom;
+}
+
+td {
+  vertical-align: top;
+  ul.menu a {
+    padding-top: 0.25em;
+  }
 }
 
 // submission labels contain paragraphs
@@ -142,3 +191,45 @@ a.icon-24px {
   position: relative;
   bottom: 2px;
 }
+
+// grant header
+h1#grant-name {
+  font-size: 1.25em;
+  font-weight: bold;
+  line-height: 1em;
+  a {
+    color: $black;
+  }
+}
+
+h1#grant-home,
+h2#section {
+  font-size: 1.65em;
+  font-weight: normal;
+  a {
+    color: $black;
+  }
+}
+
+// grant dates
+  #grant-dates {
+    .card-divider {
+      padding: .5rem 1rem;
+    }
+    .card-section {
+      padding: 0.5rem 1rem;
+    }
+    dl {
+      dt {
+        font-size: .95rem;
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+      dd {
+        margin-top: 0;
+      }
+      hr {
+        margin: .5rem;
+      }
+    }
+  }

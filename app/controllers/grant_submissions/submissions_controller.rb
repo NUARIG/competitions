@@ -1,36 +1,40 @@
 module GrantSubmissions
   class SubmissionsController < GrantBaseController
-    before_action :set_grant, except: :new
+    before_action :set_grant, except: %i[index new]
 
     def index
-      @grant   = GrantDecorator.new(@grant)
-      @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
-      @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-      @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+      @grant = Grant.kept.friendly.with_administrators.find(params[:grant_id])
+      if Pundit.policy(current_user, @grant).show?
+        @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+        @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
+        @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+      else
+        skip_policy_scope
+        flash[:alert] = I18n.t('pundit.default')
+        redirect_to root_path
+      end
     end
 
     def show
       set_submission
       authorize @submission
-      @grant = GrantDecorator.new(@grant)
       render 'show'
     end
 
     def new
       @grant = Grant.kept
                     .friendly
-                    .includes(form:
+                    .includes( form:
                                 { sections:
-                                  {questions: :multiple_choice_options} } )
+                                  { questions: :multiple_choice_options} } )
+                    .with_reviewers.with_panel
                     .find(params[:grant_id])
-      @grant = GrantDecorator.new(@grant)
       set_submission
       authorize @submission
       render 'new'
     end
 
     def edit
-      @grant = GrantDecorator.new(@grant)
       set_submission
       authorize @submission
       render 'edit'
@@ -47,7 +51,6 @@ module GrantSubmissions
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'new'
       end
@@ -64,7 +67,6 @@ module GrantSubmissions
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'edit'
       end
@@ -85,7 +87,7 @@ module GrantSubmissions
     private
 
     def set_grant
-      @grant = Grant.kept.friendly.find(params[:grant_id])
+      @grant = Grant.kept.friendly.with_reviewers.with_panel.find(params[:grant_id])
     end
 
     def submission_redirect(grant, submission)

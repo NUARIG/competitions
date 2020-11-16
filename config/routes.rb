@@ -23,10 +23,13 @@ Rails.application.routes.draw do
   end
 
   resources :grants do
-    resources :grant_permissions, except: :show,        controller: 'grant_permissions'
-    resource  :duplicate,         only: %i[new create], controller: 'grants/duplicate'
-    resource  :state,             only: :update,        controller: 'grants/state'
-    resources :reviews,           only: :index,         controller: 'grants/reviews' do
+    resources :grant_permissions, except: :show,            controller: 'grant_permissions'
+    resource  :duplicate,         only: %i[new create],     controller: 'grants/duplicate'
+    resource  :state,             only: %i[publish draft],  controller: 'grants/state' do
+      get 'publish',  on: :member
+      get 'draft',    on: :member
+    end
+    resources :reviews,           only: :index,             controller: 'grants/reviews' do
       get 'reminders',            to: 'grants/reviews/reminders#index', on: :collection
     end
     member do
@@ -47,13 +50,19 @@ Rails.application.routes.draw do
       end
     end
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers'
+    resource :panel,              only: %i[show edit update], on: :member, controller: 'panels' do
+      resources :submissions,     only: %i[index show], controller: 'panels/submissions' do
+        resources :reviews,       only: %i[index show], controller: 'panels/submissions/reviews'
+      end
+    end
 
     get 'apply', to: 'grant_submissions/submissions#new', as: :apply
   end
 
   resource :profile, only: %i[show update] do
     resources :grants,      only: :index, controller: 'profiles/grants'
-    resources :reviews,      only: :index, controller: 'profiles/reviews'
-    resources :submissions,      only: :index, controller: 'profiles/submissions'
+    resources :reviews,     only: :index, controller: 'profiles/reviews'
+    resources :submissions, only: :index, controller: 'profiles/submissions'
+    resources :panels,      only: :index, controller: 'profiles/panels'
   end
 end

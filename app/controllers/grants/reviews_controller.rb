@@ -12,7 +12,7 @@ module Grants
         @q.sorts        = 'applicant_last_name asc' if @q.sorts.empty?
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
       elsif request.format.xlsx?
-        @grant          = Grant.with_criteria. kept.friendly.find(params[:grant_id])
+        @grant          = Grant.with_criteria.kept.friendly.find(params[:grant_id])
         authorize       @grant, :grant_viewer_access?
 
         @criteria       = @grant.criteria

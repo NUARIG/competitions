@@ -1,0 +1,38 @@
+- content_for(:page_title, 'My Panels')
+
+%h3
+  = yield(:page_title)
+
+- if @grants.none? && params[:q].nil?
+  %p
+    You have no scheduled Review Panels at this time.
+- else
+  %p
+    This is a collection of published Grants that have scheduled a Review Panel.
+
+  = search_form_for @q, url: profile_panels_path, class: 'grid-x grid-margin-x medium-margin-collapse' do |f|
+    .small-12.medium-2.cell
+      .text-left.middle
+        = f.label :name_cont, 'Search Grant Name'
+    .small-12.medium-2.cell
+      = f.search_field :name_cont
+    .small-12.medium-3.cell
+      = f.submit 'Search', class: 'button'
+      = link_to 'Reset', profile_grants_path, class: 'button clear secondary'
+
+  = render partial: 'shared/pagy_header', locals: { pagy: @pagy_a }
+
+  %table
+    %thead
+      %tr
+        %th= sort_link(@q, :name, 'Grant', {}, {title: 'Sort on Grant Title'})
+        %th= sort_link(@q, :review_close_date, {}, {title: 'Sort on Review Close'})
+        %th= sort_link(@q, 'panel_start_datetime', 'Panel Start',{}, {title: 'Sort on Panel Start'})
+    %tbody
+      - @grants.each do |grant|
+        %tr.panel
+          %td= link_to grant.name, grant_panel_path(grant)
+          %td= grant.review_close_date
+          %td= grant.panel.start_datetime || 'Not Scheduled'
+
+  != pagy_foundation_nav(@pagy_a)

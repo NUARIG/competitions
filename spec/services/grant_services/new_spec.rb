@@ -41,6 +41,13 @@ RSpec.describe 'GrantServices' do
           GrantServices::New.call(grant: new_grant, user: grant_creator)
         end.to (change{Criterion.count}.by Criterion::DEFAULT_CRITERIA.count)
       end
+
+      it 'creates default review criteria' do
+        expect do
+          GrantServices::New.call(grant: new_grant, user: grant_creator)
+        end.to (change{Panel.count}.by 1)
+        expect(Panel.last.grant).to eql new_grant
+      end
     end
 
     context 'failures' do
