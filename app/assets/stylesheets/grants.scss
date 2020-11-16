@@ -32,3 +32,23 @@ main.grants {
     margin: 1rem 0;
   }
 }
+
+table#grants {
+  td.manage {
+    padding-left: 0rem;
+    padding-top: 0.15rem;
+    ul.dropdown {
+      li.text {
+        a {
+          background: none;
+        }
+        ul {
+          min-width: 150px;
+          a {
+            padding: 0.25rem .5rem;
+          }
+        }
+      }
+    }
+  }
+}
