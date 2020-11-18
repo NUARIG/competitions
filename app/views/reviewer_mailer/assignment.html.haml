@@ -2,13 +2,14 @@
   Dear #{full_name(@reviewer)},
 
 %p
-  You have been asked to review the submission
-  = surround '"', ',"' do
-    = link_to @submission.title, grant_submission_url(@grant, @submission)
-  an application to the grant #{link_to @grant.name, grant_url(@grant)} in #{link_to @application_name, root_url}.
+  You have been asked by #{full_name(@review.assigner)} to review the following submission:
+  %br
+  = link_to @submission.title, grant_submission_url(@grant, @submission)
+  %br
+  for #{@grant.name}.
 
 %p
-  By clicking the link above you can review or opt out of reviewing this submission.
+  By clicking the link above you can review or opt out of reviewing.
 
 %p
   Thank you.
