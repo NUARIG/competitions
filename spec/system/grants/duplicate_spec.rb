@@ -115,7 +115,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
           expect do
             click_button('Save as Draft')
-          end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
+          end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(grant.grant_permissions.count)
           expect(page).to have_selector '#grant-state .current', text: 'Draft'
         end
 
@@ -167,7 +167,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           page.fill_in 'Review Close Date', with: grant.review_close_date + 1.day
           expect do
             click_button('Save as Draft')
-          end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(@grant.grant_permissions.count)
+          end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(grant.grant_permissions.count)
           expect(page).to have_selector '#grant-state .current', text: 'Draft'
         end
       end
