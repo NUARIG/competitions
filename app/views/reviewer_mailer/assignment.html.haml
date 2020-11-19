@@ -6,6 +6,9 @@
   %br
   = link_to @submission.title, grant_submission_url(@grant, @submission)
   %br
+  by #{full_name(@review.applicant)}
+
+  %br
   for #{@grant.name}.
 
 %p

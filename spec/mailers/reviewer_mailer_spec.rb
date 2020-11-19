@@ -22,6 +22,10 @@ RSpec.describe ReviewerMailer, type: :mailer do
       expect(mailer.body.encoded).to have_link review.submission.title, href: grant_submission_url(grant, review.submission)
     end
 
+    it 'includes the applicant\'s full name' do
+      expect(mailer.body.encoded).to have_content "#{review.submission.applicant.first_name} #{review.submission.applicant.last_name}"
+    end
+
     it 'includes the grant name' do
       expect(mailer.body.encoded).to have_content grant.name
     end
