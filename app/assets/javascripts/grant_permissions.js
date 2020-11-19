@@ -4,7 +4,7 @@
 //= require select2
 $(document).ready(function() {
   $('select#grant_permission_user_id').select2({
-    placeholder: "Choose a person",
+    placeholder: "Find an email address",
     minimumInputLength: 1,
     allowClear: true
   });

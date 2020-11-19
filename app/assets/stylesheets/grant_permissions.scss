@@ -1,3 +1,12 @@
-// Place all the styles related to the GrantPermissions controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+main.grant_permissions {
+  .select2-selection {
+    border-radius: 0 !important;
+    border: 1px solid #cacaca !important;
+    height: 2.4375rem !important;
+    padding-top: .25rem !important;
+  }
+
+  .select2-selection__arrow {
+    top: 6px !important;
+  }
+}
