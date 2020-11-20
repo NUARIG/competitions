@@ -12,20 +12,20 @@ module GrantReviewers
 
     def create
       authorize @grant, :edit?
-      # if existing invite
-      #   flash[:warning] = 'Email already invited.'
-      # else
-      #   create/send the invite
-      flash[:alert] = 'Invitation sent.'
+      invitation = GrantReviewer::Invitation.create(grant: @grant, inviter: current_user, email: params[:email])
+      if invitation.errors.none?
+        GrantReviewerInvitationMailer.invite(invitation: invitation, grant: @grant, inviter: current_user).deliver_now
+        flash[:alert] = 'Invitation created.'
+      else
+        flash[:warning] = invitation.errors.full_messages
+      end
       redirect_back fallback_location: grant_reviewers_path(@grant)
     end
 
     private
 
     def set_grant
-      @grant = Grant.kept
-                    .friendly
-                    .find(params[:grant_id])
+      @grant = Grant.kept.friendly.find(params[:grant_id])
     end
   end
 end

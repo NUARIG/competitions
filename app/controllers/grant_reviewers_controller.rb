@@ -19,8 +19,7 @@ class GrantReviewersController < ApplicationController
     reviewer = User.find_by(email: email)
 
     if reviewer.nil?
-      # look for existing invite?
-      flash[:alert] = "Could not find user with email: #{email}. #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant), method: :post, confirm: 'An email will be sent to #{email}. You will be notified when they accept or opt out.'}."
+      flash[:alert] = "Could not find user with email: #{email}. #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant, email: email), method: :post, confirm: 'An email will be sent to #{email}. You will be notified when they accept or opt out.'}."
     else
       grant_reviewer = GrantReviewer.create(grant: @grant, reviewer: reviewer)
       if grant_reviewer.errors.none?
