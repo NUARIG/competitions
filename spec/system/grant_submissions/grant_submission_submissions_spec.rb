@@ -51,6 +51,18 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     'You are not authorized to perform this action.'
   end
 
+  def successfully_saved_submission_message
+    'Draft submission was saved. It can not be reviewed until it has been submitted.'
+  end
+
+  def successfully_submitted_submission_message
+    'You successfully applied'
+  end
+
+  def successfully_updated_draft_submission_message
+    'Draft submission was successfully updated and saved. It can not be reviewed until it has been submitted.'
+  end
+
   context '#index' do
     context 'published grant' do
       context 'with submitted submission' do
@@ -552,14 +564,14 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set(Faker::Lorem.sentence)
             click_button 'Save as Draft'
-            expect(page).to have_content 'Submission was successfully updated and saved.'
+            expect(page).to have_content successfully_updated_draft_submission_message
           end
 
           scenario 'can save an incomplete submission as draft' do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set('')
             click_button 'Save as Draft'
-            expect(page).to have_content 'Submission was successfully updated and saved.'
+            expect(page).to have_content successfully_updated_draft_submission_message
           end
 
           scenario 'cannot submit a submission with an error' do
