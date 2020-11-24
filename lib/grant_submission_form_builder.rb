@@ -64,7 +64,6 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
   def grant_disable_input?
     if options[:parent_builder]
       options[:parent_builder].instance_of?(self.class) ? options[:parent_builder].grant_disable_input? : !options[:parent_builder].object.available?
-      # options[:parent_builder].instance_of?(GrantFormBuilder) ? options[:parent_builder].grant_disable_input? : !options[:parent_builder].object.available?
     else
       read_only || !object.available?
     end
