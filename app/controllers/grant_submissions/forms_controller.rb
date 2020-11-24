@@ -6,6 +6,9 @@ module GrantSubmissions
     def edit
       @form = GrantSubmission::Form.includes(:sections=>{:questions=>[:multiple_choice_options]}).find(params[:id])
       authorize @form
+      if params[:cancelled]
+        flash[:warning] = 'All changes were discarded.'
+      end
     end
 
     def update
@@ -31,6 +34,7 @@ module GrantSubmissions
 
     def form_params
       params.require(:grant_submission_form).permit(
+          :cancelled,
           :submission_instructions,
           sections_attributes: [
             :id,
