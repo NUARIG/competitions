@@ -5,7 +5,7 @@ module GrantReviewers
     def index
       authorize @grant, :edit?
       @invitations = GrantReviewer::Invitation.by_grant(@grant)
-      skip_after_action :verify_policy_scope
+      skip_after_action :verify_policy_scoped
     end
 
     def update;end
