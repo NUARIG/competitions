@@ -12,8 +12,8 @@ module GrantReviewers
 
     def create
       authorize @grant, :edit?
-      invitation = GrantReviewer::Invitation.create(grant: @grant, inviter: current_user, email: params[:email])
-      if invitation.errors.none?
+      invitation = GrantReviewer::Invitation.new(grant: @grant, inviter: current_user, email: params[:email])
+      if invitation.save
         GrantReviewerInvitationMailer.invite(invitation: invitation, grant: @grant, inviter: current_user).deliver_now
         flash[:alert] = 'Invitation created.'
       else
