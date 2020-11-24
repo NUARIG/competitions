@@ -48,7 +48,9 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
         scenario 'display_order is updated on delete' do
           original_section = @draft_grant.form.sections.first
           expect(original_section.display_order).to be 1
-          find('.delete-section').click
+          accept_alert do
+            find('.delete-section').click
+          end
           click_link add_section_text
           new_section_text = Faker::Lorem.sentence
           find_field('Title', with: '').set(new_section_text)
@@ -66,7 +68,9 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
           click_button 'Save'
           original_section_section = @draft_grant.form.sections.second
           original_last_section    = @draft_grant.form.sections.last
-          page.find("#delete-section-#{original_section_section.id}").click
+          accept_alert do
+            page.find("#delete-section-#{original_section_section.id}").click
+          end
           click_button 'Save'
           expect(@draft_grant.form.sections.count).to be 2
           expect(GrantSubmission::Section.find(original_first_section.id).display_order).to be 1
@@ -76,7 +80,9 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
 
       context 'question' do
         scenario 'display_order is updated on delete' do
-          page.find("#delete-question-#{@original_first_question.id}").click
+          accept_alert do
+            page.find("#delete-question-#{@original_first_question.id}").click
+          end
           click_button 'Save'
           expect(@draft_grant.questions.all?{ |q| q.display_order <= 2 })
           expect(GrantSubmission::Question.find(@original_second_question.id).display_order).to be 1
@@ -86,7 +92,9 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
         scenario 'display_order is updated when question in middle of form is deleted' do
           expect(@original_first_question.display_order).to be 1
           expect(@original_third_question.display_order).to be 3
-          page.find("#delete-question-#{@original_second_question.id}").click
+          accept_alert do
+            page.find("#delete-question-#{@original_second_question.id}").click
+          end
           click_button 'Save'
           expect(@draft_grant.questions.all?{ |q| q.display_order <= 2 })
           expect(GrantSubmission::Question.find(@original_first_question.id).display_order).to be 1
