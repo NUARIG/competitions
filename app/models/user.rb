@@ -3,9 +3,11 @@
 class User < ApplicationRecord
   attr_accessor :grant_permission_role
 
-  devise :trackable, :timeoutable
+  USER_TYPES                = ["SamlUser", "RegisteredUser"]
+  SAML_DOMAINS              = COMPETITIONS_CONFIG[:devise][:registerable][:saml_domains] || []
+  RESTRICTED_EMAIL_DOMAINS  = COMPETITIONS_CONFIG[:devise][:registerable][:restricted_domains] || []
 
-  USER_TYPES = ["SamlUser", "RegisteredUser"]
+  devise :trackable, :timeoutable
 
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
                   meta:     { user_id: :id } # added for convenience
@@ -62,9 +64,19 @@ class User < ApplicationRecord
     self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
   end
 
-  # https://github.com/varvet/pundit/issues/478#issuecomment-371737216
-  # Needed so that subclasses inherit the policy from User class.
-  def self.policy_class
-    UserPolicy
+  class << self
+    def is_saml_email_address?(email:)
+      SAML_DOMAINS.any? { |domain| email&.match? domain }
+    end
+
+    def is_restricted_email_address?(email:)
+      RESTRICTED_EMAIL_DOMAINS.any? { |domain| email&.match? domain }
+    end
+
+    # Subclasses inherit their policy from this class.
+    # https://github.com/varvet/pundit/issues/478#issuecomment-371737216
+    def policy_class
+      UserPolicy
+    end
   end
 end
