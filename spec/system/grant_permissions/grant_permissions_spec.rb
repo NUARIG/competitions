@@ -17,6 +17,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     @grant_viewer_role = @grant.grant_permissions.role_viewer.first
 
     @unassigned_user   = create(:saml_user)
+    @select2_user      = create(:saml_user, email: 'select2_user@school.edu')
   end
 
   describe 'grant editor user' do
@@ -68,8 +69,11 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     end
 
     context '#new' do
-      scenario 'assigned grant_permission does not appear in select' do
+      before(:each) do
         visit new_grant_grant_permission_path(@grant.id)
+      end
+
+      scenario 'assigned grant_permission does not appear in select' do
         expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
       end
 
@@ -81,18 +85,41 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       end
 
       scenario 'requires a selected user' do
-        visit new_grant_grant_permission_path(@grant.id)
         select("#{@unassigned_user.email}", from: 'grant_permission[user_id]')
         click_button 'Save'
         expect(page).to have_content('Role must be selected.')
       end
 
       scenario 'unassigned user can be granted a role' do
-        visit new_grant_grant_permission_path(@grant.id)
         select("#{@unassigned_user.email}", from: 'grant_permission[user_id]')
         select('Editor', from:'grant_permission[role]')
         click_button 'Save'
         expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'editor'"
+      end
+
+      context 'select2 search' do
+        scenario 'select2 dropdown includes unassigned emails' do
+          select2 @select2_user.email, from: 'Email Address', search: true
+          select2 @select2_user.email, from: 'Email Address', search: 'select2'
+        end
+
+        scenario 'select2 displays search email, if exists' do
+          select2_open label: 'Email Address'
+          select2_search 'select2_user', from: 'Email Address'
+          expect(page).to have_content(@select2_user.email)
+        end
+
+        scenario 'select2 requires at least one character entered' do
+          select2_open label: 'Email Address'
+          expect(page).to have_content('Please enter 1 or more characters')
+        end
+
+        scenario 'select2 limits dropdown options with' do
+          select2_open label: 'Email Address'
+          select2_search 'zzzzzzzzzz', from: 'Email Address'
+          expect(page).to have_content('No results found')
+          expect(page).to have_select('grant_permission_user_id', :with_options => [])
+        end
       end
     end
   end
