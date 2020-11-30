@@ -48,8 +48,9 @@ module GrantSubmissions
         authorize @review
         respond_to do |format|
           if @review.save
-            ReviewerMailer.assignment(review: @review).deliver_now
-            flash[:success] = "Submission assigned for review. Notification email was sent to #{helpers.full_name(@review.reviewer)}."
+            review = Review.includes(:submission, :reviewer, :assigner).find(@review.id)
+            ReviewerMailer.assignment(review: review).deliver_now
+            flash[:success] = "Submission assigned for review. Notification email was sent to #{helpers.full_name(review.reviewer)}."
             format.json   { head :ok }
           else
             flash[:alert] = @review.errors.full_messages

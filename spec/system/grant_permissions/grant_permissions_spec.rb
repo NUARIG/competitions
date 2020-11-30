@@ -28,7 +28,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     context '#index' do
       scenario 'includes link to add permission' do
         visit grant_grant_permissions_path(@grant)
-        expect(page).to have_link 'Add new permission', href: new_grant_grant_permission_path(@grant)
+        expect(page).to have_link 'Grant access to another user', href: new_grant_grant_permission_path(@grant)
       end
 
       scenario 'includes edit link, excludes delete link' do
@@ -45,7 +45,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     context '#edit' do
       scenario 'removes edit links for user who changes their permission to viewer' do
         visit edit_grant_grant_permission_path(@grant, @grant_editor_role)
-        select('viewer', from: 'grant_permission[role]')
+        select('Viewer', from: 'grant_permission[role]')
         click_button 'Update'
         expect(page).not_to have_link('Edit', href: edit_grant_grant_permission_path(@grant, @grant_editor_role))
         expect(page).not_to have_link('Delete', href: grant_grant_permission_path(@grant, @grant_editor_role))
@@ -54,14 +54,14 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
       scenario 'existing grant_permission_editor can be assigned admin role' do
         visit edit_grant_grant_permission_path(@grant, @grant_editor_role)
-        select('admin', from: 'grant_permission[role]')
+        select('Admin', from: 'grant_permission[role]')
         click_button 'Update'
         expect(page).to have_content "#{full_name(@grant_editor)}'s permission was changed to 'admin' for this grant."
       end
 
       scenario 'last grant_permission_admin cannot be assigned a different role' do
         visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
-        select('viewer', from: 'grant_permission[role]')
+        select('Viewer', from: 'grant_permission[role]')
         click_button 'Update'
         expect(page).to have_content 'There must be at least one admin on the grant'
         expect(@grant_admin_role.role).to eql('admin')
@@ -79,7 +79,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
       scenario 'requires a selected user' do
         visit new_grant_grant_permission_path(@grant.id)
-        select('editor', from:'grant_permission[role]')
+        select('Editor', from:'grant_permission[role]')
         click_button 'Save'
         expect(page).to have_content('User must be selected.')
       end
@@ -92,7 +92,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
       scenario 'unassigned user can be granted a role' do
         select("#{@unassigned_user.email}", from: 'grant_permission[user_id]')
-        select('editor', from:'grant_permission[role]')
+        select('Editor', from:'grant_permission[role]')
         click_button 'Save'
         expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'editor'"
       end
@@ -133,7 +133,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     context '#index' do
       scenario 'includes link to add permission' do
         visit grant_grant_permissions_path(@grant)
-        expect(page).to have_link 'Add new permission', href: new_grant_grant_permission_path(@grant)
+        expect(page).to have_link 'Grant access to another user', href: new_grant_grant_permission_path(@grant)
       end
     end
 

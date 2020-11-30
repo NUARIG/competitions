@@ -1,8 +1,0 @@
-= form_with scope: :grant_state, url: grant_state_path(grant), method: :patch, local: true, id: "grant-#{grant.id}-state", class: 'grant-state' do |f|
-  |
-  - if grant.published?
-    = f.hidden_field :state, value: 'draft'
-    = f.submit 'Switch to Draft', class: 'hollow button secondary'
-  - else
-    = f.hidden_field :state, value: 'published'
-    = f.submit 'Publish this Grant', class: 'hollow button secondary'

@@ -1,4 +1,4 @@
-.nested-fields
+#overall-impact.nested-fields
   .field
     .grid-x
       .cell.small-12.medium-2
@@ -7,5 +7,13 @@
         = text_field_tag :name, 'Overall Impact Score', placeholder: 'Overall Impact Score', width: 50, disabled: true
         %p.help-text
           Overall Impact Score is Required and commenting is enabled.
-
+  .field.checkboxes
+    .grid-x
+      .cell-small-12.medium-offset-3
+        = check_box_tag 'show_impact_score_comment', 'Show Comment', {}, disabled: true
+        = label_tag 'show_impact_score_comment', 'Required'
+    .grid-x
+      .cell-small-12.medium-offset-3
+        = check_box_tag 'require_impact_score_comment', 'Allow Reviewers to Comment', {}, disabled: true
+        = label_tag 'require_impact_score_comment', 'Allow Reviewers to Comment'
 %hr

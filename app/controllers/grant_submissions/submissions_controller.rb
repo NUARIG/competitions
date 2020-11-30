@@ -1,11 +1,18 @@
 module GrantSubmissions
   class SubmissionsController < GrantBaseController
-    before_action :set_grant, except: :new
+    before_action :set_grant, except: %i[index new]
 
     def index
-      @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
-      @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-      @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+      @grant = Grant.kept.friendly.with_administrators.find(params[:grant_id])
+      if Pundit.policy(current_user, @grant).show?
+        @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+        @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
+        @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+      else
+        skip_policy_scope
+        flash[:alert] = I18n.t('pundit.default')
+        redirect_to root_path
+      end
     end
 
     def show
@@ -40,11 +47,14 @@ module GrantSubmissions
 
       if @submission.save
         @submission.update(user_updated_at: Time.now)
-        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
+        if @submission.submitted?
+          flash[:notice] = 'You successfully applied.'
+        else
+          flash[:warning] = 'Draft submission was saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
+        end
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'new'
       end
@@ -56,12 +66,15 @@ module GrantSubmissions
       @submission.user_submitted_state = params[:state]
 
       if @submission.update(submission_params)
-        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
+        if @submission.submitted?
+          flash[:notice] = 'You successfully applied.'
+        else
+          flash[:warning] = 'Draft submission was successfully updated and saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
+        end
         @submission.update(user_updated_at: Time.now)
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        @grant = GrantDecorator.new(@grant)
         flash.now[:alert] = @submission.errors.to_a
         render 'edit'
       end

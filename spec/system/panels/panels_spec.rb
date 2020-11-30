@@ -108,7 +108,7 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
 
       scenario 'requires https' do
-        page.fill_in 'Meeting Link', with: Faker::Internet.url(scheme: 'http')
+        page.fill_in 'Link', with: Faker::Internet.url(scheme: 'http')
         click_button button_text
         expect(page).to have_content 'not a valid secure URL'
       end
@@ -150,7 +150,7 @@ RSpec.describe 'Panels', type: :system, js: true do
       scenario 'it tracks whodunnit' do
         login_user editor
         visit edit_grant_panel_path(grant)
-        fill_in 'Meeting Location', with: 'Edited'
+        fill_in 'Location', with: 'Edited'
         click_button button_text
         expect(grant.panel.versions.last.whodunnit).to eql editor.id
       end
@@ -378,7 +378,7 @@ RSpec.describe 'Panels', type: :system, js: true do
   def can_update_panel(user:)
     visit edit_grant_panel_path(grant)
     new_address = Faker::Address.full_address
-    page.fill_in 'Meeting Location', with: new_address, fill_options: { clear: :backspace }
+    page.fill_in 'Location', with: new_address, fill_options: { clear: :backspace }
     click_button button_text
     expect(page).to have_content 'Panel information successfully updated.'
     expect(grant.panel.meeting_location).to eql new_address

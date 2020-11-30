@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'GrantSubmission::Responses', type: :system do
   def successfully_saved_submission_message
-    'Submission was successfully saved.'
+    'Draft submission was saved. It can not be reviewed until it has been submitted.'
   end
 
   def successfully_submitted_submission_message
@@ -10,7 +10,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
   end
 
   def successfully_updated_draft_submission_message
-    'Submission was successfully updated and saved'
+    'Draft submission was successfully updated and saved. It can not be reviewed until it has been submitted.'
   end
 
   describe 'Published Open Grant', js: true do

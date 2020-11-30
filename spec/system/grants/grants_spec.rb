@@ -9,7 +9,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       @grant                  = create(:grant_with_users)
       @inaccessible_grant     = create(:grant_with_users)
       @discarded_grant        = create(:grant_with_users, discarded_at: 1.hour.ago)
-      @admin_user             = @grant.grant_permissions.role_admin.first.user
+      @admin_user             = @grant.admins.first
 
       @draft_grant            = create(:draft_grant)
       draft_grant_permission  = create(:admin_grant_permission, user: @admin_user, grant: @draft_grant)
@@ -23,13 +23,11 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
 
     scenario 'displays only public grants for grant_admins' do
+      find("td.manage[data-grant-id='#{@grant.id}']").hover
       expect(page).to have_link('Edit', href: edit_grant_path(@grant))
-
-      expect(page).not_to have_link('Edit', href: edit_grant_path(@inaccessible_grant))
-      expect(page).not_to have_link('Delete', href: grant_path(@inaccessible_grant))
       expect(page).not_to have_link('Delete', href: grant_path(@grant))
-      expect(page).not_to have_link('Edit', href: edit_grant_path(@draft_grant))
-      expect(page).not_to have_link('Delete', href: grant_path(@draft_grant))
+      expect("tr[data-grant-id='#{@inaccessible_grant.id}']").not_to have_selector("td.manage[data-grant-id='#{@inaccessible_grant.id}']")
+      expect('table#grants').not_to have_selector "tr[data-grant-id='#{@draft_grant.id}']"
     end
   end
 

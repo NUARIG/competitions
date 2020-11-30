@@ -83,7 +83,7 @@
       - else
         = f.submit 'Update', class: 'button'
         = link_to 'Cancel', grant, class: 'button secondary clear'
-      = link_to 'Delete', grant, method: :delete, disabled: disable_fields, data: { confirm: 'Are you sure?'}, class: 'button alert clear'
+      = link_to 'Delete', grant, method: :delete, disabled: disable_fields, data: { confirm: 'Are you sure you want to delete this grant entirely?'}, class: 'button alert clear'
 
 :javascript
   $(function() {

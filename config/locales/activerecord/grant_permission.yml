@@ -2,6 +2,10 @@ en:
   activerecord:
     attributes:
       grant_permission:
+    models:
+      grant_permission:
+        one: permission
+        other: permissions
     errors:
       models:
         grant_permission:
