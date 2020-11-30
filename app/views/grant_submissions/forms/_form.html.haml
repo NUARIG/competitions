@@ -37,6 +37,7 @@
     .actions
       %hr
       = f.submit 'Save', class: 'button' unless disable_fields
+      = link_to 'Cancel', edit_grant_form_path(@grant, @form, cancelled: true), class: 'button secondary clear', title: 'Discard your changes'
 
 - if disable_fields
   :javascript
