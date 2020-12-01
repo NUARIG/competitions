@@ -5,9 +5,13 @@ class RegisteredUsers::RegistrationsController < Devise::RegistrationsController
     resource.save
     yield resource if block_given?
     if resource.persisted?
-      # .active_for_authentication? is false when using Devise::Confirmable
+      # Devise::Confirmable
+      # .active_for_authentication? is true for invited reviewers
       if resource.active_for_authentication?
-        set_flash_message! :notice, :signed_up
+        flash[:notice] = t('devise.registrations.signed_up')
+        resource.reviewable_grants.each do |grant|
+          flash[:warning] = "You have been added as a reviewer to #{helpers.link_to grant.name, grant_path(grant)}."
+        end
         sign_up(resource_name, resource)
         respond_with resource, location: after_sign_up_path_for(resource)
       else
