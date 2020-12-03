@@ -7,7 +7,7 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
   describe 'update' do
     let(:user)          { create(:saml_user, current_sign_in_at: Time.now) }
     let(:system_admin)  { create(:system_admin_saml_user) }
-    let(:other_user)    { create(:saml_user) }
+    let(:user2)         { create(:saml_user) }
 
     context 'system_admin' do
       before(:each) do
@@ -27,10 +27,10 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
 
       context 'failure' do
         scenario 'shows error on failure' do
-          other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update(era_commons: other_user_era_commons)
+          user2_era_commons = Faker::Lorem.characters(number: 10)
+          user2.update(era_commons: user2_era_commons)
           visit(edit_user_path(user))
-          page.fill_in 'eRA Commons', with: other_user_era_commons
+          page.fill_in 'eRA Commons', with: user2_era_commons
           click_button 'Update'
           expect(page).to have_content 'eRA Commons has already been taken'
         end
@@ -54,20 +54,32 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
         end
 
         scenario 'cannot edit another user profile' do
-          visit(edit_user_path(other_user))
+          visit(edit_user_path(user2))
           expect(page).to have_content 'You are not authorized to perform this action.'
         end
       end
 
       context 'failure' do
         scenario 'shows error on failure' do
-          other_user_era_commons = Faker::Lorem.characters(number: 10)
-          other_user.update(era_commons: other_user_era_commons)
+          user2_era_commons = Faker::Lorem.characters(number: 10)
+          user2.update(era_commons: user2_era_commons)
           visit(profile_path)
-          page.fill_in 'eRA Commons', with: other_user_era_commons
+          page.fill_in 'eRA Commons', with: user2_era_commons
           click_button 'Update'
           expect(page).to have_content 'eRA Commons has already been taken'
         end
+      end
+    end
+
+    describe 'sign in saml user' do
+      scenario 'user sign in' do
+        login_as(user, scope: :saml_user)
+        visit(root_path)
+        expect(page).to have_content("#{user.first_name} #{user.last_name}")
+      end
+
+      pending 'user sign out' do
+        fail '#TODO: test whether saml user can signout'
       end
     end
   end
