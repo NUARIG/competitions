@@ -5,8 +5,7 @@ class User < ApplicationRecord
   attr_accessor :pending_reviewer_invitations
 
   before_create :set_pending_reviewer_invitations, prepend: true
-  after_commit  :process_pending_reviewer_invitations,  on: :create,
-                                                        unless: -> { self.pending_reviewer_invitations.empty? }
+  after_create  :process_pending_reviewer_invitations, unless: -> { self.pending_reviewer_invitations.empty? }
 
   USER_TYPES                = ["SamlUser", "RegisteredUser"]
   SAML_DOMAINS              = COMPETITIONS_CONFIG[:devise][:registerable][:saml_domains] || []
