@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-
   resources :login, only: :index
 
   resources :banners,             except: %i[show]
