@@ -4,6 +4,8 @@ class RegisteredUser < User
   devise :database_authenticatable, :confirmable, :registerable, :rememberable, :recoverable, :validatable
 
   after_initialize :set_uid, if: :new_record?
+  after_validation :confirm_invited_reviewers, on: :create,
+                                               unless: -> { @pending_reviewer_invitations.empty? }
 
   validate  :cannot_register_with_saml_email
   validate  :cannot_register_with_spam_domain
@@ -14,6 +16,10 @@ class RegisteredUser < User
 
   def cannot_register_with_spam_domain
     errors.add(:email, 'domain is blocked from registering.') if User.is_restricted_email_address?(email: email)
+  end
+
+  def confirm_invited_reviewers
+    self.confirmed_at = DateTime.now
   end
 
   private

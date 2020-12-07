@@ -3,6 +3,10 @@
 class User < ApplicationRecord
   attr_accessor :grant_permission_role
 
+  after_validation  :pending_reviewer_invitations,  on: :create,
+                                                    prepend: true
+  after_create      :process_pending_reviewer_invitations, unless: -> { pending_reviewer_invitations.empty? }
+
   USER_TYPES                = ["SamlUser", "RegisteredUser"]
   SAML_DOMAINS              = COMPETITIONS_CONFIG[:devise][:registerable][:saml_domains] || []
   RESTRICTED_EMAIL_DOMAINS  = COMPETITIONS_CONFIG[:devise][:registerable][:restricted_domains] || []
@@ -62,6 +66,19 @@ class User < ApplicationRecord
   def get_role_by_grant(grant:)
     self.grant_permission_role ||= {}
     self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
+  end
+
+  def pending_reviewer_invitations
+    @pending_reviewer_invitations ||= GrantReviewer::Invitation.unconfirmed.where(email: email)
+  end
+
+  def process_pending_reviewer_invitations
+    pending_reviewer_invitations.each do |invitation|
+      reviewer_assignment = GrantReviewer.new(grant: invitation.grant, reviewer: self)
+      if reviewer_assignment.save
+        invitation.update(confirmed_at: DateTime.now)
+      end
+    end
   end
 
   class << self
