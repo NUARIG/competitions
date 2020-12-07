@@ -92,6 +92,10 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
+  # CapybaraSelect2
+  config.include CapybaraSelect2
+  config.include CapybaraSelect2::Helpers # if need specific helpers
+
   # Pause for AJAX actions to complete
   # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara
   config.include WaitForAjax, type: :system

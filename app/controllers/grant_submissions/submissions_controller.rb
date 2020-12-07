@@ -47,7 +47,11 @@ module GrantSubmissions
 
       if @submission.save
         @submission.update(user_updated_at: Time.now)
-        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully saved.')
+        if @submission.submitted?
+          flash[:notice] = 'You successfully applied.'
+        else
+          flash[:warning] = 'Draft submission was saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
+        end
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
@@ -62,7 +66,11 @@ module GrantSubmissions
       @submission.user_submitted_state = params[:state]
 
       if @submission.update(submission_params)
-        @submission.submitted? ? (flash[:notice] = 'You successfully applied.') : (flash[:notice] = 'Submission was successfully updated and saved.')
+        if @submission.submitted?
+          flash[:notice] = 'You successfully applied.'
+        else
+          flash[:warning] = 'Draft submission was successfully updated and saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
+        end
         @submission.update(user_updated_at: Time.now)
         submission_redirect(@grant, @submission)
       else

@@ -13,6 +13,7 @@
  *= require jquery-ui
  *= require_tree .
  *= require_self
+ *= require select2
  */
 @import "app";
 @import "foundation_and_overrides";

@@ -99,6 +99,7 @@ end
 
 group :test do
   gem 'capybara'
+  gem 'capybara-select-2'
   gem 'factory_bot_rails'
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'pundit-matchers', '~> 1.6.0'
