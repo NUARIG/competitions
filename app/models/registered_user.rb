@@ -4,7 +4,8 @@ class RegisteredUser < User
   devise :database_authenticatable, :confirmable, :registerable, :rememberable, :recoverable, :validatable
 
   after_initialize :set_uid, if: :new_record?
-  before_create    :confirm_invited_reviewers, unless: -> { self.pending_reviewer_invitations.empty? }
+  after_validation :confirm_invited_reviewers, on: :create,
+                                               unless: -> { @pending_reviewer_invitations.empty? }
 
   validate  :cannot_register_with_saml_email
   validate  :cannot_register_with_spam_domain
