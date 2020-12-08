@@ -5,8 +5,8 @@ $(document).ready(function() {
 
   if ($userSelector.length) {
     $userSelector.select2({
-      placeholder: "Find an email address",
-      minimumInputLength: 1,
+      placeholder: "Email Address",
+      minimumInputLength: 3,
       allowClear: true,
       ajax: {
         url: $userSelector.data('users-query-source'),

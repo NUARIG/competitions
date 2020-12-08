@@ -1,6 +1,6 @@
 .grid-x.grid-padding-x
   .cell.small-12.medium-6
-    = f.label :user_id, 'Email Address'
+    = f.label :user_id, 'Add a Permission by Email Address'
     = f.select(:user_id, [], { include_blank: true }, data: { users_query_source: users_query_grant_grant_permissions_path(grant_id: @grant.id) })
   .cell.small-12.medium-4
     = f.label :role, 'Grant Role'
