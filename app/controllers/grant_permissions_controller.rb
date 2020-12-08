@@ -13,7 +13,6 @@ class GrantPermissionsController < ApplicationController
 
   # GET /grants/:id/grant_permission/new
   def new
-    @users            = unassigned_users_by_grant
     @grant_permission = GrantPermission.new(grant: @grant)
   end
 
@@ -32,7 +31,6 @@ class GrantPermissionsController < ApplicationController
         format.html { redirect_to grant_grant_permissions_path(@grant) }
         format.json { render :show, status: :created, location: @grant_permission }
       else
-        @users        = unassigned_users_by_grant
         flash[:alert] = @grant_permission.errors.full_messages
         format.html { render :new }
         format.json { render json: @grant_permission.errors, status: :unprocessable_entity }
@@ -85,15 +83,8 @@ class GrantPermissionsController < ApplicationController
     authorize @grant, :grant_viewer_access?
   end
 
-
   def authorize_grant_editor
     authorize @grant, :grant_editor_access?
-  end
-
-  def unassigned_users_by_grant
-    User.left_outer_joins(:grant_permissions)
-        .where.not(id: @grant.grant_permissions.map(&:user_id))
-        .distinct
   end
 
   def grant_permission_params

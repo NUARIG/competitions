@@ -23,7 +23,9 @@ Rails.application.routes.draw do
   end
 
   resources :grants do
-    resources :grant_permissions, except: :show,            controller: 'grant_permissions'
+    resources :grant_permissions, except: :show,            controller: 'grant_permissions' do
+      get :users_query, on: :collection, to: 'grant_permissions/users_query#index', as: :users_query
+    end
     resource  :duplicate,         only: %i[new create],     controller: 'grants/duplicate'
     resource  :state,             only: %i[publish draft],  controller: 'grants/state' do
       get 'publish',  on: :member
