@@ -3,9 +3,15 @@
 class User < ApplicationRecord
   attr_accessor :grant_permission_role
 
-  devise :trackable, :timeoutable
+  after_validation  :pending_reviewer_invitations,  on: :create,
+                                                    prepend: true
+  after_create      :process_pending_reviewer_invitations, unless: -> { pending_reviewer_invitations.empty? }
 
-  USER_TYPES = ["SamlUser", "RegisteredUser"]
+  USER_TYPES                = ["SamlUser", "RegisteredUser"]
+  SAML_DOMAINS              = COMPETITIONS_CONFIG[:devise][:registerable][:saml_domains] || []
+  RESTRICTED_EMAIL_DOMAINS  = COMPETITIONS_CONFIG[:devise][:registerable][:restricted_domains] || []
+
+  devise :trackable, :timeoutable
 
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
                   meta:     { user_id: :id } # added for convenience
@@ -62,9 +68,32 @@ class User < ApplicationRecord
     self.grant_permission_role[grant] ||= GrantPermission.role_by_user_and_grant(user: self, grant: grant)
   end
 
-  # https://github.com/varvet/pundit/issues/478#issuecomment-371737216
-  # Needed so that subclasses inherit the policy from User class.
-  def self.policy_class
-    UserPolicy
+  def pending_reviewer_invitations
+    @pending_reviewer_invitations ||= GrantReviewer::Invitation.unconfirmed.where(email: email)
+  end
+
+  def process_pending_reviewer_invitations
+    pending_reviewer_invitations.each do |invitation|
+      reviewer_assignment = GrantReviewer.new(grant: invitation.grant, reviewer: self)
+      if reviewer_assignment.save
+        invitation.update(confirmed_at: DateTime.now)
+      end
+    end
+  end
+
+  class << self
+    def is_saml_email_address?(email:)
+      SAML_DOMAINS.any? { |domain| email&.match? domain }
+    end
+
+    def is_restricted_email_address?(email:)
+      RESTRICTED_EMAIL_DOMAINS.any? { |domain| email&.match? domain }
+    end
+
+    # Subclasses inherit their policy from this class.
+    # https://github.com/varvet/pundit/issues/478#issuecomment-371737216
+    def policy_class
+      UserPolicy
+    end
   end
 end

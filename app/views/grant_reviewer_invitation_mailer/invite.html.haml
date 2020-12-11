@@ -1,0 +1,15 @@
+%p
+  You have been invited by #{full_name(@inviter)} to be a reviewer for
+  %br
+  #{@grant.name}
+  %br
+  a grant in #{link_to COMPETITIONS_CONFIG[:application_name], @login_url}.
+
+%p
+  By clicking the link above you will be prompted to create your account.
+
+%p
+  If you have questions, you can contact #{full_name(@inviter)} at #{@inviter.email}.
+
+%p
+  Thank you.

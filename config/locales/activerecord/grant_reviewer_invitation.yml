@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    errors:
+      models:
+        grant_reviewer/invitation:
+          attributes:
+            inviter:
+              must_have_grant_permission: 'does not have permission on this grant.'
