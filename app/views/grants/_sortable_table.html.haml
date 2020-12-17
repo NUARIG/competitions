@@ -1,28 +1,27 @@
-%table
+%table#grants
   %thead
     %tr
       %th
-        = sort_link(q, :title, 'Grant Title',{}, {title: 'Sort on Grant Title'})
+        = sort_link(q, :title, 'Grant Title', {}, { title: 'Sort on Grant Title' })
       %th
-        = sort_link(q, :state, 'State',{}, {title: 'Sort on State'})
+        = sort_link(q, :state, 'State', {}, { title: 'Sort on State' })
       %th
-        = sort_link(q, :publish_date,{}, {title: 'Sort on Publish Date'})
+        = sort_link(q, :publish_date, {}, { title: 'Sort on Publish Date' })
       %th
-        = sort_link(q, :submission_open_date,{}, {title: 'Sort on Submission Open Date'})
+        = sort_link(q, :submission_open_date, {}, { title: 'Sort on Submission Open Date' })
       %th
-        = sort_link(q, :submission_close_date,{}, {title: 'Sort on Submission Close Date'})
+        = sort_link(q, :submission_close_date, {}, { title: 'Sort on Submission Close Date' })
       %th
 
   %tbody
     - grants.each do |grant|
-      %tr
+      %tr{ data: { grant: grant.id } }
         %td= link_to grant.name, grant
         %td= grant.state.titleize
         %td= grant.publish_date
         %td= grant.submission_open_date
         %td= grant.submission_close_date
-        %td
-          %ul.menu
-            %li= link_to 'Edit', edit_grant_path(grant) if policy(grant).edit?
-            %li= link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure?' } if policy(grant).destroy? && grant_can_be_deleted?(grant)
-            %li= link_to 'Duplicate', new_grant_duplicate_path(grant) if policy(grant).duplicate?
+        - if policy(grant).edit?
+          = render 'grants/manage_links', { grant: grant}
+        - else
+          %td
