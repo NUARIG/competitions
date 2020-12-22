@@ -1,0 +1,58 @@
+base_headers = ["Applicant",
+                "Email",
+                "Submission Title",
+                "State",
+                "Last Updated",
+                "Completed Reviews",
+               ]
+
+question_order    = []
+question_headers  = []
+
+@questions.each do |question|
+  question_order   << question.id
+
+  header_text = question.text
+  header_text = header_text + ' (Required)' if question.is_mandatory
+  question_headers << header_text
+end
+
+headers = (base_headers + question_headers)
+
+wb = xlsx_package.workbook
+
+sheet_name = prepare_excel_worksheet_name(sheet_name: @grant.name)
+
+header_style = wb.styles.add_style({b: true})
+link_style   = wb.styles.add_style({fg_color: '0000FF', u: true})
+
+wb.add_worksheet(name: sheet_name) do |sheet|
+  sheet.add_row headers, :style => header_style
+
+  @submissions.each do |submission|
+    applicant = submission.applicant
+    responses = submission.responses
+
+    review_data = review_data(submission)
+    reviews_completed = "#{review_data.completed_review_count} / #{review_data.assigned_review_count}"
+
+    responses_in_order = []
+    question_order.each do |ord|
+      response_match = responses.find { |response| response.grant_submission_question_id == ord }
+      responses_in_order << response_match
+    end
+
+    response_columns = []
+    responses_in_order.each do |response|
+      response_columns << response.response_value
+    end
+
+    sheet.add_row [ sortable_full_name(applicant),              # A
+                    applicant.email,                            # B
+                    submission.title,                           # C
+                    submission.state,                           # D
+                    submission.updated_at.to_s(:long_ordinal),  # E
+                    reviews_completed                           # F
+                  ].concat(response_columns)                    # G...
+  end
+end

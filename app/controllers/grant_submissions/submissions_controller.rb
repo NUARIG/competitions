@@ -3,15 +3,22 @@ module GrantSubmissions
     before_action :set_grant, except: %i[index new]
 
     def index
-      @grant = Grant.kept.friendly.with_administrators.find(params[:grant_id])
+      @grant      = Grant.kept.friendly.with_administrators.find(params[:grant_id])
+      @questions  = @grant.questions
+
       if Pundit.policy(current_user, @grant).show?
-        @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+        @q       = policy_scope(GrantSubmission::Submission.with_responses, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
         @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
         @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
       else
         skip_policy_scope
         flash[:alert] = I18n.t('pundit.default')
         redirect_to root_path
+      end
+
+      respond_to do |format|
+        format.html
+        format.xlsx { response.headers['Content-Disposition'] = "attachment; filename=submissions-#{@grant.name.gsub(/\W/,'')}-#{DateTime.now.strftime('%Y_%m%d')}.xlsx"}
       end
     end
 
