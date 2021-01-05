@@ -25,6 +25,8 @@ link_style   = wb.styles.add_style({fg_color: '0000FF', u: true})
 wb.add_worksheet(name: sheet_name) do |sheet|
   sheet.add_row headers, :style => header_style
 
+  response_column_widths = []
+
   @submissions.each do |submission|
     applicant = submission.applicant
     responses = submission.responses
@@ -44,6 +46,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       else
         response_columns << response.response_value
       end
+      response_column_widths << 45
     end
 
     sheet.add_row [ sortable_full_name(applicant),              # A
@@ -54,4 +57,5 @@ wb.add_worksheet(name: sheet_name) do |sheet|
                     reviews_completed                           # F
                   ].concat(response_columns)                    # G...
   end
+  sheet.column_widths(30, 25, 45, 15, 25, 25, *response_column_widths)
 end
