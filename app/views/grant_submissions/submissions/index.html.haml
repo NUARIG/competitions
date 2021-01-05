@@ -32,7 +32,7 @@
           %ul.menu
             %li.menu-text
               Actions:
-            - unless @grant.reviews.none?
+            - unless @grant.submissions.none?
               %li
                 = link_to "Save all Submissions #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_submissions_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
 
