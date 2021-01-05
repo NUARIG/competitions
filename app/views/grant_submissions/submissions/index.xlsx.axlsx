@@ -6,12 +6,8 @@ base_headers = ["Applicant",
                 "Completed Reviews",
                ]
 
-question_order    = []
 question_headers  = []
-
 @questions.each do |question|
-  question_order   << question.id
-
   header_text = question.text
   header_text = header_text + ' (Required)' if question.is_mandatory
   question_headers << header_text
@@ -32,18 +28,13 @@ wb.add_worksheet(name: sheet_name) do |sheet|
   @submissions.each do |submission|
     applicant = submission.applicant
     responses = submission.responses
+    response_columns = []
 
     review_data = review_data(submission)
     reviews_completed = "#{review_data.completed_review_count} / #{review_data.assigned_review_count}"
 
-    responses_in_order = []
-    question_order.each do |ord|
-      response_match = responses.find { |response| response.grant_submission_question_id == ord }
-      responses_in_order << response_match
-    end
-
-    response_columns = []
-    responses_in_order.each do |response|
+    @questions.map do |question|
+      response = responses.to_a.detect { |response| response.grant_submission_question_id == question.id }
       response_columns << response.response_value
     end
 
