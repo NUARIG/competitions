@@ -35,7 +35,15 @@ wb.add_worksheet(name: sheet_name) do |sheet|
 
     @questions.map do |question|
       response = responses.to_a.detect { |response| response.grant_submission_question_id == question.id }
-      response_columns << response.response_value
+
+      if question.response_type == 'file_upload'
+        file_name = response.response_value.to_s
+        file_path = rails_blob_url(response.document, disposition: 'attachment')
+        file = file_name + ' (' + file_path + ')'
+        response_columns << file
+      else
+        response_columns << response.response_value
+      end
     end
 
     sheet.add_row [ sortable_full_name(applicant),              # A
