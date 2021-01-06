@@ -1,4 +1,5 @@
-base_headers = ["Applicant",
+
+base_headers_row_2 = ["Applicant",
                 "Email",
                 "Submission Title",
                 "State",
@@ -6,14 +7,15 @@ base_headers = ["Applicant",
                 "Completed Reviews",
                ]
 
-question_headers  = []
+question_headers_row_2  = []
+
 @questions.each do |question|
   header_text = question.text
   header_text = header_text + ' (Required)' if question.is_mandatory
-  question_headers << header_text
+  question_headers_row_2 << header_text
 end
 
-headers = (base_headers + question_headers)
+headers_row_2 = (base_headers_row_2 + question_headers_row_2)
 
 wb = xlsx_package.workbook
 
@@ -23,11 +25,11 @@ header_style = wb.styles.add_style({b: true})
 link_style   = wb.styles.add_style({fg_color: '0000FF', u: true})
 
 wb.add_worksheet(name: sheet_name) do |sheet|
-  sheet.add_row headers, :style => header_style
+  sheet.add_row headers_row_2, :style => header_style
 
   response_column_widths = []
 
-  @submissions.each do |submission|
+  @submissions.each_with_index do |submission, row_index|
     applicant = submission.applicant
     responses = submission.responses
     response_columns = []
@@ -35,27 +37,37 @@ wb.add_worksheet(name: sheet_name) do |sheet|
     review_data = review_data(submission)
     reviews_completed = "#{review_data.completed_review_count} / #{review_data.assigned_review_count}"
 
+    file_upload_links = {}
+    question_index = 0
     @questions.map do |question|
+      file_upload_info = []
+      question_index += 1
+
       response = responses.to_a.detect { |response| response.grant_submission_question_id == question.id }
 
       if question.response_type == 'file_upload'
-        file_name = response.response_value.to_s
-        file_path = rails_blob_url(response.document, disposition: 'attachment')
-        file = file_name + ' (' + file_path + ')'
-        response_columns << file
+        file_upload_links[question_index] = rails_blob_url(response.document, disposition: 'attachment')
+        response_columns << response.response_value.to_s
       else
         response_columns << response.response_value
       end
       response_column_widths << 45
     end
 
-    sheet.add_row [ sortable_full_name(applicant),              # A
-                    applicant.email,                            # B
-                    submission.title,                           # C
-                    submission.state,                           # D
-                    submission.updated_at.to_s(:long_ordinal),  # E
-                    reviews_completed                           # F
-                  ].concat(response_columns)                    # G...
+    row = sheet.add_row [ sortable_full_name(applicant),              # A
+                          applicant.email,                            # B
+                          submission.title,                           # C
+                          submission.state,                           # D
+                          submission.updated_at.to_s(:long_ordinal),  # E
+                          reviews_completed                           # F
+                        ].concat(response_columns)                    # G...
+
+    alphabet_array = ('A'..'Z').to_a
+    file_upload_links.each do |column, link|
+      sheet.add_hyperlink(:location => link,
+                          :ref => "#{alphabet_array[column + 5]}#{row_index + 2}") # account for columns in lines 57-62 and header row
+      row.cells[column + 5].style = link_style
+    end
   end
   sheet.column_widths(30, 25, 45, 15, 25, 25, *response_column_widths)
 end

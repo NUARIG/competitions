@@ -52,7 +52,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
     sheet.add_hyperlink(:location => grant_submission_review_url(@grant, submission, review),
                         :ref => "B#{row_index + 2}") # account for header row
     row.cells[1].style = link_style
-    sheet.add_hyperlink(:location => grant_submission_url(@grant, submission),
+    sheet.add_hyperlink(:location => grant_submission_url(@z≈≈grant, submission),
                         :ref => "D#{row_index + 2}")
     row.cells[3].style = link_style
   end
