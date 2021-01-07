@@ -1,5 +1,4 @@
-
-base_headers_row_2 = ["Applicant",
+base_headers = ["Applicant",
                 "Email",
                 "Submission Title",
                 "State",
@@ -7,15 +6,13 @@ base_headers_row_2 = ["Applicant",
                 "Completed Reviews",
                ]
 
-question_headers_row_2  = []
+question_headers  = []
 
 @questions.each do |question|
-  header_text = question.text
-  header_text = header_text + ' (Required)' if question.is_mandatory
-  question_headers_row_2 << header_text
+  question_headers << (question.is_mandatory ? (question.text + ' (Required)') : question.text)
 end
 
-headers_row_2 = (base_headers_row_2 + question_headers_row_2)
+headers_row_2 = (base_headers + question_headers)
 
 wb = xlsx_package.workbook
 
@@ -62,7 +59,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
                           reviews_completed                           # F
                         ].concat(response_columns)                    # G...
 
-    alphabet_array = ('A'..'Z').to_a
+    alphabet_array = ('A'..'ZZ').to_a
     file_upload_links.each do |column, link|
       sheet.add_hyperlink(:location => link,
                           :ref => "#{alphabet_array[column + 5]}#{row_index + 2}") # account for columns in lines 57-62 and header row
