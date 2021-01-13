@@ -20,21 +20,7 @@
 
 .tabs-panel.is-active
 
-  %p
-    = link_to 'Back to Permissions', grant_grant_permissions_path
-  %ul
-    %li
-      %strong
-        Admin
-      = "- Delete, edit, and view grant and its submissions and reviews."
-    %li
-      %strong
-        Editor
-      = "- Edit and view grant and its submissions and reviews."
-    %li
-      %strong
-        Viewer
-      = "- View grant and its submissions and reviews."
+  = render 'permissions_header'
 
   .grid-x
     .cell

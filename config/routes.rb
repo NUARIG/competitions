@@ -23,7 +23,9 @@ Rails.application.routes.draw do
   end
 
   resources :grants do
-    resources :grant_permissions, except: :show,            controller: 'grant_permissions'
+    resources :grant_permissions, except: :show,            controller: 'grant_permissions' do
+      get :users_query, on: :collection, to: 'grant_permissions/users_query#index', as: :users_query
+    end
     resource  :duplicate,         only: %i[new create],     controller: 'grants/duplicate'
     resource  :state,             only: %i[publish draft],  controller: 'grants/state' do
       get 'publish',  on: :member
@@ -49,7 +51,12 @@ Rails.application.routes.draw do
         delete 'opt_out',         to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
       end
     end
-    resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers'
+    resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers' do
+      collection do
+        post      'invite',       to: 'grant_reviewers/invitations#create'
+        resources 'invitations',  only: %i[index update], controller: 'grant_reviewers/invitations'
+      end
+    end
     resource :panel,              only: %i[show edit update], on: :member, controller: 'panels' do
       resources :submissions,     only: %i[index show], controller: 'panels/submissions' do
         resources :reviews,       only: %i[index show], controller: 'panels/submissions/reviews'

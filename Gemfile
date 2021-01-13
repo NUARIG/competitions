@@ -31,7 +31,7 @@ gem 'redis', '~> 4.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'devise', '>= 4.7.1'
-gem 'devise_saml_authenticatable', '~> 1.6.1'
+gem 'devise_saml_authenticatable', '~> 1.6.3'
 
 gem 'draper'
 gem 'pundit'

@@ -74,15 +74,19 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
   end
 
   describe 'sign up new user' do
-    scenario 'sign up new user with devise interface' do
+    scenario 'without pending grant reviewer invitation' do
       visit new_registered_user_registration_path
-      page.fill_in 'First Name', with: 'FirstName'
-      page.fill_in 'Last Name', with: 'LastName'
-      page.fill_in 'Email', with: 'email@example.com'
-      page.fill_in 'Password', with: 'password'
-      page.fill_in 'Password confirmation', with: 'password'
-      click_button 'Create My Account'
+      fill_in_new_user_form
       expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
+    end
+
+    scenario 'with pending grant reviewer invitation' do
+      pending_invite = create(:grant_reviewer_invitation, email: 'email@example.com')
+      visit new_registered_user_registration_path
+      fill_in_new_user_form
+      expect(page).to have_content I18n.t('devise.registrations.signed_up')
+      expect(page).to have_content "You have been added as a reviewer to #{pending_invite.grant.name}"
+      expect(page.find('.warning')).to have_link pending_invite.grant.name, href: grant_path(pending_invite.grant)
     end
   end
 
@@ -95,5 +99,14 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       click_button 'Log in'
       expect(page).to have_content("#{@user3.first_name} #{@user3.last_name}")
     end
+  end
+
+  def fill_in_new_user_form
+    page.fill_in 'First Name', with: 'FirstName'
+    page.fill_in 'Last Name', with: 'LastName'
+    page.fill_in 'Email', with: 'email@example.com'
+    page.fill_in 'Password', with: 'password'
+    page.fill_in 'Password confirmation', with: 'password'
+    click_button 'Create My Account'
   end
 end

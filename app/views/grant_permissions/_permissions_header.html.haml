@@ -1,0 +1,25 @@
+.grid-x
+  .cell
+    #submenu.top-bar
+      .top-bar-left
+        %ul.menu
+          %li.menu-text
+            Actions:
+          %li
+            = link_to 'Back to all Permissions', grant_grant_permissions_path
+
+.grid-x
+  .cell
+    %ul
+      %li
+        %strong
+          Admin
+        \- Delete, edit, and view grant and its submissions and reviews.
+      %li
+        %strong
+          Editor
+        \- Edit and view grant and its submissions and reviews.
+      %li
+        %strong
+          Viewer
+        \- View grant and its submissions and reviews.

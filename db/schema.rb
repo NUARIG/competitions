@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_22_183946) do
+ActiveRecord::Schema.define(version: 2020_11_17_180406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,6 +162,37 @@ ActiveRecord::Schema.define(version: 2020_10_22_183946) do
     t.datetime "updated_at", null: false
     t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
     t.index ["user_id"], name: "index_grant_permissions_on_user_id"
+  end
+
+  create_table "grant_reviewer_invitation_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_id", null: false
+    t.string "email", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["email"], name: "index_grant_reviewer_invitation_versions_on_email"
+    t.index ["grant_id"], name: "index_grant_reviewer_invitation_versions_on_grant_id"
+    t.index ["item_id"], name: "index_grant_reviewer_invitation_versions_on_item_id"
+    t.index ["whodunnit"], name: "index_grant_reviewer_invitation_versions_on_whodunnit"
+  end
+
+  create_table "grant_reviewer_invitations", force: :cascade do |t|
+    t.bigint "grant_id", null: false
+    t.bigint "invited_by_id", null: false
+    t.bigint "invitee_id"
+    t.string "email", null: false
+    t.datetime "confirmed_at"
+    t.datetime "reminded_at"
+    t.datetime "opted_out_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_grant_reviewer_invitations_on_email"
+    t.index ["grant_id", "email"], name: "index_grant_reviewer_invitations_on_grant_id_and_email", unique: true
+    t.index ["grant_id", "invited_by_id"], name: "index_grant_reviewer_invitations_on_grant_id_and_invited_by_id"
+    t.index ["grant_id"], name: "index_grant_reviewer_invitations_on_grant_id"
   end
 
   create_table "grant_reviewer_versions", force: :cascade do |t|

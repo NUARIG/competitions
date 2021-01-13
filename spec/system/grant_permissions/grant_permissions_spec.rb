@@ -85,13 +85,13 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       end
 
       scenario 'requires a selected user' do
-        select("#{@unassigned_user.email}", from: 'grant_permission[user_id]')
+        select2(@unassigned_user.email, from: 'Email Address', search: true)
         click_button 'Save'
         expect(page).to have_content('Role must be selected.')
       end
 
       scenario 'unassigned user can be granted a role' do
-        select("#{@unassigned_user.email}", from: 'grant_permission[user_id]')
+        select2(@unassigned_user.email, from: 'Email Address', search: true)
         select('Editor', from:'grant_permission[role]')
         click_button 'Save'
         expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'editor'"
@@ -111,7 +111,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
         scenario 'select2 requires at least one character entered' do
           select2_open label: 'Email Address'
-          expect(page).to have_content('Please enter 1 or more characters')
+          expect(page).to have_content('Please enter 3 or more characters')
         end
 
         scenario 'select2 limits dropdown options with' do
