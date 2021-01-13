@@ -20,8 +20,8 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  %h3
-    = "Edit #{full_name(@grant_permission.user)}'s Permission"
+
+  = render 'permissions_header'
 
   .grid-x
     .cell
