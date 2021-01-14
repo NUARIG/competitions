@@ -8,7 +8,7 @@ FactoryBot.define do
     meeting_location  { Faker::Address.full_address }
 
     trait :open do
-      start_datetime    { 1.hour.ago      }
+      start_datetime    { 1.second.ago      }
       end_datetime      { 1.hour.from_now }
     end
 
@@ -18,8 +18,8 @@ FactoryBot.define do
     end
 
     trait :after_end_datetime do
-      start_datetime    { 2.hours.ago }
-      end_datetime      { 1.hour.ago  }
+      start_datetime    { 2.seconds.ago }
+      end_datetime      { 1.second.ago  }
     end
 
     trait :no_panel_dates do
