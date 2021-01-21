@@ -12,7 +12,7 @@ RSpec.describe 'Panel Submission Reviews', type: :system, js: true do
   let(:review1)     { submission.review.first}
 
   let!(:reviewer2)  { create(:grant_reviewer, grant: grant).reviewer }
-  let!(:review2)    { create(:scored_review_with_scored_mandatory_criteria_review,  submission: submission,
+  let!(:review2)    { create(:scored_review_with_scored_commented_criteria_review,  submission: submission,
                                                                                     reviewer: reviewer2,
                                                                                     assigner: admin) }
   let!(:reviewer3)  { create(:grant_reviewer, grant: grant).reviewer }
@@ -42,6 +42,31 @@ RSpec.describe 'Panel Submission Reviews', type: :system, js: true do
 
       scenario 'does not include incomplete review' do
         expect(page).not_to have_content full_name(reviewer3)
+      end
+
+      context 'show_reviewer_comments' do
+        scenario 'when false, shows review comments' do
+          grant.panel.update(show_review_comments: false)
+          visit grant_panel_submission_reviews_path(grant, submission)
+          expect(find_by_id('criteria-reviews')).not_to have_content 'Scores and Comments'
+          expect(find_by_id('overall-impact-scores')).not_to have_content 'Overall Impact Scores and Comments'
+          expect(page).not_to have_text review2.overall_impact_comment
+          review2.criteria_reviews.each do |criteria_review|
+            expect(page).not_to have_text criteria_review.comment
+          end
+        end
+
+        scenario 'when true, shows review comments' do
+          grant.panel.update(show_review_comments: true)
+          visit grant_panel_submission_reviews_path(grant, submission)
+          expect(find_by_id('criteria-reviews')).to have_content 'Scores and Comments'
+          expect(find_by_id('overall-impact-scores')).to have_content 'Overall Impact Scores and Comments'
+          expect(page).to have_text review2.overall_impact_comment
+          review2.criteria_reviews.each do |criteria_review|
+            expect(page).to have_text criteria_review.comment
+          end
+
+        end
       end
     end
   end

@@ -1,11 +1,12 @@
 FactoryBot.define do
   factory :panel do
-    association       :grant, factory: :published_closed_grant
-    start_datetime    { grant.submission_close_date + 1.week }
-    end_datetime      { grant.submission_close_date + 8.days }
-    instructions      { Faker::Lorem.paragraph }
-    meeting_link      { Faker::Internet.url(host: 'zoom-teams.io', scheme: 'https')}
-    meeting_location  { Faker::Address.full_address }
+    association           :grant, factory: :published_closed_grant
+    start_datetime        { grant.submission_close_date + 1.week }
+    end_datetime          { grant.submission_close_date + 8.days }
+    instructions          { Faker::Lorem.paragraph }
+    meeting_link          { Faker::Internet.url(host: 'zoom-teams.io', scheme: 'https')}
+    meeting_location      { Faker::Address.full_address }
+    show_review_comments  { false }
 
     trait :open do
       start_datetime    { 1.hour.ago      }

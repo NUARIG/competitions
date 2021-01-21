@@ -7,6 +7,7 @@ RSpec.describe Panel, type: :model do
   it { is_expected.to respond_to(:instructions) }
   it { is_expected.to respond_to(:meeting_link) }
   it { is_expected.to respond_to(:meeting_location) }
+  it { is_expected.to respond_to(:show_review_comments) }
 
   let(:panel)         { create(:panel)          }
   let(:open_panel)    { create(:open_panel)     }

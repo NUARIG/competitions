@@ -146,6 +146,22 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
     end
 
+    context 'show_review_comments' do
+      scenario 'updates' do
+        login_user editor
+        visit edit_grant_panel_path(grant)
+        check 'Show Reviewer Comments'
+        click_button button_text
+        expect(page).to have_content 'Panel information successfully updated.'
+        expect(grant.panel.reload.show_review_comments).to be true
+
+        uncheck 'Show Reviewer Comments'
+        click_button button_text
+        expect(page).to have_content 'Panel information successfully updated.'
+        expect(grant.panel.reload.show_review_comments).to be false
+      end
+    end
+
     context 'paper_trail', versioning: true do
       scenario 'it tracks whodunnit' do
         login_user editor
@@ -317,7 +333,6 @@ RSpec.describe 'Panels', type: :system, js: true do
     context 'applicant last_name' do
       scenario 'sorts on last_name' do
         visit grant_panel_path(grant)
-
         # ascending first
         click_link 'Applicant'
         within 'tr.submission:nth-child(1)' do
