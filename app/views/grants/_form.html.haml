@@ -29,9 +29,9 @@
   .cell.small-12.medium-3
     = f.label :publish_date, 'Publish Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date), required: true, disabled: disable_fields, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
+    = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date ||= Date.today), required: true, disabled: disable_fields, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
     %p.help-text#publishDateHelp
-      Once completed, your grant will publish on this date.
+      When published, your grant will be publicly available on this date.
 
 %h4
   Submission Period
@@ -89,6 +89,7 @@
   $(function() {
     $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
       format: 'mm/dd/yyyy',
+      startDate: new Date(),
       closeIcon: ' X ',
       closeButton: true
     });

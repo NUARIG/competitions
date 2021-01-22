@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+include ApplicationHelper
 include UsersHelper
 
 RSpec.describe 'GrantsDuplicate', type: :system, js: true do
@@ -79,7 +80,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
         scenario 'clears dates' do
           click_link('Duplicate', href: new_grant_duplicate_path(grant))
-          expect(page.find_field('grant_publish_date').value).to eql ''
+          expect(page.find_field('grant_publish_date').value).to eql(date_mmddyyyy(Date.today))
           expect(page.find_field('grant_submission_open_date').value).to eql ''
           expect(page.find_field('grant_submission_close_date').value).to eql ''
           expect(page.find_field('grant_review_open_date').value).to eql ''

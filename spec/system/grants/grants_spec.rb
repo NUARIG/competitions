@@ -139,7 +139,6 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Name', with: @grant.name
       page.fill_in 'Short Name', with: @grant.slug
       fill_in_trix_editor('grant_rfa', with: Faker::Lorem.paragraph)
-      page.fill_in 'Publish Date', with: @grant.publish_date
       page.fill_in 'Open Date', with: @grant.submission_open_date
       page.fill_in 'Close Date', with: @grant.submission_close_date
       page.fill_in 'Maximum Reviewers / Submission', with: @grant.max_reviewers_per_submission
@@ -148,7 +147,15 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Review Close Date', with: @grant.review_close_date
     end
 
+    scenario 'default of today for publish date' do
+      click_button 'Save as Draft'
+      grant = Grant.last
+      expect(grant.publish_date).to eql(Date.today)
+    end
+
     scenario 'valid form submission creates permissions' do
+      page.fill_in 'Publish Date', with: @grant.publish_date
+
       click_button 'Save as Draft'
       grant = Grant.last
       expect(grant.name).to eql(@grant.name)
@@ -164,6 +171,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     scenario 'invalid form submission does not create permissions' do
       grant_permission_count          = GrantPermission.all.count
 
+      page.fill_in 'Publish Date', with: @grant.publish_date
       page.fill_in 'Close Date', with: (@grant.submission_open_date - 1.day)
       click_button 'Save as Draft'
       expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
