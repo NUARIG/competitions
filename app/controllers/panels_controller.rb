@@ -37,12 +37,11 @@ class PanelsController < ApplicationController
   end
 
   def panel_params
-    params.require(:panel).permit(
-        :start_datetime,
-        :end_datetime,
-        :instructions,
-        :meeting_link,
-        :meeting_location
-    )
+    params.require(:panel).permit(:start_datetime,
+                                  :end_datetime,
+                                  :instructions,
+                                  :meeting_link,
+                                  :meeting_location,
+                                  :show_review_comments)
   end
 end

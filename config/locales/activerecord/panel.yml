@@ -3,8 +3,10 @@ en:
     attributes:
       panel: &panel
         end_datetime: End Date/Time
+        instructions: Instructions
         meeting_link: Meeting Link
         meeting_location: Meeting Location
+        show_review_comments: Show Reviewer Comments
         start_datetime: Start Date/Time
     errors:
       models:
