@@ -31,7 +31,7 @@
   .cell.small-12.medium-9
     = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date ||= Date.today), required: true, disabled: disable_fields, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
     %p.help-text#publishDateHelp
-      Once completed, your grant will publish on this date.
+      When published, your grant will be publicly available on this date.
 
 %h4
   Submission Period
