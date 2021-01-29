@@ -1,2 +1,7 @@
-// Place all the behaviors and hooks related to the matching controller here.
-// All this logic will automatically be available in application.js.
+$(document).ready(function() {
+  $('button.criterion-clear-button').click(function () {
+    $clearButton = $(this)
+    $criterionScoringContainer = $clearButton.closest('.criterion-scoring')
+    $criterionScoringContainer.find('input:checked').prop('checked', false);
+  });
+});
