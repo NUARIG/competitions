@@ -3,5 +3,6 @@ $(document).ready(function() {
     $clearButton = $(this)
     $criterionScoringContainer = $clearButton.closest('.criterion-scoring')
     $criterionScoringContainer.find('input:checked').prop('checked', false);
+    return false
   });
 });
