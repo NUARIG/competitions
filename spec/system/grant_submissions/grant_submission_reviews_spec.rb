@@ -248,8 +248,6 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
 
         scenario 'provides feedback when overall impact score is not scored' do
-          # login_as reviewer
-          # visit edit_grant_submission_review_path(grant, submission, review)
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
           end
@@ -257,6 +255,21 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           expect(page).not_to have_text 'Review was successfully updated.'
           expect(page).to have_text 'Overall Impact Score is required'
           expect(review.reload.is_complete?).to be false
+        end
+      end
+
+      context 'criterion clear button' do
+        scenario 'criterion clear button removes criterion score' do
+          criteria = []
+          grant.criteria.each do |criterion|
+            find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+            criteria << "#{criterion_id_selector(criterion)}"
+          end
+          within("##{criteria.first}-button-group") do
+            click_button("Clear")
+          end
+          click_button 'Submit Your Review'
+          expect(page).to have_text "Score is required"
         end
       end
     end

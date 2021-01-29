@@ -15,7 +15,7 @@
     .cell.small-12.medium-9
       %div.form-error{ data: {form: {error: {for: "#{criterion_id}-1"}}} }
         = "* #{criterion.name} Score is required"
-      .button-group.criterion-scoring{id: "#{criterion_id}"}
+      .button-group.criterion-scoring{id: "#{criterion_id}-button-group"}
         %label.scoring-guidance
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
