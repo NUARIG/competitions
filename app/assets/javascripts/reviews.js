@@ -1,8 +1,8 @@
 $(document).ready(function() {
-  $('button.criterion-clear-button').click(function () {
+  $('button.clear-button').click(function () {
     $clearButton = $(this)
-    $criterionScoringContainer = $clearButton.closest('.criterion-scoring')
-    $criterionScoringContainer.find('input:checked').prop('checked', false);
+    $scoringContainer = $clearButton.closest('.scoring')
+    $scoringContainer.find('input:checked').prop('checked', false);
     return false
   });
 });

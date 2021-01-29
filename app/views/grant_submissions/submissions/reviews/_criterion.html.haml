@@ -15,7 +15,7 @@
     .cell.small-12.medium-9
       %div.form-error{ data: {form: {error: {for: "#{criterion_id}-1"}}} }
         = "* #{criterion.name} Score is required"
-      .button-group.criterion-scoring{id: "#{criterion_id}-button-group"}
+      .button-group.scoring{id: "#{criterion_id}-button-group"}
         %label.scoring-guidance
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
@@ -26,7 +26,7 @@
         %label.scoring-guidance
           Poor
         -unless disabled
-          = button_tag 'Clear', class: 'secondary button hollow small criterion-clear-button', id: "#{criterion_id}-clear-button"
+          = button_tag 'Clear', class: 'secondary button hollow small clear-button', id: "#{criterion_id}-clear-button"
   - if criterion_review.criterion.show_comment_field
     .comment.grid-x
       .cell.small-12.medium-3
