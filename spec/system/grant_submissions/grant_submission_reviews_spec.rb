@@ -259,17 +259,46 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       end
 
       context 'criterion clear button' do
-        scenario 'criterion clear button removes criterion score' do
+        scenario 'criterion clear button removes required criterion score' do
           criteria = []
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
             criteria << "#{criterion_id_selector(criterion)}"
           end
+          find("label[for='overall-#{random_score}']").click
+
           within("##{criteria.first}-button-group") do
             click_button("Clear")
           end
           click_button 'Submit Your Review'
           expect(page).to have_text "Score is required"
+        end
+
+        scenario 'criterion clear button removes unrequired criterion score' do
+          unrequired_criterion = grant.criteria.first
+          unrequired_criterion.is_mandatory = false
+          unrequired_criterion.save
+          unrequired_criterion_label = criterion_id_selector(unrequired_criterion)
+          visit edit_grant_submission_review_path(grant, submission, review)
+
+          grant.criteria.each do |criterion|
+            find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+          end
+          find("label[for='overall-#{random_score}']").click
+
+          within("##{unrequired_criterion_label}-button-group") do
+            click_button("Clear")
+          end
+          click_button 'Submit Your Review'
+          expect(page).to have_text "Completed"
+
+          within(:xpath, "//table/tbody") do
+            click_link('Completed')
+          end
+
+          within("##{unrequired_criterion_label}-criterion") do
+            expect(page).to have_text "-"
+          end
         end
       end
     end
