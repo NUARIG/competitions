@@ -276,8 +276,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
         scenario 'criterion clear button removes unrequired criterion score' do
           unrequired_criterion = grant.criteria.first
-          unrequired_criterion.is_mandatory = false
-          unrequired_criterion.save
+          unrequired_criterion.update(is_mandatory: false)
           unrequired_criterion_label = criterion_id_selector(unrequired_criterion)
           visit edit_grant_submission_review_path(grant, submission, review)
 
