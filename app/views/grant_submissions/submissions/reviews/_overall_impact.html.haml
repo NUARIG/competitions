@@ -7,7 +7,7 @@
     .cell.small-12.medium-9
       %div.form-error{ data: {form: {error: {for: 'overall-1'}}} }
         * Overall Impact Score is required
-      .button-group
+      .button-group.scoring{id: "overall-button-group"}
         %label.scoring-guidance
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
@@ -16,6 +16,8 @@
             = f.label "#{value}", { class: 'button', for: "overall-#{value}", disabled: disabled }
         %label.scoring-guidance
           Poor
+        -unless disabled
+          = button_tag 'Clear', class: 'secondary button hollow small clear-button', id: "#overall-clear-button"
   #overall_comment.comment.grid-x
     .cell.small-12.medium-3
       = f.label :overall_impact_comment, disabled: disabled
