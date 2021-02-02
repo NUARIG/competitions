@@ -43,8 +43,10 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       response = responses.to_a.detect { |response| response.grant_submission_question_id == question.id }
 
       if question.response_type == 'file_upload'
-        file_upload_links[question_index] = rails_blob_url(response.document, disposition: 'attachment')
-        response_columns << response.response_value.to_s
+        if response.response_value.present?
+          file_upload_links[question_index] = rails_blob_url(response.document, disposition: 'attachment')
+          response_columns << response.response_value.to_s
+        end
       else
         response_columns << response.response_value
       end
