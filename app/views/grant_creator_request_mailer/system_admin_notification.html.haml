@@ -1,0 +1,10 @@
+%p
+  = link_to "#{full_name(@requester)}", grant_creator_request_url(@request)
+  = "has requested grant creator access in #{@application_name}."
+%p
+  %br
+  Find the full list of pending grant creator requests here:
+  %br
+  = link_to "#{grant_creator_requests_url}", grant_creator_requests_url
+%p
+  Thank you.

@@ -7,7 +7,7 @@ module GrantCreatorRequests
     def update
       @grant_creator_request.reviewer = current_user
       if @grant_creator_request.update(grant_creator_request_review_params)
-        send_notification unless @grant_creator_request.status_pending?
+        send_review unless @grant_creator_request.status_pending?
         flash[:success] = 'Request was successfully reviewed.'
         redirect_to grant_creator_requests_path
       else
@@ -27,7 +27,7 @@ module GrantCreatorRequests
       authorize @grant_creator_request, :review?
     end
 
-    def send_notification
+    def send_review
       case @grant_creator_request.status
       when 'approved'
         GrantCreatorRequestReviewMailer.approved(request: @grant_creator_request).deliver_now

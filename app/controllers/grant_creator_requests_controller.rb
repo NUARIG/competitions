@@ -27,6 +27,7 @@ class GrantCreatorRequestsController < ApplicationController
 
     respond_to do |format|
       if @grant_creator_request.save
+        send_notification
         flash[:success] = 'Your request has been sent. You will be notified after review.'
         format.html { redirect_to profile_path }
       else
@@ -64,5 +65,9 @@ class GrantCreatorRequestsController < ApplicationController
 
   def set_grant_creator_request
     @grant_creator_request = GrantCreatorRequest.find(params[:id])
+  end
+
+  def send_notification
+    GrantCreatorRequestMailer.system_admin_notification(request: @grant_creator_request).deliver_now
   end
 end
