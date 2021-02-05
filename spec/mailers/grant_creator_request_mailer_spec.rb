@@ -20,11 +20,11 @@ RSpec.describe GrantCreatorRequestMailer, type: :mailer do
       expect(mailer.body).to have_link full_name(request.requester), href: grant_creator_request_url(request)
     end
 
-    it 'includes a link to the application root url' do
+    it 'includes the application root url' do
       expect(mailer.body).to include COMPETITIONS_CONFIG[:application_name]
     end
 
-    it 'includes a link to the grants page' do
+    it 'includes a link to the grant creator requests index page' do
       expect(mailer.body).to have_link grant_creator_requests_url.to_s, href: grant_creator_requests_url
     end
   end
