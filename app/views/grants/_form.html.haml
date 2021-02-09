@@ -87,9 +87,11 @@
 
 :javascript
   $(function() {
+    yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
     $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({
       format: 'mm/dd/yyyy',
-      startDate: new Date(),
+      startDate: yesterday,
       closeIcon: ' X ',
       closeButton: true
     });
