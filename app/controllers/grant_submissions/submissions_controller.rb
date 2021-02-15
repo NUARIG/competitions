@@ -55,6 +55,7 @@ module GrantSubmissions
       if @submission.save
         @submission.update(user_updated_at: Time.now)
         if @submission.submitted?
+          send_grant_admin_submission_notification
           flash[:notice] = 'You successfully applied.'
         else
           flash[:warning] = 'Draft submission was saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
@@ -74,6 +75,7 @@ module GrantSubmissions
 
       if @submission.update(submission_params)
         if @submission.submitted?
+          send_grant_admin_submission_notification
           flash[:notice] = 'You successfully applied.'
         else
           flash[:warning] = 'Draft submission was successfully updated and saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
@@ -129,6 +131,10 @@ module GrantSubmissions
                       else
                         @grant.submissions.kept.find(params[:id]) if params[:id]
                       end
+    end
+
+    def send_grant_admin_submission_notification
+      GrantSubmissionSubmissionMailer.grant_admin_submission_notification(submission: @submission).deliver_now
     end
 
     def submission_params

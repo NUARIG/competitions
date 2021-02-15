@@ -91,7 +91,8 @@ class GrantPermissionsController < ApplicationController
     params.require(:grant_permission).permit(
       :grant_id,
       :user_id,
-      :role
+      :role,
+      :submission_notification
     )
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_20_213333) do
+ActiveRecord::Schema.define(version: 2021_02_09_185915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 2021_01_20_213333) do
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "submission_notification", default: false, null: false
     t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
     t.index ["user_id"], name: "index_grant_permissions_on_user_id"
   end
