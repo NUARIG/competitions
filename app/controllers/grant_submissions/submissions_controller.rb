@@ -134,7 +134,7 @@ module GrantSubmissions
     end
 
     def send_grant_admin_submission_notification
-      GrantSubmissionSubmissionMailer.grant_admin_submission_notification(submission: @submission).deliver_now
+      GrantPermissionMailers::SubmissionMailer.submitted_notification(submission: @submission).deliver_now
     end
 
     def submission_params
