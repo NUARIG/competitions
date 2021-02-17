@@ -2,9 +2,11 @@ class GrantCreatorRequestMailer < ApplicationMailer
   def system_admin_notification(request:)
     set_attributes(request: request)
 
-    mail( to:  @system_admin_emails,
-          subject: "Pending Grant Creator Requests in #{@application_name}"
-        )
+    if @system_admin_emails.present?
+      mail( to:  @system_admin_emails,
+            subject: "Pending Grant Creator Requests in #{@application_name}"
+          )
+    end
   end
 
   private
