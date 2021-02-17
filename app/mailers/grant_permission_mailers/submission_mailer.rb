@@ -3,9 +3,11 @@ module GrantPermissionMailers
     def submitted_notification(submission:)
       set_attributes(submission: submission)
 
-      mail( bcc:  @recipients,
-            subject: "New submission available for #{@grant.name} in #{@application_name}"
-          )
+      if @recipients.present?
+        mail( bcc:  @recipients,
+              subject: "New submission available for #{@grant.name} in #{@application_name}"
+            )
+      end
     end
 
     private

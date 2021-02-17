@@ -66,6 +66,16 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect(page).to have_content 'There must be at least one admin on the grant'
         expect(@grant_admin_role.role).to eql('admin')
       end
+
+      scenario 'can change notification level for submissions' do
+        visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
+        expect(@grant_admin_role.submission_notification).to eql false
+        find(:css, "#grant_permission_submission_notification").set(true)
+        click_button 'Update'
+        visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
+        @grant_admin_role.reload
+        expect(@grant_admin_role.submission_notification).to eql true
+      end
     end
 
     context '#new' do
@@ -95,6 +105,13 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         select('Editor', from:'grant_permission[role]')
         click_button 'Save'
         expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'editor'"
+      end
+
+      scenario 'new grant permission defaults to false for submission notification' do
+        select2(@unassigned_user.email, from: 'Email Address', search: true)
+        select('Editor', from:'grant_permission[role]')
+        click_button 'Save'
+        expect(GrantPermission.last.submission_notification).to eql false
       end
 
       context 'select2 search' do
