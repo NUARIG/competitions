@@ -28,6 +28,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
     context 'success' do
       it 'accepts a valid request' do
+        system_admin
         page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: Faker::Lorem.sentence
         click_button 'Request Grant Creation Access'
         expect(page).to have_content 'Your request has been sent. You will be notified after review.'

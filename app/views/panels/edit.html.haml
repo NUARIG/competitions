@@ -34,14 +34,14 @@
             A panel is when reviewers convene to review all submissions and decide who will be awarded the grant. All fields are optional.
     .grid-x
       .cell.small-12.medium-3
-        = f.label     :meeting_location, 'Location'
+        = f.label     :meeting_location
       .cell.small-12.medium-9
         = f.text_area :meeting_location, cols: 15, rows: 4
     .grid-x
       .cell.small-12.medium-3
-        = f.label       :meeting_link, 'Link'
+        = f.label     :meeting_link, 'Link'
       .cell.small-12.medium-9
-        = f.url_field  :meeting_link, aria: { 'described-by': 'link-help' }
+        = f.url_field :meeting_link, aria: { 'described-by': 'link-help' }
         %p.help-text#link-help
           e.g. secure (https) link to videoconference service
     .grid-x
@@ -50,7 +50,13 @@
       .cell.small-12.medium-9
         = f.hidden_field  :instructions, id: :panel_instructions
         %trix-editor(input='panel_instructions')
-
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label :show_review_comments, aria: { 'described-by': 'show-review-comments-help' }
+      .cell.small-12.medium-9
+        = f.check_box :show_review_comments
+        %p.help-text#show-review-comments-help
+          Check to display all reviewer comments to panel members
 
     %h4
       Panel Time

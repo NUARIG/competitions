@@ -33,6 +33,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_scored_and_commented_criteria_review do
+      after(:create) do |review|
+        review.grant_criteria.each do |criterion|
+          criterion.update(show_comment_field: true)
+          create(:scored_commented_criteria_review, criterion: criterion, review: review)
+        end
+      end
+    end
+
     trait :reload_submission do
       after(:create) do |review|
         # ensures current calculations are loaded
@@ -45,6 +54,7 @@ FactoryBot.define do
     factory :review_with_comment,                                 traits: %i[with_comment reload_submission]
     factory :review_with_score_and_comment,                       traits: %i[with_score with_comment reload_submission]
     factory :scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review reload_submission]
+    factory :scored_review_with_scored_commented_criteria_review, traits: %i[with_score with_comment with_scored_and_commented_criteria_review reload_submission]
     factory :reminded_review,                                     traits: %i[incomplete reminded reload_submission]
   end
 end

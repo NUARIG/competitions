@@ -39,6 +39,9 @@ main {
           color: $dark-gray;
           padding: 0.5em 1em;
         }
+        .clear-button {
+          margin-left: 2em;
+        }
         .score_value,{
           display: inline-block;
           margin-right: .5em;

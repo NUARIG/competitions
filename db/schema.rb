@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_17_180406) do
+ActiveRecord::Schema.define(version: 2021_01_20_213333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -435,6 +435,7 @@ ActiveRecord::Schema.define(version: 2020_11_17_180406) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.boolean "show_review_comments", default: false, null: false
     t.index ["discarded_at"], name: "index_panels_on_discarded_at"
     t.index ["grant_id"], name: "index_panels_on_grant_id"
   end

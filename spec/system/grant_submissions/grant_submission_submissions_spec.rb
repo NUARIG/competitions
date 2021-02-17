@@ -196,7 +196,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           login_user grant_admin
 
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Save all Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
+          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
           expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -227,7 +227,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Save all Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
+          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
           expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
@@ -256,7 +256,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Save all Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
+          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
           expect(page).not_to have_link 'Assign Reviews', href: grant_submission_reviews_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)

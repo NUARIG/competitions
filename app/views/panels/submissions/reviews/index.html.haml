@@ -61,8 +61,10 @@
         = render @reviews
 
     .grid-container
-      %h5
-        Scores and Comments
+      %h4#criteria-reviews
+        Scores
+        = ' and Comments' if @panel.show_review_comments?
+
 
     - @grant.criteria.each do |criterion|
       .grid-x.grid-y.criterion
@@ -84,16 +86,18 @@
                     - else
                       %span{ title: 'No Score' }
                         NS
-                .cell.small-12.medium-9.large-8.comment
-                  - if scored_criterion.comment.present?
-                    .row{id: "criterion-#{criterion.id}-comment"}
-                      = simple_format(scored_criterion.comment)
+                - if @panel.show_review_comments?
+                  .cell.small-12.medium-9.large-8.comment
+                    - if scored_criterion.comment.present?
+                      .row{id: "criterion-#{criterion.id}-comment"}
+                        = simple_format(scored_criterion.comment)
         %hr
 
     .grid-x.grid-padding-y
       .cell.small-12
-        %h4#overall-impact
-          Overall Impact Scores and Comments
+        %h4#overall-impact-scores
+          Overall Impact Scores
+          = ' and Comments' if @panel.show_review_comments?
 
         #overall-impact.grid-x.grid-y
           .row
@@ -106,8 +110,9 @@
                     .grid-y
                       .row
                         = review.overall_impact_score
-                      .row
-                        = review.overall_impact_comment
+                      - if @panel.show_review_comments?
+                        .row
+                          = review.overall_impact_comment
 
     %h6
       = link_to 'Return to Submission', grant_panel_submission_path(@grant, @submission)
