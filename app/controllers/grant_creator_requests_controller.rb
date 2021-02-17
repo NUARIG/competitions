@@ -68,6 +68,8 @@ class GrantCreatorRequestsController < ApplicationController
   end
 
   def send_admin_request_notification
-    GrantCreatorRequestMailer.system_admin_notification(request: @grant_creator_request).deliver_now
+    unless User.where(system_admin: true).blank?
+      GrantCreatorRequestMailer.system_admin_notification(request: @grant_creator_request).deliver_now
+    end
   end
 end

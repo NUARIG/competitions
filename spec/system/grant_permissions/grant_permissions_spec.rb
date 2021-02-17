@@ -67,14 +67,16 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect(@grant_admin_role.role).to eql('admin')
       end
 
-      scenario 'can change notification level for submissions' do
-        visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
-        expect(@grant_admin_role.submission_notification).to eql false
-        find(:css, "#grant_permission_submission_notification").set(true)
-        click_button 'Update'
-        visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
-        @grant_admin_role.reload
-        expect(@grant_admin_role.submission_notification).to eql true
+      context 'notifications' do
+        scenario 'can change notification level for submissions' do
+          visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
+          expect(@grant_admin_role.submission_notification).to eql false
+          find(:css, "#grant_permission_submission_notification").set(true)
+          click_button 'Update'
+          visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
+          @grant_admin_role.reload
+          expect(@grant_admin_role.submission_notification).to eql true
+        end
       end
     end
 
