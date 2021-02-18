@@ -14,9 +14,11 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-  resources :login, only: :index
+  resources :login, only: %i[index]
 
-  resources :banners,             except: %i[show]
+  resources :banners, except: %i[show]
+
+  resources :release, only: %i[index], controller: 'documentation/release'
 
   resources :grant_creator_requests do
     resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
