@@ -7,7 +7,10 @@
   .cell.small-12.medium-4
     = f.label :role, 'Grant Role'
     = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
-
+.grid-x
+  .cell.small-12
+    Receive Notifications for:
+    = render partial: 'grant_permissions/notification_checkboxes', locals: { f: f, user: @user }
 .grid-x
   .cell.small-12.actions
     = f.submit 'Update', class: 'button'

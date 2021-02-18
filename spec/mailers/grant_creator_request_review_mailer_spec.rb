@@ -7,7 +7,6 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
     let(:mailer)           { described_class.approved(request: approved_request)}
 
     it 'has the appropriate subject' do
-
       expect(mailer.subject).to eql "#{COMPETITIONS_CONFIG[:application_name]}: Approved Grant Creator Request"
     end
 

@@ -25,7 +25,7 @@
       .cell.small-12.medium-2
       .cell.small-12.medium-10
         - if current_user.system_admin?
-          = render partial: 'users/admin_checkboxes', locals: { f: f, user: @user } if current_user.system_admin?
+          = render partial: 'users/admin_checkboxes', locals: { f: f, user: @user }
         - elsif @user.grant_creator_requests.pending.any?
           .button.holow.disabled
             Pending Grant Creation Request
