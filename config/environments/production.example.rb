@@ -106,4 +106,12 @@ Rails.application.configure do
   # Time zone
   config.time_zone = # e.g. 'Central Time (US & Canada)' # https://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html
   config.active_record.default_timezone = :local
+
+  # Exception Mailer
+  config.middleware.use ExceptionNotification::Rack,
+    email: {
+      email_prefix: "[#{Rails.env}][#{COMPETITIONS_CONFIG[:application_name]}] ",
+      sender_address: COMPETITIONS_CONFIG[:contact_email],
+      exception_recipients: COMPETITIONS_CONFIG[:mailer][:email]
+    }
 end
