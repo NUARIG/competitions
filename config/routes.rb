@@ -18,7 +18,10 @@ Rails.application.routes.draw do
 
   resources :banners, except: %i[show]
 
-  resources :release, only: %i[index], controller: 'documentation/release'
+  resources :documentation, only: %i[index] do
+    get 'release', to: 'documentation/release#index', on: :collection
+  end
+
 
   resources :grant_creator_requests do
     resource :review, only: %i[show update], controller: 'grant_creator_requests/review', on: :member
