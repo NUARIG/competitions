@@ -38,8 +38,7 @@ class ApplicationController < ActionController::Base
 
   # Devise methods
   def authenticate_user!
-    store_location_for(:registered_user, request.original_url)
-    store_location_for(:saml_user, request.original_url)
+    store_user_location!
     unless user_signed_in?
       flash[:alert] = 'You need to sign in or sign up before continuing.'
       redirect_to login_index_url
@@ -56,6 +55,11 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
   helper_method :user_signed_in?
+
+  def store_user_location!
+    store_location_for(:registered_user, request.fullpath)
+    store_location_for(:saml_user, request.fullpath)
+  end
 
   protected
     # Permitted parameters for users in devise methods.
