@@ -28,4 +28,21 @@ RSpec.describe 'Login', type: :system do
       expect(page).to have_selector('#registered_user_password')
     end
   end
+
+  describe 'deep linking on log in', js: true do
+    let(:grant)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+    let(:registered_editor)   { create(:registered_user) }
+    let(:editor_permission)   { create(:grant_permission, grant: grant, user: registered_editor) }
+
+    context 'log in to grant reviews index' do
+      scenario 'it redirects to the deep link on login' do
+        editor_permission
+        visit grant_reviews_path(grant)
+        find(:css, "#registered_user_uid").set(registered_editor.email)
+        find(:css, "#registered_user_password").set(registered_editor.password)
+        click_button 'Log in'
+        expect(page).to have_current_path grant_reviews_path(grant)
+      end
+    end
+  end
 end

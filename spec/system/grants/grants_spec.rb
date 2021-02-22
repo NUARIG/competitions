@@ -180,12 +180,13 @@ RSpec.describe 'Grants', type: :system, js: true do
   end
 
   describe 'Show' do
-    let(:grant)     { create(:published_open_grant_with_users, :with_reviewer) }
-    let(:applicant) { create(:user) }
-    let(:reviewer)  { grant.reviewers.first }
-    let(:admin)     { grant.admins.first }
-    let(:editor)    { grant.editors.first }
-    let(:viewer)    { grant.viewers.first }
+    let(:grant)                 { create(:published_open_grant_with_users, :with_reviewer) }
+    let(:applicant)             { create(:user) }
+    let(:registered_applicant)  { create(:registered_user) }
+    let(:reviewer)              { grant.reviewers.first }
+    let(:admin)                 { grant.admins.first }
+    let(:editor)                { grant.editors.first }
+    let(:viewer)                { grant.viewers.first }
 
     context 'panel information' do
       it 'does not display dates to anonymous users' do
@@ -198,6 +199,18 @@ RSpec.describe 'Grants', type: :system, js: true do
         visit grant_path(grant)
         expect(page).not_to have_content 'Panel Start'
         expect(page).not_to have_content 'Panel End'
+      end
+
+      context 'user login redirects' do
+        it 'redirects to show page on user login' do
+          visit grant_path(grant)
+          expect(page).to have_content 'Log in'
+          click_link 'Log in'
+          fill_in 'Email address', with: registered_applicant.email
+          fill_in 'Password', with: registered_applicant.password
+          click_button 'Log in'
+          expect(page).to have_current_path grant_path(grant)
+        end
       end
 
       context 'reviewer' do

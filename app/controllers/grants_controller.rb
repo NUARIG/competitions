@@ -2,6 +2,7 @@
 
 class GrantsController < ApplicationController
   skip_before_action :authenticate_user!, only: :show
+  before_action :store_user_location!, only: :show, unless: :user_signed_in?
   before_action :set_grant, except: %i[index new create]
 
   # GET /grants
