@@ -38,8 +38,8 @@ class ApplicationController < ActionController::Base
 
   # Devise methods
   def authenticate_user!
-    store_user_location!
     unless user_signed_in?
+      store_user_location!
       flash[:alert] = 'You need to sign in or sign up before continuing.'
       redirect_to login_index_url
     end
