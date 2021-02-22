@@ -6,7 +6,26 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.8 (February, 17, 2021)
+    %a.accordion-title{:href => "#"} 1.9 (February 22, 2021)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Grant show page redirects to same page on login.
+            #{github_issue_link(issue: 727)}
+          %li
+            Create Release notes page (this one).
+            #{github_issue_link(issue: 761)}
+          %li
+            Add opt-in submission notifications for grant admins.
+            #{github_issue_link(issue: 756)}
+          %li
+            Add exception notification for system admins.
+            #{github_issue_link(issue: 755)}
+
+%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
+  %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.8 (February 17, 2021)
     .accordion-content{"data-tab-content" => ""}
       %p
         %ul
