@@ -34,6 +34,10 @@
         - else
           = link_to 'Request Grant Creation Permission', new_grant_creator_request_path if current_user == @user
     .grid-x
+      .cell.small-12.medium-2
+      .cell.small-12.medium-10
+        = link_to 'Change Your Password', edit_registered_user_registration_path if current_user == @user && @user.registered_user?
+    .grid-x
       .cell.small-12.medium-offset-2.actions
         = f.submit 'Update', class: 'button'
 

@@ -43,22 +43,39 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
     describe 'existing users' do
       let(:token) {registered_user.send_reset_password_instructions }
 
-      scenario 'can change' do
-        visit edit_registered_user_password_path(params: {reset_password_token: token})
-        page.fill_in 'New password', with: valid_password
-        page.fill_in 'Confirm new password', with: valid_password
-        click_button 'Change my password'
+      context 'user not logged in' do
+        scenario 'displays error with invalid token' do
+          visit edit_registered_user_password_path(params: {reset_password_token: Faker::Lorem.characters(number: 5)})
+          page.fill_in 'New password', with: valid_password
+          page.fill_in 'Confirm new password', with: valid_password
+          click_button 'Change my password'
+          expect(page).to have_content 'token is invalid'
+        end
 
-        expect(page).to have_content 'Your password has been changed successfully.'
+        scenario 'can change using password reset' do
+          visit edit_registered_user_password_path(params: {reset_password_token: token})
+          page.fill_in 'New password', with: valid_password
+          page.fill_in 'Confirm new password', with: valid_password
+          click_button 'Change my password'
+          expect(page).to have_content 'Your password has been changed successfully.'
+        end
       end
 
-      scenario 'displays error with invalid token' do
-        visit edit_registered_user_password_path(params: {reset_password_token: Faker::Lorem.characters(number: 5)})
-        page.fill_in 'New password', with: valid_password
-        page.fill_in 'Confirm new password', with: valid_password
-        click_button 'Change my password'
+      context 'user logged in' do
+        before(:each) do
+          login_as(registered_user, scope: :registered_user)
+        end
 
-        expect(page).to have_content 'token is invalid'
+        scenario 'can change password while logged in' do
+          new_password = Faker::Lorem.characters(number: 12, min_alpha: 6)
+          visit profile_path(registered_user)
+          click_link 'Change Your Password'
+          find(:css, "#registered_user_current_password").set(registered_user.password)
+          find(:css, "#registered_user_password").set(new_password)
+          find(:css, "#registered_user_password_confirmation").set(new_password)
+          click_button 'Update'
+          expect(page).to have_content 'Your account has been updated successfully.'
+        end
       end
     end
   end
