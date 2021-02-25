@@ -1,6 +1,6 @@
 - content_for(:page_title, 'Profile')
 
-%h1
+%h2
   Your Profile
 
 = form_with(model: @user, scope: :user, url: profile_path, method: :put, local: true) do |f|
