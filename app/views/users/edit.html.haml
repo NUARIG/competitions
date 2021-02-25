@@ -1,6 +1,6 @@
 - content_for(:page_title, "Edit #{full_name(@user)}")
 
-%h1
+%h2
   = yield :page_title
 
 = form_with(model: @user, scope: :user, url: user_path, method: :put, local: true) do |f|

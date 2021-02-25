@@ -62,19 +62,37 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
       end
 
       context 'user logged in' do
-        before(:each) do
-          login_as(registered_user, scope: :registered_user)
+        context 'registered user' do\
+          before(:each) do
+            login_as(saml_user, scope: :saml_user)
+          end
+
+          scenario 'Change Your Password link not on SAML user profiles' do
+            visit profile_path(saml_user)
+            expect(page).not_to have_content 'Change Your Password'
+          end
         end
 
-        scenario 'can change password while logged in' do
-          new_password = Faker::Lorem.characters(number: 12, min_alpha: 6)
-          visit profile_path(registered_user)
-          click_link 'Change Your Password'
-          find(:css, "#registered_user_current_password").set(registered_user.password)
-          find(:css, "#registered_user_password").set(new_password)
-          find(:css, "#registered_user_password_confirmation").set(new_password)
-          click_button 'Update'
-          expect(page).to have_content 'Your account has been updated successfully.'
+        context 'registered user' do
+          before(:each) do
+            login_as(registered_user, scope: :registered_user)
+          end
+
+          scenario 'user can navigate to password change from profile' do
+            visit profile_path(registered_user)
+            click_link 'Change Your Password'
+            expect(current_path).to eq edit_registered_user_registration_path
+          end
+
+          scenario 'can change password while logged in' do
+            new_password = Faker::Lorem.characters(number: 12, min_alpha: 6)
+            visit edit_registered_user_registration_path(registered_user)
+            find(:css, "#registered_user_current_password").set(registered_user.password)
+            find(:css, "#registered_user_password").set(new_password)
+            find(:css, "#registered_user_password_confirmation").set(new_password)
+            click_button 'Update'
+            expect(page).to have_content 'Your account has been updated successfully.'
+          end
         end
       end
     end
