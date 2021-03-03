@@ -10,14 +10,14 @@ module GrantSubmission
 
     self.table_name = 'grant_submission_submissions'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
-                    meta: { grant_id: :grant_id, applicant_id: :created_id }
+                    meta: { grant_id: :grant_id, submitter_id: :created_id }
 
     belongs_to :grant,          inverse_of: :submissions
     belongs_to :form,           class_name: 'GrantSubmission::Form',
                                 foreign_key: 'grant_submission_form_id',
                                 inverse_of: :submissions
     has_many :sections,         through: :form
-    belongs_to :applicant,      class_name: 'User',
+    belongs_to :submitter,      class_name: 'User',
                                 foreign_key: 'created_id'
     has_many :responses,        dependent: :destroy,
                                 class_name: 'GrantSubmission::Response',
@@ -54,7 +54,7 @@ module GrantSubmission
     scope :to_be_assigned,      -> (max) { where(["reviews_count < ?", max]) }
     scope :with_reviews,        -> { includes( reviews: [:reviewer, :criteria_reviews]) }
     scope :with_reviewers,      -> { includes( :reviewers ) }
-    scope :with_applicant,      -> { includes( :applicant ) }
+    scope :with_submitter,      -> { includes( :submitter ) }
 
     scope :sort_by_average_overall_impact_score_nulls_last_asc,  -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score ASC NULLS LAST")) }
     scope :sort_by_average_overall_impact_score_nulls_last_desc, -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score DESC NULLS LAST")) }

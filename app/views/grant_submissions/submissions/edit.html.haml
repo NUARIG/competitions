@@ -1,4 +1,4 @@
-- title_text = "Edit #{current_user == @submission.applicant ? 'Your Submission' : 'Submission'}"
+- title_text = "Edit #{current_user == @submission.submitter ? 'Your Submission' : 'Submission'}"
 - content_for(:page_title, "#{title_text} - #{@grant.name}")
 
 = render 'shared/grant_header', { grant: @grant, section_title: title_text }

@@ -14,7 +14,7 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
                                                      reviewer: reviewer) }
 
   def successful_unsubmit_message
-    'You have changed the status of this submission to Draft. It may now be edited by the applicant.'
+    'You have changed the status of this submission to Draft. It may now be edited by the submitter.'
   end
 
   def draft_unsubmit_message

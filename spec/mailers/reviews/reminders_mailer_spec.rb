@@ -43,7 +43,7 @@ RSpec.describe ReminderMailer, type: :mailer do
     context 'multiple reviews' do
       let(:other_submission)  {create(:submission_with_responses, grant: grant,
                                                                   form: grant.form,
-                                                                  applicant: user) }
+                                                                  submitter: user) }
       let!(:other_review)     { create(:incomplete_review,  submission: other_submission,
                                                             assigner: grant_editor,
                                                             reviewer: reviewer) }

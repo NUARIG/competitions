@@ -6,7 +6,7 @@ RSpec.describe 'Panels', type: :system, js: true do
   let(:editor)      { grant.editors.first }
   let(:viewer)      { grant.viewers.first }
   let(:reviewer)    { grant.reviewers.first }
-  let(:applicant)   { grant.applicants.first }
+  let(:submitter)   { grant.submitters.first }
   let(:button_text) { 'Update Panel Information' }
   let(:review)      { create(:scored_review_with_scored_mandatory_criteria_review,
                                 submission: grant.submissions.first,
@@ -51,8 +51,8 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         context 'grant_viewer' do
           scenario 'cannot visit the edit page' do
-            login_user applicant
-            cannot_vist_edit_page(user: applicant)
+            login_user submitter
+            cannot_vist_edit_page(user: submitter)
           end
         end
 
@@ -261,13 +261,13 @@ RSpec.describe 'Panels', type: :system, js: true do
     before(:each) do
       @high_scored_submission = review.submission
       @high_scored_submission.update(title: "AAA #{Faker::Lorem.sentence}")
-      @high_scored_submission.applicant.update(last_name: 'AAA')
+      @high_scored_submission.submitter.update(last_name: 'AAA')
       @high_scored_submission.reviews.first.update(overall_impact_score: Review::MAXIMUM_ALLOWED_SCORE)
       @high_scored_submission.reviews.first.criteria_reviews.each{ |r| r.update(score: Review::MAXIMUM_ALLOWED_SCORE,
                                                                          updated_at: grant.review_close_date - 1.minute) }
 
       @low_scored_submission  = create(:reviewed_submission, grant: grant, form: grant.form, title: "ZZZ #{Faker::Lorem.sentence}")
-      @low_scored_submission.applicant.update(last_name: 'ZZZ')
+      @low_scored_submission.submitter.update(last_name: 'ZZZ')
       @low_scored_submission.reviews.first.update(overall_impact_score: Review::MINIMUM_ALLOWED_SCORE)
       @low_scored_submission.reviews.first.criteria_reviews.each{ |r| r.update(score: Review::MINIMUM_ALLOWED_SCORE,
                                                                         updated_at: grant.review_close_date - 1.minute) }
@@ -330,11 +330,11 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
     end
 
-    context 'applicant last_name' do
+    context 'submitter last_name' do
       scenario 'sorts on last_name' do
         visit grant_panel_path(grant)
         # ascending first
-        click_link 'Applicant'
+        click_link 'Submitter'
         within 'tr.submission:nth-child(1)' do
           expect(page).to have_text @high_scored_submission.title
         end
@@ -343,7 +343,7 @@ RSpec.describe 'Panels', type: :system, js: true do
         end
 
         # descending
-        click_link 'Applicant'
+        click_link 'Submitter'
         within 'tr.submission:nth-child(1)' do
           expect(page).to have_text @low_scored_submission.title
         end

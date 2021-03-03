@@ -27,7 +27,7 @@ class User < ApplicationRecord
 
   has_many   :submissions,            class_name: 'GrantSubmission::Submission',
                                       foreign_key: :created_id,
-                                      inverse_of: :applicant
+                                      inverse_of: :submitter
   has_many   :applied_grants,         through: :submissions,
                                       source: :grant
 

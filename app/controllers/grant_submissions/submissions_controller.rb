@@ -108,7 +108,7 @@ module GrantSubmissions
     end
 
     def submission_redirect(grant, submission)
-      if current_user == submission.applicant
+      if current_user == submission.submitter
         redirect_to profile_submissions_path
       elsif current_user.get_role_by_grant(grant: grant)
         redirect_to grant_submissions_path(grant)

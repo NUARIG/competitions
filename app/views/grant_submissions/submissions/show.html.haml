@@ -1,4 +1,4 @@
-- title_text = "#{current_user == @submission.applicant ? 'Your Submission' : 'Submission'}"
+- title_text = "#{current_user == @submission.submitter ? 'Your Submission' : 'Submission'}"
 - content_for(:page_title, "#{title_text} - #{@grant.name}")
 
 %h1#grant-name
@@ -30,9 +30,9 @@
       = @submission.title
     %h5
       Submitted By:
-      = "#{@submission.applicant.first_name} #{@submission.applicant.last_name}"
+      = "#{@submission.submitter.first_name} #{@submission.submitter.last_name}"
 
-    - if current_user == @submission.applicant && @submission.draft?
+    - if current_user == @submission.submitter && @submission.draft?
       = link_to 'Edit This Submission', edit_grant_submission_path(@grant, @submission), class: 'hollow button secondary'
     - if @submission.reviewers.include?(current_user)
       - review = find_review_by_submission_and_reviewer(@submission, current_user)

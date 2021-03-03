@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_09_185915) do
+ActiveRecord::Schema.define(version: 2021_03_03_210741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -350,12 +350,12 @@ ActiveRecord::Schema.define(version: 2021_02_09_185915) do
     t.string "item_type", null: false
     t.integer "item_id", null: false
     t.integer "grant_id", null: false
-    t.integer "applicant_id", null: false
+    t.integer "submitter_id", null: false
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
     t.datetime "created_at", null: false
-    t.index ["grant_id", "applicant_id"], name: "index_gs_submission_v_on_grant_id_applicant_it"
+    t.index ["grant_id", "submitter_id"], name: "index_gs_submission_v_on_grant_id_submitter_it"
     t.index ["grant_id"], name: "index_gs_submission_v_on_grant_id"
     t.index ["item_id"], name: "index_gs_submission_v_on_item_id"
     t.index ["whodunnit"], name: "index_gs_submission_v_on_whodunnit"

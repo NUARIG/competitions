@@ -4,7 +4,7 @@ class CreateGrantSubmissionSubmissionVersions < ActiveRecord::Migration[5.2]
       t.string   :item_type,   null: false
       t.integer  :item_id,     null: false
       t.integer  :grant_id,    null: false
-      t.integer  :applicant_id, null: false
+      t.integer  :submitter_id, null: false
       t.string   :event,       null: false
       t.integer  :whodunnit # user id
       t.text     :object
@@ -13,7 +13,7 @@ class CreateGrantSubmissionSubmissionVersions < ActiveRecord::Migration[5.2]
 
     add_index :grant_submission_submission_versions, [:item_id], name: 'index_gs_submission_v_on_item_id'
     add_index :grant_submission_submission_versions, :grant_id,  name: 'index_gs_submission_v_on_grant_id'
-    add_index :grant_submission_submission_versions, %i[grant_id applicant_id], name: 'index_gs_submission_v_on_grant_id_applicant_it'
+    add_index :grant_submission_submission_versions, %i[grant_id submitter_id], name: 'index_gs_submission_v_on_grant_id_submitter_it'
     add_index :grant_submission_submission_versions, [:whodunnit], name: 'index_gs_submission_v_on_whodunnit'
   end
 end

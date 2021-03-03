@@ -4,12 +4,12 @@ include UsersHelper
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)            { grant.submissions.first }
-  let(:applicant)             { submission.applicant }
+  let(:submitter)             { submission.submitter }
   let(:system_admin)          { create(:system_admin_saml_user) }
   let(:grant_admin)           { grant.administrators.first }
   let(:grant_editor)          { grant.administrators.second }
   let(:grant_viewer)          { grant.administrators.third }
-  let(:new_applicant)         { create(:saml_user) }
+  let(:new_submitter)         { create(:saml_user) }
   let(:draft_submission)      { create(:draft_submission_with_responses,
                                         grant: grant,
                                         form: grant.form) }
@@ -34,17 +34,17 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:admin_submission)      { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form,
-                                        applicant: grant_admin,
+                                        submitter: grant_admin,
                                         created_at: grant.submission_close_date - 1.hour) }
   let(:editor_submission)     { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form,
-                                        applicant: grant_editor,
+                                        submitter: grant_editor,
                                         created_at: grant.submission_close_date - 1.hour) }
   let(:viewer_submission)     { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form,
-                                        applicant: grant_viewer,
+                                        submitter: grant_viewer,
                                         created_at: grant.submission_close_date - 1.hour) }
 
   def not_authorized_text
@@ -277,10 +277,10 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
 
-      context 'applicant' do
+      context 'submitter' do
         before(:each) do
           other_submission.save
-          login_user applicant
+          login_user submitter
 
           visit grant_submissions_path(grant)
         end
@@ -299,7 +299,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).not_to have_link 'Save all Submissions', href: grant_submissions_path(grant)
           end
 
-          scenario 'does not include other applicant submission' do
+          scenario 'does not include other submitter submission' do
             expect(page).not_to have_content other_submission.title
           end
 
@@ -476,9 +476,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
 
-      context 'applicant' do
+      context 'submitter' do
         scenario 'cannot visit submissions page' do
-          login_user applicant
+          login_user submitter
           visit grant_submissions_path(grant)
           expect(page).to have_text not_authorized_text
         end
@@ -491,18 +491,18 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         login_user grant_admin
       end
 
-      scenario 'filters on applicant last name' do
+      scenario 'filters on submitter last name' do
         visit grant_submissions_path(grant)
-        expect(page).to have_content sortable_full_name(draft_submission.applicant)
-        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: applicant.last_name
+        expect(page).to have_content sortable_full_name(draft_submission.submitter)
+        page.fill_in 'q_submitter_first_name_or_submitter_last_name_or_title_cont', with: submitter.last_name
         click_button 'Search'
-        expect(page).not_to have_content sortable_full_name(draft_submission.applicant)
+        expect(page).not_to have_content sortable_full_name(draft_submission.submitter)
       end
 
       scenario 'filters on application title' do
         visit grant_submissions_path(grant)
         expect(page).to have_content draft_submission.title
-        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: submission.title.truncate_words(2, omission: '')
+        page.fill_in 'q_submitter_first_name_or_submitter_last_name_or_title_cont', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
         expect(page).not_to have_content draft_submission.title
       end
@@ -511,9 +511,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
   context 'apply' do
     describe 'Published Open Grant', js: true do
-      context 'applicant' do
+      context 'submitter' do
         before(:each) do
-          login_user new_applicant
+          login_user new_submitter
           visit grant_apply_path(grant)
         end
 
@@ -550,7 +550,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context '#update' do
         before(:each) do
           grant.questions.where(response_type: 'short_text').first.update(is_mandatory: true)
-          login_user applicant
+          login_user submitter
         end
 
         context 'draft submission' do
@@ -621,9 +621,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
 
-      context 'applicant' do
+      context 'submitter' do
         before(:each) do
-          login_user new_applicant
+          login_user new_submitter
           visit grant_apply_path(draft_grant)
         end
 
@@ -635,10 +635,10 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   end
 
   context 'show' do
-    context 'applicant' do
+    context 'submitter' do
       context 'draft' do
         before(:each) do
-          login_user draft_submission.applicant
+          login_user draft_submission.submitter
           visit grant_submission_path(draft_submission.grant, draft_submission)
         end
 
@@ -654,7 +654,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'submitted' do
         before(:each) do
-          login_user submission.applicant
+          login_user submission.submitter
           visit grant_submission_path(grant, submission)
         end
 

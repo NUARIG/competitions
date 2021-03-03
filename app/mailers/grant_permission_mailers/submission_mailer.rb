@@ -14,7 +14,7 @@ module GrantPermissionMailers
 
     def set_attributes(submission:)
       @submission         = submission
-      @applicant          = @submission.applicant
+      @submitter          = @submission.submitter
       @grant              = @submission.grant
       @recipients         = GrantPermission.submission_notification_emails(grant: @grant)
       @application_name   = COMPETITIONS_CONFIG[:application_name]
