@@ -1,0 +1,14 @@
+%p
+  Dear Grant Administrator,
+%p
+  = link_to @application_name, root_url
+  has a new submission for Grant:
+  #{ link_to @grant.name, grant_url(@grant) }.
+%p
+  Applicant:
+  = full_name(@applicant)
+  %br
+  Submission:
+  = link_to "#{@submission.title}", grant_submission_url(@grant, @submission)
+%p
+  Thank you.

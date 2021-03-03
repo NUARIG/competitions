@@ -19,4 +19,4 @@
         = mail_to COMPETITIONS_CONFIG[:contact_email]
       %p
         = precede 'v' do
-          = Competitions::Application::VERSION
+          = link_to Competitions::Application::VERSION, release_documentation_index_path

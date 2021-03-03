@@ -29,7 +29,7 @@ RSpec.describe 'Home', type: :system do
         scenario 'displays help log in links' do
           expect(page).to have_link 'Help'
           page.find('#help').hover
-          expect(page).to have_link 'Logging In'
+          expect(page).to have_link 'Release Notes'
         end
       end
 

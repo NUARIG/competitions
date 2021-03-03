@@ -6,6 +6,7 @@ RSpec.describe GrantPermission, type: :model do
   it { is_expected.to respond_to(:grant) }
   it { is_expected.to respond_to(:user) }
   it { is_expected.to respond_to(:role) }
+  it { is_expected.to respond_to(:submission_notification) }
 
   let(:grant)             { create(:grant) }
 
@@ -13,15 +14,21 @@ RSpec.describe GrantPermission, type: :model do
   let(:editor_user)       { create(:saml_user) }
   let(:viewer_user)       { create(:saml_user) }
 
+  let(:admin_user_with_submission_notification) { create(:saml_user) }
+
   let(:admin_grant_permission)  { build(:admin_grant_permission, grant_id: grant.id, user_id: admin_user.id) }
   let(:editor_grant_permission) { build(:editor_grant_permission, grant_id: grant.id, user_id: editor_user.id) }
   let(:viewer_grant_permission) { build(:viewer_grant_permission, grant_id: grant.id, user_id: viewer_user.id) }
 
+  let(:admin_grant_permission_with_submission_notification) { build(:admin_grant_permission_with_submission_notification,
+                                                                    grant_id: grant.id,
+                                                                    user_id: admin_user_with_submission_notification.id)}
   describe '#validations' do
     it 'validates a valid grant_permission' do
       expect(admin_grant_permission).to be_valid
       expect(editor_grant_permission).to be_valid
       expect(viewer_grant_permission).to be_valid
+      expect(admin_grant_permission_with_submission_notification).to be_valid
     end
 
     it 'requires a grant' do

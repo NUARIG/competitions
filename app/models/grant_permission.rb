@@ -25,11 +25,13 @@ class GrantPermission < ApplicationRecord
 
   validate :prevent_last_admin_edit, on: :update, if: -> { role_changed? && role_changed_from_admin? && is_last_grant_admin? }
 
-  scope :with_users, -> { (includes :users) }
-
   def self.role_by_user_and_grant(user:, grant:)
     return GrantPermission::ROLES[:admin] if user.system_admin?
     GrantPermission.find_by(grant: grant, user: user)&.role
+  end
+
+  def self.submission_notification_emails(grant: grant)
+    User.find(GrantPermission.where(grant: grant, submission_notification: true).map { |gp| gp.user_id }).map { |u| u.email }
   end
 
   private

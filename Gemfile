@@ -54,6 +54,8 @@ gem 'trix'
 gem 'discard', '~> 1.2'
 gem 'paper_trail'
 
+gem 'exception_notification'
+
 gem 'american_date'
 gem 'validates_timeliness'
 

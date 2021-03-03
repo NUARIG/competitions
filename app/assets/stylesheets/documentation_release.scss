@@ -1,0 +1,16 @@
+main.release {
+  .accordion {
+
+    .accordion-item {
+      background: #E6E6E6;
+      border: solid 1px;
+      margin: .25rem;
+      padding: 1rem;
+      list-style-type: none;
+
+      .accordion-title {
+        font: bold;
+      }
+    }
+  }
+}
