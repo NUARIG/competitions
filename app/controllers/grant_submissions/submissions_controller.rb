@@ -7,11 +7,11 @@ module GrantSubmissions
       @questions  = @grant.questions
 
       if Pundit.policy(current_user, @grant).show?
-        submission_count = (params[:format] == 'xlsx' ? nil : Pagy::VARS[:items])
+        pagy_items = (params[:format] == 'xlsx' ? nil : Pagy::VARS[:items])
 
         @q       = policy_scope(GrantSubmission::Submission.with_responses, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
         @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-        @pagy, @submissions = pagy(@q.result, count: submission_count, i18n_key: 'activerecord.models.submission')
+        @pagy, @submissions = pagy(@q.result, items: pagy_items, i18n_key: 'activerecord.models.submission')
       else
         skip_policy_scope
         flash[:alert] = I18n.t('pundit.default')
