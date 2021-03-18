@@ -6,6 +6,15 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.9.1 (March 17, 2021)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Update pagination settings to include all submissions on xlsx exports.
+            #{github_issue_link(issue: 795)}
+
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.9 (February 22, 2021)
     .accordion-content{"data-tab-content" => ""}
       %p
