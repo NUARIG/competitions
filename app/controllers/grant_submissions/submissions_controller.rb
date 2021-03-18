@@ -4,12 +4,16 @@ module GrantSubmissions
 
     def index
       @grant      = Grant.kept.friendly.with_administrators.find(params[:grant_id])
-      @questions  = @grant.questions
 
       if Pundit.policy(current_user, @grant).show?
-        @q       = policy_scope(GrantSubmission::Submission.with_responses, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
-        @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-        @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+        if params[:format] == 'xlsx'
+          @questions  = @grant.questions
+          @submissions = policy_scope(GrantSubmission::Submission.with_responses, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
+        else
+          @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+          @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
+          @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+        end
       else
         skip_policy_scope
         flash[:alert] = I18n.t('pundit.default')
