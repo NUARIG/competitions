@@ -1,5 +1,5 @@
-class ChangeSubmitterColumnNameOnSubmissions < ActiveRecord::Migration[6.0]
+class ChangeApplicantColumnNameOnSubmissions < ActiveRecord::Migration[6.0]
   def change
-    rename_column :grant_submission_submission_versions, :submitter_id, :submitter_id
+    rename_column :grant_submission_submission_versions, :applicant_id, :submitter_id
   end
 end
