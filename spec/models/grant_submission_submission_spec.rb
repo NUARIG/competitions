@@ -31,7 +31,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
       expect(submission.errors).to include(:form)
     end
 
-    it 'requires an submitter' do
+    it 'requires a submitter' do
       submission.submitter = nil
       expect(submission).not_to be_valid
       expect(submission.errors).to include(:submitter)

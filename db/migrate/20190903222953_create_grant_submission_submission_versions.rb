@@ -4,7 +4,7 @@ class CreateGrantSubmissionSubmissionVersions < ActiveRecord::Migration[5.2]
       t.string   :item_type,   null: false
       t.integer  :item_id,     null: false
       t.integer  :grant_id,    null: false
-      t.integer  :submitter_id, null: false
+      t.integer  :applicant_id, null: false
       t.string   :event,       null: false
       t.integer  :whodunnit # user id
       t.text     :object
