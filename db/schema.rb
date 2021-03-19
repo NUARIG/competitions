@@ -355,7 +355,7 @@ ActiveRecord::Schema.define(version: 2021_03_03_210741) do
     t.integer "whodunnit"
     t.text "object"
     t.datetime "created_at", null: false
-    t.index ["grant_id", "submitter_id"], name: "index_gs_submission_v_on_grant_id_applicant_it"
+    t.index ["grant_id", "submitter_id"], name: "index_gs_submission_v_on_grant_id_submitter_it"
     t.index ["grant_id"], name: "index_gs_submission_v_on_grant_id"
     t.index ["item_id"], name: "index_gs_submission_v_on_item_id"
     t.index ["whodunnit"], name: "index_gs_submission_v_on_whodunnit"
