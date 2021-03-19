@@ -6,7 +6,7 @@ RSpec.describe 'Panel Submission', type: :system, js: true do
   let!(:submission) { create(:reviewed_submission, grant: grant) }
   let(:admin)       { grant.admins.first }
   let(:reviewer)    { submission.reviews.first.reviewer }
-  let(:applicant)   { submission.applicant }
+  let(:submitter)   { submission.submitter }
   let(:review1)     { submission.review.first}
 
   let!(:reviewer2)  { create(:grant_reviewer, grant: grant).reviewer }
@@ -30,7 +30,7 @@ RSpec.describe 'Panel Submission', type: :system, js: true do
         expect(page).to have_content submission.title
         expect(page).to have_content submission.average_overall_impact_score
         expect(page).to have_content submission.composite_score
-        expect(page).to have_content full_name(applicant)
+        expect(page).to have_content full_name(submitter)
       end
 
       scenario 'includes submission responses' do

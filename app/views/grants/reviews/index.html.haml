@@ -37,9 +37,9 @@
       .text-right
         %ul.menu
           %li.search
-            = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont, placeholder: 'Applicant or Reviewer'
+            = f.search_field :submitter_first_name_or_submitter_last_name_or_reviewer_first_name_or_reviewer_last_name_cont, placeholder: 'Submitter or Reviewer'
           %li.search
-            = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Applicant'
+            = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Submitter'
         .reset
           = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
 
@@ -54,7 +54,7 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :applicant_last_name, 'Applicant', {}, { title: 'Sort on Applicant' })
+          = sort_link(@q, :submitter_last_name, 'Submitter', {}, { title: 'Sort on Submitter' })
         %th
           = sort_link(@q, :submission_title, 'Submission', {}, { title: 'Sort on Submission Title' })
         %th
@@ -69,7 +69,7 @@
       - @reviews.each do |review|
         %tr
           %td
-            = sortable_full_name(review.submission.applicant)
+            = sortable_full_name(review.submission.submitter)
           %td
             = link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
           %td

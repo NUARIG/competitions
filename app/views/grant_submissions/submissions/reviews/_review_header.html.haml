@@ -9,9 +9,9 @@
     .grid-x.cell.small-12.medium-10
       = link_to @submission.title, grant_submission_path(@grant, @submission)
     .grid-x.cell.small-12.medium-2
-      %strong Applicant:
+      %strong Submitter:
     .grid-x.cell.small-12.medium-10
-      = full_name(@submission.applicant)
+      = full_name(@submission.submitter)
     .grid-x.cell.small-12.medium-2
       %strong Reviewed By:
     .grid-x.cell.small-12.medium-10

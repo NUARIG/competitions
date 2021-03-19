@@ -19,7 +19,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
   let(:user)                      { create(:saml_user) }
 
   context 'header text' do
-    context 'applicant' do
+    context 'submitter' do
       scenario 'displays MyGrants link in the header' do
         login_as grant_admin
 

@@ -22,15 +22,15 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
 
     def resolve
       if user.in?(@grant.administrators) || user.system_admin?
-        GrantSubmission::Submission.includes(:applicant, :reviews).where(grant_id: @grant.id)
+        GrantSubmission::Submission.includes(:submitter, :reviews).where(grant_id: @grant.id)
       else
-        scope.where(applicant: user)
+        scope.where(submitter: user)
       end
     end
   end
 
   def show?
-    grant_viewer_access? || current_user_is_applicant? || current_user_is_reviewer?
+    grant_viewer_access? || current_user_is_submitter? || current_user_is_reviewer?
   end
 
   def create?
@@ -42,7 +42,7 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def update?
-    (grant_editor_access? || current_user_is_applicant?) && submission.draft?
+    (grant_editor_access? || current_user_is_submitter?) && submission.draft?
   end
 
   def edit?
@@ -50,7 +50,7 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def destroy?
-    grant_admin_access? && (submission.applicant.in?(@grant.administrators) || !grant.published?)
+    grant_admin_access? && (submission.submitter.in?(@grant.administrators) || !grant.published?)
   end
 
   def unsubmit?
@@ -67,8 +67,8 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     @grant
   end
 
-  def current_user_is_applicant?
-    submission.applicant == user
+  def current_user_is_submitter?
+    submission.submitter == user
   end
 
   def current_user_is_reviewer?

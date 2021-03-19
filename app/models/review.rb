@@ -16,7 +16,7 @@ class Review < ApplicationRecord
                               foreign_key: 'grant_submission_submission_id',
                               counter_cache: true,
                               inverse_of: :reviews
-  has_one  :applicant,        through: :submission
+  has_one  :submitter,        through: :submission
   has_one  :grant,            through: :submission
   has_many :grant_criteria,   through: :grant,
                               source: :criteria
@@ -39,7 +39,7 @@ class Review < ApplicationRecord
 
   validate :reviewer_is_a_grant_reviewer
   validate :assigner_is_a_grant_editor
-  validate :reviewer_is_not_applicant
+  validate :reviewer_is_not_submitter
   validate :reviewer_may_be_assigned,       if: :new_record?
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
@@ -49,7 +49,7 @@ class Review < ApplicationRecord
   scope :with_criteria_reviews,    -> { includes(:criteria_reviews) }
   scope :with_reviewer,            -> { includes(:reviewer) }
   scope :with_grant,               -> { includes(submission: :grant) }
-  scope :with_grant_and_applicant, -> { includes(submission: [:grant, :applicant]) }
+  scope :with_grant_and_submitter, -> { includes(submission: [:grant, :submitter]) }
   scope :by_grant,                 -> (grant) { with_grant.where(grants: { id: grant.id}) }
 
   scope :order_by_created_at,      -> { order(created_at: :desc) }
@@ -92,8 +92,8 @@ class Review < ApplicationRecord
     errors.add(:assigner, :may_not_add_review) unless Pundit.policy(assigner, grant).grant_editor_access?
   end
 
-  def reviewer_is_not_applicant
-    errors.add(:reviewer, :may_not_review_own_submission) if reviewer == submission.applicant
+  def reviewer_is_not_submitter
+    errors.add(:reviewer, :may_not_review_own_submission) if reviewer == submission.submitter
   end
 
   def reviewer_may_be_assigned
