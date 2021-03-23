@@ -1,0 +1,9 @@
+%tr{ data: { invite: invitation.id } }
+  %td.email
+    = invitation.email
+  %td.created
+    = date_mmddyyyy(invitation.created_at)
+  %td.confirmation
+    = (invitation.confirmed_at.nil?) ? '-' : date_mmddyyyy(invitation.confirmed_at)
+  %td.inviter
+    = full_name(invitation.inviter)

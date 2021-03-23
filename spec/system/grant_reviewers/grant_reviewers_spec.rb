@@ -48,7 +48,7 @@ RSpec.describe 'GrantReviewers', type: :system do
     scenario 'unknown users may not be added as reviewers' do
       page.fill_in 'Email', with: unknown_user.email
       click_button 'Look Up'
-      expect(page).to have_content("Could not find user with email: #{unknown_user.email}")
+      expect(page).to have_content("Could not find a user with the email: #{unknown_user.email}")
       expect(page).not_to have_content("#{unknown_user.first_name} #{unknown_user.last_name}")
     end
 
