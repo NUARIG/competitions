@@ -30,10 +30,6 @@ class GrantPermission < ApplicationRecord
     GrantPermission.find_by(grant: grant, user: user)&.role
   end
 
-  def self.submission_notification_emails(grant: grant)
-    User.find(GrantPermission.where(grant: grant, submission_notification: true).map { |gp| gp.user_id }).map { |u| u.email }
-  end
-
   private
 
   def prevent_last_admin_edit
