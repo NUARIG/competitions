@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_22_143522) do
+ActiveRecord::Schema.define(version: 2021_03_19_162605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,17 +344,6 @@ ActiveRecord::Schema.define(version: 2021_03_22_143522) do
     t.datetime "updated_at", null: false
     t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
     t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
-  end
-
-  create_table "grant_submission_submission_applicants", force: :cascade do |t|
-    t.bigint "grant_submission_submission_id"
-    t.bigint "user_id"
-    t.string "role"
-    t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["grant_submission_submission_id"], name: "i_gsa_on_grant_submission_submission_id"
-    t.index ["user_id"], name: "index_grant_submission_submission_applicants_on_user_id"
   end
 
   create_table "grant_submission_submission_versions", force: :cascade do |t|
