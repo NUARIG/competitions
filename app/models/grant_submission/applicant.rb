@@ -3,7 +3,7 @@
 module GrantSubmission
   class Applicant < ApplicationRecord
     self.table_name = 'grant_submission_applicants'
-    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmissionApplicantVersion' },
+    has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::ApplicantVersion' },
                     meta:     { grant_submission_submission_id: :grant_submission_submission_id,
                                 user_id: :user_id }
 
@@ -46,7 +46,7 @@ module GrantSubmission
     end
 
     def is_last_submission_primary_applicant?
-      submission.submission_permissions.role_primary.one?
+      submission.applicants.role_primary.one?
     end
 
     def role_changed_from_primary_applicant?
