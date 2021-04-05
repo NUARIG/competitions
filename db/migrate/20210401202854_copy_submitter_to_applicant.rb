@@ -2,8 +2,7 @@ class CopySubmitterToApplicant < ActiveRecord::Migration[6.0]
   def up
     GrantSubmission::Submission.all.each do |submission|
       GrantSubmission::Applicant.create!(grant_submission_submission_id: submission.id,
-                                         user_id: submission.submitter.id,
-                                         role: 'primary')
+                                         user_id: submission.submitter.id)
     end
   end
 

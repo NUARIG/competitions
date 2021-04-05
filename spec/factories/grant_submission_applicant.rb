@@ -4,6 +4,5 @@ FactoryBot.define do
   factory :grant_submission_applicant, class: 'GrantSubmission::Applicant' do
     association :submission, factory: :grant_submission_submission
     association :user, factory: :saml_user
-    role { 'primary' }
   end
 end

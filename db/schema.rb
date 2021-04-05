@@ -236,7 +236,6 @@ ActiveRecord::Schema.define(version: 2021_04_01_202854) do
   create_table "grant_submission_applicants", force: :cascade do |t|
     t.bigint "grant_submission_submission_id", null: false
     t.bigint "user_id", null: false
-    t.string "role"
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
