@@ -10,7 +10,8 @@ module GrantSubmission
     belongs_to :submission,   class_name: 'GrantSubmission::Submission',
                               foreign_key: 'grant_submission_submission_id',
                               inverse_of: :applicants
-    belongs_to :user
+    belongs_to :user,         foreign_key: :user_id,
+                              inverse_of: :applied_submissions
 
     before_destroy :prevent_last_applicant_destroy, if: -> { is_last_applicant? }
 
