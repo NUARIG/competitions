@@ -218,31 +218,6 @@ ActiveRecord::Schema.define(version: 2021_04_01_202854) do
     t.index ["reviewer_id"], name: "index_grant_reviewers_on_reviewer_id"
   end
 
-  create_table "grant_submission_applicant_versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.integer "grant_submission_submission_id", null: false
-    t.integer "user_id", null: false
-    t.string "event", null: false
-    t.integer "whodunnit"
-    t.text "object"
-    t.datetime "created_at", null: false
-    t.index ["grant_submission_submission_id"], name: "index_gs_applicant_v_on_submission_id"
-    t.index ["item_id"], name: "index_gs_applicant_v_on_item_id"
-    t.index ["user_id"], name: "index_gs_applicant_v_on_user_id"
-    t.index ["whodunnit"], name: "index_gs_applicant_v_on_whodunnit"
-  end
-
-  create_table "grant_submission_applicants", force: :cascade do |t|
-    t.bigint "grant_submission_submission_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["grant_submission_submission_id"], name: "i_gsa_on_grant_submission_submission_id"
-    t.index ["user_id"], name: "index_grant_submission_applicants_on_user_id"
-  end
-
   create_table "grant_submission_form_versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.integer "item_id", null: false
@@ -288,6 +263,31 @@ ActiveRecord::Schema.define(version: 2021_04_01_202854) do
     t.index ["display_order", "grant_submission_question_id"], name: "i_smco_on_display_order_and_submission_question_id", unique: true
     t.index ["grant_submission_question_id"], name: "i_gsmco_on_submission_question_id"
     t.index ["text", "grant_submission_question_id"], name: "i_smco_on_text_and_submission_question_id", unique: true
+  end
+
+  create_table "grant_submission_permission_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_submission_submission_id", null: false
+    t.integer "user_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["grant_submission_submission_id"], name: "index_gs_permission_v_on_submission_id"
+    t.index ["item_id"], name: "index_gs_permission_v_on_item_id"
+    t.index ["user_id"], name: "index_gs_permission_v_on_user_id"
+    t.index ["whodunnit"], name: "index_gs_permission_v_on_whodunnit"
+  end
+
+  create_table "grant_submission_permissions", force: :cascade do |t|
+    t.bigint "grant_submission_submission_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["grant_submission_submission_id"], name: "i_gsa_on_grant_submission_submission_id"
+    t.index ["user_id"], name: "index_grant_submission_permissions_on_user_id"
   end
 
   create_table "grant_submission_question_versions", force: :cascade do |t|
@@ -541,9 +541,9 @@ ActiveRecord::Schema.define(version: 2021_04_01_202854) do
   add_foreign_key "criteria_reviews", "reviews"
   add_foreign_key "grant_permissions", "grants"
   add_foreign_key "grant_permissions", "users"
-  add_foreign_key "grant_submission_applicants", "grant_submission_submissions"
-  add_foreign_key "grant_submission_applicants", "users"
   add_foreign_key "grant_submission_forms", "grants"
+  add_foreign_key "grant_submission_permissions", "grant_submission_submissions"
+  add_foreign_key "grant_submission_permissions", "users"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
   add_foreign_key "panels", "grants"
   add_foreign_key "reviews", "grant_submission_submissions"

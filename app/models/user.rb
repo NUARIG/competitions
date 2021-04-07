@@ -25,12 +25,12 @@ class User < ApplicationRecord
   has_many   :reviewable_grants,      through: :grant_reviewers,
                                       source: :grant
 
-  has_many   :applied_submissions,    class_name: 'GrantSubmission::Applicant',
+
+  has_many   :submission_permissions, class_name: 'GrantSubmission::Permission',
                                       foreign_key: :user_id,
-                                      inverse_of: :applicant
-  has_many   :submissions,            class_name: 'GrantSubmission::Submission',
-                                      foreign_key: :created_id,
-                                      inverse_of: :submitter
+                                      inverse_of: :user
+  has_many   :submissions,            through: :submission_permissions
+
   has_many   :submitted_grants,       through: :submissions,
                                       source: :grant
 
