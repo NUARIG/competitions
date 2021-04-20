@@ -91,10 +91,10 @@ FactoryBot.define do
     trait :with_submission do
       after(:create) do |grant|
         submitter = create(:saml_user)
-        create(:submission_with_responses, grant: grant,
-                                           form: grant.form,
-                                           submitter: submitter,
-                                           user_updated_at: grant.submission_close_date - 1.minute)
+        create(:submission_with_responses_permission, grant: grant,
+                                                      form: grant.form,
+                                                      submitter: submitter,
+                                                      user_updated_at: grant.submission_close_date - 1.minute)
 
       end
     end

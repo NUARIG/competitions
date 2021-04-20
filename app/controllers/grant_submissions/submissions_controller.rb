@@ -55,8 +55,9 @@ module GrantSubmissions
       set_submission
       authorize @submission
       @submission.user_submitted_state = params[:state]
+      result = GrantSubmissionSubmissionServices::New.call(submission: @submission, user: current_user)
 
-      if @submission.save
+      if result.success?
         @submission.update(user_updated_at: Time.now)
         if @submission.submitted?
           send_grant_admin_submission_notification
@@ -67,7 +68,8 @@ module GrantSubmissions
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        flash.now[:alert] = @submission.errors.to_a
+        flash.now[:alert] = result.messages
+        # flash.now[:alert] = @submission.errors.to_a
         render 'new'
       end
     end
