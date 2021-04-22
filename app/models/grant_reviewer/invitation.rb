@@ -13,12 +13,15 @@ class GrantReviewer::Invitation < ApplicationRecord
   validates_uniqueness_of :email, scope: :grant, message: 'has already been invited.'
   validate :inviter_may_invite
 
+  scope :with_inviter,-> { includes(:inviter) }
+
   scope :by_invitee,  -> (invitee) { where(invitee: invitee) }
   scope :by_email,    -> (email)   { where(email: email) }
   scope :by_grant,    -> (grant)   { where(grant_id: grant.id) }
 
   scope :confirmed,   -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
+  # TODO: 3/20/21 - implement opt out functionality
   scope :opted_out,   -> { where.not(opted_out_at: nil) }
   scope :open,        -> { where(confirmed_at: nil, opted_out_at: nil) }
 
