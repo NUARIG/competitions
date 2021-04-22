@@ -4,37 +4,33 @@ include UsersHelper
 RSpec.describe GrantPermissionMailers::SubmissionMailer, type: :mailer do
   describe 'approved request' do
 
-    let(:grant)       { create(:published_open_grant_with_users) }
-    let(:submission)  { create(:grant_submission_submission, grant: grant) }
-    let(:mailer)      { described_class.submitted_notification(submission: submission)}
+    let!(:grant)       { create(:published_open_grant_with_users) }
+    let!(:submission)  { create(:grant_submission_submission, grant: grant) }
+    let(:mailer)       { described_class.submitted_notification(grant: grant,
+                                                                recipients: get_recipients,
+                                                                submission: submission)}
 
-    context 'no grant permissions accepting submission notifications' do
-      it 'has an empty mailer' do
-        expect(mailer.subject).to be_falsey
-        expect(mailer.bcc).to be_falsey
-        expect(mailer.body).to be_empty
-      end
 
-      it 'does not throw an exception' do
-        expect {mailer}.not_to raise_error
-      end
+    def get_recipients
+      grant.grant_permissions
+           .with_user
+           .where(submission_notification: true)
+           .map{ |permission| permission.user.email }
     end
 
     context 'grant permissions accepting submission notifications' do
       before(:each) do
-        grant.grant_permissions.each do |grant_permission|
-          grant_permission.update(submission_notification: true)
-        end
+        grant.grant_permissions.role_admin.update(submission_notification: true)
+        grant.grant_permissions.role_viewer.update(submission_notification: true)
       end
 
       it 'has the appropriate subject' do
         expect(mailer.subject).to eql("New submission available for #{grant.name} in #{COMPETITIONS_CONFIG[:application_name]}")
       end
 
-      it 'uses the system admins\' email addresses' do
+      it 'uses the correct system admin email addresses' do
         emails  = []
         emails  << grant.grant_permissions.role_admin.first.user.email
-        emails  << grant.grant_permissions.role_editor.first.user.email
         emails  << grant.grant_permissions.role_viewer.first.user.email
         expect(mailer.bcc).to match_array emails
       end

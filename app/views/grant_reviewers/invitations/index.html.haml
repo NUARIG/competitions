@@ -1,0 +1,47 @@
+- title_text = 'Reviewer Invitations'
+- content_for(:page_title, "#{title_text} - #{@grant.name}")
+
+= render 'shared/grant_header', { grant: @grant, section_title: title_text }
+
+.small-12.cell
+  %ul.breadcrumbs
+    %li
+      = link_to 'Home', root_path
+    %li
+      = link_to 'Grant Home', grant_path(@grant)
+    - if current_user.get_role_by_grant(grant: @grant)
+      %li
+        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      = link_to 'Reviewers', grant_reviewers_path(@grant)
+    %li
+      Invitations
+
+  = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
+
+.tabs-panel.is-active
+  #submenu.top-bar
+    - if @invitations.none?
+      %p
+        There are no reviewer invitations to this grant.
+    - else
+      .top-bar-left
+        %ul.menu
+          %li.menu-text
+            Actions:
+          %li
+            = link_to 'Back to Reviewers', grant_reviewers_path(@grant)
+
+  %table#grant-reviewer-invitations
+    %thead
+      %tr
+        %th
+          Invited Email
+        %th
+          Invited On
+        %th
+          Confirmed On
+        %th
+          Invited By
+    %tbody
+      = render partial: 'invitation', collection: @invitations, as: :invitation
