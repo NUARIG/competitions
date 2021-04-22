@@ -16,7 +16,7 @@ FactoryBot.define do
 
     trait :with_permission do
       after(:create) do |submission|
-        create(:grant_submission_permission, submission: submission, user: submission.submitter)                                                                           created_at: grant.review_close_date - 1.hour)
+        create(:grant_submission_permission, submission: submission, user: submission.submitter)
       end
     end
 
@@ -59,10 +59,10 @@ FactoryBot.define do
       end
     end
 
-    factory :submission_with_responses,             traits: %i[with_responses]
-    factory :submission_with_responses_permission,  traits: %i[with_responses with_permission]
-    factory :draft_submission,                      traits: %i[draft]
-    factory :draft_submission_with_responses,       traits: %i[draft with_responses]
-    factory :reviewed_submission,                   traits: %i[with_responses with_review]
+    factory :submission_with_responses,                   traits: %i[with_responses]
+    factory :submission_with_responses_with_permission,   traits: %i[with_permission with_responses]
+    factory :draft_submission,                            traits: %i[draft]
+    factory :draft_submission_with_responses,             traits: %i[draft with_responses]
+    factory :reviewed_submission,                         traits: %i[with_responses with_review]
   end
 end

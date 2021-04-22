@@ -26,7 +26,7 @@ module GrantSubmission
     end
 
     def is_last_permission?
-      submission.applicants.one?
+      submission.permissions.one?
     end
   end
 end

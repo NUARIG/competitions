@@ -31,7 +31,7 @@ RSpec.describe GrantSubmission::Permission, type: :model do
       permission
       expect{permission.destroy}.not_to change{submission.permissions.count}
       expect(permission.errors).to include(:base)
-      expect(permission.errors[:base]).to include('There must be at least one permission on the grant')
+      expect(permission.errors[:base]).to include('There must be at least one permission on the submission')
     end
   end
 end
