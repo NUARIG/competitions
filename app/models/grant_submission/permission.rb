@@ -13,20 +13,20 @@ module GrantSubmission
     belongs_to :user,         foreign_key: :user_id,
                               inverse_of: :submission_permissions
 
-    before_destroy :prevent_last_permission_destroy, if: -> { is_last_permission? }
+    # before_destroy :prevent_last_permission_destroy, if: -> { is_last_permission? }
 
     validates :submission,  presence: true
     validates :user,        presence: true
 
     private
 
-    def prevent_last_permission_destroy
-      errors.add(:base, 'There must be at least one permission on the submission')
-      throw :abort
-    end
+    # def prevent_last_permission_destroy
+    #   errors.add(:base, 'There must be at least one permission on the submission')
+    #   throw :abort
+    # end
 
-    def is_last_permission?
-      submission.permissions.one?
-    end
+    # def is_last_permission?
+    #   submission.permissions.one?
+    # end
   end
 end

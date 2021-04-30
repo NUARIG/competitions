@@ -18,11 +18,11 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
     let(:grant_permission)  { create(:admin_grant_permission, grant: grant)}
     let(:submitter)         { create(:saml_user) }
 
-    let(:draft_submission) { create(:draft_submission_with_responses, grant:      grant,
-                                                                      form:       grant.form,
-                                                                      created_id: submitter.id,
-                                                                      title:      Faker::Lorem.sentence,
-                                                                      state:      'draft') }
+    let(:draft_submission) { create(:draft_submission_with_responses_with_permission, grant:      grant,
+                                                                                      form:       grant.form,
+                                                                                      created_id: submitter.id,
+                                                                                      title:      Faker::Lorem.sentence,
+                                                                                      state:      'draft') }
 
     let(:multiple_choice_question)  { grant.questions.where(response_type: 'pick_one').first }
     let(:file_upload_question)      { grant.questions.where(response_type: 'file_upload').first }

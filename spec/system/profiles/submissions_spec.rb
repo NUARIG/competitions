@@ -5,9 +5,9 @@ RSpec.describe 'Profile Submissions', type: :system, js: true do
   let(:grant)            { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "First #{Faker::Lorem.sentence(word_count: 3)}") }
   let(:grant2)           { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "Second #{Faker::Lorem.sentence(word_count: 3)}") }
   let(:submission)       { grant.submissions.first }
-  let(:draft_submission) { create(:draft_submission_with_responses, grant: grant2,
-                                                                    form: grant2.form,
-                                                                    submitter: submitter) }
+  let(:draft_submission) { create(:draft_submission_with_responses_with_permission, grant: grant2,
+                                                                                    form: grant2.form,
+                                                                                    submitter: submitter) }
   let(:submitter)        { submission.submitter }
   let(:user)             { create(:saml_user) }
 

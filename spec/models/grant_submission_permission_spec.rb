@@ -25,13 +25,4 @@ RSpec.describe GrantSubmission::Permission, type: :model do
     end
 
   end
-
-  describe '#validations' do
-    it 'prevents deletion of last permission' do
-      permission
-      expect{permission.destroy}.not_to change{submission.permissions.count}
-      expect(permission.errors).to include(:base)
-      expect(permission.errors[:base]).to include('There must be at least one permission on the submission')
-    end
-  end
 end

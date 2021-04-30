@@ -59,10 +59,11 @@ FactoryBot.define do
       end
     end
 
-    factory :submission_with_responses,                   traits: %i[with_responses]
-    factory :submission_with_responses_with_permission,   traits: %i[with_permission with_responses]
-    factory :draft_submission,                            traits: %i[draft]
-    factory :draft_submission_with_responses,             traits: %i[draft with_responses]
-    factory :reviewed_submission,                         traits: %i[with_responses with_review]
+    factory :submission_with_responses,                         traits: %i[with_responses]
+    factory :submission_with_responses_with_permission,         traits: %i[with_permission with_responses]
+    factory :draft_submission,                                  traits: %i[draft]
+    factory :draft_submission_with_responses,                   traits: %i[draft with_responses]
+    factory :draft_submission_with_responses_with_permission,   traits: %i[draft with_permission with_responses]
+    factory :reviewed_submission,                               traits: %i[with_responses with_review]
   end
 end
