@@ -5,7 +5,7 @@ module GrantSubmissionSubmissionServices
     def self.call(submission:, user:)
       ActiveRecord::Base.transaction(requires_new: true) do
         submission.save!
-        GrantSubmission::Permission.create!(submission: submission, user: user)
+        GrantSubmission::Applicant.create!(submission: submission, user: user)
       end
       OpenStruct.new(success?: true)
     rescue ActiveRecord::RecordInvalid => invalid

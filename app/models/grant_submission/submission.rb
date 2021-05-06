@@ -19,11 +19,11 @@ module GrantSubmission
     has_many :sections,         through: :form
     belongs_to :submitter,      class_name: 'User',
                                 foreign_key: 'created_id'
-    has_many :permissions,      dependent: :destroy,
-                                class_name: 'GrantSubmission::Permission',
+    has_many :applicants,       dependent: :destroy,
+                                class_name: 'GrantSubmission::Applicant',
                                 foreign_key: 'grant_submission_submission_id',
                                 inverse_of: :submission
-    has_many :users,            through: :permissions
+    has_many :users,            through: :applicants
 
     has_many :responses,        dependent: :destroy,
                                 class_name: 'GrantSubmission::Response',

@@ -18,7 +18,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
     let(:grant_permission)  { create(:admin_grant_permission, grant: grant)}
     let(:submitter)         { create(:saml_user) }
 
-    let(:draft_submission) { create(:draft_submission_with_responses_with_permission, grant:      grant,
+    let(:draft_submission) { create(:draft_submission_with_responses_with_applicant, grant:      grant,
                                                                                       form:       grant.form,
                                                                                       created_id: submitter.id,
                                                                                       title:      Faker::Lorem.sentence,

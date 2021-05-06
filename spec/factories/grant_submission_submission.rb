@@ -14,9 +14,9 @@ FactoryBot.define do
       user_updated_at { nil }
     end
 
-    trait :with_permission do
+    trait :with_applicant do
       after(:create) do |submission|
-        create(:grant_submission_permission, submission: submission, user: submission.submitter)
+        create(:grant_submission_applicant, submission: submission, user: submission.submitter)
       end
     end
 
@@ -60,10 +60,10 @@ FactoryBot.define do
     end
 
     factory :submission_with_responses,                         traits: %i[with_responses]
-    factory :submission_with_responses_with_permission,         traits: %i[with_permission with_responses]
+    factory :submission_with_responses_with_applicant,          traits: %i[with_applicant with_responses]
     factory :draft_submission,                                  traits: %i[draft]
     factory :draft_submission_with_responses,                   traits: %i[draft with_responses]
-    factory :draft_submission_with_responses_with_permission,   traits: %i[draft with_permission with_responses]
+    factory :draft_submission_with_responses_with_applicant,    traits: %i[draft with_applicant with_responses]
     factory :reviewed_submission,                               traits: %i[with_responses with_review]
   end
 end
