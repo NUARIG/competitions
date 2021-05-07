@@ -26,10 +26,10 @@ class User < ApplicationRecord
                                       source: :grant
 
 
-  has_many   :applicants,             class_name: 'GrantSubmission::Applicant',
-                                      foreign_key: :user_id,
-                                      inverse_of: :user
-  has_many   :submissions,            through: :applicants
+  has_many   :submission_applicants,   class_name: 'GrantSubmission::SubmissionApplicant',
+                                      foreign_key: :applicant_id,
+                                      inverse_of: :applicant
+  has_many   :submissions,            through: :submission_applicants
 
   has_many   :submitted_grants,       through: :submissions,
                                       source: :grant
@@ -42,12 +42,12 @@ class User < ApplicationRecord
   has_many   :grant_creator_requests, foreign_key: :requester_id,
                                       inverse_of: :requester
 
-  validates :uid,               presence: true,
-                                uniqueness: true
-  validates :email,             presence: true,
-                                uniqueness: true
-  validates :first_name,        presence: true
-  validates :last_name,         presence: true
+  validates :uid,                     presence: true,
+                                      uniqueness: true
+  validates :email,                   presence: true,
+                                      uniqueness: true
+  validates :first_name,              presence: true
+  validates :last_name,               presence: true
 
   validates_uniqueness_of :era_commons, unless: -> { era_commons.blank? }
 

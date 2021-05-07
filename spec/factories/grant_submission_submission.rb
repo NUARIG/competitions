@@ -16,7 +16,7 @@ FactoryBot.define do
 
     trait :with_applicant do
       after(:create) do |submission|
-        create(:grant_submission_applicant, submission: submission, user: submission.submitter)
+        create(:grant_submission_submission_applicant, submission: submission, applicant: submission.submitter)
       end
     end
 

@@ -12,29 +12,31 @@ module GrantSubmission
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
                     meta: { grant_id: :grant_id, submitter_id: :created_id }
 
-    belongs_to :grant,          inverse_of: :submissions
-    belongs_to :form,           class_name: 'GrantSubmission::Form',
-                                foreign_key: 'grant_submission_form_id',
-                                inverse_of: :submissions
-    has_many :sections,         through: :form
-    belongs_to :submitter,      class_name: 'User',
-                                foreign_key: 'created_id'
-    has_many :applicants,       dependent: :destroy,
-                                class_name: 'GrantSubmission::Applicant',
-                                foreign_key: 'grant_submission_submission_id',
-                                inverse_of: :submission
-    has_many :users,            through: :applicants
+    belongs_to :grant,                inverse_of: :submissions
+    belongs_to :form,                 class_name: 'GrantSubmission::Form',
+                                      foreign_key: 'grant_submission_form_id',
+                                      inverse_of: :submissions
+    has_many :sections,               through: :form
+    belongs_to :submitter,            class_name: 'User',
+                                      foreign_key: 'created_id'
+    has_many :submission_applicants,  dependent: :destroy,
+                                      class_name: 'GrantSubmission::SubmissionApplicant',
+                                      foreign_key: 'grant_submission_submission_id',
+                                      inverse_of: :submission
+    has_many :applicants,             through: :submission_applicants,
+                                      class_name: 'User',
+                                      foreign_key: :applicant_id
 
-    has_many :responses,        dependent: :destroy,
-                                class_name: 'GrantSubmission::Response',
-                                foreign_key: 'grant_submission_submission_id',
-                                inverse_of: :submission
-    has_many :reviews,          foreign_key: 'grant_submission_submission_id',
-                                inverse_of: :submission
-    has_many :reviewers,        through: :reviews,
-                                source: :reviewer
-    has_many :criteria_reviews, through: :reviews,
-                                inverse_of: :submission
+    has_many :responses,              dependent: :destroy,
+                                      class_name: 'GrantSubmission::Response',
+                                      foreign_key: 'grant_submission_submission_id',
+                                      inverse_of: :submission
+    has_many :reviews,                foreign_key: 'grant_submission_submission_id',
+                                      inverse_of: :submission
+    has_many :reviewers,              through: :reviews,
+                                      source: :reviewer
+    has_many :criteria_reviews,       through: :reviews,
+                                      inverse_of: :submission
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true

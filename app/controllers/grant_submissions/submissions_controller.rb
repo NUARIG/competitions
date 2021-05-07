@@ -55,7 +55,7 @@ module GrantSubmissions
       set_submission
       authorize @submission
       @submission.user_submitted_state = params[:state]
-      result = GrantSubmissionSubmissionServices::New.call(submission: @submission, user: current_user)
+      result = GrantSubmissionSubmissionServices::New.call(submission: @submission, applicant: current_user)
 
       if result.success?
         @submission.update(user_updated_at: Time.now)
