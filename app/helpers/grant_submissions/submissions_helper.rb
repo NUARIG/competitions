@@ -15,6 +15,6 @@ module GrantSubmissions::SubmissionsHelper
   end
 
   def owner(submission)
-    submission.applicant_submissions.exists? ? submission.appplicants : submission.submitter
+    submission.applicant_submissions.exists? ? submission.applicants : submission.submitter
   end
 end

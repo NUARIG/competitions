@@ -19,7 +19,7 @@ module GrantSubmission
     has_many :sections,               through: :form
     belongs_to :submitter,            class_name: 'User',
                                       foreign_key: 'created_id'
-    has_many :submission_applicants,  dependent: :destroy,
+    has_many :submission_applicants,  dependent: :delete_all, # This does not trigger callbacks on the children, so it will not delete any grandchildren if added in the future.
                                       class_name: 'GrantSubmission::SubmissionApplicant',
                                       foreign_key: 'grant_submission_submission_id',
                                       inverse_of: :submission

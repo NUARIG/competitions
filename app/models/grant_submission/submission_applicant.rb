@@ -14,20 +14,20 @@ module GrantSubmission
                               foreign_key: :applicant_id,
                               inverse_of: :submission_applicants
 
-    # before_destroy :prevent_last_permission_destroy, if: -> { is_last_permission? }
+    before_destroy :prevent_last_applicant_destroy, if: -> { is_last_applicant? }
 
     validates :submission,  presence: true
     validates :applicant,   presence: true
 
     private
 
-    # def prevent_last_permission_destroy
-    #   errors.add(:base, 'There must be at least one permission on the submission')
-    #   throw :abort
-    # end
+    def prevent_last_applicant_destroy
+      errors.add(:base, 'There must be at least one applicant on the submission')
+      throw :abort
+    end
 
-    # def is_last_permission?
-    #   submission.permissions.one?
-    # end
+    def is_last_applicant?
+      submission.applicants.one?
+    end
   end
 end

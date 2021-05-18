@@ -5,11 +5,11 @@
   has a new submission for Grant:
   #{ link_to @grant.name, grant_url(@grant) }.
 %p
+  = 'Applicant'.pluralize(@applicants.count) + ':'
+  = full_name_list(@applicants)
+  %br
   Submitter:
   = full_name(@submitter)
-  %br
-  Applicants:
-  = full_name_list(@applicants)
   %br
   Submission:
   = link_to "#{@submission.title}", grant_submission_url(@grant, @submission)

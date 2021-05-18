@@ -10,18 +10,10 @@ module UsersHelper
   end
 
   def full_name_list(users)
-    list = []
-    users.each do |user|
-      list << full_name(user)
-    end
-    list.to_sentence
+    users.map{ |user| full_name(user) }.to_sentence
   end
 
   def sortable_full_name_list(users)
-    list = []
-    users.each do |user|
-      list << sortable_full_name(user)
-    end
-    list.to_sentence(words_connector: '; ')
+    users.map{ |user| full_name(user) }.to_sentence(words_connector: '; ')
   end
 end
