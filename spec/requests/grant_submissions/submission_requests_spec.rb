@@ -7,6 +7,10 @@ RSpec.describe 'grant_submission requests', type: :request do
   let(:submission)   { grant.submissions.first }
 
   context '#show' do
+    before(:each) do
+      sign_in(submission.applicants.first)
+    end
+
     context 'submitted' do
       before(:each) do
         submission.update(state: 'submitted')
@@ -14,7 +18,6 @@ RSpec.describe 'grant_submission requests', type: :request do
 
       context 'kept' do
         it 'sucessfully renders' do
-          sign_in(submission.submitter)
           get grant_submission_path(grant, submission)
 
           expect(response).to have_http_status(:success)
@@ -23,7 +26,6 @@ RSpec.describe 'grant_submission requests', type: :request do
 
       context 'discarded' do
         it 'renders 404', with_errors_rendered: true do
-          sign_in(submission.submitter)
           grant.discard
           get grant_submission_path(grant, submission)
 
@@ -39,7 +41,6 @@ RSpec.describe 'grant_submission requests', type: :request do
 
       context 'kept' do
         it 'sucessfully renders' do
-          sign_in(submission.submitter)
           get grant_submission_path(grant, submission)
 
           expect(response).to have_http_status(:success)
@@ -48,7 +49,6 @@ RSpec.describe 'grant_submission requests', type: :request do
 
       context 'discarded', with_errors_rendered: true do
         it 'renders 404' do
-          sign_in(submission.submitter)
           grant.discard
           get grant_submission_path(grant, submission)
 

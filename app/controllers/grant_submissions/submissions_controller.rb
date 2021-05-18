@@ -55,7 +55,7 @@ module GrantSubmissions
       set_submission
       authorize @submission
       @submission.user_submitted_state = params[:state]
-      result = GrantSubmissionSubmissionServices::New.call(submission: @submission, applicant: current_user)
+      result = GrantSubmissionSubmissionServices::New.call(submission: @submission)
 
       if result.success?
         @submission.update(user_updated_at: Time.now)
@@ -114,7 +114,7 @@ module GrantSubmissions
     end
 
     def submission_redirect(grant, submission)
-      if current_user == submission.submitter
+      if current_user == submission.submitter || submission.applicants.include?(current_user)
         redirect_to profile_submissions_path
       elsif current_user.get_role_by_grant(grant: grant)
         redirect_to grant_submissions_path(grant)

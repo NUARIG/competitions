@@ -5,6 +5,13 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)            { grant.submissions.first }
   let(:submitter)             { submission.submitter }
+  let(:sa_submitter)          { create(:grant_submission_submission_applicant,
+                                        submission: submission,
+                                        applicant: submitter) }
+  let(:applicant)             { create(:saml_user) }
+  let(:sa_applicant)          { create(:grant_submission_submission_applicant,
+                                        submission: submission,
+                                        applicant: applicant) }
   let(:system_admin)          { create(:system_admin_saml_user) }
   let(:grant_admin)           { grant.administrators.first }
   let(:grant_editor)          { grant.administrators.second }
@@ -13,6 +20,13 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:draft_submission)      { create(:draft_submission_with_responses,
                                         grant: grant,
                                         form: grant.form) }
+  let(:draft_sa_submitter)    { create(:grant_submission_submission_applicant,
+                                        submission: draft_submission,
+                                        applicant:  draft_submission.submitter) }
+  let(:draft_applicant)       { create(:saml_user) }
+  let(:draft_sa_applicant)    { create(:grant_submission_submission_applicant,
+                                        submission: draft_submission,
+                                        applicant: draft_applicant) }
   let(:draft_grant)           { create(:draft_grant) }
   let(:other_submission)      { create(:grant_submission_submission, grant: grant) }
   let(:review)                { create(:scored_review_with_scored_mandatory_criteria_review,
@@ -483,6 +497,15 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_text not_authorized_text
         end
       end
+
+      context 'applicant' do
+        scenario 'cannot visit submissions page' do
+          login_user applicant
+          visit grant_submissions_path(grant)
+          expect(page).to have_text not_authorized_text
+        end
+      end
+
     end
 
     context 'search' do
@@ -639,6 +662,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context 'draft' do
         before(:each) do
           login_user draft_submission.submitter
+          draft_sa_submitter
           visit grant_submission_path(draft_submission.grant, draft_submission)
         end
 

@@ -20,6 +20,7 @@ class Review < ApplicationRecord
   has_one  :grant,            through: :submission
   has_many :grant_criteria,   through: :grant,
                               source: :criteria
+  has_many :applicants,       through: :submission
 
   has_many :criteria_reviews, -> { order("criteria_reviews.created_at") },
                               dependent: :destroy
@@ -39,7 +40,7 @@ class Review < ApplicationRecord
 
   validate :reviewer_is_a_grant_reviewer
   validate :assigner_is_a_grant_editor
-  validate :reviewer_is_not_submitter
+  validate :reviewer_is_not_applicant
   validate :reviewer_may_be_assigned,       if: :new_record?
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
@@ -92,8 +93,8 @@ class Review < ApplicationRecord
     errors.add(:assigner, :may_not_add_review) unless Pundit.policy(assigner, grant).grant_editor_access?
   end
 
-  def reviewer_is_not_submitter
-    errors.add(:reviewer, :may_not_review_own_submission) if reviewer == submission.submitter
+  def reviewer_is_not_applicant
+    errors.add(:reviewer, :may_not_review_own_submission) if submission.applicants.include?(reviewer)
   end
 
   def reviewer_may_be_assigned

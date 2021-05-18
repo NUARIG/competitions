@@ -8,7 +8,7 @@ module GrantSubmissions
         if @submission.draft?
           flash[:warning] = 'This submission is already editable.'
         elsif @submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
-          flash[:success] = 'You have changed the status of this submission to Draft. It may now be edited by the submitter.'
+          flash[:success] = 'You have changed the status of this submission to Draft. It may now be edited.'
         else
           flash[:alert]   = @submission.errors.full_messages
         end

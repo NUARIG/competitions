@@ -30,7 +30,7 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def show?
-    grant_viewer_access? || current_user_is_submitter? || current_user_is_reviewer?
+    grant_viewer_access? || current_user_is_applicant? || current_user_is_reviewer?
   end
 
   def create?
@@ -42,7 +42,7 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def update?
-    (grant_editor_access? || current_user_is_submitter?) && submission.draft?
+    (grant_editor_access? || current_user_is_applicant?) && submission.draft?
   end
 
   def edit?
@@ -67,8 +67,12 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     @grant
   end
 
-  def current_user_is_submitter?
-    submission.submitter == user
+  # def current_user_is_submitter?
+  #   submission.submitter == user
+  # end
+
+  def current_user_is_applicant?
+    submission.applicants.include?(user)
   end
 
   def current_user_is_reviewer?

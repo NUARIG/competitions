@@ -60,9 +60,10 @@ module GrantSubmission
     scope :order_by_created_at, -> { order(created_at: :desc) }
     scope :by_grant,            -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned,      -> (max) { where(["reviews_count < ?", max]) }
-    scope :with_reviews,        -> { includes( reviews: [:reviewer, :criteria_reviews]) }
-    scope :with_reviewers,      -> { includes( :reviewers ) }
-    scope :with_submitter,      -> { includes( :submitter ) }
+    scope :with_reviews,        -> { includes(reviews: [:reviewer, :criteria_reviews]) }
+    scope :with_reviewers,      -> { includes(:reviewers) }
+    scope :with_submitter,      -> { includes(:submitter) }
+    scope :with_applicants,     -> { includes(:applicants) }
 
     scope :sort_by_average_overall_impact_score_nulls_last_asc,  -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score ASC NULLS LAST")) }
     scope :sort_by_average_overall_impact_score_nulls_last_desc, -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score DESC NULLS LAST")) }

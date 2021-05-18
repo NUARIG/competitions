@@ -8,7 +8,8 @@ RSpec.describe GrantPermissionMailers::SubmissionMailer, type: :mailer do
     let!(:submission)  { create(:grant_submission_submission, grant: grant) }
     let(:mailer)       { described_class.submitted_notification(grant: grant,
                                                                 recipients: get_recipients,
-                                                                submission: submission)}
+                                                                submission: submission) }
+    let(:submission_applicant) { create(:grant_submission_submission_applicant, submission: submission) }
 
 
     def get_recipients
@@ -45,6 +46,11 @@ RSpec.describe GrantPermissionMailers::SubmissionMailer, type: :mailer do
 
       it "includes the submitter\'s name" do
         expect(mailer.body).to include(full_name(submission.submitter))
+      end
+
+      it "includes the applicant\'s name" do
+        s = submission_applicant
+        expect(mailer.body).to include(full_name(s.applicant))
       end
 
       it 'includes a submission title' do

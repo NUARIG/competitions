@@ -48,8 +48,9 @@ class Grant < ApplicationRecord
 
   has_many   :reviews,              through: :submissions
 
-  has_many   :submitters,           through: :submissions,
-                                    inverse_of: :submitted_grants
+  has_many   :submitters,           through: :submissions
+
+  has_many   :applicants,           through: :submissions
 
   has_many   :criteria,             inverse_of: :grant
 
