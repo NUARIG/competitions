@@ -67,10 +67,6 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     @grant
   end
 
-  # def current_user_is_submitter?
-  #   submission.submitter == user
-  # end
-
   def current_user_is_applicant?
     submission.applicants.include?(user)
   end
