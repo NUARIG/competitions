@@ -27,7 +27,7 @@ module Panels
       end
 
       def set_submission
-        @submission = GrantSubmission::Submission.kept.with_applicant.find(params[:submission_id])
+        @submission = GrantSubmission::Submission.kept.with_submitter.find(params[:submission_id])
       end
     end
   end

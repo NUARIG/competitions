@@ -325,7 +325,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe '#create', js: true do
     before(:each) do
       grant.update(max_reviewers_per_submission: 2)
-      applicant           = submission.applicant
+      submitter           = submission.submitter
     end
 
     context 'draft submission' do
@@ -362,23 +362,23 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
     end
 
     context 'failure' do
-      let(:applicant_reviewer) { create(:grant_reviewer, grant: grant,
-                                                         reviewer: submission.applicant)}
+      let(:submitter_reviewer) { create(:grant_reviewer, grant: grant,
+                                                         reviewer: submission.submitter)}
 
       before(:each) do
         review
-        applicant_reviewer
+        submitter_reviewer
         login_as(grant_admin, scope: :saml_user)
 
         visit grant_reviewers_path(grant)
       end
 
-      scenario 'does not add review when reviewer is applicant' do
+      scenario 'does not add review when reviewer is submitter' do
         submission_to_assign = find_by_id("submission_#{submission.id}")
-        applicant_reviews    = find("#reviews_#{applicant_reviewer.reviewer.id} ul.review_list")
+        submitter_reviews    = find("#reviews_#{submitter_reviewer.reviewer.id} ul.review_list")
 
         expect do
-          submission_to_assign.drag_to applicant_reviews
+          submission_to_assign.drag_to submitter_reviews
           wait_for_ajax
         end.not_to change{grant.reviews.count}
 

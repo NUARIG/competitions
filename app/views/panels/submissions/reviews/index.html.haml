@@ -28,8 +28,8 @@
     %h4
       = @submission.title
     %h5
-      Applicant:
-      = full_name(@submission.applicant)
+      Submitter:
+      = full_name(@submission.submitter)
 
   .cell.small-12.medium-3
     = render partial: 'panels/submissions/card', locals: { submission: @submission, section: 'reviews', grant: @grant }

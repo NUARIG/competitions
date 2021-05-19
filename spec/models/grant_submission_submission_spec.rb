@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe GrantSubmission::Submission, type: :model do
   it { is_expected.to respond_to(:grant) }
   it { is_expected.to respond_to(:form) }
-  it { is_expected.to respond_to(:applicant) }
+  it { is_expected.to respond_to(:submitter) }
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:reviews) }
   it { is_expected.to respond_to(:reviewers) }
@@ -31,10 +31,10 @@ RSpec.describe GrantSubmission::Submission, type: :model do
       expect(submission.errors).to include(:form)
     end
 
-    it 'requires an applicant' do
-      submission.applicant = nil
+    it 'requires a submitter' do
+      submission.submitter = nil
       expect(submission).not_to be_valid
-      expect(submission.errors).to include(:applicant)
+      expect(submission.errors).to include(:submitter)
     end
 
     it 'requires a title' do

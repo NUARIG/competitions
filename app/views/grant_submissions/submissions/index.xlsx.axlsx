@@ -1,4 +1,4 @@
-base_headers = ["Applicant",
+base_headers = ["Submitter",
                 "Email",
                 "Submission Title",
                 "State",
@@ -27,7 +27,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
   response_column_widths = []
 
   @submissions.each_with_index do |submission, row_index|
-    applicant = submission.applicant
+    submitter = submission.submitter
     responses = submission.responses
     response_columns = []
 
@@ -55,8 +55,8 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       response_column_widths << 45
     end
 
-    row = sheet.add_row [ sortable_full_name(applicant),              # A
-                          applicant.email,                            # B
+    row = sheet.add_row [ sortable_full_name(submitter),              # A
+                          submitter.email,                            # B
                           submission.title,                           # C
                           submission.state,                           # D
                           submission.updated_at.to_s(:long_ordinal),  # E

@@ -16,10 +16,11 @@ class Review < ApplicationRecord
                               foreign_key: 'grant_submission_submission_id',
                               counter_cache: true,
                               inverse_of: :reviews
-  has_one  :applicant,        through: :submission
+  has_one  :submitter,        through: :submission
   has_one  :grant,            through: :submission
   has_many :grant_criteria,   through: :grant,
                               source: :criteria
+  has_many :applicants,       through: :submission
 
   has_many :criteria_reviews, -> { order("criteria_reviews.created_at") },
                               dependent: :destroy
@@ -49,7 +50,7 @@ class Review < ApplicationRecord
   scope :with_criteria_reviews,    -> { includes(:criteria_reviews) }
   scope :with_reviewer,            -> { includes(:reviewer) }
   scope :with_grant,               -> { includes(submission: :grant) }
-  scope :with_grant_and_applicant, -> { includes(submission: [:grant, :applicant]) }
+  scope :with_grant_and_submitter, -> { includes(submission: [:grant, :submitter]) }
   scope :by_grant,                 -> (grant) { with_grant.where(grants: { id: grant.id}) }
 
   scope :order_by_created_at,      -> { order(created_at: :desc) }
@@ -93,7 +94,7 @@ class Review < ApplicationRecord
   end
 
   def reviewer_is_not_applicant
-    errors.add(:reviewer, :may_not_review_own_submission) if reviewer == submission.applicant
+    errors.add(:reviewer, :may_not_review_own_submission) if submission.has_applicant?(reviewer)
   end
 
   def reviewer_may_be_assigned

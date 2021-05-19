@@ -54,8 +54,8 @@ RSpec.describe Review, type: :model do
         expect(review).to be_valid
       end
 
-      it 'requires reviewer to not be the applicant' do
-        review.reviewer = grant.submissions.first.applicant
+      it 'requires reviewer to not be the submitter' do
+        review.reviewer = grant.submissions.first.submitter
         expect(review).not_to be_valid
       end
 

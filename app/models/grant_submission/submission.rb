@@ -10,25 +10,33 @@ module GrantSubmission
 
     self.table_name = 'grant_submission_submissions'
     has_paper_trail versions: { class_name: 'PaperTrail::GrantSubmission::SubmissionVersion' },
-                    meta: { grant_id: :grant_id, applicant_id: :created_id }
+                    meta: { grant_id: :grant_id, submitter_id: :created_id }
 
-    belongs_to :grant,          inverse_of: :submissions
-    belongs_to :form,           class_name: 'GrantSubmission::Form',
-                                foreign_key: 'grant_submission_form_id',
-                                inverse_of: :submissions
-    has_many :sections,         through: :form
-    belongs_to :applicant,      class_name: 'User',
-                                foreign_key: 'created_id'
-    has_many :responses,        dependent: :destroy,
-                                class_name: 'GrantSubmission::Response',
-                                foreign_key: 'grant_submission_submission_id',
-                                inverse_of: :submission
-    has_many :reviews,          foreign_key: 'grant_submission_submission_id',
-                                inverse_of: :submission
-    has_many :reviewers,        through: :reviews,
-                                source: :reviewer
-    has_many :criteria_reviews, through: :reviews,
-                                inverse_of: :submission
+    belongs_to :grant,                inverse_of: :submissions
+    belongs_to :form,                 class_name: 'GrantSubmission::Form',
+                                      foreign_key: 'grant_submission_form_id',
+                                      inverse_of: :submissions
+    has_many :sections,               through: :form
+    belongs_to :submitter,            class_name: 'User',
+                                      foreign_key: 'created_id'
+    has_many :submission_applicants,  dependent: :delete_all, # This does not trigger callbacks on the children, so it will not delete any grandchildren if added in the future.
+                                      class_name: 'GrantSubmission::SubmissionApplicant',
+                                      foreign_key: 'grant_submission_submission_id',
+                                      inverse_of: :submission
+    has_many :applicants,             through: :submission_applicants,
+                                      class_name: 'User',
+                                      foreign_key: :applicant_id
+
+    has_many :responses,              dependent: :destroy,
+                                      class_name: 'GrantSubmission::Response',
+                                      foreign_key: 'grant_submission_submission_id',
+                                      inverse_of: :submission
+    has_many :reviews,                foreign_key: 'grant_submission_submission_id',
+                                      inverse_of: :submission
+    has_many :reviewers,              through: :reviews,
+                                      source: :reviewer
+    has_many :criteria_reviews,       through: :reviews,
+                                      inverse_of: :submission
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true
@@ -52,9 +60,10 @@ module GrantSubmission
     scope :order_by_created_at, -> { order(created_at: :desc) }
     scope :by_grant,            -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned,      -> (max) { where(["reviews_count < ?", max]) }
-    scope :with_reviews,        -> { includes( reviews: [:reviewer, :criteria_reviews]) }
-    scope :with_reviewers,      -> { includes( :reviewers ) }
-    scope :with_applicant,      -> { includes( :applicant ) }
+    scope :with_reviews,        -> { includes(reviews: [:reviewer, :criteria_reviews]) }
+    scope :with_reviewers,      -> { includes(:reviewers) }
+    scope :with_submitter,      -> { includes(:submitter) }
+    scope :with_applicants,     -> { includes(:applicants) }
 
     scope :sort_by_average_overall_impact_score_nulls_last_asc,  -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score ASC NULLS LAST")) }
     scope :sort_by_average_overall_impact_score_nulls_last_desc, -> { order(Arel.sql("average_overall_impact_score = 0 nulls last, average_overall_impact_score DESC NULLS LAST")) }
@@ -70,6 +79,16 @@ module GrantSubmission
       # TODO: Figure out policies
       #       HIGH PRIORITY
       # is_root? ? super : parent.available?
+    end
+
+    # CALLBACKS
+    def abort_or_prepare_destroy
+      if self.grant.published?
+        prevent_delete_from_published_grant
+        throw(:abort)
+      else
+        prepare_submission_destroy
+      end
     end
 
     # REVIEWS
@@ -93,13 +112,9 @@ module GrantSubmission
       self.update(composite_score: calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
     end
 
-    def abort_or_prepare_destroy
-      if self.grant.published?
-        prevent_delete_from_published_grant
-        throw(:abort)
-      else
-        prepare_submission_destroy
-      end
+    # USERS
+    def has_applicant?(user)
+      applicants.include?(user)
     end
 
     private

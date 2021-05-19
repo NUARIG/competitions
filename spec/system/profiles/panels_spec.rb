@@ -5,19 +5,19 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
   let(:user)             { create(:user)}
   let!(:editor_grant)    { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "AAA Editor #{Faker::Lorem.sentence}") }
   let!(:reviewer_grant)  { create(:closed_grant_with_users_and_form_and_submission_and_reviewer, name: "ZZZ Reviewer #{Faker::Lorem.sentence}") }
-  let!(:submitted_grant) { create(:closed_grant_with_users_and_form_and_submission_and_reviewer, name: "YYY Applicant #{Faker::Lorem.sentence}") }
+  let!(:submitted_grant) { create(:closed_grant_with_users_and_form_and_submission_and_reviewer, name: "YYY Submitter #{Faker::Lorem.sentence}") }
   let!(:draft_grant)     { create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer, name: "BBB Draft #{Faker::Lorem.sentence}") }
 
   let!(:editor_permission)            { create(:grant_permission, grant: editor_grant, user: user, role: 'editor') }
   let!(:reviewer_role)                { create(:grant_reviewer, grant: reviewer_grant, reviewer: user) }
   let!(:draft_permission)             { create(:grant_permission, grant: draft_grant, user: user, role: 'admin') }
-  let!(:grant_submission_submission)  { create(:submission_with_responses, grant: submitted_grant, applicant: user ) }
+  let!(:grant_submission_submission)  { create(:submission_with_responses, grant: submitted_grant, submitter: user ) }
 
   context 'user without panels' do
     context 'header text' do
       context 'excludes MyPanels' do
-        scenario 'applicant with no roles' do
-          login_user editor_grant.applicants.first
+        scenario 'submitter with no roles' do
+          login_user editor_grant.submitters.first
           visit root_path
 
           expect(page).not_to have_link 'MyPanels'
@@ -33,7 +33,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
 
     context '#index' do
       scenario 'displays no panels message' do
-        login_user editor_grant.applicants.first
+        login_user editor_grant.submitters.first
         visit profile_panels_path
         expect(page).to have_content 'You have no scheduled Review Panels at this time.'
       end

@@ -9,13 +9,13 @@ module GrantSubmissions
       def index
         @grant = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
-        @submission     = GrantSubmission::Submission.includes(:applicant).find(params[:submission_id])
+        @submission     = GrantSubmission::Submission.includes(:submitter).find(params[:submission_id])
         @q              = Review.with_reviewer.with_criteria_reviews.by_submission(@submission).ransack(params[:q])
         @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
         respond_to do |format|
           format.html { render :index }
-          format.pdf  { render pdf:                     "reviews_#{@submission.applicant.last_name}_#{@submission.title.truncate_words(5, omission: '').gsub(/\W/,'-')}",
+          format.pdf  { render pdf:                     "reviews_#{@submission.submitter.last_name}_#{@submission.title.truncate_words(5, omission: '').gsub(/\W/,'-')}",
                                disable_smart_shrinking: true,
                                disable_external_links:  true,
                                disable_internal_links:  true,
@@ -103,7 +103,7 @@ module GrantSubmissions
       def set_review_grant_and_submission
         @grant      = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         @submission = @grant.submissions.kept.find(params[:submission_id])
-        @review     = @submission.reviews.kept.includes(:criteria, submission: :applicant).find(params[:id])
+        @review     = @submission.reviews.kept.includes(:criteria, submission: :submitter).find(params[:id])
       end
 
       def set_redirect_path

@@ -16,13 +16,13 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
   describe 'Published Open Grant', js: true do
     let(:grant)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let(:grant_permission)  { create(:admin_grant_permission, grant: grant)}
-    let(:applicant)         { create(:saml_user) }
+    let(:submitter)         { create(:saml_user) }
 
-    let(:draft_submission) { create(:draft_submission_with_responses, grant:      grant,
-                                                                      form:       grant.form,
-                                                                      created_id: applicant.id,
-                                                                      title:      Faker::Lorem.sentence,
-                                                                      state:      'draft') }
+    let(:draft_submission) { create(:draft_submission_with_responses_with_applicant, grant:      grant,
+                                                                                      form:       grant.form,
+                                                                                      created_id: submitter.id,
+                                                                                      title:      Faker::Lorem.sentence,
+                                                                                      state:      'draft') }
 
     let(:multiple_choice_question)  { grant.questions.where(response_type: 'pick_one').first }
     let(:file_upload_question)      { grant.questions.where(response_type: 'file_upload').first }
@@ -33,9 +33,9 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
     let(:file_upload_question)      { grant.questions.where(response_type: 'file_upload').first }
 
 
-    describe 'as an applicant' do
+    describe 'as an submitter' do
       before(:each) do
-        login_as(applicant, scope: :saml_user)
+        login_as(submitter, scope: :saml_user)
         grant_permission
         visit grant_apply_path(grant)
         find_field('Your Project\'s Title', with: '').set(Faker::Lorem.sentence)
