@@ -8,9 +8,10 @@
   = 'Applicant'.pluralize(@applicants.count) + ':'
   = full_name_list(@applicants)
   %br
-  Submitter:
-  = full_name(@submitter)
-  %br
+  - unless @applicants.include?(@submitter)
+    Submitter:
+    = full_name(@submitter)
+    %br
   Submission:
   = link_to "#{@submission.title}", grant_submission_url(@grant, @submission)
 %p
