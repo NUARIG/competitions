@@ -50,7 +50,10 @@ class Grant < ApplicationRecord
 
   has_many   :submitters,           through: :submissions
 
-  has_many   :applicants,           through: :submissions
+  has_many   :applicants,           class_name: 'User',
+                                    inverse_of: :applied_grants,
+                                    through: :submissions
+
 
   has_many   :criteria,             inverse_of: :grant
 

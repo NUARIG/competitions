@@ -24,6 +24,9 @@ class User < ApplicationRecord
                                       inverse_of: :reviewer
   has_many   :reviewable_grants,      through: :grant_reviewers,
                                       source: :grant
+  has_many   :applied_grants,         class_name: 'Grant',
+                                      inverse_of: :applicants,
+                                      through: :submissions
 
 
   has_many   :submission_applicants,  class_name: 'GrantSubmission::SubmissionApplicant',

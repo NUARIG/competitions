@@ -114,7 +114,7 @@ module GrantSubmissions
     end
 
     def submission_redirect(grant, submission)
-      if current_user == submission.applicants.include?(current_user)
+      if submission.has_applicant?(current_user)
         redirect_to profile_submissions_path
       elsif current_user.get_role_by_grant(grant: grant)
         redirect_to grant_submissions_path(grant)

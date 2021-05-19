@@ -81,6 +81,16 @@ module GrantSubmission
       # is_root? ? super : parent.available?
     end
 
+    # CALLBACKS
+    def abort_or_prepare_destroy
+      if self.grant.published?
+        prevent_delete_from_published_grant
+        throw(:abort)
+      else
+        prepare_submission_destroy
+      end
+    end
+
     # REVIEWS
     def all_scored_criteria
       criteria_reviews.scored.pluck(:score)
@@ -102,13 +112,9 @@ module GrantSubmission
       self.update(composite_score: calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
     end
 
-    def abort_or_prepare_destroy
-      if self.grant.published?
-        prevent_delete_from_published_grant
-        throw(:abort)
-      else
-        prepare_submission_destroy
-      end
+    # USERS
+    def has_applicant?(user)
+      applicants.include?(user)
     end
 
     private

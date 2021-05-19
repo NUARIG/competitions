@@ -94,7 +94,7 @@ class Review < ApplicationRecord
   end
 
   def reviewer_is_not_applicant
-    errors.add(:reviewer, :may_not_review_own_submission) if submission.applicants.include?(reviewer)
+    errors.add(:reviewer, :may_not_review_own_submission) if submission.has_applicant?(reviewer)
   end
 
   def reviewer_may_be_assigned
