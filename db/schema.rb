@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_01_202854) do
+ActiveRecord::Schema.define(version: 2021_02_09_185915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -346,41 +346,16 @@ ActiveRecord::Schema.define(version: 2021_04_01_202854) do
     t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
   end
 
-  create_table "grant_submission_submission_applicant_versions", force: :cascade do |t|
+  create_table "grant_submission_submission_versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.integer "item_id", null: false
-    t.integer "grant_submission_submission_id", null: false
+    t.integer "grant_id", null: false
     t.integer "applicant_id", null: false
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
     t.datetime "created_at", null: false
-    t.index ["applicant_id"], name: "index_gs_submission_applicant_v_on_applicant_id"
-    t.index ["grant_submission_submission_id"], name: "index_gs_submission_applicant_v_on_submission_id"
-    t.index ["item_id"], name: "index_gs_submission_applicant_v_on_item_id"
-    t.index ["whodunnit"], name: "index_gs_submission_applicant_v_on_whodunnit"
-  end
-
-  create_table "grant_submission_submission_applicants", force: :cascade do |t|
-    t.bigint "grant_submission_submission_id", null: false
-    t.bigint "applicant_id", null: false
-    t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["applicant_id"], name: "index_grant_submission_submission_applicants_on_applicant_id"
-    t.index ["grant_submission_submission_id"], name: "i_gssa_on_grant_submission_submission_id"
-  end
-
-  create_table "grant_submission_submission_versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.integer "grant_id", null: false
-    t.integer "submitter_id", null: false
-    t.string "event", null: false
-    t.integer "whodunnit"
-    t.text "object"
-    t.datetime "created_at", null: false
-    t.index ["grant_id", "submitter_id"], name: "index_gs_submission_v_on_grant_id_submitter_id"
+    t.index ["grant_id", "applicant_id"], name: "index_gs_submission_v_on_grant_id_applicant_it"
     t.index ["grant_id"], name: "index_gs_submission_v_on_grant_id"
     t.index ["item_id"], name: "index_gs_submission_v_on_item_id"
     t.index ["whodunnit"], name: "index_gs_submission_v_on_whodunnit"
@@ -543,7 +518,6 @@ ActiveRecord::Schema.define(version: 2021_04_01_202854) do
   add_foreign_key "grant_permissions", "users"
   add_foreign_key "grant_submission_forms", "grants"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
-  add_foreign_key "grant_submission_submission_applicants", "grant_submission_submissions"
   add_foreign_key "panels", "grants"
   add_foreign_key "reviews", "grant_submission_submissions"
 end
