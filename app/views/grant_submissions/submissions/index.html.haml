@@ -58,7 +58,7 @@
             Scores
       %tr
         %th
-          = sort_link(@q, :submitter_last_name, 'Submitter',{}, {title: 'Sort on Submitter'})
+          = sort_link(@q, :submitter_last_name, 'Applicants',{}, {title: 'Sort on Applicants'})
         %th
           = sort_link(@q, :title, 'Title',{}, {title: 'Sort on Title'})
         %th
@@ -83,7 +83,10 @@
 
         %tr.submission{data: { submission: submission.id } }
           %td
-            = link_to sortable_full_name(submitter), grant_submission_path(@grant, submission)
+            - owners(submission).each do |owner|
+              = link_to sortable_full_name(owner), grant_submission_path(@grant, submission)
+              %br
+
           %td
             = link_to submission.title, grant_submission_path(@grant, submission)
           %td

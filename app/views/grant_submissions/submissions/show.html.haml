@@ -29,9 +29,11 @@
     %h4
       = @submission.title
     %h5
-      Submitted By:
-      = "#{@submission.submitter.first_name} #{@submission.submitter.last_name}"
-
+      Applicants:
+      = full_name_list(@submission.applicants)
+    %p
+      Submitter:
+      = full_name(@submission.submitter)
     - if current_user == @submission.submitter && @submission.draft?
       = link_to 'Edit This Submission', edit_grant_submission_path(@grant, @submission), class: 'hollow button secondary'
     - if @submission.reviewers.include?(current_user)

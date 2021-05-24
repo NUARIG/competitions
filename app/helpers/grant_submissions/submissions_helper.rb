@@ -13,4 +13,8 @@ module GrantSubmissions::SubmissionsHelper
                      composite_score:        '-')
     end
   end
+
+  def owners(submission)
+    submission.submission_applicants.exists? ? submission.applicants : Array.wrap(submission.submitter)
+  end
 end

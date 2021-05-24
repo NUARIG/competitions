@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
       member do
         patch 'unsubmit',         to: 'grant_submissions/submissions/unsubmit#update'
+        resources 'submission_applicants', only: %i[index create destroy], controller: 'grant_submissions/submissions/submission_applicants'
       end
       resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews' do
         delete 'opt_out',         to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
