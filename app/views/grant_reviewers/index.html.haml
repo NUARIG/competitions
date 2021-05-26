@@ -42,14 +42,19 @@
       %p
         To remove an assignment, drag the submission from the reviewer's box back to the unassigned submissions box on the right.
       %p
-        Each reviewer may assess up to #{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}.
+        Each reviewer may assess up to
+        = succeed '.' do
+          = link_to "#{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
+
     .cell.small-5.small-offset-2
       %h4
         Unassigned Submissions
       %p
         Drag the unassigned submissions below to the box under the desired reviewer on the left.
       %p
-        Each submission may be assessed by up to #{@grant.max_reviewers_per_submission} reviewers
+        Each submission may be assessed by up to
+        = succeed '.' do
+          = link_to "#{@grant.max_reviewers_per_submission} #{'reviewer'.pluralize(@grant.max_reviewers_per_submission)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
       %p
         Note: Draft submissions are not reviewable.
 
