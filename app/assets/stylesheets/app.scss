@@ -121,6 +121,11 @@ header {
         background-color: #e6e6e6;
       }
     }
+    p {
+      a {
+        &:hover { text-decoration: underline 1px solid; }
+      }
+    }
   }
 
   footer {

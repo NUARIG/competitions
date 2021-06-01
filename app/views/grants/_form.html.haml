@@ -55,16 +55,20 @@
 
 %h3
   Review Settings
-.grid-x
+.grid-x#reviewers
   .cell.small-12.medium-3
     = f.label :max_reviewers_per_submission, 'Maximum Reviewers / Submission', class: 'middle'
   .cell.small-12.medium-9
-    = f.number_field :max_reviewers_per_submission, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true
+    = f.number_field :max_reviewers_per_submission, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true, aria: { 'described-by': 'submissionPerReviewerHelp' }
+    %p.help-text#submissionPerReviewerHelp
+      Each submission may be reviewed by up to this number of reviewers
 .grid-x
   .cell.small-12.medium-3
     = f.label :max_submissions_per_reviewer, 'Maximum Submissions / Reviewer', class: 'middle'
   .cell.small-12.medium-9
-    = f.number_field :max_submissions_per_reviewer, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true
+    = f.number_field :max_submissions_per_reviewer, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true, aria: { 'described-by': 'reviewerPerSubmissionHelp' }
+    %p.help-text#reviewerPerSubmissionHelp
+      Each reviewer may review up to this number of submissions
 
 - unless disable_fields
   .grid-x
