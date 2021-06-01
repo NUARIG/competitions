@@ -32,37 +32,16 @@
     = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date ||= Date.today), required: true, disabled: disable_fields, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
     %p.help-text#publishDateHelp
       When published, your grant will be publicly available on this date.
-
-%h4
-  Submission Period
 .grid-x
   .cell.small-12.medium-3
-    = f.label :submission_open_date, 'Open Date', class: 'middle'
+    = f.label :submission_open_date, 'Submission Open Date', class: 'middle'
   .cell.small-12.medium-9
     = f.text_field :submission_open_date, value: date_mmddyyyy(grant.submission_open_date), placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
-    = f.label :submission_close_date, 'Close Date', class: 'middle'
+    = f.label :submission_close_date, 'Submission Close Date', class: 'middle'
   .cell.small-12.medium-9
     = f.text_field :submission_close_date, value: date_mmddyyyy(grant.submission_close_date), placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
-
-%h3
-  Review Settings
-.grid-x.grid-padding-y
-  .cell
-    = f.label :review_guidance, 'Review Guidance'
-    = f.hidden_field :review_guidance, id: 'grant_review_guidance'
-    %trix-editor(input='grant_review_guidance')
-.grid-x
-  .cell.small-12.medium-3
-    = f.label :max_reviewers_per_submission, 'Maximum Reviewers / Submission', class: 'middle'
-  .cell.small-12.medium-9
-    = f.number_field :max_reviewers_per_submission, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true
-.grid-x
-  .cell.small-12.medium-3
-    = f.label :max_submissions_per_reviewer, 'Maximum Submissions / Reviewer', class: 'middle'
-  .cell.small-12.medium-9
-    = f.number_field :max_submissions_per_reviewer, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_open_date, 'Review Open Date', class: 'middle'
@@ -73,6 +52,19 @@
     = f.label :review_close_date, 'Review Close Date', class: 'middle'
   .cell.small-12.medium-9
     = f.text_field :review_close_date, value: date_mmddyyyy(grant.review_close_date), disabled: disable_fields, class: 'small-12 medium-4'
+
+%h3
+  Review Settings
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :max_reviewers_per_submission, 'Maximum Reviewers / Submission', class: 'middle'
+  .cell.small-12.medium-9
+    = f.number_field :max_reviewers_per_submission, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true
+.grid-x
+  .cell.small-12.medium-3
+    = f.label :max_submissions_per_reviewer, 'Maximum Submissions / Reviewer', class: 'middle'
+  .cell.small-12.medium-9
+    = f.number_field :max_submissions_per_reviewer, min: 1, disabled: disable_fields, class: 'middle small-12 medium-4', required: true
 
 - unless disable_fields
   .grid-x
