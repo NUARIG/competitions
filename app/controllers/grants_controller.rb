@@ -57,7 +57,6 @@ class GrantsController < ApplicationController
     authorize @grant
     if @grant.update(grant_params)
       flash[:notice] = 'Grant was successfully updated.'
-      # redirect_to grant_path(@grant)
       redirect_back(fallback_location: grant_path(@grant))
     else
       flash.now[:alert] = @grant.errors.full_messages
