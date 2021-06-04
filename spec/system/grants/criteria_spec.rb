@@ -24,9 +24,9 @@ RSpec.describe 'Criteria', type: :system, js: true do
       scenario 'it deletes a criterion' do
         expect do
           find('.remove', match: :first).click
-          click_button 'Save'
+          click_button 'Save Changes'
         end.to change{grant.criteria.count}.by(-1)
-        expect(page).to have_content 'Criteria updated'
+        expect(page).to have_content 'Review form and criteria updated.'
       end
 
       scenario 'adds a criterion form to the page' do

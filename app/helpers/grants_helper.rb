@@ -11,7 +11,7 @@ module GrantsHelper
       { (grant.published? ? 'View' : 'Preview') => grant_path(grant),
         'Overview'            => edit_grant_path(grant),
         'Submission Form' => edit_grant_form_path(grant, grant.form),
-        'Review Criteria' => criteria_grant_path(grant),
+        'Review Form'     => criteria_grant_path(grant),
         'Submissions'     => grant_submissions_path(grant),
         'Reviewers'       => grant_reviewers_path(grant),
         'Reviews'         => grant_reviews_path(grant),
@@ -21,7 +21,7 @@ module GrantsHelper
       { 'View'            => grant_path(grant),
         'Overview'        => edit_grant_path(grant),
         'Submission Form' => edit_grant_form_path(grant, grant.form),
-        'Review Criteria' => criteria_grant_path(grant),
+        'Review Form'     => criteria_grant_path(grant),
         'Submissions'     => grant_submissions_path(grant),
         'Reviews'         => grant_reviews_path(grant),
         'Permissions'     => grant_grant_permissions_path(grant) }

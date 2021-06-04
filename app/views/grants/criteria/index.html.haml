@@ -1,8 +1,8 @@
-- content_for(:page_title, 'Edit Review Criteria')
+- content_for(:page_title, 'Edit Review Form')
 
 - disable_fields = !policy(@grant).grant_editor_access?
 
-= render 'shared/grant_header', { grant: @grant, section_title: 'Review Criteria' }
+= render 'shared/grant_header', { grant: @grant, section_title: 'Review Form' }
 
 .grid-x
   .small-12.cell
@@ -19,41 +19,48 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  .grid-x
-    .cell.small-12
-      %p
-        %em
-          Reviewers will use the criteria defined on this page to assess their assigned submissions. You may also provide instructions and guidelines to help them score the submissions.
-      %p
-        %em
-          Scoring matches the NIH's #{link_to '9-point scale', 'https://grants.nih.gov/grants/policy/review/rev_prep/scoring.htm'} as shown below.
-
-  .grid-x
-    .button-group
-      %label.scoring-guidance
-        Exceptional
-      - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
-        .score_value
-          = radio_button_tag 'overall_impact_score', value
-          = label_tag "#{value}", nil, class: 'button', for: "example-#{value}"
-      %label.scoring-guidance
-        Poor
-
-  %hr
   = form_for @grant, url: update_criteria_grant_path(@grant) do |f|
-    #criteria.grid-x
+    .grid-x
       .cell
-        = f.fields_for :criteria, @criteria do |criterion|
-          = render partial: 'criterion_fields', locals: { f: criterion }
+        = render partial: 'grants/review_guidance', locals: { f: f }
 
-    - unless disable_fields
-      .links
-        = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small'
+    %hr
+    .grid-x
+      .cell.small-12
+        %h4
+          Criteria
+        %p
+          %em
+            Reviewers will use the criteria defined on this page to assess their assigned submissions.
+        %p
+          %em
+            Scoring matches the NIH's #{link_to '9-point scale', 'https://grants.nih.gov/grants/policy/review/rev_prep/scoring.htm'} as shown below.
+
+    .grid-x
+      .button-group
+        %label.scoring-guidance
+          Exceptional
+        - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
+          .score_value
+            = radio_button_tag 'overall_impact_score', value
+            = label_tag "#{value}", nil, class: 'button', for: "example-#{value}"
+        %label.scoring-guidance
+          Poor
+
+    %hr
+      #criteria.grid-x
+        .cell
+          = f.fields_for :criteria, @criteria do |criterion|
+            = render partial: 'criterion_fields', locals: { f: criterion }
+
+      - unless disable_fields
+        .links
+          = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small'
 
 
-      .cell.overall_impact_score
-        = render partial: 'overall_impact_fields'
+        .cell.overall_impact_score
+          = render partial: 'overall_impact_fields'
 
 
-      .cell
-        = f.submit 'Save Changes', class: 'button'
+        .cell
+          = f.submit 'Save Changes', class: 'button'
