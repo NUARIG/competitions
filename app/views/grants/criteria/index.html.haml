@@ -1,8 +1,8 @@
-- content_for(:page_title, 'Edit Review Criteria')
+- content_for(:page_title, 'Edit Review Form')
 
 - disable_fields = !policy(@grant).grant_editor_access?
 
-= render 'shared/grant_header', { grant: @grant, section_title: 'Review Criteria' }
+= render 'shared/grant_header', { grant: @grant, section_title: 'Review Form' }
 
 .grid-x
   .small-12.cell
