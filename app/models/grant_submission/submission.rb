@@ -40,6 +40,7 @@ module GrantSubmission
 
 
     accepts_nested_attributes_for :responses, allow_destroy: true
+    accepts_nested_attributes_for :submission_applicants, allow_destroy: true
 
     SUBMISSION_STATES     = { draft:     'draft',
                               submitted: 'submitted'}.freeze

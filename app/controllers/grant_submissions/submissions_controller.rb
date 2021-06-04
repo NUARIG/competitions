@@ -175,8 +175,13 @@ module GrantSubmissions
                          :datetime_val,
                          :document,
                          :remove_document,
-                         :_destroy
-                       ])
+                         :_destroy],
+                       submission_applicants_attributes: [
+                         :id,
+                         :grant_submission_submission_id,
+                         :applicant_id
+                       ]
+                       )
     end
   end
 end

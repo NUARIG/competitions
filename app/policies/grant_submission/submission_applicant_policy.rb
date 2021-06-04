@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GrantSubmission::SubmissionPolicy < ApplicationPolicy
+class GrantSubmission::SubmissionApplicantPolicy < SubmissionPolicy
   attr_reader :user, :grant
   include GrantRoleAccess
 
