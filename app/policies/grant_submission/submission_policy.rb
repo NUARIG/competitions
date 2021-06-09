@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GrantSubmission::SubmissionPolicy < ApplicationPolicy
-  attr_reader :user, :grant
+  # attr_reader :user, :grant
   include GrantRoleAccess
 
   def initialize(context, record)

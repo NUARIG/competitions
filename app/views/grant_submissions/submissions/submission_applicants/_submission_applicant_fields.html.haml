@@ -1,0 +1,27 @@
+/ - disable_fields = !policy(@submission).update?
+
+.grid-x
+  = link_to 'Add or Remove Applicants', new_grant_submission_submission_applicant_path(@grant, @submission)
+  / Add Applicant by Email Address
+  / %div{ style: 'display: inline-block' }
+  /   = form_for :grant_submission_submission_applicant, url: grant_submission_submission_applicants_path(@grant, @submission) do |f|
+  /     .input-group
+  /       = f.email_field :applicant_email, placeholder: 'Email', class: 'input-group-field'
+  /       .input-group-button
+  /         = f.submit 'Look Up', class: 'button small'
+
+.nested-fields
+  .field
+    %table
+      %thead
+        %tr
+          %th Name
+          %th Email
+      %tbody
+        - @submission.submission_applicants.each do |sub_app|
+        - applicant = sub_app.applicant
+          %tr
+            %td= full_name(applicant)
+            %td= applicant.email
+
+
