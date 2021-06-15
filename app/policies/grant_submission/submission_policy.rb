@@ -3,6 +3,7 @@
 class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   # attr_reader :user, :grant
   include GrantRoleAccess
+  include GrantSubmission::SubmissionRoleAccess
 
   def initialize(context, record)
     @user   = context.user
@@ -22,9 +23,9 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
 
     def resolve
       if user.in?(@grant.administrators) || user.system_admin?
-        GrantSubmission::Submission.includes(:submitter, :reviews).where(grant_id: @grant.id)
+        GrantSubmission::Submission.includes(:reviews, :applicants).where(grant_id: @grant.id)
       else
-        scope.where(submitter: user)
+        GrantSubmission::Submission.includes(:applicants).where(users: { id: user.id })
       end
     end
   end
@@ -67,11 +68,11 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     record.grant # @grant
   end
 
-  def current_user_is_applicant?
-    submission.applicants.include?(user)
-  end
+  # def current_user_is_applicant?
+  #   submission.applicants.include?(user)
+  # end
 
-  def current_user_is_reviewer?
-    submission.reviewers.include?(user)
-  end
+  # def current_user_is_reviewer?
+  #   submission.reviewers.include?(user)
+  # end
 end

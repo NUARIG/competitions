@@ -20,7 +20,7 @@
         Applicants
 
 .grid-x
-  Add Applicant by Email Address
+  Add Applicant by Email Address.
   %div{ style: 'display: inline-block' }
     = form_for :grant_submission_submission_applicant, url: grant_submission_submission_applicants_path(@grant, @submission) do |f|
       .input-group
@@ -43,20 +43,7 @@
             %td= full_name(applicant)
             %td= applicant.email
             %td= button_to "Remove", grant_submission_submission_applicant_path(@grant, @submission, sub_app), method: :delete, class: 'button tiny hollow alert remove', data: { confirm: "Are you sure you want to remove #{full_name(applicant)} from this submission?" }
-/ .grid-x
-/   .cell
-/     = form_with model: [@grant, @grant_permission], local: true do |f|
-/       = render 'new_form', f: f, grant: @grant, users: @users
 
-/ .grid-x.grid-padding-x
-/   .cell.small-12.medium-6
-/     = f.label :user_id, 'Add a Applicant by Email Address'
-/     = f.select(:user_id, [], { include_blank: true }, data: { users_query_source: users_query_grant_grant_permissions_path(grant_id: @grant.id) })
-/   .cell.small-12.medium-4
-/     = f.label :role, 'Grant Role'
-/     = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
-/ .grid-x
-/   .actions
-/     = f.hidden_field :grant_id, value: grant.id
-/     = f.submit 'Save', class: 'button'
-/     = link_to 'Cancel', grant_grant_permissions_path, class: 'button secondary'
+.grid-x
+  .actions
+    = link_to 'Cancel', edit_grant_submission_path(@grant, @submission), class: 'button secondary'
