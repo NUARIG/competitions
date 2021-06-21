@@ -2,11 +2,10 @@
 module GrantSubmissions
   module Submissions
     class SubmissionApplicantsController < GrantBaseController
+      skip_after_action :verify_policy_scoped, only: %i[index]
       before_action     :set_submission_and_grant
 
-
       def index
-        skip_policy_scope
         authorize @submission, :edit?
         @submission_applicants = @submission.submission_applicants.includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
       end
