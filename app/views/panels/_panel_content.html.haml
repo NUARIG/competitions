@@ -16,7 +16,8 @@
           Average Scores
       %tr
         %th{width: 200}
-          = sort_link(@q, :submitter_last_name, 'Submitter')
+          / = sort_link(@q, :applicants_last_name, 'Submitter')
+          = sort_link(@q, :applicants_last_name, 'Applicants',{}, {title: 'Sort on Applicants'})
         %th
           = sort_link(@q, :title, 'Submission')
         %th{width: 150}
@@ -31,8 +32,12 @@
     - @submissions.each do |submission|
       - review_data = review_data(submission)
       %tr.submission{ data: { submission: submission.id } }
-        %td.submitter{ data: { submitter: submission.submitter.id } }
-          = sortable_full_name(submission.submitter)
+        / %td.submitter{ data: { submitter: submission.submitter.id } }
+        %td.submitter{ data: { applicants: submission.applicants.map(&:id.to_proc) } }
+          / = sortable_full_name(submission.submitter)
+          - submission.applicants.each do |applicant|
+            = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+            %br
         %td.title{ data: { title: submission.id } }
           = link_to submission.title, grant_panel_submission_path(@grant, submission)
         %td.reviews

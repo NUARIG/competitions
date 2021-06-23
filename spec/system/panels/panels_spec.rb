@@ -330,11 +330,11 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
     end
 
-    context 'submitter last_name' do
+    context 'applicants last_name' do
       scenario 'sorts on last_name' do
         visit grant_panel_path(grant)
         # ascending first
-        click_link 'Submitter'
+        click_link 'Applicants'
         within 'tr.submission:nth-child(1)' do
           expect(page).to have_text @high_scored_submission.title
         end
@@ -343,7 +343,7 @@ RSpec.describe 'Panels', type: :system, js: true do
         end
 
         # descending
-        click_link 'Submitter'
+        click_link 'Applicants'
         within 'tr.submission:nth-child(1)' do
           expect(page).to have_text @low_scored_submission.title
         end

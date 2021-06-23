@@ -12,7 +12,7 @@ module GrantSubmissions
         else
           @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
           @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-          @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.submission')
+          @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
         end
       else
         skip_policy_scope

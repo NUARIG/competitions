@@ -5,11 +5,12 @@
   .cell.small-12.medium-9
     = f.text_field(attribute: :title)
 
-.grid-x
-  .cell.small-12
-    %fieldset.fieldset
-      %legend= 'Applicants'
-      = render partial: 'grant_submissions/submissions/submission_applicants/submission_applicant_fields', locals: { submission: @submission, f: f }
+- if params[:action] == 'edit'
+  .grid-x
+    .cell.small-12
+      %fieldset.fieldset
+        %legend= 'Applicants'
+        = render partial: 'grant_submissions/submissions/submission_applicants/submission_applicant_fields', locals: { submission: @submission, f: f }
 
 - @submission.form.sections.sort_by(&:display_order).each do |section|
   .grid-x
