@@ -1,0 +1,11 @@
+/ .nested-fields
+/   .field
+.grid-x.grid-padding-y
+  .cell
+    %h4
+      = f.label :review_guidance, 'Review Guidance'
+    %p
+      %em
+        You may optionally provide instructions and guidelines to help reviewers score the submission.
+    = f.hidden_field :review_guidance, id: 'review_guidance'
+    %trix-editor(input='review_guidance')
