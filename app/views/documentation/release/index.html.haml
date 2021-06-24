@@ -6,6 +6,27 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.11 (June 23, 2021)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Add anchor link to change reviewer counts.
+            #{github_issue_link(issue: 815)}
+          %li
+            Move Review Guidance from Overview to Review Criteria tab.
+            #{github_issue_link(issue: 817)}
+          %li
+            Add help text to Review Guidance.
+            #{github_issue_link(issue: 816)}
+          %li
+            Change config examples to reflect the test env saml idp suggested in the new wiki.
+            #{github_issue_link(issue: 816)}
+            %br
+            = link_to "https://github.com/NUARIG/competitions/wiki/Installation-and-configuration-of-test-saml-idp"
+
+%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.10 (April 22, 2021)
     .accordion-content{"data-tab-content" => ""}
       %p
