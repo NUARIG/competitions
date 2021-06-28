@@ -6,8 +6,8 @@
   %td.small
     = user.saml_user? ? 'SAML User' : 'Registered User'
   %td.small
-    = date_mmddyyyy(user.created_at)
+    = time_tag(datetime: user.created_at.to_date)
   %td.small
-    = time_ago_in_words(user.current_sign_in_at) if user.current_sign_in_at.present?
+    = time_ago_tag(datetime: user.current_sign_in_at) if user.current_sign_in_at.present?
   %td.small
     = link_to 'Edit', edit_user_path(user)

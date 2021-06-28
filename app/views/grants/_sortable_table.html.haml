@@ -18,9 +18,9 @@
       %tr{ data: { grant: grant.id } }
         %td= link_to grant.name, grant
         %td= grant.state.titleize
-        %td= grant.publish_date
-        %td= grant.submission_open_date
-        %td= grant.submission_close_date
+        %td= time_tag(datetime: grant.publish_date)
+        %td= time_tag(datetime: grant.submission_open_date)
+        %td= time_tag(datetime: grant.submission_close_date)
         - if policy(grant).edit?
           = render 'grants/manage_links', { grant: grant}
         - else

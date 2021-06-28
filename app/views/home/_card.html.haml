@@ -7,13 +7,12 @@
       .date
         %strong
           Announced:
-        .publish-date
-          = grant.publish_date
+        = time_tag(datetime: grant.publish_date, css_class: 'publish-date')
       .date
         %strong
           Submission Period:
         .submission-period
-          = grant.submission_period
+          = submission_period(grant: grant)
   .card-divider.grant-links
     %ul.menu
       = grant.show_menu_link

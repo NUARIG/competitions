@@ -2,8 +2,8 @@
   %td.email
     = invitation.email
   %td.created
-    = date_mmddyyyy(invitation.created_at)
+    = time_tag(datetime: invitation.created_at.to_date)
   %td.confirmation
-    = (invitation.confirmed_at.nil?) ? '-' : date_mmddyyyy(invitation.confirmed_at)
+    = (invitation.confirmed_at.nil?) ? '-' : time_tag(datetime: invitation.confirmed_at)
   %td.inviter
     = full_name(invitation.inviter)

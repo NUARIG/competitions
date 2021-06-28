@@ -6,25 +6,21 @@
       %dt
         Publish Date:
       %dd
-        = grant.publish_date
+        = time_tag(datetime: grant.publish_date)
       %dt
         Submission Period:
       %dd
-        %span.open
-          #{grant.submission_open_date.to_formatted_s(:short_format)}
-        &mdash;
-        %span.close
-          #{grant.submission_close_date.to_formatted_s(:short_format)}
+        = submission_period(grant: grant)
       - if current_user.present?
         - if grant.panel.start_datetime? && (current_user.get_role_by_grant(grant: grant).present? || grant.reviewers.include?(current_user))
           %dt
             Panel Start:
           %dd
-            = grant.panel.start_datetime
+            = time_tag(datetime: grant.panel.start_datetime)
           %dt
             Panel End:
           %dd
-            = grant.panel.end_datetime
+            = time_tag(datetime: grant.panel.end_datetime)
           %hr
             .text-center
               = link_to 'View Panel', grant_panel_path(grant)

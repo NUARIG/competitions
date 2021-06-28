@@ -13,8 +13,13 @@
   %tbody
     - @banners.each do |banner|
       %tr
-        %td= truncate(strip_tags(banner.body), length: 64, separator: ' ')
-        %td= banner.visible
-        %td= banner.created_at
-        %td= link_to 'Edit', edit_banner_path(banner) if policy(banner).edit?
-        %td= link_to 'Delete', banner, method: :delete, data: { confirm: 'Are you sure you want to delete this banner entirely? To take it down without deleting it, uncheck the Visible box on the edit page.' } if policy(banner).destroy?
+        %td
+          = truncate(strip_tags(banner.body), length: 64, separator: ' ')
+        %td
+          = banner.visible
+        %td
+          = time_tag(datetime: banner.created_at)
+        %td
+          = link_to 'Edit', edit_banner_path(banner) if policy(banner).edit?
+        %td
+          = link_to 'Delete', banner, method: :delete, data: { confirm: 'Are you sure you want to delete this banner entirely? To take it down without deleting it, uncheck the Visible box on the edit page.' } if policy(banner).destroy?
