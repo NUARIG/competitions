@@ -30,4 +30,8 @@ module GrantsHelper
         'Apply'       => grant_apply_path(grant, grant.form) }
     end
   end
+
+  def submission_period(grant:)
+    "#{time_tag(datetime: grant.submission_open_date, css_class: 'open')} &mdash; #{time_tag(datetime: grant.submission_close_date, css_class: 'close')}".html_safe
+  end
 end

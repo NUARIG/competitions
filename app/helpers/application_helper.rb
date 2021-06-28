@@ -38,9 +38,22 @@ module ApplicationHelper
   end
 
   def date_time_separate_lines(date)
-    date.blank? ? '' : date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe
+    date.blank? ? '' : content_tag(:time, date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe, datetime: date.to_formatted_s(:machine))
   end
 
+  def time_tag(datetime:, css_class: '')
+    content_tag(:time, datetime, set_time_tag_attributes(datetime: datetime, css_class: css_class))
+  end
+
+  def time_ago_tag(datetime:, css_class: '')
+    content_tag(:time, time_ago_in_words(datetime), set_time_tag_attributes(datetime: datetime, css_class: css_class) )
+  end
+
+  def set_time_tag_attributes(datetime:, css_class: '')
+    tag_options = { datetime: datetime.to_formatted_s(:machine) }
+    tag_options[:class] = css_class if css_class.present?
+    tag_options
+  end
   # Exports
   def prepare_excel_worksheet_name(sheet_name:)
     sheet_name.gsub(/\\/, '').gsub(/[\/*\[\]:?]/, '').truncate(31, omission: '')
