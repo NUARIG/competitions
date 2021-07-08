@@ -18,7 +18,7 @@
         %td
           = banner.visible
         %td
-          = time_tag(datetime: banner.created_at)
+          = time_tag(banner.created_at, banner.created_at.to_formatted_s(:default))
         %td
           = link_to 'Edit', edit_banner_path(banner) if policy(banner).edit?
         %td

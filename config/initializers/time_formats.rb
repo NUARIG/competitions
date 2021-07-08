@@ -13,3 +13,7 @@ Date::DATE_FORMATS[:machine] = '%Y-%m-%d'
 Time::DATE_FORMATS[:default] = '%m/%d/%Y %l:%M%P'
 # Machine: YYYY-MM-DD
 Time::DATE_FORMATS[:machine] = '%Y-%m-%d %T'
+# date_only
+Time::DATE_FORMATS[:date_only] = '%m/%d/%Y'
+# short_date_only: -M/-D/YY
+Time::DATE_FORMATS[:short_date_only] = '%-m/%-d/%y'

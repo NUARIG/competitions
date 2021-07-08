@@ -32,6 +32,6 @@ module GrantsHelper
   end
 
   def submission_period(grant:)
-    "#{time_tag(datetime: grant.submission_open_date, css_class: 'open')} &mdash; #{time_tag(datetime: grant.submission_close_date, css_class: 'close')}".html_safe
+    "#{time_tag(grant.submission_open_date.beginning_of_day, grant.submission_open_date, class: 'open')} &mdash; #{time_tag(grant.submission_close_date.end_of_day, grant.submission_close_date, class: 'close')}".html_safe
   end
 end

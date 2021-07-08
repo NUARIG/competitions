@@ -53,8 +53,8 @@
           %td
             = link_to_if grant_published, truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
           %td
-            = time_tag(datetime: review.created_at)
+            = time_tag(review.created_at, review.created_at.to_formatted_s(:default))
           %td
-            = time_tag(datetime: review.grant.review_close_date)
+            = time_tag(review.grant.review_close_date.end_of_day, review.grant.review_close_date.to_formatted_s(:default))
 
   != pagy_foundation_nav(@pagy)

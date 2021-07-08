@@ -37,8 +37,8 @@
           %td
             = link_to grant.name, grant_panel_path(grant)
           %td
-            = time_tag(datetime: grant.review_close_date)
+            = time_tag(grant.review_close_date.end_of_day, grant.review_close_date.end_of_day.to_formatted_s(:date_only))
           %td
-            = time_tag(datetime: grant.panel.start_datetime) || 'Not Scheduled'
+            = grant.panel.start_datetime.present? ? time_tag(grant.panel.start_datetime, grant.panel.start_datetime.to_formatted_s(:default)) : 'Not Scheduled'
 
   != pagy_foundation_nav(@pagy_a)

@@ -43,7 +43,7 @@
           %td
             = submission.state.titleize
           %td
-            = time_tag(datetime: submission.updated_at)
+            = time_tag(submission.updated_at, submission.updated_at.to_formatted_s(:default))
           %td
             - unless submission.submitted?
               = link_to 'Edit', edit_grant_submission_path(submission.grant, submission), class: 'button clear'
