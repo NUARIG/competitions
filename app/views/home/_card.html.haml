@@ -1,21 +1,19 @@
-.card{id: "grant_#{grant.id}"}
+.card{ id: "grant_#{grant.id}" }
   .card-section.grant-name
-    %h4.name{class: grant.name_length_class}
+    %h4.name{ class: grant.name_length_class }
       = link_to grant.name, grant_path(grant)
   .card-section.grant-dates
     .dates
       .date
         %strong
           Announced:
-        .publish-date
-          = grant.publish_date
+        = time_tag(grant.publish_date.beginning_of_day, grant.publish_date.beginning_of_day.to_formatted_s(:date_only), class: 'publish-date')
       .date
         %strong
           Submission Period:
         .submission-period
-          = grant.submission_period
+          = submission_period(grant: grant)
   .card-divider.grant-links
     %ul.menu
       = grant.show_menu_link
-      =# grant.apply_menu_link
       = grant.edit_menu_link

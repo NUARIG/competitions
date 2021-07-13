@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_19_162605) do
+ActiveRecord::Schema.define(version: 2021_07_12_151209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,7 +33,14 @@ ActiveRecord::Schema.define(version: 2021_03_19_162605) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "audit_actions", force: :cascade do |t|
@@ -346,6 +353,31 @@ ActiveRecord::Schema.define(version: 2021_03_19_162605) do
     t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
   end
 
+  create_table "grant_submission_submission_applicant_versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.integer "grant_submission_submission_id", null: false
+    t.integer "applicant_id", null: false
+    t.string "event", null: false
+    t.integer "whodunnit"
+    t.text "object"
+    t.datetime "created_at", null: false
+    t.index ["applicant_id"], name: "index_gs_submission_applicant_v_on_applicant_id"
+    t.index ["grant_submission_submission_id"], name: "index_gs_submission_applicant_v_on_submission_id"
+    t.index ["item_id"], name: "index_gs_submission_applicant_v_on_item_id"
+    t.index ["whodunnit"], name: "index_gs_submission_applicant_v_on_whodunnit"
+  end
+
+  create_table "grant_submission_submission_applicants", force: :cascade do |t|
+    t.bigint "grant_submission_submission_id", null: false
+    t.bigint "applicant_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["applicant_id"], name: "index_grant_submission_submission_applicants_on_applicant_id"
+    t.index ["grant_submission_submission_id"], name: "i_gssa_on_grant_submission_submission_id"
+  end
+
   create_table "grant_submission_submission_versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.integer "item_id", null: false
@@ -512,12 +544,14 @@ ActiveRecord::Schema.define(version: 2021_03_19_162605) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "criteria_reviews", "criteria"
   add_foreign_key "criteria_reviews", "reviews"
   add_foreign_key "grant_permissions", "grants"
   add_foreign_key "grant_permissions", "users"
   add_foreign_key "grant_submission_forms", "grants"
   add_foreign_key "grant_submission_questions", "grant_submission_sections"
+  add_foreign_key "grant_submission_submission_applicants", "grant_submission_submissions"
   add_foreign_key "panels", "grants"
   add_foreign_key "reviews", "grant_submission_submissions"
 end
