@@ -29,8 +29,9 @@
     %h4
       = @submission.title
     %h5
-      Applicants:
-      = full_name_list(@submission.applicants)
+      - applicants = @submission.applicants
+      = 'Applicant'.pluralize(applicants.count) + ':'
+      = full_name_list(applicants)
     %p
       Submitter:
       = full_name(@submission.submitter)

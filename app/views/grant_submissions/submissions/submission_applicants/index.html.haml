@@ -39,7 +39,7 @@
       %tbody
         - @submission.submission_applicants.each do |sub_app|
         - applicant = sub_app.applicant
-          %tr
+          %tr{ id: "row_applicant_" + sub_app.id.to_s }
             %td= full_name(applicant)
             %td= applicant.email
             %td= button_to "Remove", grant_submission_submission_applicant_path(@grant, @submission, sub_app), method: :delete, class: 'button tiny hollow alert remove', data: { confirm: "Are you sure you want to remove #{full_name(applicant)} from this submission?" }
