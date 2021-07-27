@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GrantSubmission::SubmissionPolicy < ApplicationPolicy
-  # attr_reader :user, :grant
   include GrantRoleAccess
   include GrantSubmission::SubmissionRoleAccess
 
@@ -65,14 +64,6 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def grant
-    record.grant # @grant
+    record.grant
   end
-
-  # def current_user_is_applicant?
-  #   submission.applicants.include?(user)
-  # end
-
-  # def current_user_is_reviewer?
-  #   submission.reviewers.include?(user)
-  # end
 end

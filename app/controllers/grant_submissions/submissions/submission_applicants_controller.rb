@@ -18,11 +18,10 @@ module GrantSubmissions
 
         if user.nil?
           flash[:alert] = "Could not find a user with the email: #{email}."
-          # #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant, email: email), method: :post, data: { confirm: "An email will be sent to #{email}. You will be notified when they accept or opt out."} }"
         else
           submission_applicant = GrantSubmission::SubmissionApplicant.create(submission: @submission, applicant: user)
           if submission_applicant.errors.none?
-            flash[:success] = "Added #{helpers.full_name(submission_applicant.applicant)} as applicant."
+            flash[:success] = "#{helpers.full_name(submission_applicant.applicant)} was added as applicant on #{@submission.title}."
           else
             flash[:alert]   = submission_applicant.errors.full_messages
           end
@@ -34,16 +33,17 @@ module GrantSubmissions
 
       def destroy
         authorize @submission, :edit?
-        applicant = GrantSubmission::SubmissionApplicant.find(params[:id])
+        submission_applicant = GrantSubmission::SubmissionApplicant.find(params[:id])
+        applicant = submission_applicant.applicant
 
-        if applicant.nil?
+        if submission_applicant.nil?
           flash[:alert] = 'Applicant could not be found.'
         else
-          if applicant.destroy
-            flash[:notice] = 'Applicant was deleted.'
+          if submission_applicant.destroy
+            flash[:notice] = "#{helpers.full_name(applicant)} is no longer an applicant on #{@submission.title}."
             redirect_to grant_submission_submission_applicants_path(@grant, @submission)
           else
-            flash[:error] = applicant.errors.to_a
+            flash[:error] = submission_applicant.errors.to_a
             redirect_to grant_submission_submission_applicants_path(@grant, @submission)
           end
         end

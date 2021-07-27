@@ -312,7 +312,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
         login_as(admin, scope: :saml_user)
       end
 
-      context 'grant submissions index' do
+      context 'grant submissions' do
         describe '#index', js: true do
           before(:each) do
             visit grant_submissions_path(open_grant)
@@ -399,7 +399,8 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               accept_alert do
                 find('tr', id: "row_applicant_" + draft_sa_applicant_02.id.to_s).click_button("Remove")
               end
-              expect(page).not_to have_text(draft_applicant_02.last_name)
+              expect(page).to have_text("#{draft_applicant_02.first_name} #{draft_applicant_02.last_name} is no longer an applicant on #{draft_submission.title}.")
+              expect(page).not_to have_text(draft_applicant_02.email)
             end
 
             scenario 'can add an applicant' do
@@ -408,6 +409,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               expect(page).not_to have_text(new_applicant.email)
               find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
               click_button 'Look Up'
+              expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
               expect(page).to have_text(new_applicant.email)
             end
           end
@@ -420,7 +422,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
         login_as(editor, scope: :saml_user)
       end
 
-      context 'grant submissions index' do
+      context 'grant submissions' do
         describe '#index', js: true do
           before(:each) do
             visit grant_submissions_path(open_grant)
@@ -507,7 +509,8 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               accept_alert do
                 find('tr', id: "row_applicant_" + draft_sa_applicant_02.id.to_s).click_button("Remove")
               end
-              expect(page).not_to have_text(draft_applicant_02.last_name)
+              expect(page).to have_text("#{draft_applicant_02.first_name} #{draft_applicant_02.last_name} is no longer an applicant on #{draft_submission.title}.")
+              expect(page).not_to have_text(draft_applicant_02.email)
             end
 
             scenario 'can add an applicant' do
@@ -516,6 +519,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               expect(page).not_to have_text(new_applicant.email)
               find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
               click_button 'Look Up'
+              expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
               expect(page).to have_text(new_applicant.email)
             end
           end
@@ -665,7 +669,8 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
                 accept_alert do
                   find('tr', id: "row_applicant_" + draft_sa_applicant_02.id.to_s).click_button("Remove")
                 end
-                expect(page).not_to have_text(draft_applicant_02.last_name)
+                expect(page).to have_text("#{draft_applicant_02.first_name} #{draft_applicant_02.last_name} is no longer an applicant on #{draft_submission.title}.")
+                expect(page).not_to have_text(draft_applicant_02.email)
               end
 
               scenario 'can add an applicant' do
@@ -674,6 +679,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
                 expect(page).not_to have_text(new_applicant.email)
                 find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
                 click_button 'Look Up'
+                expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
                 expect(page).to have_text(new_applicant.email)
               end
             end
