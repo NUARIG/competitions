@@ -1,6 +1,6 @@
 base_headers = ["Review Status",
                 "Reviewer",
-                "Submitter",
+                "Applicants",
                 "Submission Title",
                 "Overall Impact Score",
                 "Overall Impact Comment",
@@ -43,7 +43,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
 
     row = sheet.add_row [(review_is_complete ? 'Complete' : 'Incomplete'), # A
                          sortable_full_name(review.reviewer),               # B
-                         sortable_full_name(submission.submitter),          # C
+                         sortable_full_name_list(submission.applicants),         # C
                          submission.title,                                  # D
                          (review.overall_impact_score ||= '0'),             # E
                          (review.overall_impact_comment || ''),             # F

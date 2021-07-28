@@ -16,9 +16,9 @@
     .grid-x
       .cell.small-12.medium-2
         %strong
-          Submitter:
+          Applicants:
       .cell.small-12.medium-10
-        = full_name(@submission.submitter)
+        = full_name_list(@submission.applicants)
     .grid-x
       .cell.small-12.medium-2
         %strong

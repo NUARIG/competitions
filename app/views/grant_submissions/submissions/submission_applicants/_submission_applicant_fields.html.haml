@@ -1,0 +1,17 @@
+.grid-x
+  = link_to 'Add or Remove Applicants', grant_submission_applicants_path(@grant, @submission)
+.nested-fields
+  .field
+    %table
+      %thead
+        %tr
+          %th Name
+          %th Email
+      %tbody
+        - @submission.submission_applicants.each do |sub_app|
+        - applicant = sub_app.applicant
+          %tr
+            %td= full_name(applicant)
+            %td= applicant.email
+
+

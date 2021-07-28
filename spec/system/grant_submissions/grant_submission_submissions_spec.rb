@@ -511,21 +511,22 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     context 'search' do
       before(:each) do
         draft_submission
+        draft_sa_applicant
         login_user grant_admin
       end
 
       scenario 'filters on submitter last name' do
         visit grant_submissions_path(grant)
-        expect(page).to have_content sortable_full_name(draft_submission.submitter)
-        page.fill_in 'q_submitter_first_name_or_submitter_last_name_or_title_cont', with: submitter.last_name
+        expect(page).to have_content sortable_full_name(draft_submission.applicants.first)
+        page.fill_in 'q_applicants_first_name_or_applicants_last_name_or_title_cont_all', with: submission.applicants.first.last_name
         click_button 'Search'
-        expect(page).not_to have_content sortable_full_name(draft_submission.submitter)
+        expect(page).not_to have_content sortable_full_name(draft_submission.applicants.first)
       end
 
       scenario 'filters on application title' do
         visit grant_submissions_path(grant)
         expect(page).to have_content draft_submission.title
-        page.fill_in 'q_submitter_first_name_or_submitter_last_name_or_title_cont', with: submission.title.truncate_words(2, omission: '')
+        page.fill_in 'q_applicants_first_name_or_applicants_last_name_or_title_cont_all', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
         expect(page).not_to have_content draft_submission.title
       end

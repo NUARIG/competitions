@@ -9,14 +9,14 @@ module Grants
         authorize @grant, :grant_viewer_access?
 
         @q              = Review.by_grant(@grant).ransack(params[:q])
-        @q.sorts        = 'submitter_last_name asc' if @q.sorts.empty?
-        @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
+        @q.sorts        = 'applicants_last_name asc' if @q.sorts.empty?
+        @pagy, @reviews = pagy_array(@q.result, i18n_key: 'activerecord.models.review')
       elsif request.format.xlsx?
         @grant          = Grant.with_criteria.kept.friendly.find(params[:grant_id])
         authorize       @grant, :grant_viewer_access?
 
         @criteria       = @grant.criteria
-        @reviews        = Review.with_grant_and_submitter.with_criteria_reviews.by_grant(@grant)
+        @reviews        = Review.with_grant_and_submitter_and_applicants.with_criteria_reviews.by_grant(@grant)
       end
 
       respond_to do |format|

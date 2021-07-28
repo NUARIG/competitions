@@ -16,11 +16,16 @@
   %tbody
     - grants.each do |grant|
       %tr{ data: { grant: grant.id } }
-        %td= link_to grant.name, grant
-        %td= grant.state.titleize
-        %td= grant.publish_date
-        %td= grant.submission_open_date
-        %td= grant.submission_close_date
+        %td
+          = link_to grant.name, grant
+        %td
+          = grant.state.titleize
+        %td
+          = time_tag(grant.publish_date.beginning_of_day, grant.publish_date.beginning_of_day.to_formatted_s(:date_only))
+        %td
+          = time_tag(grant.submission_open_date.beginning_of_day, grant.submission_open_date.beginning_of_day.to_formatted_s(:date_only))
+        %td
+          = time_tag(grant.submission_close_date.end_of_day, grant.submission_close_date.end_of_day.to_formatted_s(:date_only))
         - if policy(grant).edit?
           = render 'grants/manage_links', { grant: grant}
         - else

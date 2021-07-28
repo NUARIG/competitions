@@ -13,7 +13,7 @@ module Grants
     def update
       authorize @grant, :edit?
       if @grant.update(grant_params)
-        flash[:notice] = 'Criteria updated'
+        flash[:notice] = 'Review form and criteria updated.'
         redirect_to criteria_grant_path(@grant)
       else
         flash.now[:alert] = @grant.errors.full_messages
@@ -29,6 +29,7 @@ module Grants
 
     def grant_params
       params.require(:grant).permit(
+        :review_guidance,
         criteria_attributes: [
           :id,
           :name,

@@ -1,5 +1,7 @@
-base_headers = ["Submitter",
-                "Email",
+base_headers = ["Applicants",
+                "Applicant Emails",
+                "Submitter",
+                "Submitter Email",
                 "Submission Title",
                 "State",
                 "Last Updated",
@@ -28,6 +30,13 @@ wb.add_worksheet(name: sheet_name) do |sheet|
 
   @submissions.each_with_index do |submission, row_index|
     submitter = submission.submitter
+    applicants = []
+    emails = []
+    submission.applicants.each do |applicant|
+      applicants << sortable_full_name(applicant)
+      emails << applicant.email
+    end
+
     responses = submission.responses
     response_columns = []
 
@@ -55,19 +64,21 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       response_column_widths << 45
     end
 
-    row = sheet.add_row [ sortable_full_name(submitter),              # A
-                          submitter.email,                            # B
-                          submission.title,                           # C
-                          submission.state,                           # D
-                          submission.updated_at.to_s(:long_ordinal),  # E
-                          reviews_completed                           # F
-                        ].concat(response_columns)                    # G...
+    row = sheet.add_row [ applicants.to_sentence(words_connector: '; '),  # A
+                          emails.to_sentence,                             # B
+                          sortable_full_name(submitter),                  # C
+                          submitter.email,                                # D
+                          submission.title,                               # E
+                          submission.state,                               # F
+                          submission.updated_at.to_s(:long_ordinal),      # G
+                          reviews_completed                               # H
+                        ].concat(response_columns)                        # I...
 
     alphabet_array = ('A'..'ZZ').to_a
     file_upload_links.each do |column, link|
       sheet.add_hyperlink(:location => link,
-                          :ref => "#{alphabet_array[column + 5]}#{row_index + 2}") # account for columns in lines 57-62 and header row
-      row.cells[column + 5].style = link_style
+                          :ref => "#{alphabet_array[column + 7]}#{row_index + 2}") # account for columns in lines 57-62 and header row
+      row.cells[column + 7].style = link_style
     end
   end
   sheet.column_widths(30, 25, 45, 15, 25, 25, *response_column_widths)
