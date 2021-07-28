@@ -19,8 +19,8 @@ The following are required to install competitions:
 
 # Compatibility
 
-  * Ruby:   2.6.6
-  * Rails:  6.0.3.4
+  * Ruby:   3.0.2
+  * Rails:  6.1.4
 
 
 # Shibboleth IDP
