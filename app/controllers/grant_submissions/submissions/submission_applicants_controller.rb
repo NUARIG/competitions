@@ -28,7 +28,7 @@ module GrantSubmissions
 
         end
 
-        redirect_to grant_submission_submission_applicants_path(@grant, @submission)
+        redirect_to grant_submission_applicants_path(@grant, @submission)
       end
 
       def destroy
@@ -41,10 +41,10 @@ module GrantSubmissions
         else
           if submission_applicant.destroy
             flash[:notice] = "#{helpers.full_name(applicant)} is no longer an applicant on #{@submission.title}."
-            redirect_to grant_submission_submission_applicants_path(@grant, @submission)
+            redirect_to grant_submission_applicants_path(@grant, @submission)
           else
             flash[:error] = submission_applicant.errors.to_a
-            redirect_to grant_submission_submission_applicants_path(@grant, @submission)
+            redirect_to grant_submission_applicants_path(@grant, @submission)
           end
         end
       end

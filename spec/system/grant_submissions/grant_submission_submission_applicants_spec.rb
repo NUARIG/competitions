@@ -110,7 +110,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
 
           describe 'submission applicants #index', js: true do
             before(:each) do
-              visit grant_submission_submission_applicants_path(closed_grant, closed_draft_submission)
+              visit grant_submission_applicants_path(closed_grant, closed_draft_submission)
               expect(page).to have_text('You are not authorized to perform this action.')
             end
           end
@@ -169,7 +169,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
 
           describe 'submission applicants #index', js: true do
             before(:each) do
-              visit grant_submission_submission_applicants_path(closed_grant, closed_draft_submission)
+              visit grant_submission_applicants_path(closed_grant, closed_draft_submission)
               expect(page).to have_text('You are not authorized to perform this action.')
             end
           end
@@ -228,7 +228,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
 
           describe 'submission applicants #index', js: true do
             before(:each) do
-              visit grant_submission_submission_applicants_path(closed_grant, closed_draft_submission)
+              visit grant_submission_applicants_path(closed_grant, closed_draft_submission)
               expect(page).to have_text('You are not authorized to perform this action.')
             end
           end
@@ -287,7 +287,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
 
         describe 'submission applicants #index', js: true do
           before(:each) do
-            visit grant_submission_submission_applicants_path(closed_grant, closed_draft_submission)
+            visit grant_submission_applicants_path(closed_grant, closed_draft_submission)
             expect(page).to have_text('You are not authorized to perform this action.')
           end
         end
@@ -378,20 +378,20 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               scenario 'displays add or remove link' do
                 expect(page).to have_text(draft_applicant_01.email)
                 expect(page).to have_text(draft_applicant_02.email)
-                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_submission_applicants_path(open_grant, draft_submission))
+                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
               end
 
               scenario 'add or remove link directs to the submission applicants index' do
-                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_submission_applicants_path(open_grant, draft_submission))
+                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
                 click_link 'Add or Remove Applicants'
-                expect(current_path).to eq(grant_submission_submission_applicants_path(open_grant, draft_submission))
+                expect(current_path).to eq(grant_submission_applicants_path(open_grant, draft_submission))
               end
             end
           end
 
           describe 'submission applicants #index', js: true do
             before(:each) do
-              visit grant_submission_submission_applicants_path(open_grant, draft_submission)
+              visit grant_submission_applicants_path(open_grant, draft_submission)
             end
 
             scenario 'can remove an applicant' do
@@ -488,20 +488,20 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               scenario 'displays add or remove link' do
                 expect(page).to have_text(draft_applicant_01.email)
                 expect(page).to have_text(draft_applicant_02.email)
-                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_submission_applicants_path(open_grant, draft_submission))
+                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
               end
 
               scenario 'add or remove link directs to the submission applicants index' do
-                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_submission_applicants_path(open_grant, draft_submission))
+                expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
                 click_link 'Add or Remove Applicants'
-                expect(current_path).to eq(grant_submission_submission_applicants_path(open_grant, draft_submission))
+                expect(current_path).to eq(grant_submission_applicants_path(open_grant, draft_submission))
               end
             end
           end
 
           describe 'submission applicants #index', js: true do
             before(:each) do
-              visit grant_submission_submission_applicants_path(open_grant, draft_submission)
+              visit grant_submission_applicants_path(open_grant, draft_submission)
             end
 
             scenario 'can remove an applicant' do
@@ -583,7 +583,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
 
         describe 'submission applicants #index', js: true do
           scenario 'cannot edit submission applicants' do
-            visit grant_submission_submission_applicants_path(open_grant, draft_submission)
+            visit grant_submission_applicants_path(open_grant, draft_submission)
             expect(page).to have_text('You are not authorized to perform this action.')
           end
         end
@@ -650,18 +650,18 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
             scenario 'displays add or remove link' do
               expect(page).to have_text(draft_applicant_01.email)
               expect(page).to have_text(draft_applicant_02.email)
-              expect(page).to have_link('Add or Remove Applicants', href: grant_submission_submission_applicants_path(open_grant, draft_submission))
+              expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
             end
 
             scenario 'add or remove link directs to the submission applicants index' do
-              expect(page).to have_link('Add or Remove Applicants', href: grant_submission_submission_applicants_path(open_grant, draft_submission))
+              expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
               click_link 'Add or Remove Applicants'
-              expect(current_path).to eq(grant_submission_submission_applicants_path(open_grant, draft_submission))
+              expect(current_path).to eq(grant_submission_applicants_path(open_grant, draft_submission))
             end
 
             describe 'submission applicants #index', js: true do
               before(:each) do
-                visit grant_submission_submission_applicants_path(open_grant, draft_submission)
+                visit grant_submission_applicants_path(open_grant, draft_submission)
               end
 
               scenario 'can remove an applicant' do
