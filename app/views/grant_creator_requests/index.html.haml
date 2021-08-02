@@ -20,6 +20,6 @@
           %td
             = full_name(request.requester)
           %td
-            = request.created_at
+            = time_tag(request.created_at, request.created_at.to_formatted_s(:default))
           %td
             = link_to 'Review and Approve', grant_creator_request_review_path(request)

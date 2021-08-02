@@ -38,7 +38,11 @@ module ApplicationHelper
   end
 
   def date_time_separate_lines(date)
-    date.blank? ? '' : date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe
+    date.blank? ? '' : time_tag(date, date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe)
+  end
+
+  def time_ago_tag(datetime:)
+    time_tag(datetime, time_ago_in_words(datetime))
   end
 
   # Exports
