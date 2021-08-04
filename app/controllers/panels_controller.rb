@@ -4,9 +4,9 @@ class PanelsController < ApplicationController
 
   def show
     authorize @panel
-    @q                  = @grant.submissions.kept.reviewed.with_applicant.ransack(params[:q])
+    @q                  = @grant.submissions.kept.reviewed.with_applicants.ransack(params[:q])
     @q.sorts            = 'average_overall_impact_score asc' if @q.sorts.empty?
-    @pagy, @submissions = pagy(@q.result, i18n_key: 'activerecord.models.grant_submission_submission')
+    @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.grant_submission_submission')
     render :show
   end
 

@@ -26,10 +26,10 @@
       %td{colspan: "3"}
         %div{id: "reviews_#{reviewer.id}"}
           %ul.review_list.small-10.large-offset-1
-            - reviews = reviewer.reviews.with_grant_and_applicant.by_grant(grant)
+            - reviews = reviewer.reviews.with_grant_and_submitter_and_applicants.by_grant(grant)
             - reviews.each do |review|
               - submission = review.submission
               %li.review{id: "review_#{"#{review.id}"}", data: { destination_url: grant_submission_review_path(grant, submission, review) }}
                 %span
-                  #{sortable_full_name(submission.applicant)}: #{truncate(submission.title, length: 40)}
+                  #{sortable_full_name(submission.submitter)}: #{truncate(submission.title, length: 40)}
 

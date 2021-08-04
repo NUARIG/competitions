@@ -181,8 +181,8 @@ RSpec.describe 'Grants', type: :system, js: true do
 
   describe 'Show' do
     let(:grant)                 { create(:published_open_grant_with_users, :with_reviewer) }
-    let(:applicant)             { create(:user) }
-    let(:registered_applicant)  { create(:registered_user) }
+    let(:submitter)             { create(:user) }
+    let(:registered_submitter)  { create(:registered_user) }
     let(:reviewer)              { grant.reviewers.first }
     let(:admin)                 { grant.admins.first }
     let(:editor)                { grant.editors.first }
@@ -206,8 +206,8 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           expect(page).to have_content 'Log in'
           click_link 'Log in'
-          fill_in 'Email address', with: registered_applicant.email
-          fill_in 'Password', with: registered_applicant.password
+          fill_in 'Email address', with: registered_submitter.email
+          fill_in 'Password', with: registered_submitter.password
           click_button 'Log in'
           expect(page).to have_current_path grant_path(grant)
         end

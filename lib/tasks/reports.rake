@@ -15,16 +15,16 @@ namespace :reports do
     question_ids = questions.map(&:id)
     questions_texts = questions.map(&:text)
 
-    column_headers = [ "applicant last name", "applicant first name", "applicant email", "project title"]
+    column_headers = [ "submitter last name", "submitter first name", "submitter email", "project title"]
     column_headers.concat questions_texts
 
     CSV.open(csv_file, "w") do |csv|
       csv << column_headers
 
       submissions.each do |submission|
-        applicant = submission.applicant
+        submitter = submission.submitter
 
-        submission_fields = [applicant.last_name, applicant.first_name, applicant.email, submission.title]
+        submission_fields = [submitter.last_name, submitter.first_name, submitter.email, submission.title]
 
         ordered_responses = submission.responses.sort_by { |response| question_ids.index response.grant_submission_question_id}
         submission_fields.concat ordered_responses.map(&:response_value)

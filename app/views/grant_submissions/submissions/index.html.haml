@@ -40,7 +40,7 @@
           .text-right
             %ul.menu
               %li.search
-                = f.search_field :applicant_first_name_or_applicant_last_name_or_title_cont, placeholder: 'Applicant or Project'
+                = f.search_field :applicants_first_name_or_applicants_last_name_or_title_cont_all, placeholder: 'Applicant or Project'
               %li.search
                 = f.submit 'Search', class: 'button'
             .reset
@@ -58,7 +58,7 @@
             Scores
       %tr
         %th
-          = sort_link(@q, :applicant_last_name, 'Applicant',{}, { title: 'Sort on Applicant'} )
+          = sort_link(@q, :applicants_last_name, 'Applicants',{}, {title: 'Sort on Applicants'})
         %th
           = sort_link(@q, :title, 'Title',{}, { title: 'Sort on Title'} )
         %th
@@ -79,18 +79,20 @@
     %tbody
       - @submissions.each do |submission|
         - review_data = review_data(submission)
-        - applicant   = submission.applicant
 
         %tr.submission{ data: { submission: submission.id } }
           %td
-            = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+            - submission.applicants.each do |applicant|
+              = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+              %br
+
           %td
             = link_to submission.title, grant_submission_path(@grant, submission)
           %td
             %div.status{ data: { status: submission.id } }
               = submission.state.titleize
               - if current_user.get_role_by_grant(grant: @grant).nil?
-                = render 'submission_applicant_links', { grant: @grant, submission: submission }
+                = render 'submission_submitter_links', { grant: @grant, submission: submission }
               - else
                 = render 'submission_administrator_links', { grant: @grant, submission: submission }
 

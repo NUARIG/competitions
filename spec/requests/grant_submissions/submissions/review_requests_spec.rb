@@ -90,8 +90,8 @@ RSpec.describe 'grant_submission review requests', type: :request do
         expect(response).to have_http_status(:success)
       end
 
-      it 'redirects the applicant' do
-        sign_in(review.submission.applicant)
+      it 'redirects the submitter' do
+        sign_in(review.submission.submitter)
         get grant_submission_review_path(grant, submission, review)
 
         expect(response).to have_http_status(:redirect)
@@ -149,8 +149,8 @@ RSpec.describe 'grant_submission review requests', type: :request do
       end.to change{ submission.reload.composite_score }
     end
 
-    it 'redirects the applicant' do
-      sign_in(review.submission.applicant)
+    it 'redirects the submitter' do
+      sign_in(review.submission.submitter)
       get edit_grant_submission_review_path(grant, submission, review)
 
       expect(response).to have_http_status(:redirect)

@@ -5,6 +5,6 @@
   %div.administer.small{data: { status: submission.id} }
     = link_to 'Switch to Draft', unsubmit_grant_submission_path(grant, submission), method: :patch, title: 'Allow for editing'
 
-- if current_user.get_role_by_grant(grant: grant) == 'admin' && (submission.applicant.in?(grant.administrators) || grant.draft?)
+- if current_user.get_role_by_grant(grant: grant) == 'admin' && (submission.submitter.in?(grant.administrators) || grant.draft?)
   %div.delete
     = link_to 'Delete', grant_submission_path(grant, submission), method: :delete, data: { confirm: 'This will delete the submission and its assigned reviews. Are you sure?'}, class: 'small'

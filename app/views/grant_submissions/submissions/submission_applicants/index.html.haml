@@ -1,0 +1,50 @@
+- title_text = "Edit #{current_user == @submission.submitter ? 'Your Submission' : 'Submission'}"
+- content_for(:page_title, "#{title_text} - #{@grant.name}")
+
+
+.grid-x
+  .small-12.cell
+    %ul.breadcrumbs
+      %li
+        = link_to 'Home', root_path
+      %li
+        = link_to 'Grant Home', grant_path(@grant)
+      - if current_user.get_role_by_grant(grant: @grant)
+        %li
+          = link_to 'Edit', edit_grant_path(@grant)
+      %li
+        = link_to 'Submission', grant_submission_path(@grant, @submission)
+      %li
+        = link_to title_text, edit_grant_submission_path(@grant, @submission)
+      %li
+        Applicants
+
+.grid-x
+  .small-12.cell
+    Add Applicant by Email Address.
+    %div{ style: 'display: inline-block' }
+      = form_for :grant_submission_submission_applicant, url: grant_submission_applicants_path(@grant, @submission) do |f|
+        .input-group
+          = f.email_field :applicant_email, placeholder: 'Email', class: 'input-group-field'
+          .input-group-button
+            = f.submit 'Look Up', class: 'button small'
+
+.nested-fields
+  .field
+    %table
+      %thead
+        %tr
+          %th Name
+          %th Email
+          %th
+      %tbody
+        - @submission.submission_applicants.each do |sub_app|
+        - applicant = sub_app.applicant
+          %tr{ id: "row_applicant_" + sub_app.id.to_s }
+            %td= full_name(applicant)
+            %td= applicant.email
+            %td= button_to "Remove", grant_submission_applicant_path(@grant, @submission, sub_app), method: :delete, class: 'button tiny hollow alert remove', data: { confirm: "Are you sure you want to remove #{full_name(applicant)} from this submission?" }
+
+.grid-x
+  .actions
+    = link_to 'Cancel', edit_grant_submission_path(@grant, @submission), class: 'button secondary'
