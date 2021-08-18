@@ -403,7 +403,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               expect(page).not_to have_text(draft_applicant_02.email)
             end
 
-            scenario 'can add an applicant' do
+            scenario 'can add an applicant only once' do
               new_applicant
 
               expect(page).not_to have_text(new_applicant.email)
@@ -411,6 +411,10 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               click_button 'Look Up'
               expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
               expect(page).to have_text(new_applicant.email)
+
+              find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
+              click_button 'Look Up'
+              expect(page).to have_text("Applicant has already been taken")
             end
           end
         end
@@ -513,7 +517,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               expect(page).not_to have_text(draft_applicant_02.email)
             end
 
-            scenario 'can add an applicant' do
+            scenario 'can add an applicant only once' do
               new_applicant
 
               expect(page).not_to have_text(new_applicant.email)
@@ -521,6 +525,10 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               click_button 'Look Up'
               expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
               expect(page).to have_text(new_applicant.email)
+
+              find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
+              click_button 'Look Up'
+              expect(page).to have_text("Applicant has already been taken")
             end
           end
         end
@@ -673,7 +681,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
                 expect(page).not_to have_text(draft_applicant_02.email)
               end
 
-              scenario 'can add an applicant' do
+              scenario 'can add an applicant only once' do
                 new_applicant
 
                 expect(page).not_to have_text(new_applicant.email)
@@ -681,6 +689,10 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
                 click_button 'Look Up'
                 expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
                 expect(page).to have_text(new_applicant.email)
+
+                find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
+                click_button 'Look Up'
+                expect(page).to have_text("Applicant has already been taken")
               end
             end
           end

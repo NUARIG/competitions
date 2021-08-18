@@ -19,6 +19,8 @@ module GrantSubmission
     validates :submission,  presence: true
     validates :applicant,   presence: true
 
+    validates :applicant, uniqueness: { scope: :submission }
+
     private
 
     def prevent_last_applicant_destroy

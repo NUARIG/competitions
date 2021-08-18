@@ -21,6 +21,7 @@ module GrantSubmissions
         else
           submission_applicant = GrantSubmission::SubmissionApplicant.create(submission: @submission, applicant: user)
           if submission_applicant.errors.none?
+            ApplicantMailer.assignment(submission_applicant: submission_applicant).deliver_now
             flash[:success] = "#{helpers.full_name(submission_applicant.applicant)} was added as applicant on #{@submission.title}."
           else
             flash[:alert]   = submission_applicant.errors.full_messages
@@ -40,6 +41,7 @@ module GrantSubmissions
           flash[:alert] = 'Applicant could not be found.'
         else
           if submission_applicant.destroy
+            ApplicantMailer.unassignment(submission_applicant: submission_applicant).deliver_now
             flash[:notice] = "#{helpers.full_name(applicant)} is no longer an applicant on #{@submission.title}."
             redirect_to grant_submission_applicants_path(@grant, @submission)
           else

@@ -1,0 +1,11 @@
+%p
+  Dear #{full_name(@applicant)},
+
+%p
+  You have been unassigned as an applicant on the submission
+  = surround '"', ',"' do
+    = @submission.title
+  an application to the grant
+  = succeed '.' do
+    = link_to @grant.name, grant_url(@grant)
+
