@@ -14,7 +14,7 @@ RSpec.describe PaperTrail::GrantSubmission::SubmissionApplicantVersion, type: :m
       expect(@submission_applicant.versions.last.grant_submission_submission_id).to eql @submission.id
     end
 
-    it 'tracks appliant_id' do
+    it 'tracks applicant_id' do
       expect(@submission_applicant.versions.last.applicant_id).to eql @applicant.id
     end
   end

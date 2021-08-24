@@ -10,7 +10,8 @@ RSpec.describe ApplicantMailer, type: :mailer do
                                       submission: submission,
                                       applicant: new_applicant) }
 
-    let(:mailer)            { described_class.assignment(submission_applicant: sa_new_applicant) }
+    let(:editor)            { create(:saml_user) }
+    let(:mailer)            { described_class.assignment(submission_applicant: sa_new_applicant, current_user: editor) }
 
     before(:each) do
       sa_new_applicant
@@ -36,6 +37,10 @@ RSpec.describe ApplicantMailer, type: :mailer do
       it 'includes the grant name' do
         expect(mailer.body.encoded).to have_content grant.name
       end
+
+      it "includes the editor/'s name" do
+        expect(mailer.body.encoded).to have_content "#{editor.first_name} #{CGI.escapeHTML(editor.last_name)}"
+      end
     end
 
     context 'unassignment' do
@@ -46,7 +51,8 @@ RSpec.describe ApplicantMailer, type: :mailer do
                                         submission: submission,
                                         applicant: applicant) }
 
-      let(:mailer)            { described_class.unassignment(submission_applicant: sa_applicant) }
+      let(:editor)            { create(:saml_user) }
+      let(:mailer)            { described_class.unassignment(submission_applicant: sa_applicant, current_user: editor) }
 
       before(:each) do
         sa_applicant

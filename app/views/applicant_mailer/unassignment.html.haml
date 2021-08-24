@@ -2,8 +2,8 @@
   Dear #{full_name(@applicant)},
 
 %p
-  You have been unassigned as an applicant on the submission
-  = surround '"', ',"' do
+  #{full_name(@current_user)} has removed you as an applicant on the submission
+  = surround ', "', ',"' do
     = @submission.title
   an application to the grant
   = succeed '.' do

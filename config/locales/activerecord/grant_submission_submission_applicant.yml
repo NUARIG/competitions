@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    errors:
+      models:
+        grant_submission/submission_applicant:
+          attributes:
+            applicant:
+              taken: 'is already on this submission.'
