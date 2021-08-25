@@ -5,4 +5,4 @@ en:
         grant_submission/submission_applicant:
           attributes:
             applicant:
-              taken: 'is already on this submission.'
+              taken: "%{applicant_name} is already on the submission, %{submission_title}."
