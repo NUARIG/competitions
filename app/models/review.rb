@@ -16,10 +16,11 @@ class Review < ApplicationRecord
                               foreign_key: 'grant_submission_submission_id',
                               counter_cache: true,
                               inverse_of: :reviews
-  has_one  :applicant,        through: :submission
+  has_one  :submitter,        through: :submission
   has_one  :grant,            through: :submission
   has_many :grant_criteria,   through: :grant,
                               source: :criteria
+  has_many :applicants,       through: :submission
 
   has_many :criteria_reviews, -> { order("criteria_reviews.created_at") },
                               dependent: :destroy
@@ -46,17 +47,17 @@ class Review < ApplicationRecord
   validate :submission_is_not_draft
   validate :is_not_after_close_date
 
-  scope :with_criteria_reviews,    -> { includes(:criteria_reviews) }
-  scope :with_reviewer,            -> { includes(:reviewer) }
-  scope :with_grant,               -> { includes(submission: :grant) }
-  scope :with_grant_and_applicant, -> { includes(submission: [:grant, :applicant]) }
-  scope :by_grant,                 -> (grant) { with_grant.where(grants: { id: grant.id}) }
+  scope :with_criteria_reviews,                   -> { includes(:criteria_reviews) }
+  scope :with_reviewer,                           -> { includes(:reviewer) }
+  scope :with_grant,                              -> { includes(submission: :grant) }
+  scope :with_grant_and_submitter_and_applicants, -> { includes(submission: [:grant, :submitter, :applicants]) }
+  scope :by_grant,                                -> (grant) { with_grant.where(grants: { id: grant.id}) }
 
-  scope :order_by_created_at,      -> { order(created_at: :desc) }
-  scope :by_reviewer,              -> (reviewer)   { where(reviewer_id: reviewer.id) }
-  scope :by_submission,            -> (submission) { where(grant_submission_submission_id: submission.id) }
-  scope :completed,                -> { where.not(overall_impact_score: nil) }
-  scope :incomplete,               -> { where(overall_impact_score: nil) }
+  scope :order_by_created_at,                     -> { order(created_at: :desc) }
+  scope :by_reviewer,                             -> (reviewer)   { where(reviewer_id: reviewer.id) }
+  scope :by_submission,                           -> (submission) { where(grant_submission_submission_id: submission.id) }
+  scope :completed,                               -> { where.not(overall_impact_score: nil) }
+  scope :incomplete,                              -> { where(overall_impact_score: nil) }
   # TODO: could be used to throttle reminders to a given timeframe
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
@@ -93,7 +94,7 @@ class Review < ApplicationRecord
   end
 
   def reviewer_is_not_applicant
-    errors.add(:reviewer, :may_not_review_own_submission) if reviewer == submission.applicant
+    errors.add(:reviewer, :may_not_review_own_submission) if submission.has_applicant?(reviewer)
   end
 
   def reviewer_may_be_assigned

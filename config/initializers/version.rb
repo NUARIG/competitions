@@ -1,5 +1,5 @@
 module Competitions
   class Application
-    VERSION = '1.12'
+    VERSION = '1.13'
   end
 end

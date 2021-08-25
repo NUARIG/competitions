@@ -90,11 +90,11 @@ FactoryBot.define do
 
     trait :with_submission do
       after(:create) do |grant|
-        applicant = create(:saml_user)
-        create(:submission_with_responses, grant: grant,
-                                           form: grant.form,
-                                           applicant: applicant,
-                                           user_updated_at: grant.submission_close_date - 1.minute)
+        submitter = create(:saml_user)
+        create(:submission_with_responses_with_applicant,  grant: grant,
+                                                            form: grant.form,
+                                                            submitter: submitter,
+                                                            user_updated_at: grant.submission_close_date - 1.minute)
 
       end
     end
@@ -135,8 +135,9 @@ FactoryBot.define do
     factory :draft_grant_with_users,                        traits: %i[draft with_users with_users_and_submission_form with_panel]
     factory :completed_grant_with_users,                    traits: %i[completed with_users]
 
-    factory :open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published open with_users_and_submission_form with_submission with_reviewer with_panel]
-    factory :draft_open_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[draft open with_users_and_submission_form with_submission with_reviewer with_panel]
-    factory :closed_grant_with_users_and_form_and_submission_and_reviewer, traits: %i[published closed with_users_and_submission_form with_submission with_reviewer with_panel]
+    factory :open_grant_with_users_and_form_and_submission,                     traits: %i[published open with_users_and_submission_form with_submission]
+    factory :open_grant_with_users_and_form_and_submission_and_reviewer,        traits: %i[published open with_users_and_submission_form with_submission with_reviewer with_panel]
+    factory :draft_open_grant_with_users_and_form_and_submission_and_reviewer,  traits: %i[draft open with_users_and_submission_form with_submission with_reviewer with_panel]
+    factory :closed_grant_with_users_and_form_and_submission_and_reviewer,      traits: %i[published closed with_users_and_submission_form with_submission with_reviewer with_panel]
   end
 end

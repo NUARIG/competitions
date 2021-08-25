@@ -1,0 +1,11 @@
+%p
+  Dear #{full_name(@applicant)},
+
+%p
+  #{full_name(@current_user)} has added you as an applicant on the submission
+  = surround ', "', ',"' do
+    = link_to @title, grant_submission_url(@grant, @submission)
+  an application to the grant
+  = succeed '.' do
+    = link_to @grant.name, grant_url(@grant)
+

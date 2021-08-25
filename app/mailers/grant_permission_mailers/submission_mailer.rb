@@ -13,7 +13,8 @@ module GrantPermissionMailers
 
     def set_attributes(submission:, grant:, recipients:)
       @submission         = submission
-      @applicant          = submission.applicant
+      @submitter          = @submission.submitter
+      @applicants         = @submission.applicants
       @grant              = grant
       @recipients         = recipients
       @application_name   = COMPETITIONS_CONFIG[:application_name]

@@ -37,9 +37,9 @@
       .text-right
         %ul.menu
           %li.search
-            = f.search_field :applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont, placeholder: 'Applicant or Reviewer'
+            = f.search_field :applicants_first_name_or_applicants_last_name_or_reviewer_first_name_or_reviewer_last_name_cont_any, placeholder: 'Applicants or Reviewer'
           %li.search
-            = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Applicant'
+            = f.submit 'Search', class: 'button', placeholder: 'Reviewer or Applicants'
         .reset
           = link_to 'Reset', grant_reviews_path(@grant), class: 'button clear secondary'
 
@@ -54,7 +54,7 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :applicant_last_name, 'Applicant', {}, { title: 'Sort on Applicant' })
+          = sort_link(@q, :applicants_last_name, 'Applicants', {}, { title: 'Sort on Applicants' })
         %th
           = sort_link(@q, :submission_title, 'Submission', {}, { title: 'Sort on Submission Title' })
         %th
@@ -67,15 +67,18 @@
 
     %tbody
       - @reviews.each do |review|
+        - submission = review.submission
         %tr
           %td
-            = sortable_full_name(review.submission.applicant)
+            - submission.applicants.each do |applicant|
+              = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+              %br
           %td
-            = link_to truncate(review.submission.title), grant_submission_path(review.grant, review.submission)
+            = link_to truncate(submission.title), grant_submission_path(review.grant, submission)
           %td
             = sortable_full_name(review.reviewer)
           %td
-            = link_to (review.is_complete? ? 'Full Review' : 'Incomplete'), grant_submission_review_path(review.grant, review.submission, review)
+            = link_to (review.is_complete? ? 'Full Review' : 'Incomplete'), grant_submission_review_path(review.grant, submission, review)
           %td
             = (review.overall_impact_score || 0)
           %td

@@ -119,7 +119,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
 
         scenario 'displays "reset search" link when there is a search param' do
           visit path
-          fill_in 'q_applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont', with: 'Submission'
+          fill_in 'q_applicants_first_name_or_applicants_last_name_or_reviewer_first_name_or_reviewer_last_name_cont_any', with: 'Submission'
           click_button 'Search'
           expect(page).to have_link 'Reset search', href: path
         end
@@ -128,7 +128,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
       context 'no results' do
         scenario 'displays download all link when there are reviews' do
           visit path
-          fill_in 'q_applicant_first_name_or_applicant_last_name_or_reviewer_first_name_or_reviewer_last_name_cont', with: 'supercalifragilistic'
+          fill_in 'q_applicants_first_name_or_applicants_last_name_or_reviewer_first_name_or_reviewer_last_name_cont_any', with: 'supercalifragilistic'
           click_button 'Search'
           expect(page).to have_selector '#excel-export'
           expect(page.find(:xpath, "//a[@href='#{grant_reviews_path(grant, {format: 'xlsx'})}']")).not_to be nil

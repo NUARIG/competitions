@@ -4,15 +4,29 @@ include UsersHelper
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
   let(:submission)            { grant.submissions.first }
-  let(:applicant)             { submission.applicant }
+  let(:submitter)             { submission.submitter }
+  let(:sa_submitter)          { create(:grant_submission_submission_applicant,
+                                        submission: submission,
+                                        applicant: submitter) }
+  let(:applicant)             { create(:saml_user) }
+  let(:sa_applicant)          { create(:grant_submission_submission_applicant,
+                                        submission: submission,
+                                        applicant: applicant) }
   let(:system_admin)          { create(:system_admin_saml_user) }
   let(:grant_admin)           { grant.administrators.first }
   let(:grant_editor)          { grant.administrators.second }
   let(:grant_viewer)          { grant.administrators.third }
-  let(:new_applicant)         { create(:saml_user) }
+  let(:new_submitter)         { create(:saml_user) }
   let(:draft_submission)      { create(:draft_submission_with_responses,
                                         grant: grant,
                                         form: grant.form) }
+  let(:draft_sa_submitter)    { create(:grant_submission_submission_applicant,
+                                        submission: draft_submission,
+                                        applicant:  draft_submission.submitter) }
+  let(:draft_applicant)       { create(:saml_user) }
+  let(:draft_sa_applicant)    { create(:grant_submission_submission_applicant,
+                                        submission: draft_submission,
+                                        applicant: draft_applicant) }
   let(:draft_grant)           { create(:draft_grant) }
   let(:other_submission)      { create(:grant_submission_submission, grant: grant) }
   let(:review)                { create(:scored_review_with_scored_mandatory_criteria_review,
@@ -34,17 +48,17 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:admin_submission)      { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form,
-                                        applicant: grant_admin,
+                                        submitter: grant_admin,
                                         created_at: grant.submission_close_date - 1.hour) }
   let(:editor_submission)     { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form,
-                                        applicant: grant_editor,
+                                        submitter: grant_editor,
                                         created_at: grant.submission_close_date - 1.hour) }
   let(:viewer_submission)     { create(:submission_with_responses,
                                         grant: grant,
                                         form: grant.form,
-                                        applicant: grant_viewer,
+                                        submitter: grant_viewer,
                                         created_at: grant.submission_close_date - 1.hour) }
 
   def not_authorized_text
@@ -277,10 +291,10 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
 
-      context 'applicant' do
+      context 'submitter' do
         before(:each) do
           other_submission.save
-          login_user applicant
+          login_user submitter
 
           visit grant_submissions_path(grant)
         end
@@ -299,7 +313,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).not_to have_link 'Save all Submissions', href: grant_submissions_path(grant)
           end
 
-          scenario 'does not include other applicant submission' do
+          scenario 'does not include other submitter submission' do
             expect(page).not_to have_content other_submission.title
           end
 
@@ -476,6 +490,14 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
 
+      context 'submitter' do
+        scenario 'cannot visit submissions page' do
+          login_user submitter
+          visit grant_submissions_path(grant)
+          expect(page).to have_text not_authorized_text
+        end
+      end
+
       context 'applicant' do
         scenario 'cannot visit submissions page' do
           login_user applicant
@@ -483,26 +505,28 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_text not_authorized_text
         end
       end
+
     end
 
     context 'search' do
       before(:each) do
         draft_submission
+        draft_sa_applicant
         login_user grant_admin
       end
 
-      scenario 'filters on applicant last name' do
+      scenario 'filters on submitter last name' do
         visit grant_submissions_path(grant)
-        expect(page).to have_content sortable_full_name(draft_submission.applicant)
-        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: applicant.last_name
+        expect(page).to have_content sortable_full_name(draft_submission.applicants.first)
+        page.fill_in 'q_applicants_first_name_or_applicants_last_name_or_title_cont_all', with: submission.applicants.first.last_name
         click_button 'Search'
-        expect(page).not_to have_content sortable_full_name(draft_submission.applicant)
+        expect(page).not_to have_content sortable_full_name(draft_submission.applicants.first)
       end
 
       scenario 'filters on application title' do
         visit grant_submissions_path(grant)
         expect(page).to have_content draft_submission.title
-        page.fill_in 'q_applicant_first_name_or_applicant_last_name_or_title_cont', with: submission.title.truncate_words(2, omission: '')
+        page.fill_in 'q_applicants_first_name_or_applicants_last_name_or_title_cont_all', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
         expect(page).not_to have_content draft_submission.title
       end
@@ -511,9 +535,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
   context 'apply' do
     describe 'Published Open Grant', js: true do
-      context 'applicant' do
+      context 'submitter' do
         before(:each) do
-          login_user new_applicant
+          login_user new_submitter
           visit grant_apply_path(grant)
         end
 
@@ -550,7 +574,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context '#update' do
         before(:each) do
           grant.questions.where(response_type: 'short_text').first.update(is_mandatory: true)
-          login_user applicant
+          login_user submitter
         end
 
         context 'draft submission' do
@@ -621,9 +645,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
       end
 
-      context 'applicant' do
+      context 'submitter' do
         before(:each) do
-          login_user new_applicant
+          login_user new_submitter
           visit grant_apply_path(draft_grant)
         end
 
@@ -635,10 +659,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   end
 
   context 'show' do
-    context 'applicant' do
+    context 'submitter' do
       context 'draft' do
         before(:each) do
-          login_user draft_submission.applicant
+          login_user draft_submission.submitter
+          draft_sa_submitter
           visit grant_submission_path(draft_submission.grant, draft_submission)
         end
 
@@ -654,7 +679,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'submitted' do
         before(:each) do
-          login_user submission.applicant
+          login_user submission.submitter
           visit grant_submission_path(grant, submission)
         end
 

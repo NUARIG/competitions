@@ -8,7 +8,7 @@ RSpec.describe ReviewPolicy, type: :policy do
   let(:review)            { create(:incomplete_review, assigner: grant.administrators.first,
                                     reviewer: grant.reviewers.first,
                                     submission: grant.submissions.first) }
-  let(:applicant)         { submission.applicant}
+  let(:submitter)         { submission.submitter}
   let(:logged_in_user)    { create(:saml_user) }
 
   context 'with a system admin user' do
@@ -90,8 +90,8 @@ RSpec.describe ReviewPolicy, type: :policy do
     it { is_expected.not_to permit_action(:opt_out) }
   end
 
-  context 'with an applicant user' do
-    let(:user) { submission.applicant }
+  context 'with an submitter user' do
+    let(:user) { submission.submitter }
 
     it { is_expected.not_to permit_action(:index) }
     it { is_expected.not_to permit_action(:new) }

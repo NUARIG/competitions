@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class GrantSubmission::SubmissionPolicy < ApplicationPolicy
-  attr_reader :user, :grant
   include GrantRoleAccess
+  include GrantSubmission::SubmissionRoleAccess
 
   def initialize(context, record)
     @user   = context.user
@@ -22,9 +22,9 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
 
     def resolve
       if user.in?(@grant.administrators) || user.system_admin?
-        GrantSubmission::Submission.includes(:applicant, :reviews).where(grant_id: @grant.id)
+        GrantSubmission::Submission.includes(:reviews, :applicants).where(grant_id: @grant.id)
       else
-        scope.where(applicant: user)
+        GrantSubmission::Submission.includes(:applicants).where(users: { id: user.id })
       end
     end
   end
@@ -50,7 +50,7 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def destroy?
-    grant_admin_access? && (submission.applicant.in?(@grant.administrators) || !grant.published?)
+    grant_admin_access? && (submission.submitter.in?(grant.administrators) || !grant.published?)
   end
 
   def unsubmit?
@@ -64,14 +64,6 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   end
 
   def grant
-    @grant
-  end
-
-  def current_user_is_applicant?
-    submission.applicant == user
-  end
-
-  def current_user_is_reviewer?
-    submission.reviewers.include?(user)
+    record.grant
   end
 end

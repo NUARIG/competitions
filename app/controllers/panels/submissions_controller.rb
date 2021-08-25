@@ -30,7 +30,7 @@ module Panels
     end
 
     def set_submission
-      @submission = GrantSubmission::Submission.kept.reviewed.with_applicant.with_responses.find(params[:id])
+      @submission = GrantSubmission::Submission.kept.reviewed.with_submitter.with_responses.find(params[:id])
     end
   end
 end
