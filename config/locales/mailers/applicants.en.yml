@@ -1,0 +1,7 @@
+en:
+  mailers:
+    applicant_mailer:
+        assignment:
+          subject: "%{application_name}: Assigned as applicant on %{title}"
+        unassignment:
+          subject: "%{application_name}: Unassigned as applicant on %{title}"
