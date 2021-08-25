@@ -3,6 +3,8 @@ en:
     errors:
       models:
         grant_submission/submission_applicant:
+          base:
+            remove_last: 'There must be at least one applicant on the submission'
           attributes:
             applicant:
               taken: "%{applicant_name} is already on the submission, %{submission_title}."

@@ -20,28 +20,26 @@ module GrantSubmission
     validates :applicant,   presence: true
 
     validate :prevent_creation_of_existing_applicant, if: -> () { applicant_already_exists? }
-    # validates :applicant, uniqueness: { scope: :submission }
 
     private
+
+    def prevent_last_applicant_destroy
+      errors.add(:base, I18n.t('activerecord.errors.models.grant_submission/submission_applicant.base.remove_last'))
+      throw :abort
+    end
+
+    def is_last_applicant?
+      submission.applicants.one?
+    end
 
     def applicant_already_exists?
       GrantSubmission::SubmissionApplicant.where(submission: submission).where(applicant: applicant).any?
     end
 
     def prevent_creation_of_existing_applicant
-      errors.add(:base, I18n.t('activerecord.errors.models.grant_submission/submission_applicant.attributes.applicant.taken',
+      errors.add(:applicant, I18n.t('activerecord.errors.models.grant_submission/submission_applicant.attributes.applicant.taken',
                                 submission_title: submission.title,
                                 applicant_name: ApplicationController.helpers.full_name(self.applicant)))
-      throw :abort
-    end
-
-    def prevent_last_applicant_destroy
-      errors.add(:base, 'There must be at least one applicant on the submission')
-      throw :abort
-    end
-
-    def is_last_applicant?
-      submission.applicants.one?
     end
   end
 end
