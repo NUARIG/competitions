@@ -32,38 +32,52 @@ Rails.application.routes.draw do
     resources :grant_permissions, except: :show,            controller: 'grant_permissions' do
       get :users_query, on: :collection, to: 'grant_permissions/users_query#index', as: :users_query
     end
+
     resource  :duplicate,         only: %i[new create],     controller: 'grants/duplicate'
+
     resource  :state,             only: %i[publish draft],  controller: 'grants/state' do
       get 'publish',  on: :member
       get 'draft',    on: :member
     end
+
     resources :reviews,           only: :index,             controller: 'grants/reviews' do
       get 'reminders',            to: 'grants/reviews/reminders#index', on: :collection
     end
+
     member do
       get   'criteria',           to: 'grants/criteria#index',   as: :criteria
       patch 'criteria/update',    to: 'grants/criteria#update',  as: :update_criteria
     end
+
     resources :forms,             only: %i[update edit update_fields],  controller: 'grant_submissions/forms' do
       member do
         put :update_fields
       end
     end
+
     resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
-      resources 'applicants', only: %i[index create destroy], controller: 'grant_submissions/submissions/submission_applicants'
+      resources 'applicants',     only: %i[index create destroy], controller: 'grant_submissions/submissions/submission_applicants'
+
       member do
         patch 'unsubmit',         to: 'grant_submissions/submissions/unsubmit#update'
       end
+
       resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews' do
         delete 'opt_out',         to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
       end
     end
+
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers' do
       collection do
         post      'invite',       to: 'grant_reviewers/invitations#create'
-        resources 'invitations',  only: %i[index update], controller: 'grant_reviewers/invitations'
+        resources 'invitations',  only: %i[index update], controller: 'grant_reviewers/invitations' do
+          collection do
+            resources :reminders, only: :index, as: 'invitation_reminders', controller: 'grant_reviewers/invitations/reminders'
+          end
+        end
       end
     end
+
     resource :panel,              only: %i[show edit update], on: :member, controller: 'panels' do
       resources :submissions,     only: %i[index show], controller: 'panels/submissions' do
         resources :reviews,       only: %i[index show], controller: 'panels/submissions/reviews'

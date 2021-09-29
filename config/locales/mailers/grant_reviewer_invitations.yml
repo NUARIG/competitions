@@ -1,0 +1,7 @@
+en:
+  mailers:
+    grant_reviewer_invitations:
+      invite:
+        subject: "Reviewer Invitation for %{grant}"
+      reminder:
+        subject: "Reminder - Reviewer Invitation for %{grant}"
