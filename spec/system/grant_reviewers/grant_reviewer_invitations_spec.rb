@@ -89,6 +89,12 @@ RSpec.describe GrantReviewer::Invitation, type: :system do
       it 'does not include link to send reminder emails' do
         expect(page).not_to have_link 'Send Reminder to Invited Reviewers', href: grant_invitation_reminders_path(grant)
       end
+
+      it 'displays no email sent text' do
+        visit grant_invitation_reminders_path(grant)
+        expect(page).to have_text 'There are no open reviewer invitations for this grant. No reminders have been sent'
+      end
+
     end
   end
 
