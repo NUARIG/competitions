@@ -21,6 +21,7 @@ module GrantReviewers
       def send_reminder_emails
         @open_invitations.each do |invitation|
           GrantReviewerInvitationMailer.reminder(invitation: invitation, grant: @grant).deliver_now
+          invitation.update(reminded_at: Time.now)
         end
       end
     end

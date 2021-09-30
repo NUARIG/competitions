@@ -38,5 +38,11 @@ RSpec.describe 'grant_reviewer_invitation requests', type: :request do
       get(grant_invitation_reminders_path(grant))
       expect(ActionMailer::Base.deliveries.count).to be 1
     end
+
+    it "updates the invitation's reminded_at attribute" do
+      expect do
+        get(grant_invitation_reminders_path(grant))
+      end.to change{invited.reload.reminded_at}.from nil
+    end
   end
 end
