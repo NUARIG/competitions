@@ -3,7 +3,7 @@
   %br
   #{@grant.name}
   %br
-  a grant in #{link_to COMPETITIONS_CONFIG[:application_name], @login_url}.
+  a grant in #{link_to COMPETITIONS_CONFIG[:application_name], get_login_url_by_email_address(@email)}.
 
 %p
   Once you have logged in, you may also opt out of this request.
