@@ -87,15 +87,6 @@ test:
         - '.space'
         - '.online'
         # - <ANY OTHER EXTENSIONS YOU WOULD LIKE TO BLOCK>
-    test_saml_user: # - <ADD THE INFORMATION FOR ONE OF YOUR DEV/TEST SAML USERS>
-      # Below is an example from our testing instance.
-      # See the wiki for more information.
-      # https://github.com/NUARIG/competitions/wiki/Installation-and-configuration-of-test-saml-idp
-      first_name: 'Billy'
-      last_name: 'Zoom'
-      email: 'b-zoom@x.edu'
-      uid: 'bz1'
-      password: 'secret'
     saml_authenticatable: # See https://github.com/apokalipto/devise_saml_authenticatable for more information.
       idp_entity_id: ''
       idp_entity_name: 'TEST ID'

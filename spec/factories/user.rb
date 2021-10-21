@@ -16,13 +16,6 @@ FactoryBot.define do
       session_index             { Faker::Lorem.characters }
     end
 
-    trait :test_saml_user do
-      first_name                { "#{COMPETITIONS_CONFIG[:devise][:test_saml_user][:first_name]}" }
-      last_name                 { "#{COMPETITIONS_CONFIG[:devise][:test_saml_user][:last_name]}" }
-      email                     { "#{COMPETITIONS_CONFIG[:devise][:test_saml_user][:email]}" }
-      uid                       { "#{COMPETITIONS_CONFIG[:devise][:test_saml_user][:uid]}" }
-    end
-
     trait :registered do
       confirmed_at              { Time.now }
       type                      { 'RegisteredUser' }
