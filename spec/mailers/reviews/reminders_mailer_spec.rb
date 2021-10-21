@@ -3,7 +3,7 @@ include UsersHelper
 
 RSpec.describe ReminderMailer, type: :mailer do
   describe 'grant reviews reminder' do
-    let(:grant) { create(:open_grant_with_users_and_form_and_submission_and_reviewer, max_submissions_per_reviewer: 5) }
+    let(:grant)         { create(:open_grant_with_users_and_form_and_submission_and_reviewer, max_submissions_per_reviewer: 5) }
     let(:grant_editor)  { grant.grant_permissions.role_editor.first.user }
     let(:submission)    { grant.submissions.first }
     let(:reviewer)      { grant.reviewers.first }
@@ -37,6 +37,10 @@ RSpec.describe ReminderMailer, type: :mailer do
 
       it 'includes a link to the grant' do
         expect(mailer.body.encoded).to have_link "all your reviews for #{grant.name}"
+      end
+
+      it 'includes the review deadline' do
+        expect(mailer.body.encoded).to have_content grant.review_close_date.strftime("%B %e, %Y")
       end
     end
 

@@ -14,6 +14,10 @@ RSpec.describe ReviewerMailer, type: :mailer do
       expect(mailer.to).to eql [reviewer.email]
     end
 
+    it 'uses the assigner\'s email address' do
+      expect(mailer.cc).to eql [review.assigner.email]
+    end
+
     it 'addresses the reviewer by their full name' do
       expect(mailer.body.encoded).to include "Dear #{reviewer.first_name} #{CGI.escapeHTML(reviewer.last_name)}"
     end
@@ -28,6 +32,10 @@ RSpec.describe ReviewerMailer, type: :mailer do
 
     it 'includes the grant name' do
       expect(mailer.body.encoded).to have_content grant.name
+    end
+
+    it 'includes the review deadline' do
+      expect(mailer.body.encoded).to have_content grant.review_close_date.strftime("%B %e, %Y")
     end
   end
 
