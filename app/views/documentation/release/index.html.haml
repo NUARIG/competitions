@@ -6,6 +6,22 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.14 (October 21, 2021)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Upgrade Rails to version 6.1.4.1.
+            #{github_issue_link(issue: 871)}
+          %li
+            Add review deadline date to the reviewer invitation and reminder emails. Copy the assigner on initial reviewer invitation.
+            #{github_issue_link(issue: 868)} &
+            #{github_issue_link(issue: 869)}
+          %li
+            Add bulk reminder email to reviewer invitation page.
+            #{github_issue_link(issue: 846)}
+
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.13 (August 4, 2021)
     .accordion-content{"data-tab-content" => ""}
       %p
@@ -35,7 +51,6 @@
             Add notification emails when adding or removing applicants.
             #{github_issue_link(issue: 848)}
 
-%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.12 (August 1, 2021)
     .accordion-content{"data-tab-content" => ""}
@@ -57,7 +72,6 @@
             Move Review Guidance from grant overview to review criteria tab.
             #{github_issue_link(issue: 817)}
 
-%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.11 (June 23, 2021)
     .accordion-content{"data-tab-content" => ""}
@@ -78,7 +92,6 @@
             %br
             = link_to "https://github.com/NUARIG/competitions/wiki/Installation-and-configuration-of-test-saml-idp"
 
-%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.10 (April 22, 2021)
     .accordion-content{"data-tab-content" => ""}
