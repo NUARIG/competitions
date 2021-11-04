@@ -2,19 +2,23 @@ class ReviewerMailer < ApplicationMailer
   def assignment(review:)
     set_attributes(review: review)
 
-    mail(to: @reviewer.email, subject: I18n.t('mailers.reviewer_mailer.assignment.subject', application_name: @application_name))
+    mail(to:      @reviewer.email,
+         cc:      @review.assigner.email,
+         subject: I18n.t('mailers.reviewer_mailer.assignment.subject', application_name: @application_name))
   end
 
   def unassignment(review:)
     set_attributes(review: review)
 
-    mail(to: @reviewer.email, subject: I18n.t('mailers.reviewer_mailer.unassignment.subject', application_name: @application_name))
+    mail(to: @reviewer.email,
+         subject: I18n.t('mailers.reviewer_mailer.unassignment.subject', application_name: @application_name))
   end
 
   def opt_out(review:)
     set_attributes(review: review)
 
-    mail(to: get_opt_out_recipients, subject: I18n.t('mailers.reviewer_mailer.opt_out.subject', application_name: @application_name))
+    mail(to: get_opt_out_recipients,
+         subject: I18n.t('mailers.reviewer_mailer.opt_out.subject', application_name: @application_name))
   end
 
   private

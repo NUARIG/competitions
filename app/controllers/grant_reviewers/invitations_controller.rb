@@ -5,7 +5,8 @@ module GrantReviewers
 
     def index
       authorize @grant, :edit?
-      @invitations = GrantReviewer::Invitation.with_inviter.by_grant(@grant)
+      @invitations          = GrantReviewer::Invitation.with_inviter.by_grant(@grant)
+      @has_open_invitations = @invitations.any?{ |invite| invite.confirmed_at.nil? && invite.opted_out_at.nil? }
     end
 
     def update;end

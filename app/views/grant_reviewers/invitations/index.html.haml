@@ -29,6 +29,9 @@
         %ul.menu
           %li.menu-text
             Actions:
+          - if @has_open_invitations
+            %li
+              = link_to 'Send Reminder to Invited Reviewers', grant_invitation_reminders_path(@grant)
           %li
             = link_to 'Back to Reviewers', grant_reviewers_path(@grant)
 

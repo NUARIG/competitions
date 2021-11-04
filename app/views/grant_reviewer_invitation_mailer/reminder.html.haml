@@ -1,12 +1,12 @@
 %p
-  You have been invited by #{full_name(@inviter)} to be a reviewer for
+  This is a friendly reminder that you have been invited by #{full_name(@inviter)} to be a reviewer for
   %br
   #{@grant.name}
   %br
   a grant in #{link_to COMPETITIONS_CONFIG[:application_name], get_login_url_by_email_address(@email)}.
 
 %p
-  By clicking the link above you will be prompted to create your account.
+  Once you have logged in, you may also opt out of this request.
 
 %p
   If you have questions, you can contact #{full_name(@inviter)} at #{@inviter.email}.
