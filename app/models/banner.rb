@@ -6,4 +6,6 @@ class Banner < ApplicationRecord
   scope :by_created_at,   -> { order(created_at: :desc) }
 
   validates_presence_of   :body
+
+  broadcasts_to ->(banner) { :banners }, inserts_by: :prepend
 end

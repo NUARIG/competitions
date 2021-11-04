@@ -143,13 +143,17 @@ header {
   }
 }
 
-th {
+th,
+#turbo-table .header {
+  background-color: $table-head-background;
   font-size: .85em;
+  font-weight: bold;
   text-align: left;
   vertical-align: bottom;
 }
 
-td {
+td,
+#turbo-table .row .columns {
   vertical-align: top;
   ul.menu a {
     padding-top: 0.25em;
@@ -217,24 +221,38 @@ h2#section {
 }
 
 // grant dates
-  #grant-dates {
-    .card-divider {
-      padding: .5rem 1rem;
+#grant-dates {
+  .card-divider {
+    padding: .5rem 1rem;
+  }
+  .card-section {
+    padding: 0.5rem 1rem;
+  }
+  dl {
+    dt {
+      font-size: .95rem;
+      font-weight: bold;
+      margin-bottom: 0;
     }
-    .card-section {
-      padding: 0.5rem 1rem;
+    dd {
+      margin-top: 0;
     }
-    dl {
-      dt {
-        font-size: .95rem;
-        font-weight: bold;
-        margin-bottom: 0;
-      }
-      dd {
-        margin-top: 0;
-      }
-      hr {
-        margin: .5rem;
-      }
+    hr {
+      margin: .5rem;
     }
   }
+}
+
+#turbo-table {
+  margin: 2rem 0;
+  border: $table-border;
+
+  .columns {
+    border-bottom: $table-border;
+    padding: $table-padding;
+  }
+
+  .turbo-row:nth-of-type(even) {
+    background-color: #f1f1f1;
+  }
+}

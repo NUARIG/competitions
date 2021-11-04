@@ -20,5 +20,6 @@
 //= require jquery_nested_form
 //= require cocoon
 //= require pagy
+//= require turbo
 //= require_tree .
 $(function(){ $(document).foundation(); });

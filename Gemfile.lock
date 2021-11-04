@@ -215,6 +215,10 @@ GEM
       haml (>= 4.0.6, < 6.0)
       html2haml (>= 1.0.1)
       railties (>= 5.1)
+    hotwire-rails (0.1.3)
+      rails (>= 6.0.0)
+      stimulus-rails
+      turbo-rails
     html2haml (2.2.0)
       erubis (~> 2.7.0)
       haml (>= 4.0, < 6)
@@ -399,15 +403,16 @@ GEM
     sshkit (1.21.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stimulus-rails (0.7.1)
+      rails (>= 6.0.0)
     temple (0.8.2)
     thor (1.1.0)
     tilt (2.0.10)
     timeliness (0.4.4)
     trix (0.10.1)
       rails
-    turbolinks (5.2.1)
-      turbolinks-source (~> 5.2)
-    turbolinks-source (5.2.0)
+    turbo-rails (7.1.1)
+      rails (>= 6.0.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
@@ -469,6 +474,7 @@ DEPENDENCIES
   foundation-rails (~> 6.5.1.0)
   friendly_id (~> 5.4.0)
   haml-rails (~> 2.0.1)
+  hotwire-rails
   i18n-debug
   jbuilder (~> 2.5)
   jquery-rails (>= 4.3.5)
@@ -497,7 +503,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   sprockets-es6
   trix
-  turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)
   validates_timeliness (= 6.0.0.alpha1)

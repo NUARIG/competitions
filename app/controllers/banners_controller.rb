@@ -7,6 +7,7 @@ class BannersController < ApplicationController
       @q = Banner.all.ransack(params[:q])
       @q.sorts = 'created_at desc' if @q.sorts.empty?
       @pagy, @banners = pagy(@q.result, i18n_key: 'activerecord.models.banner')
+      @banner = Banner.new
     else
       flash[:alert] = I18n.t('pundit.default')
       redirect_to root_path
@@ -23,7 +24,8 @@ class BannersController < ApplicationController
     authorize @banner
     if @banner.save
       # TODO: Confirm messages the user should see
-      redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
+      # format.turbo_stream
+      format.html { redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success') }
     else
       flash.now[:alert] = @banner.errors.full_messages
       render :new

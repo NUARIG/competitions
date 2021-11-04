@@ -9,7 +9,10 @@
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = stylesheet_link_tag     wicked_pdf_asset_base64("pdf")
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    / = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+    = turbo_include_tags
+
 
   %body.grid-container
     = render 'layouts/header'

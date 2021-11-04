@@ -2,28 +2,32 @@
 
 class BannerPolicy < ApplicationPolicy
 
-  def new?
+  def index?
     user.system_admin?
   end
 
+  def new?
+    index?
+  end
+
   def create?
-    new?
+    index?
   end
 
   def edit?
-    new?
+    index?
   end
 
   def show?
-    new?
+    index?
   end
 
   def update?
-    new?
+    index?
   end
 
   def destroy?
-    new?
+    index?
   end
 
   private

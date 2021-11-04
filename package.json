@@ -1,5 +1,17 @@
 {
   "name": "competitions",
+  "version": "1.4",
+  "description": "Competitions is an open source tool to run NIH-style peer review of competitions, pilot projects, and research proposals in a cloud-based consortium-wide single sign-on platform.",
+  "main": "index.js",
+  "repository": "https://github.com/NUARIG/competitions.git",
+  "author": "Firas Wehbe <firas.wehbe@northwestern.edu>",
+  "license": "MIT",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "@hotwired/stimulus": "^3.0.1",
+    "@hotwired/turbo-rails": "^7.0.1",
+    "@rails/actioncable": "^6.0.0",
+    "@rails/activestorage": "^6.0.0",
+    "@rails/ujs": "^6.0.0"
+  }
 }

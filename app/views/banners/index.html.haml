@@ -2,10 +2,10 @@
 
 - if current_user.system_admin?
   %h3
-
     = yield(:page_title)
 
-  = link_to 'Create New Banner', new_banner_path, class: 'button primary'
+  = form_with model: @banner do |f|
+    = render 'new_form', f: f
 
   - if @banners.none?
     %p
