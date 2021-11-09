@@ -2,10 +2,18 @@
 
 import Rails from "@rails/ujs"
 import * as ActiveStorage from "@rails/activestorage"
-import "channels"
+// import "./channels"
 import "@hotwired/turbo-rails"
 
-// import "controllers"
+import "./src/vendor/jquery"
+import "jquery-ui"
+import "jquery_nested_form"
+import "trix"
+import "@rails/actiontext"
+import "foundation-sites"
+import "foundation-datepicker"
+import "select2"
+
 import "./controllers"
 
 Rails.start()
@@ -18,5 +26,5 @@ require('./src/legacy/form_builder_standard_answer')
 require('./src/legacy/form_builder_survey')
 require('./src/legacy/form_builder_upload_setup')
 require('./src/legacy/foundation-datepicker')
-require('./src/legacy/grant_permission')
+require('./src/legacy/grant_permissions')
 require('./src/legacy/reviews')

@@ -25,6 +25,13 @@
   resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.1.4.tgz#c3c5a9f8302c429af9722b6c50ab48049016d2a3"
   integrity sha512-0LmSKJTuo2dL6BQ+9xxLnS9lbkyfz2mBGeBnQ2J7o9Bn0l0q+ZC6VuoZMZZXPvABI4QT7Nfknv5WhfKYL+boew==
 
+"@rails/actiontext@^6.1.4-1":
+  version "6.1.4-1"
+  resolved "https://registry.yarnpkg.com/@rails/actiontext/-/actiontext-6.1.4-1.tgz#c75fbeeb7860c2f508150ad003c0c0d0c97c7584"
+  integrity sha512-dS7AdkJtSyuX2PXipCTNOKEg5G/ftwS+FmM5+8Zxbo35tgs08hfYFPh0muoj5eEkshwV67kEEV/iHgX8PMLh4w==
+  dependencies:
+    "@rails/activestorage" "^6.0.0"
+
 "@rails/activestorage@^6.0.0":
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/@rails/activestorage/-/activestorage-6.1.4.tgz#7772f539cc846df5f4364fc57ccb48860f9e966e"
@@ -36,6 +43,18 @@
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.4.tgz#093d5341595a02089ed309dec40f3c37da7b1b10"
   integrity sha512-O3lEzL5DYbxppMdsFSw36e4BHIlfz/xusynwXGv3l2lhSlvah41qviRpsoAlKXxl37nZAqK+UUF5cnGGK45Mfw==
+
+cssom@0.2.x:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.2.5.tgz#2682709b5902e7212df529116ff788cd5b254894"
+  integrity sha1-JoJwm1kC5yEt9SkRb/eIzVslSJQ=
+
+debug@*:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
+  integrity sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
+  dependencies:
+    ms "2.1.2"
 
 esbuild-android-arm64@0.13.12:
   version "0.13.12"
@@ -145,7 +164,76 @@ esbuild@^0.13.12:
     esbuild-windows-64 "0.13.12"
     esbuild-windows-arm64 "0.13.12"
 
+foundation-datepicker@^1.5.6:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/foundation-datepicker/-/foundation-datepicker-1.5.6.tgz#6dc891f3f6422028219f74284d1684548a8ca4bf"
+  integrity sha1-bciR8/ZCICghn3QoTRaEVIqMpL8=
+
+foundation-sites@^6.7.4:
+  version "6.7.4"
+  resolved "https://registry.yarnpkg.com/foundation-sites/-/foundation-sites-6.7.4.tgz#495ddb3b7014ae33df3bf7cc1f9fe74b2cfd572e"
+  integrity sha512-2QPaZJ0Od0DyklhQyKC3zPbr8AAUXSkr1scZJrQTgj/KTLresuCgUBfi7ft32NlOWhuqVXisjOgTE8N5EPS3cg==
+
+foundation@^4.2.1-1:
+  version "4.2.1-1"
+  resolved "https://registry.yarnpkg.com/foundation/-/foundation-4.2.1-1.tgz#4e497e2d9737533334b1e68354cd8dd039cbc47b"
+  integrity sha1-Tkl+LZc3UzM0seaDVM2N0DnLxHs=
+  dependencies:
+    stylus "~0.32.1"
+    stylus-type-utils "~0.0.3"
+
+jquery-ui@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.13.0.tgz#ab5ac65f37ca093c51b3478c4097f55bbc008f36"
+  integrity sha512-Osf7ECXNTYHtKBkn9xzbIf9kifNrBhfywFEKxOeB/OVctVmLlouV9mfc2qXCp6uyO4Pn72PXKOnj09qXetopCw==
+  dependencies:
+    jquery ">=1.8.0 <4.0.0"
+
+"jquery@>=1.8.0 <4.0.0", jquery@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
+  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
+
+jquery_nested_form@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/jquery_nested_form/-/jquery_nested_form-0.3.3.tgz#f24f79bdf2423e006016277939ff9d86e7aa316e"
+  integrity sha512-6y6ngyzD+D2G4RRembajJIXruU09DDGoaeQfaddYNv/jhVzcpMesFk6yM5P2e/+ruXU934gHd/ieyaekVibsoA==
+
+mkdirp@0.3.x:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
+  integrity sha1-3j5fiWHIjHh+4TaN+EmsRBPsqNc=
+
+ms@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
+  integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
+
+select2@^4.1.0-rc.0:
+  version "4.1.0-rc.0"
+  resolved "https://registry.yarnpkg.com/select2/-/select2-4.1.0-rc.0.tgz#ba3cd3901dda0155e1c0219ab41b74ba51ea22d8"
+  integrity sha512-Hr9TdhyHCZUtwznEH2CBf7967mEM0idtJ5nMtjvk3Up5tPukOLXbHUNmh10oRfeNIhj+3GD3niu+g6sVK+gK0A==
+
 spark-md5@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/spark-md5/-/spark-md5-3.0.2.tgz#7952c4a30784347abcee73268e473b9c0167e3fc"
   integrity sha512-wcFzz9cDfbuqe0FZzfi2or1sgyIrsDwmPwfZC4hiNidPdPINjeUwNfv5kldczoEAcjl9Y1L3SM7Uz2PUEQzxQw==
+
+stylus-type-utils@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/stylus-type-utils/-/stylus-type-utils-0.0.3.tgz#f048334728bb5144ecd599c627553db64ea0a6bb"
+  integrity sha1-8EgzRyi7UUTs1ZnGJ1U9tk6gprs=
+
+stylus@~0.32.1:
+  version "0.32.1"
+  resolved "https://registry.yarnpkg.com/stylus/-/stylus-0.32.1.tgz#3d28275bd9f181085f8dd0fa52a8559696978212"
+  integrity sha1-PSgnW9nxgQhfjdD6UqhVlpaXghI=
+  dependencies:
+    cssom "0.2.x"
+    debug "*"
+    mkdirp "0.3.x"
+
+trix@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/trix/-/trix-1.3.1.tgz#ccce8d9e72bf0fe70c8c019ff558c70266f8d857"
+  integrity sha512-BbH6mb6gk+AV4f2as38mP6Ucc1LE3OD6XxkZnAgPIduWXYtvg2mI3cZhIZSLqmMh9OITEpOBCCk88IVmyjU7bA==

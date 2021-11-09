@@ -38,7 +38,7 @@ Capybara.server = :webrick
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -57,6 +57,9 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # You can uncomment this line to turn off ActiveRecord support entirely.
+  # config.use_active_record = false
+
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
@@ -64,7 +67,7 @@ RSpec.configure do |config|
   # You can disable this behaviour by removing the line below, and instead
   # explicitly tag your specs with their type, e.g.:
   #
-  #     RSpec.describe UsersController, :type => :controller do
+  #     RSpec.describe UsersController, type: :controller do
   #       # ...
   #     end
   #
