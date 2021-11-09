@@ -238,6 +238,8 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
+    jsbundling-rails (0.1.9)
+      railties (>= 6.0.0)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -479,6 +481,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails (>= 4.3.5)
   jquery-ui-rails
+  jsbundling-rails
   listen (~> 3.5.1)
   nested_form
   pagy (~> 4.10.1)
