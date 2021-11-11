@@ -14,7 +14,7 @@ import "@rails/actiontext"
 import "foundation-sites"
 import "foundation-datepicker"
 import "motion-ui"
-import "select2"
+import "./src/vendor/select2"
 
 import "./controllers"
 

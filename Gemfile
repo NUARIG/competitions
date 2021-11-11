@@ -57,7 +57,7 @@ gem 'validates_timeliness', '6.0.0.alpha1'
 # form_builder
 gem "cocoon"
 gem "nested_form"
-gem "select2-rails"
+# gem "select2-rails"
 
 # s3
 gem "aws-sdk-s3", require: false

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).on('turbo:load', function()  {
   $('button.clear-button').click(function () {
     $clearButton = $(this)
     $scoringContainer = $clearButton.closest('.scoring')
