@@ -20,6 +20,9 @@ import "./controllers"
 
 Rails.start()
 ActiveStorage.start()
+$(document).on('turbo:load', function() {
+    $(function(){ $(document).foundation(); });
+});
 
 require('./src/legacy/app')
 // require('./src/legacy/cable')
@@ -29,8 +32,5 @@ require('./src/legacy/form_builder_survey')
 require('./src/legacy/form_builder_upload_setup')
 require('./src/legacy/foundation-datepicker')
 require('./src/legacy/grant_permissions')
+// require('./src/legacy/grant_reviewers')
 require('./src/legacy/reviews')
-
-$(document).on('turbo:load', function() {
-    $(function(){ $(document).foundation(); });
-});
