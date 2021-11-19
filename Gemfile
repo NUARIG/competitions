@@ -34,8 +34,8 @@ gem 'rubyzip',                      '~> 2.3.0'
 
 # frontend
 gem 'font-awesome-rails'
+gem 'foundation-rails', '~> 6.5.3.0'
 gem 'foundation-datepicker-rails'
-gem 'foundation-rails', '~> 6.5.1.0'
 gem 'friendly_id',      '~> 5.4.0'
 gem 'haml-rails',       '~> 2.0.1'
 gem 'jquery-rails',     '>= 4.3.5'
