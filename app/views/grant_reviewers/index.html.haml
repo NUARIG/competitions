@@ -75,6 +75,13 @@
 
 :javascript
   function downloadJSAtOnload() {
+    $.ajaxSetup({
+      beforeSend: function(xhr)
+      {
+        xhr.setRequestHeader('X-CSRF-Token', '#{form_authenticity_token}')
+      }
+    });
+
     $(function() {
       current_location = '/grants/#{@grant.to_param}/reviewers';
 
@@ -91,9 +98,7 @@
             $.ajax({
               type: "POST",
               url: $(ui.draggable).data("destinationUrl"),
-              beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', '#{form_authenticity_token}')},
               data: { "reviewer_id": reviewer_id },
-
               success: function(data) {
                 window.location.href = current_location;
               },
@@ -116,7 +121,6 @@
           $.ajax({
             type: "DELETE",
             url: $(ui.draggable).data("destinationUrl"),
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', '#{form_authenticity_token}')},
             success: function(data) {
               window.location.href = current_location;
             },

@@ -21,7 +21,7 @@ import "./controllers"
 Rails.start()
 ActiveStorage.start()
 $(document).on('turbo:load', function() {
-    $(function(){ $(document).foundation(); });
+  $(function(){ $(document).foundation(); });
 });
 
 require('./src/legacy/app')
