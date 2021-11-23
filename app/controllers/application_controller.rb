@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   protect_from_forgery prepend: true, with: :exception
+  # protect_from_forgery with: :null_session
+
+
 
   def user_for_paper_trail
     user_signed_in? ? current_user.id : 'Unauthenticated user'
