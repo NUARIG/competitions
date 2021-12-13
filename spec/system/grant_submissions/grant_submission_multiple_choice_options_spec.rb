@@ -18,9 +18,13 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
 
     context 'edit' do
       scenario 'requires at least one option' do
-        @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options.count.times do
+        # Capybara.ignore_hidden_elements = false
+        options = @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options
+        first_option = options.first
+        options.count.times do
           accept_alert do
-            find('.delete-option', match: :first).click
+            # page.find("#delete-option-#{first_option.id}", visible: all).click
+            page.find("#delete-option-#{first_option.id}").click
           end
         end
         click_button 'Save'
@@ -28,12 +32,13 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
         find('.add-option').click
         click_button 'Save'
         expect(page).to have_text 'Multiple Choice Option text cannot be empty'
+        # Capybara.ignore_hidden_elements = false
       end
 
       scenario 'requires text' do
         @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options.count.times do
           accept_alert do
-            find('.delete-option', match: :first).click
+            page.find("#delete-option-#{first_option.id}", :visible => false).click
           end
         end
         find('.add-option').click
