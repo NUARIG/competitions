@@ -52,7 +52,7 @@ RSpec.describe BannersController, type: :controller do
           expect(assigns(:banner)).to be_persisted
         end
 
-        it "redirects to the created banner" do
+        it "redirects to banners index after banner creation" do
           post :create, params: {banner: valid_attributes }
           expect(response).to redirect_to(banners_path)
         end
