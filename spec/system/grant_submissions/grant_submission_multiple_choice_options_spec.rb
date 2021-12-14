@@ -21,10 +21,11 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
         # Capybara.ignore_hidden_elements = false
         options = @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options
         first_option = options.first
+        byebug
         options.count.times do
           accept_alert do
-            # page.find("#delete-option-#{first_option.id}", visible: all).click
-            page.find("#delete-option-#{first_option.id}").click
+            page.find("#delete-option-#{first_option.id}", visible: all).click
+            # page.find("#delete-option-#{first_option.id}").click
           end
         end
         click_button 'Save'
