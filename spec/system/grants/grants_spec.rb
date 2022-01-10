@@ -206,6 +206,11 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           expect(page).to have_content 'Log in'
           click_link 'Log in'
+
+          expect(page).to have_link 'Continue with Email', href: new_registered_user_session_path
+          click_link 'Continue with Email'
+          expect(current_path).to eq("/registered_users/sign_in")
+
           fill_in 'Email address', with: registered_submitter.email
           fill_in 'Password', with: registered_submitter.password
           click_button 'Log in'
