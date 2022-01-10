@@ -1,7 +1,7 @@
 class AddAverageScoreColumnsToGrantSubmissionSubmissions < ActiveRecord::Migration[5.2]
   def up
-    add_column :grant_submission_submissions, :average_overall_impact_score, :decimal, { precision: 5, scale: 2 }
-    add_column :grant_submission_submissions, :composite_score, :decimal, { precision: 5, scale: 2 }
+    add_column :grant_submission_submissions, :average_overall_impact_score, :decimal, :precision => 5, :scale => 2
+    add_column :grant_submission_submissions, :composite_score, :decimal, :precision => 5, :scale => 2
 
     GrantSubmission::Submission.all.each do |submission|
       submission.update(average_overall_impact_score: submission.set_average_overall_impact_score)
