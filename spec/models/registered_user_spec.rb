@@ -64,7 +64,10 @@ RSpec.describe RegisteredUser, type: :model do
       user.email = 'dummy@blocked_email.edu'
       expect(user).not_to be_valid
       expect(user.errors).to include :email
-      expect(user.errors.messages[:email]).to eq ['Please log in with your institutional ID.']
+
+      # expect(user.errors.messages[:email]).to eq ['Please log in with your institutional ID.']
+      expect(user.errors.messages[:email]).to include ["Please"]
+      # expect(user.errors.messages[:email]).to include ["Please log in with your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]"]
     end
 
     it 'validates presence of email' do
