@@ -10,7 +10,7 @@ en:
       saml_user:
         invalid: "Log in failed. Please confirm your institutional ID and password."
       registered_user:
-        saml_user_domain: '<a href="/users/saml/sign_in">Log in with your Institutional ID.</a>'
+        saml_user_domain: "<a href=%{link}>%{link_text}</a>"
         invalid: Incorrect e-mail address or password.
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."

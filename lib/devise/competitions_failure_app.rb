@@ -10,7 +10,7 @@ module Devise
 
       message = warden_message || default || :unauthenticated
 
-      message = :saml_user_domain if (message == :not_found_in_database && saml_domains.include?(user_domain))
+      message   = :saml_user_domain if (message == :not_found_in_database && saml_domains.include?(user_domain))
 
       if message.is_a?(Symbol)
         options = {}
@@ -21,6 +21,9 @@ module Devise
         keys = (auth_keys.respond_to?(:keys) ? auth_keys.keys : auth_keys).map { |key| scope_class.human_attribute_name(key) }
         options[:authentication_keys] = keys.join(I18n.translate(:"support.array.words_connector"))
         options = i18n_options(options)
+
+        options[:link]      = Rails.application.routes.url_helpers.new_saml_user_session_path
+        options[:link_text] = "Log in with your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}."
 
         I18n.t(:"#{scope}.#{message}", **options)
       else
