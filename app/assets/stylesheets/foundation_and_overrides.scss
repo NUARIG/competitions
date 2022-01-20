@@ -55,6 +55,12 @@
 // @include motion-ui-transitions;
 // @include motion-ui-animations;
 
+.close-button, .close-button.medium {
+  right: 0.5rem;
+  top: 0rem;
+  font-size: 1.25em;
+}
+
 .help-text {
   color: $dark-gray;
   padding-left: 0.15em;
