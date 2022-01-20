@@ -8,11 +8,9 @@ en:
       send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
     failure:
       saml_user:
-        invalid: "Log in failed. Please confirm your NetID or password."
+        invalid: "Log in failed. Please confirm your institutional ID and password."
       registered_user:
-        idp_entity_message:
-          - 'Please log in with your
-          - <a href="/users/saml/sign_in">Institutional ID</a>.'
+        invalid_idp_domain: '<a href="/users/saml/sign_in">Log in with your Institutional ID.</a>'
         invalid: Incorrect e-mail address or password.
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."

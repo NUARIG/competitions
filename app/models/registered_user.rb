@@ -11,7 +11,7 @@ class RegisteredUser < User
   validate  :cannot_register_with_spam_domain
 
   def cannot_register_with_saml_email
-    errors.add(:email, "\n Please log in with your #{ActionController::Base.helpers.link_to "#{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}", Rails.application.routes.url_helpers.new_saml_user_session_path}") if User.is_saml_email_address?(email: email)
+    errors.add(:email, "\n #{ActionController::Base.helpers.link_to "Log in with your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}", Rails.application.routes.url_helpers.new_saml_user_session_path}") if User.is_saml_email_address?(email: email)
   end
 
   def cannot_register_with_spam_domain
