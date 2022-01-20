@@ -10,7 +10,7 @@ module Devise
 
       message = warden_message || default || :unauthenticated
 
-      message = :restricted_idp_domain if (message == :not_found_in_database && saml_domains.include?(user_domain))
+      message = :saml_user_domain if (message == :not_found_in_database && saml_domains.include?(user_domain))
 
       if message.is_a?(Symbol)
         options = {}
