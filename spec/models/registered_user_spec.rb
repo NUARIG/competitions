@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+include UsersHelper
 
 RSpec.shared_examples "a restricted domain" do
   describe "restricted_domain_email" do
@@ -62,9 +63,10 @@ RSpec.describe RegisteredUser, type: :model do
 
     it 'checks for saml email domains' do
       user.email = 'dummy@blocked_email.edu'
+
       expect(user).not_to be_valid
       expect(user.errors).to include :email
-      expect(user.errors.messages[:email]).to eq ['Please log in with your institutional ID.']
+      expect(user.errors.messages[:email].first).to include "Log in with your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}"
     end
 
     it 'validates presence of email' do

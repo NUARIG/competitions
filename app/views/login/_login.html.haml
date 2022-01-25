@@ -4,13 +4,9 @@
 
 .cell
   .instructions.registered
-    With your institutional account
   = link_to "With #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}",  new_saml_user_session_path, class: 'saml-log-in button expanded'
 .cell.or
   OR
 .cell
   .instructions.registered
-    Enter your account details
-  = render partial: 'devise/sessions/form', locals: { resource: 'registered_user', resource_name: 'registered_user' }
-.cell
-  = render partial: 'devise/shared/links', locals: {resource: 'registered_user', resource_name: 'registered_user' }
+  = link_to "Continue with Email",  new_registered_user_session_path, class: 'registered-user-log-in button expanded'
