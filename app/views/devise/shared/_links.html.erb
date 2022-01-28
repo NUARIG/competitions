@@ -1,9 +1,15 @@
-<div id="registered-user-links">
+<div id="registered-user-signin">
   <%- if controller_name != 'sessions' && controller_name != 'login' %>
     Already have an account?
     <%= link_to "Log in", login_index_path() %><br />
   <% end %>
+</div>
 
+<div id="saml-user-link">
+  <%= link_to "Login with your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}", new_saml_user_session_path(resource_name) %><br />
+</div>
+
+<div id="registered-user-links">
   <%- if controller_name != 'registrations' %>
     <%= "New user (without #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]})?"%>
     <%= link_to "Create an account", new_registration_path(resource_name) %><br />
@@ -17,8 +23,4 @@
   <%- if controller_name != 'confirmations' %>
     <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />
   <% end %>
-</div>
-
-<div id="saml-user-link">
-  <%= link_to "Login with your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}", new_saml_user_session_path(resource_name) %><br />
 </div>
