@@ -7,9 +7,9 @@ class GrantDecorator < Draper::Decorator
 
   def name_length_class
     case
-    when object.name.length > 50
+    when object.name.length > 100
       'long'
-    when object.name.length > 35
+    when object.name.length > 50
       'medium'
     end
   end

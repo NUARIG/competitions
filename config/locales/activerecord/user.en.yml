@@ -13,10 +13,15 @@ en:
       registered_user:
         <<: *user
         uid: Email
+        saml_email: ''
     errors:
       models:
         user:
           <<: *user
+        registered_user:
+          attributes:
+            email:
+              saml_email_invalid: 'is not valid for this type of account.'
     models:
       user:
         one: user

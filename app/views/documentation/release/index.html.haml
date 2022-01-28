@@ -6,6 +6,19 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.15 (January 26, 2022)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Account for long grant titles in CSS.
+            #{github_issue_link(issue: 880)}
+          %li
+            Clarify the login page with better error messages and links.
+            #{github_issue_link(issue: 885)}
+
+%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.14 (October 21, 2021)
     .accordion-content{"data-tab-content" => ""}
       %p

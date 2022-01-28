@@ -35,7 +35,7 @@ main.sessions {
 }
 
 main.login {
-  .saml-log-in {
+  .saml-log-in, .registered-user-log-in {
     font-weight: bold;
   }
 
