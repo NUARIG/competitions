@@ -55,7 +55,7 @@ RSpec.describe GrantPermissionMailers::SubmissionMailer, type: :mailer do
           submitter_applicant.save
         end
 
-        it "includes the applicant\'s name" do
+        it "includes the applicant's name" do
           expect(mailer.body).to include(full_name(submitter_applicant.applicant))
         end
 
