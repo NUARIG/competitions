@@ -3,18 +3,12 @@ module Devise
     protected
 
     def i18n_message(default = nil)
+      user_domain     = params.dig(:registered_user, :uid).try(:split, "@").try(:last)
+      saml_domains    = COMPETITIONS_CONFIG.dig(:devise, :registerable, :saml_domains)
+      idp_entity_name = COMPETITIONS_CONFIG.dig(:devise, :saml_authenticatable, :idp_entity_name)
 
       message = warden_message || default || :unauthenticated
-
-      if params[:registered_user].present?
-        user_domain     = params[:registered_user][:uid].split("@").last
-        saml_domains    = COMPETITIONS_CONFIG[:devise][:registerable][:saml_domains]
-        idp_entity_name = COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]
-
-        if (message == :not_found_in_database && saml_domains.include?(user_domain))
-          message   = :saml_user_domain
-        end
-      end
+      message = :saml_user_domain if (message == :not_found_in_database && saml_domains.include?(user_domain))
 
       if message.is_a?(Symbol)
         options = {}
