@@ -6,6 +6,16 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.15.1 (January 26, 2022)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Add a check for existence of registered user.
+            #{github_issue_link(issue: 891)}
+
+%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.15 (January 26, 2022)
     .accordion-content{"data-tab-content" => ""}
       %p
