@@ -3,6 +3,8 @@
     <div class="cell align-center-middle">
       <h3>Resend Confirmation</h2>
 
+      <%= render "devise/shared/login_prepend_links" %>
+
       <div class="cell">
         <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
           <div id="fields">
@@ -16,7 +18,7 @@
             </div>
           <% end %>
 
-        <%= render "devise/shared/links" %>
+        <%= render "devise/shared/login_append_links" %>
       </div>
     </div>
   </div>

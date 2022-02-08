@@ -1,12 +1,18 @@
 
 %h3
-  = "Log in"
+  Log In
 
 .cell
-  .instructions.registered
-  = link_to "With #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}",  new_saml_user_session_path, class: 'saml-log-in button expanded'
+  .instructions.saml
+  = link_to "With your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}",  new_saml_user_session_path, class: 'saml-log-in button expanded'
 .cell.or
   OR
 .cell
-  .instructions.registered
-  = link_to "Continue with Email",  new_registered_user_session_path, class: 'registered-user-log-in button expanded'
+  = link_to "Continue with your #{COMPETITIONS_CONFIG[:application_name]} account",  new_registered_user_session_path, class: 'registered-user-log-in button expanded'
+
+  %p
+
+    = "New user (without #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]})?"
+    = link_to 'Create an account', new_registered_user_registration_path
+
+    = render 'devise/shared/login_append_links'
