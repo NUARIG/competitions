@@ -19,7 +19,7 @@ RSpec.describe 'Home', type: :system do
     describe 'header links' do
       context 'anonymous user' do
         scenario 'displays login link' do
-          expect(page).to have_link 'Log in'
+          expect(page).to have_link 'Log In'
         end
 
         scenario 'displays help log in links' do

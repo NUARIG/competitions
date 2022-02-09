@@ -5,9 +5,7 @@
         Create an Account
 
       .cell
-        %p
-          = "#{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]} user?"
-          = link_to 'Log in', new_saml_user_session_path
+        = render 'devise/shared/login_prepend_links'
         %p
           Please provide the following information to create a new account.
           %br
@@ -34,4 +32,4 @@
             .cell
               = f.submit "Create My Account", class: 'button expanded'
 
-        = render "devise/shared/links"
+        = render "devise/shared/login_append_links"

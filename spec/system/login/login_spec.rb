@@ -4,12 +4,11 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Login', type: :system do
-
   describe 'Home page', js: true do
     scenario 'home page login link navigates to login page' do
       visit root_path
-      expect(page).to have_link 'Log in'
-      click_link 'Log in'
+      expect(page).to have_link 'Log In'
+      click_link 'Log In'
       expect(current_path).to eq(login_index_path)
     end
   end
@@ -20,11 +19,11 @@ RSpec.describe 'Login', type: :system do
     end
 
     scenario 'login page has SAML ID login button' do
-      expect(page).to have_selector(:link_or_button, "With #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}")
+      expect(page).to have_selector(:link_or_button, "With your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}")
     end
 
     scenario 'login page has Registered Account login button' do
-      expect(page).to have_selector(:link_or_button, "Continue with Email")
+      expect(page).to have_selector(:link_or_button, REGISTERED_USER_LOGIN_BUTTON_TEXT)
     end
   end
 
@@ -49,13 +48,14 @@ RSpec.describe 'Login', type: :system do
         editor_permission
         visit grant_reviews_path(grant)
 
-        expect(page).to have_link 'Continue with Email', href: new_registered_user_session_path
-        click_link 'Continue with Email'
-        expect(current_path).to eq("/registered_users/sign_in")
+        expect(page).to have_link REGISTERED_USER_LOGIN_BUTTON_TEXT, href: new_registered_user_session_path
+        click_link REGISTERED_USER_LOGIN_BUTTON_TEXT
+        expect(current_path).to eq('/registered_users/sign_in')
 
         find(:css, "#registered_user_uid").set(registered_editor.email)
         find(:css, "#registered_user_password").set(registered_editor.password)
-        click_button 'Log in'
+
+        click_button 'Log In'
         expect(page).to have_current_path grant_reviews_path(grant)
       end
     end
