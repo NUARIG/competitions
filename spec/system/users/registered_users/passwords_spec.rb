@@ -71,6 +71,14 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
             visit profile_path(saml_user)
             expect(page).not_to have_content 'Change Your Password'
           end
+
+          scenario 'Visiting password page redirects to root' do
+            visit profile_path(saml_user)
+            visit edit_registered_user_registration_path
+            expect(page).not_to have_content 'Change Your Password'
+            expect(page).to have_content 'You are already logged in.'
+            expect(current_path).to eq root_path
+          end
         end
 
         context 'registered user' do

@@ -4,6 +4,9 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Login', type: :system do
+  let(:registered_user) { create(:registered_user) }
+  let(:saml_user) { create(:saml_user) }
+
   describe 'Home page', js: true do
     scenario 'home page login link navigates to login page' do
       visit root_path
@@ -58,6 +61,24 @@ RSpec.describe 'Login', type: :system do
         click_button 'Log In'
         expect(page).to have_current_path grant_reviews_path(grant)
       end
+    end
+  end
+
+  describe 'with logged in user' do
+    scenario 'saml_user is redirected to the home page' do
+      sign_in saml_user
+      visit login_index_path
+
+      expect(page).to have_text('You are already logged in.')
+      expect(current_path).to eq root_path
+    end
+
+    scenario 'registered_user is redirected to the home page' do
+      sign_in registered_user
+      visit login_index_path
+
+      expect(page).to have_text('You are already logged in.')
+      expect(current_path).to eq root_path
     end
   end
 end
