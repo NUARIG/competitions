@@ -41,7 +41,7 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
 
   describe 'update' do
     describe 'existing users' do
-      let(:token) {registered_user.send_reset_password_instructions }
+      let(:token) { registered_user.send_reset_password_instructions }
 
       context 'user not logged in' do
         scenario 'displays error with invalid token' do
@@ -62,7 +62,7 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
       end
 
       context 'user logged in' do
-        context 'registered user' do\
+        context 'saml user' do
           before(:each) do
             login_as(saml_user, scope: :saml_user)
           end
