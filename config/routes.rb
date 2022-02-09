@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   devise_for :registered_users, controllers: {
                                   confirmations:  'registered_users/confirmations',
                                   passwords:      'registered_users/passwords',
-                                  registrations:  'registered_users/registrations'
+                                  registrations:  'registered_users/registrations',
+                                  sessions:       'registered_users/sessions'
                                 }
 
   devise_for :saml_users, path: 'users',

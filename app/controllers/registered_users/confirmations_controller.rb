@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RegisteredUsers::ConfirmationsController < Devise::ConfirmationsController
+  before_action :redirect_logged_in_user_to_root, if: -> { saml_user_signed_in? }
+
   # POST /resource/confirmation
   def create
     self.resource = resource_class.send_confirmation_instructions(resource_params)

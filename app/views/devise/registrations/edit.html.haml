@@ -1,17 +1,20 @@
 %h3
   Change Your Password
+
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
   .field
     = f.label :email
     = f.email_field :email, disabled: true, autofocus: true, autocomplete: "email"
+
   - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-    %div
-      Currently waiting confirmation for: #{resource.unconfirmed_email}
+    %div.help-text
+      Currently awaiting confirmation for: #{resource.unconfirmed_email}
+
   .field
-    = f.label :current_password, 'Current Password'
+    = f.label :current_password
     = f.password_field :current_password, autocomplete: "current-password"
   .field
-    = f.label :password, 'New Password'
+    = f.label :password
     = f.password_field :password, autocomplete: "new-password"
     - if @minimum_password_length
       %div.help-text

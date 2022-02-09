@@ -1,4 +1,6 @@
 class RegisteredUsers::RegistrationsController < Devise::RegistrationsController
+  before_action :redirect_logged_in_user_to_root, if: -> { saml_user_signed_in? }
+
   def create
     build_resource(sign_up_params)
 
