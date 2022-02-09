@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery prepend: true, with: :exception
 
   def user_for_paper_trail
-    user_signed_in? ? current_user.id : 'Unauthenticated user'
+    current_user&.id || 'Unauthenticated user'
   end
 
   def user_not_authorized(exception)
