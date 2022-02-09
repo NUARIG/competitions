@@ -204,16 +204,17 @@ RSpec.describe 'Grants', type: :system, js: true do
       context 'user login redirects' do
         it 'redirects to show page on user login' do
           visit grant_path(grant)
-          expect(page).to have_content 'Log in'
-          click_link 'Log in'
+          expect(page).to have_content 'Log In'
+          click_link 'Log In'
 
-          expect(page).to have_link 'Continue with Email', href: new_registered_user_session_path
-          click_link 'Continue with Email'
+          expect(page).to have_link REGISTERED_USER_LOGIN_BUTTON_TEXT, href: new_registered_user_session_path
+          click_link REGISTERED_USER_LOGIN_BUTTON_TEXT
           expect(current_path).to eq("/registered_users/sign_in")
 
           fill_in 'Email address', with: registered_submitter.email
           fill_in 'Password', with: registered_submitter.password
-          click_button 'Log in'
+
+          click_button 'Log In'
           expect(page).to have_current_path grant_path(grant)
         end
       end
