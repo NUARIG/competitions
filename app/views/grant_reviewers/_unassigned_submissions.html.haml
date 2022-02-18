@@ -2,5 +2,5 @@
   .cell.small-10.large-offset-1
     .unassigned_submission{id: "submission_#{submission.id}", data: { destination_url: grant_submission_reviews_path(grant.id, submission.id) }}
       %span
-        #{submission.submitter.last_name}, #{submission.submitter.first_name}: #{truncate(submission.title, length: 40)}
+        #{sortable_full_name(submission.applicants.first)}: #{truncate(submission.title, length: 40)}
         (#{@grant.max_reviewers_per_submission  - submission.reviews_count})
