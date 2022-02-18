@@ -31,5 +31,5 @@
               - submission = review.submission
               %li.review{id: "review_#{"#{review.id}"}", data: { destination_url: grant_submission_review_path(grant, submission, review) }}
                 %span
-                  #{sortable_full_name(submission.submitter)}: #{truncate(submission.title, length: 40)}
+                  #{sortable_full_name(submission.applicants.first)}: #{truncate(submission.title, length: 40)}
 
