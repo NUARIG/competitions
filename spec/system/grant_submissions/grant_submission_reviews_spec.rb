@@ -2,16 +2,20 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
-  let(:grant)         { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
-  let(:grant_admin)   { grant.grant_permissions.role_admin.first.user }
-  let(:grant_editor)  { grant.grant_permissions.role_editor.first.user }
-  let(:grant_viewer)  { grant.grant_permissions.role_viewer.first.user }
-  let(:submission)    { grant.submissions.first }
-  let(:reviewer)      { grant.reviewers.first }
-  let(:review)        { create(:review, submission: submission,
-                                        assigner: grant_admin,
-                                        reviewer: reviewer) }
-  let(:new_grant_reviewer) { create(:grant_reviewer, grant: grant) }
+  let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+  let(:grant_admin)           { grant.grant_permissions.role_admin.first.user }
+  let(:grant_editor)          { grant.grant_permissions.role_editor.first.user }
+  let(:grant_viewer)          { grant.grant_permissions.role_viewer.first.user }
+  let(:submission)            { grant.submissions.first }
+  let(:reviewer)              { grant.reviewers.first }
+  let(:review)                { create(:review, submission: submission,
+                                                assigner: grant_admin,
+                                                reviewer: reviewer) }
+  let(:new_grant_reviewer)    { create(:grant_reviewer, grant: grant) }
+  let(:applicant)             { create(:saml_user) }
+  let(:submission_applicant)  { create(:grant_submission_submission_applicant,
+                                          submission: submission,
+                                          applicant: applicant) }
 
   def random_score
     rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE)
@@ -59,7 +63,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
         scenario 'displays table with all criteria' do
           criteria = @grant.criteria.pluck(:name)
-          headers = all('th').map {|column| column.text.strip }
+          headers  = all('th').map {|column| column.text.strip }
           expect(criteria.all? { |criterion| headers.include?(criterion) }).to be true
         end
 
@@ -325,14 +329,39 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   describe '#create', js: true do
     before(:each) do
       grant.update(max_reviewers_per_submission: 2)
-      submitter           = submission.submitter
+      submitter = submission.submitter
+      login_as(grant_admin, scope: :saml_user)
+    end
+
+    context 'applicants' do
+      describe 'with one applicant replacing submitter' do
+        scenario 'displays applicant where available' do
+          submission_applicant.save
+          submission.submission_applicants.first.delete
+          visit grant_reviewers_path(grant)
+
+          expect(page).to have_text sortable_full_name(applicant)
+          expect(page).not_to have_text sortable_full_name(submission.submitter)
+        end
+      end
+
+      describe 'assigned submissions' do
+        scenario 'displays applicant name' do
+          submission_applicant.save
+          submission.submission_applicants.first.delete
+          review.save
+          visit grant_reviewers_path(grant)
+
+          expect(page).to have_text sortable_full_name(applicant)
+          expect(page).not_to have_text sortable_full_name(submission.submitter)
+        end
+      end
     end
 
     context 'draft submission' do
       scenario 'does not appear for assignment' do
         submission.reviews.delete_all
         submission.update(state: 'draft')
-        login_as(grant_admin, scope: :saml_user)
         visit grant_reviewers_path(grant)
 
         expect(page).not_to have_text submission.title
