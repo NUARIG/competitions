@@ -22,9 +22,9 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
 
     def resolve
       if user.in?(@grant.administrators) || user.system_admin?
-        GrantSubmission::Submission.includes(:reviews, :applicants).where(grant_id: @grant.id)
+        GrantSubmission::Submission.kept.includes(:reviews, :applicants).where(grant_id: @grant.id)
       else
-        GrantSubmission::Submission.includes(:applicants).where(users: { id: user.id })
+        GrantSubmission::Submission.kept.includes(:applicants).where(users: { id: user.id })
       end
     end
   end
