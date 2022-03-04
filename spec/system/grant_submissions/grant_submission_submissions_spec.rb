@@ -102,6 +102,14 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(composite).to have_text '-'
           end
 
+          scenario 'discarded submission is not included' do
+            expect(page).to have_content submission.title
+            submission.update(discarded_at: Time.now)
+
+            visit grant_submissions_path(grant)
+            expect(page).not_to have_content viewer_submission.title
+          end
+
           context 'with reviews' do
             scenario 'submission with one review shows scores' do
               review.save
