@@ -107,7 +107,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             submission.update(discarded_at: Time.now)
 
             visit grant_submissions_path(grant)
-            expect(page).not_to have_content viewer_submission.title
+            expect(page).not_to have_content submission.title
           end
 
           context 'with reviews' do
