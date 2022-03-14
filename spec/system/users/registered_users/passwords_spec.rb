@@ -41,7 +41,7 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
 
   describe 'update' do
     describe 'existing users' do
-      let(:token) {registered_user.send_reset_password_instructions }
+      let(:token) { registered_user.send_reset_password_instructions }
 
       context 'user not logged in' do
         scenario 'displays error with invalid token' do
@@ -62,7 +62,7 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
       end
 
       context 'user logged in' do
-        context 'registered user' do\
+        context 'saml user' do
           before(:each) do
             login_as(saml_user, scope: :saml_user)
           end
@@ -70,6 +70,14 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
           scenario 'Change Your Password link not on SAML user profiles' do
             visit profile_path(saml_user)
             expect(page).not_to have_content 'Change Your Password'
+          end
+
+          scenario 'Visiting password page redirects to root' do
+            visit profile_path(saml_user)
+            visit edit_registered_user_registration_path
+            expect(page).not_to have_content 'Change Your Password'
+            expect(page).to have_content 'You are already logged in.'
+            expect(current_path).to eq root_path
           end
         end
 

@@ -1,0 +1,9 @@
+#saml-user-link
+  %div
+    %p
+      = "Have a #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}? "
+      = link_to 'Login here instead', new_saml_user_session_path(resource_name)
+      - if controller_name != 'registrations'
+        %br
+        = "New user (without #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]})?"
+        = link_to "Create your account", new_registration_path(resource_name)

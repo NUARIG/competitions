@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '6.1.4.1'
+gem 'rails', '6.1.5'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -68,7 +68,7 @@ gem 'wkhtmltopdf-binary'
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
-  gem 'puma',         '~> 4.3.9'
+  gem 'puma',         '~> 4.3.11'
   gem 'webrick',      '1.7.0'
 end
 
