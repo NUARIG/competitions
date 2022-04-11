@@ -77,7 +77,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
     scenario 'without pending grant reviewer invitation' do
       visit new_registered_user_registration_path
       fill_in_new_user_form
-      expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
+      expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account. Email providers treat these confirmations differently so be sure to check your spam folder, especially if you use Gmail.'
     end
 
     scenario 'with pending grant reviewer invitation' do

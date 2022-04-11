@@ -23,7 +23,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
       find_field('Password').set(valid_password)
       find_field('Password confirmation').set(valid_password)
       click_button signup_button_text
-      expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
+      expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account. Email providers treat these confirmations differently so be sure to check your spam folder, especially if you use Gmail.'
     end
 
     context 'existing users may not re-register' do
