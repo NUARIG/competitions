@@ -1,14 +1,25 @@
-#turbo-table
-  %div.row.header
-    %div.columns.small-12.medium-6.table-head
-      = sort_link(q, :body)
-    %div.columns.small-12.medium-2.table-head
-      = sort_link(q, :visible)
-    %div.columns.small-12.medium-2.table-head
-      = sort_link(q, :created_at)
-    %div.columns.small-2.medium-2.table-head
+%table
+  %thead
+    %tr
+      %th
+        = sort_link(q, :body)
+      %th
+        = sort_link(q, :visible)
+      %th
+        = sort_link(q, :created_at)
+      %th
+      %th
 
-  = turbo_stream_from :banners
-  = turbo_frame_tag :banners do
+  %tbody
     - @banners.each do |banner|
-      = render partial: 'banner', locals: { q: @q, banner: banner }
+      %tr
+        %td
+          = truncate(strip_tags(banner.body), length: 64, separator: ' ')
+        %td
+          = banner.visible
+        %td
+          = time_tag(banner.created_at, banner.created_at.to_formatted_s(:default))
+        %td
+          = link_to 'Edit', edit_banner_path(banner) if policy(banner).edit?
+        %td
+          = link_to 'Delete', banner, method: :delete, data: { confirm: 'Are you sure you want to delete this banner entirely? To take it down without deleting it, uncheck the Visible box on the edit page.' } if policy(banner).destroy?

@@ -53,6 +53,11 @@ header {
   }
 
   main {
+    .callout {
+      a {
+        text-decoration: underline;
+      }
+    }
     #submenu {
       background: none;
       display: flex;

@@ -22,7 +22,7 @@ main.home {
           .name {
             @include breakpoint(medium) {
               &.long {
-                font-size: 1.3125rem;
+                font-size: 1.125rem;
               }
             }
           }

@@ -4,8 +4,7 @@
   %h3
     = yield(:page_title)
 
-  = form_with model: @banner do |f|
-    = render 'new_form', f: f
+  = link_to 'Create New Banner', new_banner_path, class: 'button primary'
 
   - if @banners.none?
     %p
