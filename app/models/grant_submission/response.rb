@@ -13,13 +13,17 @@ module GrantSubmission
     MAXIMUM_DOCUMENT_FILE_SIZE          = MAXIMUM_DOCUMENT_MEGABYTES.megabytes
     READABLE_MAXIMUM_DOCUMENT_FILE_SIZE = "#{MAXIMUM_DOCUMENT_MEGABYTES}MB"
 
-    ALLOWED_DOCUMENT_TYPES           = { 'PDF'  => '.pdf',
-                                         'Word' => %w[.doc .docx .dotx] }.freeze
-    ALLOWED_DOCUMENT_FILE_EXTENSIONS = ALLOWED_DOCUMENT_TYPES.values.flatten.freeze
+    ALLOWED_DOCUMENT_TYPES           = { 'PDF':   { extensions: %w[.pdf], filetype: 'application/pdf'},
+                                         'Word':  { extensions: %w[.doc .docx .dotx], filetype: ['application/msword',
+                                                                                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                                                                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.template'] } }
+
+    ALLOWED_DOCUMENT_FILE_EXTENSIONS = ALLOWED_DOCUMENT_TYPES.values.map{ |doc_type| doc_type[:extensions] }.flatten.freeze
+    ALLOWED_DOCUMENT_FILE_TYPES      = ALLOWED_DOCUMENT_TYPES.values.map{ |doc_type| doc_type[:filetype] }.flatten.freeze
     READABLE_ALLOWED_DOCUMENT_TYPES  = ALLOWED_DOCUMENT_TYPES.keys
-                                       .to_sentence(words_connector: ', ',
-                                                    two_words_connector: ' or ',
-                                                    last_word_connector: ' or ').freeze
+                                                             .to_sentence(words_connector: ', ',
+                                                                          two_words_connector: ' or ',
+                                                                          last_word_connector: ' or ').freeze
 
     belongs_to :submission,             class_name: 'GrantSubmission::Submission',
                                         foreign_key: 'grant_submission_submission_id',
@@ -125,6 +129,7 @@ module GrantSubmission
         validate_length_if_short_text_response
       when 'file_upload'
         if document.attached?
+          validate_attachment_extension_if_file_upload_response
           validate_attachment_type_if_file_upload_response
           validate_attachment_size_if_file_upload_response
           validate_attachment_not_removed_on_submit if submission&.user_submitted_state == 'submitted'
@@ -153,6 +158,7 @@ module GrantSubmission
       end
     end
 
+    # FILE UPLOAD VALIDATIONS
     def validate_attachment_size_if_file_upload_response
       if self.document.blob.byte_size > MAXIMUM_DOCUMENT_FILE_SIZE
         errors.add(:document, :file_too_large, question: question.text,
@@ -161,8 +167,15 @@ module GrantSubmission
       end
     end
 
-    def validate_attachment_type_if_file_upload_response
+    def validate_attachment_extension_if_file_upload_response
       if ALLOWED_DOCUMENT_FILE_EXTENSIONS.exclude?(self.document.filename.extension_with_delimiter)
+        errors.add(:document, :excluded_extension_type, question: question.text,
+                                                        allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
+      end
+    end
+
+    def validate_attachment_type_if_file_upload_response
+      if ALLOWED_DOCUMENT_FILE_TYPES.exclude?(self.document.content_type)
         errors.add(:document, :excluded_mime_type, question: question.text,
                                                    allowed_types: READABLE_ALLOWED_DOCUMENT_TYPES)
       end

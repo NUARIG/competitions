@@ -129,7 +129,7 @@ module GrantSubmissions
                         form   = @grant.form
                         @grant.submissions.build(form: form)
                       when 'edit', 'update'
-                        GrantSubmission::Submission.kept.find(params[:id])
+                        GrantSubmission::Submission.kept.with_applicants.find(params[:id])
                       when 'show'
                         GrantSubmission::Submission.kept.with_reviewers.find(params[:id])
                       when 'create'
@@ -179,8 +179,7 @@ module GrantSubmissions
                        submission_applicants_attributes: [
                          :id,
                          :grant_submission_submission_id,
-                         :applicant_id
-                       ]
+                         :applicant_id]
                        )
     end
   end

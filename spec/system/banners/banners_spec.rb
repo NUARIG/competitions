@@ -61,10 +61,10 @@ RSpec.describe 'Banners', type: :system do
 
         context '#create' do
           scenario 'Shows error for empty body' do
-            # click_link 'Create New Banner'
-            # expect(current_path).to eq("/banners/new")
-            click_button 'Submit'
-            # expect(page).to have_content('Body is required.')
+            click_link 'Create New Banner'
+            expect(current_path).to eq("/banners/new")
+            click_button 'Save'
+            expect(page).to have_content('Body is required.')
           end
 
           context 'visible' do
@@ -72,12 +72,12 @@ RSpec.describe 'Banners', type: :system do
               body = Faker::Lorem.sentence
               truncated_body = body.truncate_words(2, omission: '')
 
-              # click_link 'Create New Banner'
-              # expect(current_path).to eq("/banners/new")
+              click_link 'Create New Banner'
+              expect(current_path).to eq("/banners/new")
               fill_in_trix_editor('banner_body', with: body)
-              click_button 'Submit'
+              click_button 'Save'
               expect(current_path).to eq("/banners")
-              # expect(page).to have_content I18n.t('banners.create.visible_success')
+              expect(page).to have_content I18n.t('banners.create.visible_success')
               expect(page).to have_content(truncated_body)
 
               visit root_path
@@ -89,11 +89,14 @@ RSpec.describe 'Banners', type: :system do
             scenario 'create a banner' do
               @body = Faker::Lorem.sentence
               truncated_body = @body.truncate_words(2, omission: '')
+
+              click_link 'Create New Banner'
+              expect(current_path).to eq("/banners/new")
               uncheck 'Visible'
               fill_in_trix_editor('banner_body', with: @body)
-              click_button 'Submit'
+              click_button 'Save'
               expect(current_path).to eq("/banners")
-              # expect(page).to have_content I18n.t('banners.create.not_visible_success')
+              expect(page).to have_content I18n.t('banners.create.not_visible_success')
               expect(page).to have_content(truncated_body)
 
               visit root_path

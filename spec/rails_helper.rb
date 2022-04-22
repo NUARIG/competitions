@@ -50,7 +50,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -103,6 +103,9 @@ RSpec.configure do |config|
   # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara
   config.include WaitForAjax, type: :system
 end
+
+APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]
+REGISTERED_USER_LOGIN_BUTTON_TEXT = "Continue with your #{APPLICATION_NAME} account"
 
 def scroll_to_bottom_of_the_page
   page.execute_script 'window.scrollBy(0,10000)'

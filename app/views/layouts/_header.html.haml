@@ -5,7 +5,7 @@
         %li
           .home
             = link_to "#{COMPETITIONS_CONFIG[:application_name]}", root_path
-        - if user_signed_in?
+        - if user_is_signed_in
           - user_has_editable_grants  = current_user.editable_grants.kept.any?
           - user_has_reviews          = current_user.reviews.kept.any?
 
@@ -24,4 +24,4 @@
     .top-bar-right
       %ul.dropdown.menu{"data-dropdown-menu" => ""}
         = render 'layouts/header_help_links'
-        = render 'devise/menu/login_items'
+        = render partial: 'devise/menu/login_items', locals: { user_is_signed_in: user_is_signed_in }

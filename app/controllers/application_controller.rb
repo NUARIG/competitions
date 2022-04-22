@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  include Pundit
+  include Pundit::Authorization
   include Pagy::Backend
 
   before_action :authenticate_user!, unless: :devise_controller?
@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
 
 
   def user_for_paper_trail
-    user_signed_in? ? current_user.id : 'Unauthenticated user'
+    current_user&.id || 'Unauthenticated user'
   end
 
   def user_not_authorized(exception)
@@ -65,6 +65,7 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
     # Permitted parameters for users in devise methods.
     def configure_permitted_parameters_for_devise_methods
       devise_parameter_sanitizer.permit(:sign_in) do |user_params|
@@ -80,4 +81,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def redirect_logged_in_user_to_root
+      flash[:notice] = 'You are already logged in.'
+      redirect_to root_path
+    end
 end

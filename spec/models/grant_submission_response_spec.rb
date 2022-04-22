@@ -312,7 +312,7 @@ RSpec.describe GrantSubmission::Response, type: :model do
         end
 
         let(:file_upload_response) { create(:valid_file_upload_response, submission: grant.submissions.first,
-                                                                        question: file_upload_question) }
+                                                                         question: file_upload_question) }
 
         it 'validates response with a attached file' do
           expect(file_upload_response.document.attached?).to be true
@@ -327,15 +327,33 @@ RSpec.describe GrantSubmission::Response, type: :model do
         end
       end
 
+      context 'invalid file extension upload' do
+        before(:each) do
+          grant.submissions.first.update(state: 'draft')
+        end
+
+        let(:file_upload_response)  { build(:invalid_file_upload_response, submission: grant.submissions.first,
+                                                                           question: file_upload_question) }
+
+        it 'validates response with an invalid attached file' do
+          expect(file_upload_response).not_to be_valid
+          expect(file_upload_response.errors.messages[:document].first).to include('must be a PDF or Word file.')
+        end
+      end
+
       context 'invalid file type upload' do
         before(:each) do
           grant.submissions.first.update(state: 'draft')
         end
 
-        let(:file_upload_response) { build(:invalid_file_upload_response, submission: grant.submissions.first,
-                                                                          question: file_upload_question) }
+        let(:file_upload_response) { build(:valid_file_upload_response, submission: grant.submissions.first,
+                                                                        question: file_upload_question) }
 
-        it 'validates response with an invalid attached file' do
+        it 'validates response with an valid extension and invalid content_type' do
+          allow(file_upload_response).to receive_message_chain(:document, :attached?).and_return(true)
+          allow(file_upload_response.document).to receive_message_chain(:blob, :byte_size).and_return(1.megabytes)
+          allow(file_upload_response.document).to receive_message_chain(:filename, :extension_with_delimiter).and_return('.pdf')
+          allow(file_upload_response).to receive_message_chain(:document, :content_type).and_return('text/x-php')
           expect(file_upload_response).not_to be_valid
           expect(file_upload_response.errors.messages[:document].first).to include('must be a PDF or Word file.')
         end

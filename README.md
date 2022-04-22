@@ -35,7 +35,7 @@ The following are required to install competitions:
 Configure the following files with your instance's attributes and store the files on the server.
 
 ```
-app/stylesheets/_settings.scss
+app/assets/stylesheets/_settings.scss
 config/environments/*
 config/competitions_config.yml
 config/database.yml

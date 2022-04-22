@@ -4,22 +4,35 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Home', type: :system do
+  LONG_NAME = Faker::Lorem.paragraph_by_chars(number: 156)
+
+  let!(:open_grant)       { create(:grant_with_users) }
+  let!(:closed_grant)     { create(:published_closed_grant) }
+  let!(:completed_grant)  { create(:completed_grant) }
+  let!(:draft_grant)      { create(:draft_open_grant) }
+  let!(:discarded_grant)  { create(:grant_with_users, discarded_at: 1.hour.ago) }
+  let!(:user)             { create(:saml_user) }
+  let!(:admin_user)       { open_grant.administrators.first }
+  let(:long_name_grant)   { create(:grant_with_users, name: LONG_NAME)}
+  let(:second_open_grant) { create(:grant_with_users) }
+
+
   describe 'Index', js: true do
     before(:each) do
-      @open_grant         = create(:grant_with_users)
-      @closed_grant       = create(:published_closed_grant)
-      @completed_grant    = create(:completed_grant)
-      @draft_grant        = create(:draft_open_grant)
-      @discarded_grant    = create(:grant_with_users, discarded_at: 1.hour.ago)
-      @user               = create(:saml_user)
-      @admin_user         = @open_grant.administrators.first
+      # @open_grant         = create(:grant_with_users)
+      # @closed_grant       = create(:published_closed_grant)
+      # @completed_grant    = create(:completed_grant)
+      # @draft_grant        = create(:draft_open_grant)
+      # @discarded_grant    = create(:grant_with_users, discarded_at: 1.hour.ago)
+      # @user               = create(:saml_user)
+      # @admin_user         = @open_grant.administrators.first
       visit root_path
     end
 
     describe 'header links' do
       context 'anonymous user' do
         scenario 'displays login link' do
-          expect(page).to have_link 'Log in'
+          expect(page).to have_link 'Log In'
         end
 
         scenario 'displays help log in links' do
@@ -31,16 +44,16 @@ RSpec.describe 'Home', type: :system do
 
       context 'logged in user' do
         scenario 'displays user name and profile link' do
-          login_as(@user, scope: :saml_user)
+          login_as(user, scope: :saml_user)
           visit root_path
-          expect(page).to have_link full_name(@user), href: '#'
+          expect(page).to have_link full_name(user), href: '#'
           page.find('#logged-in').hover
           expect(page).to have_link 'Edit Your Profile'
         end
       end
 
       scenario 'does not display help log in link' do
-        login_as(@user, scope: :saml_user)
+        login_as(user, scope: :saml_user)
         visit root_path
         expect(page).to have_link 'Help'
         page.find('#help').hover
@@ -54,36 +67,48 @@ RSpec.describe 'Home', type: :system do
       end
 
       scenario 'displays a published grant' do
-        expect(page).to have_content @open_grant.name
+        expect(page).to have_content open_grant.name
       end
 
       scenario 'does not display a closed grant' do
-        expect(page).not_to have_content @closed_grant.name
+        expect(page).not_to have_content closed_grant.name
       end
 
       scenario 'does not display a completed grant' do
-        expect(page).not_to have_content @completed_grant.name
+        expect(page).not_to have_content completed_grant.name
       end
 
       scenario 'does not display a draft grant' do
-        expect(page).not_to have_content @draft_grant.name
+        expect(page).not_to have_content draft_grant.name
       end
 
       scenario 'does not display a soft_deleted grant' do
-        expect(page).not_to have_content @discarded_grant.name
+        expect(page).not_to have_content discarded_grant.name
       end
     end
 
     describe 'edit grant link logic' do
       before(:each) do
-        @second_open_grant = create(:grant_with_users)
-        login_as(@admin_user, scope: :saml_user)
+        second_open_grant.save
+        login_as(admin_user, scope: :saml_user)
         visit root_path
       end
 
       scenario 'it does not display edit grant link when user has no permission' do
-        expect(page).to have_link 'Edit', href: edit_grant_path(@open_grant)
-        expect(page).not_to have_link 'Edit', href: edit_grant_path(@second_open_grant)
+        expect(page).to have_link 'Edit', href: edit_grant_path(open_grant)
+        expect(page).not_to have_link 'Edit', href: edit_grant_path(second_open_grant)
+      end
+    end
+
+    describe 'grant name truncation logic' do
+      before(:each) do
+        long_name_grant.save
+        visit root_path
+      end
+
+      scenario 'truncates grant names longer than 150 characters' do
+        expect(page).not_to have_content LONG_NAME
+        expect(page).to have_content (LONG_NAME.first(147) + '...')
       end
     end
   end
