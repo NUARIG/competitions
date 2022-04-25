@@ -20,9 +20,10 @@ module GrantSubmissions
                                disable_external_links:  true,
                                disable_internal_links:  true,
                                disposition:             'attachment',
-                               layout:                  'pdf.html.haml',
+                               layout:                  'pdf',
                                print_media_type:        true,
-                               template:                'grant_submissions/submissions/reviews/index.html.haml' }
+                               template:                'grant_submissions/submissions/reviews/index',
+                               formats:                 [:html] }
         end
       end
 

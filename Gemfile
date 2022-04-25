@@ -68,7 +68,7 @@ gem 'wkhtmltopdf-binary'
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
-  gem 'puma',         '~> 4.3.11'
+  gem 'puma',         '~> 4.3.12'
   gem 'webrick',      '1.7.0'
 end
 

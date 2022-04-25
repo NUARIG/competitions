@@ -6,6 +6,25 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.16.1 (April 11, 2022)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Change wording for registered user confirmations.
+            #{github_issue_link(issue: 922)}
+          %li
+            Fix deprecation warnings for rails 7.
+            #{github_issue_link(issue: 928)}
+          %li
+            Update Puma version.
+            #{github_issue_link(issue: 923)}
+          %li
+            Update Nokogiri version.
+            #{github_issue_link(issue: 927)}
+
+%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.16 (February 22, 2022)
     .accordion-content{"data-tab-content" => ""}
       %p
