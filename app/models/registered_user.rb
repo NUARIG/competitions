@@ -29,4 +29,3 @@ class RegisteredUser < User
     errors.add(:email, 'domain is blocked from registering.')
   end
 end
-

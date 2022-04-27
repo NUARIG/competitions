@@ -69,19 +69,19 @@ RSpec.describe 'Banners', type: :system do
 
           context 'visible' do
             scenario 'create a banner' do
-              body = Faker::Lorem.sentence
-              truncated_body = body.truncate_words(2, omission: '')
+              @body = Faker::Lorem.sentence
+              truncated_body = @body.truncate_words(2, omission: '')
 
               click_link 'Create New Banner'
               expect(current_path).to eq("/banners/new")
-              fill_in_trix_editor('banner_body', with: body)
+              fill_in_trix_editor('banner_body', with: @body)
               click_button 'Save'
               expect(current_path).to eq("/banners")
               expect(page).to have_content I18n.t('banners.create.visible_success')
               expect(page).to have_content(truncated_body)
 
               visit root_path
-              expect(page).to have_content(body)
+              expect(page).to have_content(@body)
             end
           end
 

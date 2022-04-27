@@ -2,6 +2,7 @@
 
 - if current_user.system_admin?
   %h3
+
     = yield(:page_title)
 
   = link_to 'Create New Banner', new_banner_path, class: 'button primary'
