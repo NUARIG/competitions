@@ -38,16 +38,6 @@
   .grid-x
     .cell.small-5
       %h4
-        Reviewers and Submissions
-      %p
-        To remove an assignment, drag the submission from the reviewer's box back to the unassigned submissions box on the right.
-      %p
-        Each reviewer may assess up to
-        = succeed '.' do
-          = link_to "#{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
-
-    .cell.small-5.small-offset-2
-      %h4
         Unassigned Submissions
       %p
         Drag the unassigned submissions below to the box under the desired reviewer on the left.
@@ -58,20 +48,30 @@
       %p
         Note: Draft submissions are not reviewable.
 
-  .grid-x
-    #assigned-reviewers.cell.small-5
-      - if @grant_reviewers.none?
-        There are no reviewers. Use the form above to define reviewers by their email address.
-      - else
-        = render partial: 'reviewers', locals: { grant: @grant, grant_reviewers: @grant_reviewers }
+    .cell.small-5.small-offset-2
+      %h4
+        Reviewers and Submissions
+      %p
+        To remove an assignment, drag the submission from the reviewer's box back to the unassigned submissions box on the right.
+      %p
+        Each reviewer may assess up to
+        = succeed '.' do
+          = link_to "#{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
 
-    .gridx.small-5.small-offset-2(data-sticky-container)
+  .grid-x
+    .gridx.small-5(data-sticky-container)
       #unassigned_submissions.sticky(data-sticky data-top-anchor="assigned-reviewers")
         .unassigned_submission_list
           - if @unassigned_submissions.none?
             There are no completed submissions that need to be assigned.
           - else
             = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
+
+    #assigned-reviewers.cell.small-5.small-offset-2
+      - if @grant_reviewers.none?
+        There are no reviewers. Use the form above to define reviewers by their email address.
+      - else
+        = render partial: 'reviewers', locals: { grant: @grant, grant_reviewers: @grant_reviewers }
 
 :javascript
   function downloadJSAtOnload() {
