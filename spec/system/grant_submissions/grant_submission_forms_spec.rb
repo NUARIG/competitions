@@ -49,7 +49,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
           original_section = @draft_grant.form.sections.first
           expect(original_section.display_order).to be 1
           accept_alert do
-            find('.delete-section').click
+            page.find("#delete-section-#{original_section.id}").click
           end
           click_link add_section_text
           new_section_text = Faker::Lorem.sentence

@@ -7,18 +7,21 @@ gem 'pg'
 gem 'rails', '6.1.5'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '>= 5'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+# gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+
+gem 'hotwire-rails'
+gem 'jsbundling-rails'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.1.0', require: false
@@ -31,8 +34,8 @@ gem 'rubyzip',                      '~> 2.3.0'
 
 # frontend
 gem 'font-awesome-rails'
+gem 'foundation-rails', '~> 6.5.3.0'
 gem 'foundation-datepicker-rails'
-gem 'foundation-rails', '~> 6.5.1.0'
 gem 'friendly_id',      '~> 5.4.0'
 gem 'haml-rails',       '~> 2.0.1'
 gem 'jquery-rails',     '>= 4.3.5'
@@ -54,7 +57,7 @@ gem 'validates_timeliness', '6.0.0.alpha1'
 # form_builder
 gem "cocoon"
 gem "nested_form"
-gem "select2-rails"
+# gem "select2-rails"
 
 # s3
 gem "aws-sdk-s3", require: false

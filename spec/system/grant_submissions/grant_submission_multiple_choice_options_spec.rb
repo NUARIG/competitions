@@ -18,25 +18,28 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
 
     context 'edit' do
       scenario 'requires at least one option' do
-        @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options.count.times do
+        last_multiple_choice_question = @grant.questions.where(response_type: 'pick_one').last
+        options = last_multiple_choice_question.multiple_choice_options
+        options.each do |option|
           accept_alert do
-            find('.delete-option', match: :first).click
+            page.find("#delete-option-#{option.id}").click
           end
         end
         click_button 'Save'
         expect(page).to have_text requires_option_text
-        find('.add-option').click
+
+        page.find('.add-option', match: :first).click
         click_button 'Save'
         expect(page).to have_text 'Multiple Choice Option text cannot be empty'
       end
 
       scenario 'requires text' do
-        @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options.count.times do
+        @grant.questions.where(response_type: 'pick_one').last.multiple_choice_options.each do |option|
           accept_alert do
-            find('.delete-option', match: :first).click
+            page.find("#delete-option-#{option.id}", visible: false).click
           end
         end
-        find('.add-option').click
+        find('.add-option', match: :first).click
         click_button 'Save'
         expect(page).to have_text 'Multiple Choice Option text cannot be empty'
       end

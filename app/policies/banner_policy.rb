@@ -6,6 +6,10 @@ class BannerPolicy < ApplicationPolicy
     user.system_admin?
   end
 
+  def index?
+    new?
+  end
+
   def create?
     new?
   end

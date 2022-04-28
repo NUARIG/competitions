@@ -3,7 +3,7 @@
     %span
       Section
     - if has_edit_permission
-      = section.link_to_remove 'Delete', { id: "delete-section-#{section.object.id}", class: 'delete-section button tiny btn-pill alert hollow', title: 'Delete this section and its questions'}
+      = section.link_to_remove 'Delete', { id: "delete-section-#{section.object.id}", class: 'delete-section button tiny btn-pill alert hollow', title: 'Delete this section and its questions', data: { confirm: "Please submit the form to confirm your changes." } }
 
   .grid-x
     .cell.small-12.medium-8

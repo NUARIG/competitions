@@ -74,21 +74,53 @@
             = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
 
 :javascript
-  $(function() {
-    current_location = '/grants/#{@grant.to_param}/reviewers';
-    $('.review').draggable({
-      revert: 'invalid'
+  function downloadJSAtOnload() {
+    $.ajaxSetup({
+      beforeSend: function(xhr)
+      {
+        xhr.setRequestHeader('X-CSRF-Token', '#{form_authenticity_token}')
+      }
     });
-    $('.review_list').droppable({
-      hoverClass: 'hover',
-      drop: function(event, ui) {
-        if ($(ui.draggable).attr('id').split('_').length == 2) {
-          reviewer_id = $(this).parent().attr('id').split('_').splice(-1)[0];
 
+    $(function() {
+      current_location = '/grants/#{@grant.to_param}/reviewers';
+
+      $('.review').draggable({
+        revert: 'invalid'
+      });
+
+      $('.review_list').droppable({
+        hoverClass: 'hover',
+        drop: function(event, ui) {
+          if ($(ui.draggable).attr('id').split('_').length == 2) {
+            reviewer_id = $(this).parent().attr('id').split('_').splice(-1)[0];
+
+            $.ajax({
+              type: "POST",
+              url: $(ui.draggable).data("destinationUrl"),
+              data: { "reviewer_id": reviewer_id },
+              success: function(data) {
+                window.location.href = current_location;
+              },
+
+              error: function() {
+                window.location.href = current_location;
+              }
+            });
+          }
+        }
+      });
+
+      $('.unassigned_submission').draggable({
+        revert: "invalid"
+      });
+
+      $('.unassigned_submission_list').droppable({
+        hoverClass: "hover",
+        drop: function(event, ui) {
           $.ajax({
-            type: "POST",
+            type: "DELETE",
             url: $(ui.draggable).data("destinationUrl"),
-            data: { "reviewer_id": reviewer_id },
             success: function(data) {
               window.location.href = current_location;
             },
@@ -97,25 +129,15 @@
             }
           });
         }
-      }
-    })
-  });
-
-  $('.unassigned_submission').draggable({
-    revert: "invalid"
-  });
-  $('.unassigned_submission_list').droppable({
-    hoverClass: "hover",
-    drop: function(event, ui) {
-      $.ajax({
-        type: "DELETE",
-        url: $(ui.draggable).data("destinationUrl"),
-        success: function(data) {
-          window.location.href = current_location;
-        },
-        error: function() {
-          window.location.href = current_location;
-        }
       });
-    }
-  });
+
+    });
+  }
+
+  if (window.addEventListener) {
+    window.addEventListener("load", downloadJSAtOnload, false);
+  } else if (window.attachEvent) {
+    window.attachEvent("onload", downloadJSAtOnload);
+  } else {
+    window.onload = downloadJSAtOnload;
+  }

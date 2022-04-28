@@ -25,9 +25,10 @@
       // that.copy_in_follow_up_dependency(this);
     });
 
-    $(document).on('nested:fieldRemoved', function(event) {
-      confirm('Please submit the form to confirm your changes.');
-    });
+    // $(document).on('nested:fieldRemoved', function(event) {
+    //   console.log("I AM IN THIS JS FUNCTION.")
+    //   confirm('Please submit the form to confirm your changes.');
+    // });
 
     //see https://github.com/ryanb/nested_form/blob/0.3.2/README.md#javascript-events
     $(document).on('nested:fieldAdded', function(event){

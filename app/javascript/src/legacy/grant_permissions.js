@@ -1,5 +1,5 @@
 //= require select2
-$(document).ready(function() {
+$(document).on('turbo:load', function() {
 
   $userSelector = $('select#grant_permission_user_id')
 

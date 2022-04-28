@@ -2,7 +2,7 @@
 - disable_fields = !(@form.available? && current_user_may_edit)
 
 :javascript
-  $(function(){Grant.FormBuilderSurvey.init();});
+  document.addEventListener('turbo:load', function(){Grant.FormBuilderSurvey.init();});
   document.addEventListener("trix-initialize", function(event) {
     var elementButtons = event.target.toolbarElement.querySelectorAll("button")
     for (i=0; i<elementButtons.length; i++) {
