@@ -22,6 +22,7 @@ gem 'redis', '~> 4.0'
 
 gem 'hotwire-rails'
 gem 'jsbundling-rails'
+gem 'turbo-rails', '~> 1.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.1.0', require: false
