@@ -286,8 +286,8 @@ GEM
       rspec-rails (>= 3.0.0)
     racc (1.6.0)
     rack (2.2.3.1)
-    rack-test (1.1.0)
-      rack (>= 1.0, < 3)
+    rack-test (2.0.2)
+      rack (>= 1.3)
     rails (6.1.5)
       actioncable (= 6.1.5)
       actionmailbox (= 6.1.5)
@@ -423,8 +423,10 @@ GEM
     timeliness (0.4.4)
     trix (0.10.1)
       rails
-    turbo-rails (7.1.1)
-      rails (>= 6.0.0)
+    turbo-rails (1.1.1)
+      actionpack (>= 6.0.0)
+      activejob (>= 6.0.0)
+      railties (>= 6.0.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
@@ -516,6 +518,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   sprockets-es6
   trix
+  turbo-rails (~> 1.1)
   tzinfo-data
   uglifier (>= 1.3.0)
   validates_timeliness (= 6.0.0.alpha1)
