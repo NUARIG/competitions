@@ -19,6 +19,10 @@ Rails.application.configure do
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
+    # As part of ticket #235
+    #   Fix TypeError related to caching.
+    #   See: https://stackoverflow.com/a/7838450
+    config.cache_classes = true
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
