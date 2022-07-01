@@ -15,7 +15,7 @@
   The deadline for your review is #{@grant.review_close_date.strftime("%B %e, %Y")}.
 
 %p
-  By clicking the link above you can review or opt out of reviewing.
+  Review or opt out of reviewing here: #{link_to @submission.title, grant_submission_url(@grant, @submission)}.
 
 %p
   Thank you.
