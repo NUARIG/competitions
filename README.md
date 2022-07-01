@@ -13,7 +13,8 @@ The following are required to install competitions:
   * Storage should be configured locally or with AWS
   * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
   * Postgres database
-  * RVM installed on server
+  * RVM installed on the server
+  # Yarn installed on the server
   * Capistrano for deployment
 
 
@@ -31,6 +32,8 @@ The following are required to install competitions:
 
 
 # Installation
+
+
 
 Configure the following files with your instance's attributes and store the files on the server.
 
