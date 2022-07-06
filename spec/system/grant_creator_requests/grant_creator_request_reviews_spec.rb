@@ -39,7 +39,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
 
         select('Approved', from: 'grant_creator_request[status]')
         click_button 'Review This Access Request'
-
+        pause
         expect(open_request.reload.status_approved?).to be true
       end
     end
