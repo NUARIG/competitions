@@ -22,11 +22,10 @@ class BannersController < ApplicationController
     @banner = Banner.new(banner_params)
     authorize @banner
     if @banner.save
-      clear_cached_banners if @banner.visible?
       redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
     else
       flash.now[:alert] = @banner.errors.full_messages
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -37,12 +36,10 @@ class BannersController < ApplicationController
   def update
     authorize @banner
     if @banner.update(banner_params)
-      # Clear cache if the banner visibility changed or if the banner is visible
-      clear_cached_banners if @banner.saved_change_to_visible? || @banner.visible?
       redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
     else
       flash.now[:alert] = @banner.errors.full_messages
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -52,7 +49,6 @@ class BannersController < ApplicationController
       flash[:alert] = 'Banner could not be found.'
     else
       if @banner.destroy
-        clear_cached_banners
         flash[:success] = 'The banner has been deleted.'
       else
         flash[:alert] = 'Unable to delete this banner.'
@@ -72,10 +68,5 @@ class BannersController < ApplicationController
 
   def set_banner
     @banner = Banner.find(params[:id])
-  end
-
-  def clear_cached_banners
-    # See: app/helpers/banners_helper.rb
-    Rails.cache.clear('current_banners')
   end
 end
