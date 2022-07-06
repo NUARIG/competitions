@@ -143,8 +143,11 @@ RSpec.describe 'Banners', type: :system do
           end
 
           scenario 'unsuccessful edit of a banner' do
-            @banner.body.length.times do
-              find(:xpath, "//trix-editor[@input='banner_body']").send_keys(:backspace)
+            banner_length = (@banner.body.length + 1)
+            %i[arrow_right backspace].each do |key|
+              banner_length.times do
+                find(:xpath, "//trix-editor[@input='banner_body']").send_keys(key)
+              end
             end
             click_button 'Update'
             expect(page).to have_content('Please review the following error')
@@ -169,22 +172,18 @@ RSpec.describe 'Banners', type: :system do
 
     end
 
-    describe 'banner does not display on grant show page' do
-
-      before(:each) do
+    describe 'banner displays on other pages' do
+      scenario 'Banner only displays on home page. Grant show page does not include banner text.' do
         @open_grant = create(:published_open_grant)
         visit grant_path(@open_grant)
-      end
 
-      scenario 'Banner only displays on home page. Grant show page does not include banner text.' do
-        expect(page).not_to have_content @banner.body
+        expect(page).to have_content @banner.body
       end
-
     end
 
     describe 'invisible banner' do
       before(:each) do
-        @invisible_banner             = create(:invisible_banner)
+        @invisible_banner = create(:invisible_banner)
         visit root_path
       end
 
@@ -198,7 +197,7 @@ RSpec.describe 'Banners', type: :system do
   describe 'PaperTrail', js: true, versioning: true do
     before(:each) do
       @banner = create(:banner)
-      @system_admin_user  = create(:system_admin_saml_user)
+      @system_admin_user = create(:system_admin_saml_user)
       login_as(@system_admin_user, scope: :saml_user)
       visit edit_banner_path(@banner)
     end
@@ -206,6 +205,7 @@ RSpec.describe 'Banners', type: :system do
     it 'tracks whodunnit' do
       fill_in_trix_editor('banner_body', with: Faker::Lorem.sentence(word_count: 10))
       click_button 'Update'
+      sleep(0.25)
       expect(@banner.versions.last.whodunnit).to eql(@system_admin_user.id)
     end
   end
