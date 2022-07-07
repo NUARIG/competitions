@@ -91,7 +91,7 @@ module GrantSubmissions
       else
         @submission.state = 'draft'
         flash.now[:alert] = @submission.errors.to_a
-        render 'edit'
+        render 'edit', status: :unprocessable_entity
       end
     end
 

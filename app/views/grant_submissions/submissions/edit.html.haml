@@ -23,5 +23,5 @@
     %aside
       = render partial: 'grants/dates_card', locals: { grant: @grant }
   #rfa.small-12.medium-9.cell
-    = grant_form_for [@grant, @submission], url: grant_submission_url(@grant, @submission), html: {multipart: true} do |f|
+    = grant_form_for [@grant, @submission], url: grant_submission_url(@grant, @submission), local: true, data: { turbo: false }, html: {multipart: true} do |f|
       = render partial: 'form', locals: { f: f }

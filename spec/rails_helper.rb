@@ -107,6 +107,10 @@ end
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]
 REGISTERED_USER_LOGIN_BUTTON_TEXT = "Continue with your #{APPLICATION_NAME} account"
 
+def pause(time: 0.25)
+  sleep(time)
+end
+
 def scroll_to_bottom_of_the_page
   page.execute_script 'window.scrollBy(0,10000)'
 end

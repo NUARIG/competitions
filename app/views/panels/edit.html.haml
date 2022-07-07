@@ -25,7 +25,7 @@
         %li.menu-text
           = link_to 'View Panel', grant_panel_path(@grant)
 
-  = form_with(model: [@grant, @panel], method: :patch, local: true) do |f|
+  = form_with(model: [@grant, @panel], method: :patch, local: true, data: { turbo: false }) do |f|
 
     .grid-x
       .cell
