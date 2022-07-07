@@ -168,7 +168,7 @@ RSpec.describe 'Panels', type: :system, js: true do
         visit edit_grant_panel_path(grant)
         fill_in 'Location', with: 'Edited'
         click_button button_text
-        sleep(0.5)
+        pause
         expect(grant.panel.versions.last.whodunnit).to eql editor.id
       end
     end
@@ -313,7 +313,7 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # ascending first
         click_link 'Composite'
-        sleep(0.25)
+        pause
         within 'tr.submission:nth-child(1)' do
           expect(page).to have_text @low_scored_submission.title
         end
@@ -323,7 +323,7 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # descending
         click_link 'Composite'
-        sleep(0.25)
+        pause
         within 'tr.submission:nth-child(1)' do
           expect(page).to have_text @high_scored_submission.title
         end
