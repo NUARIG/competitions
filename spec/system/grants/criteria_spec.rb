@@ -25,6 +25,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
         expect do
           find('.remove', match: :first).click
           click_button 'Save Changes'
+          pause
         end.to change{grant.criteria.count}.by(-1)
         expect(page).to have_content 'Review form and criteria updated.'
       end
@@ -65,8 +66,8 @@ RSpec.describe 'Criteria', type: :system, js: true do
         end
         expect do
           click_button 'Save'
+          pause
         end.not_to change{grant.criteria.count}
-        sleep(0.5)
         expect(page).to have_content 'Must have at least one review criteria.'
       end
 
@@ -74,6 +75,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
         scenario 'it tracks whodunnit' do
           find_field('Criterion Name', with: grant.criteria.last.name).set(Faker::Lorem.sentence)
           click_button 'Save'
+          pause
           expect(grant.criteria.last.versions.last.whodunnit).to be admin.id
         end
       end

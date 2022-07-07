@@ -41,6 +41,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
             click_link add_section_text
             find_field('Title', with: '').set(new_section_text)
             click_button 'Save'
+            pause
           end.to (change{@draft_grant.form.sections.count}).by 1
           expect(page).to have_text 'Submission Form successfully updated'
         end
@@ -66,13 +67,15 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
           click_link add_section_text
           find_field('Title', with: '').set('Section Last')
           click_button 'Save'
+          pause
           original_section_section = @draft_grant.form.sections.second
           original_last_section    = @draft_grant.form.sections.last
           accept_alert do
             page.find("#delete-section-#{original_section_section.id}").click
           end
           click_button 'Save'
-          expect(@draft_grant.form.sections.count).to be 2
+          pause
+          expect(@draft_grant.reload.form.sections.count).to eq 2
           expect(GrantSubmission::Section.find(original_first_section.id).display_order).to be 1
           expect(GrantSubmission::Section.find(original_last_section.id).display_order).to be 2
         end
@@ -84,6 +87,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
             page.find("#delete-question-#{@original_first_question.id}").click
           end
           click_button 'Save'
+          pause
           expect(@draft_grant.questions.all?{ |q| q.display_order <= 2 })
           expect(GrantSubmission::Question.find(@original_second_question.id).display_order).to be 1
           expect(GrantSubmission::Question.find(@original_third_question.id).display_order).to be 2
@@ -96,6 +100,7 @@ RSpec.describe 'GrantSubmission::Forms', type: :system do
             page.find("#delete-question-#{@original_second_question.id}").click
           end
           click_button 'Save'
+          pause
           expect(@draft_grant.questions.all?{ |q| q.display_order <= 2 })
           expect(GrantSubmission::Question.find(@original_first_question.id).display_order).to be 1
           expect(GrantSubmission::Question.find(@original_third_question.id).display_order).to be 2

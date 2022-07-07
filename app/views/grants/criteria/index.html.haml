@@ -19,7 +19,7 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  = form_for @grant, url: update_criteria_grant_path(@grant) do |f|
+  = form_for @grant, url: update_criteria_grant_path(@grant), local: true, data: { turbo: false } do |f|
     .grid-x
       .cell
         = render partial: 'grants/review_guidance', locals: { f: f }
