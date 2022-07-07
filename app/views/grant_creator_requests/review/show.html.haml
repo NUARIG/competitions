@@ -7,7 +7,7 @@
   Approving and submitting this request will immediately allow
   = full_name(@grant_creator_request.requester)
   to create and publish grants.
-  = form_with model: @grant_creator_request, url: grant_creator_request_review_path(@grant_creator_request), local: true, id: 'grant-request' do |f|
+  = form_with model: @grant_creator_request, url: grant_creator_request_review_path(@grant_creator_request), data: { turbo: false}, id: 'grant-request' do |f|
     = render partial: 'grant_creator_requests/request_attributes', locals: { f: f, request: @grant_creator_request }
     = render partial: 'grant_creator_requests/review_attributes',  locals: { f: f, request: @grant_creator_request }
     = f.submit 'Review This Access Request', class: 'button'

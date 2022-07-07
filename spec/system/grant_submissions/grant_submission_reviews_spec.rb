@@ -246,7 +246,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           click_button 'Submit Your Review'
           expect(page).not_to have_text 'Review was successfully updated.'
           grant.criteria.each do |criterion|
-            expect(page).to have_text "#{criterion.name} Score is required"
+            expect(page).to have_text "\'#{criterion.name}\' must be scored"
           end
           expect(review.reload.is_complete?).to be false
         end
@@ -265,7 +265,8 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       context 'criterion clear button' do
         scenario 'criterion clear button removes required criterion score' do
           criteria = []
-          grant.criteria.each do |criterion|
+          grant_criteria = grant.criteria
+          grant_criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
             criteria << "#{criterion_id_selector(criterion)}"
           end
@@ -275,7 +276,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
             click_button("Clear")
           end
           click_button 'Submit Your Review'
-          expect(page).to have_text "Score is required"
+          expect(page).to have_text "\'#{grant_criteria.first.name}\' must be scored"
         end
 
         scenario 'criterion clear button removes unrequired criterion score' do

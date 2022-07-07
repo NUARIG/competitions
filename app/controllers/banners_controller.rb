@@ -22,11 +22,10 @@ class BannersController < ApplicationController
     @banner = Banner.new(banner_params)
     authorize @banner
     if @banner.save
-      # TODO: Confirm messages the user should see
       redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
     else
       flash.now[:alert] = @banner.errors.full_messages
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -40,7 +39,7 @@ class BannersController < ApplicationController
       redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
     else
       flash.now[:alert] = @banner.errors.full_messages
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

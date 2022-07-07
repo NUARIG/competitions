@@ -4,7 +4,7 @@
   .callout.warning
     Review period is closed
 
-= form_for (review), url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } } do |f|
+= form_for (review), url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } }, local: true, data: { turbo: false } do |f|
   - if review.criteria_reviews.any?
     %h3
       Review Criteria

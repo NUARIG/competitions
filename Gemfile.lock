@@ -454,6 +454,7 @@ GEM
     zeitwerk (2.6.0)
 
 PLATFORMS
+  x86_64-darwin-18
   x86_64-darwin-20
   x86_64-linux
 

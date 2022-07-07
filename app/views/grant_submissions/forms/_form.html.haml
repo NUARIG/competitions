@@ -13,7 +13,7 @@
 - unless @form.new_record?
   = hidden_field_tag :form_update_fields_url, update_fields_grant_form_url(@grant, @form), id: 'survey_update_fields_url'
 
-= grant_form_for([@grant, @form], url: grant_form_path) do |f|
+= grant_form_for [@grant, @form], url: grant_form_path, local: true, data: { turbo: false } do |f|
   %table.unstriped
     %tr
       %td
