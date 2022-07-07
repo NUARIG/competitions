@@ -3,5 +3,5 @@
 %h2
   Your Profile
 
-= form_with(model: @user, scope: :user, url: profile_path, method: :put, local: true) do |f|
+= form_with(model: @user, scope: :user, url: profile_path, method: :put, local: true, data: { turbo: false }) do |f|
   = render partial: 'users/form', locals: { f: f }

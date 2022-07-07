@@ -22,7 +22,7 @@ module GrantSubmissions
         redirect_to edit_grant_form_path(@grant, @form)
       else
         flash.now[:alert] = @form.errors.full_messages
-        render :edit
+        render :edit, status: :unprocessable_entity
       end
     end
 

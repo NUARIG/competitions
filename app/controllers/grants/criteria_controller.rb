@@ -17,7 +17,7 @@ module Grants
         redirect_to criteria_grant_path(@grant)
       else
         flash.now[:alert] = @grant.errors.full_messages
-        render 'index'
+        render 'index', status: :unprocessable_entity
       end
     end
 

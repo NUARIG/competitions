@@ -3,7 +3,7 @@
 %h1
   Edit Your Grant Creation Access Request
 
-= form_with model: @grant_creator_request, url: grant_creator_request_path(@grant_creator_request), local: true, id: 'grant-request' do |f|
+= form_with model: @grant_creator_request, url: grant_creator_request_path(@grant_creator_request), local: true, data: { turbo: false }, id: 'grant-request' do |f|
   = render partial: 'request_attributes', locals: { f: f, request: @grant_creator_request }
   - if current_user == @grant_creator_request.requester
     .grid-x

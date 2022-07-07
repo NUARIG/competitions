@@ -21,6 +21,8 @@
       %main.cell{ class: controller_name }
         = render partial: 'layouts/flash', locals: { user_is_signed_in: user_is_signed_in }
 
+        = render 'banners/public_banner' if visible_banners.any?
+
         = yield
 
     #footer.grid-x.grid-margin-x.grid-margin-y
