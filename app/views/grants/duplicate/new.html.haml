@@ -28,5 +28,5 @@
     %p
       You can change or delete anything.
 
-    = form_with model: @grant, url: grant_duplicate_path, local: true do |f|
+    = form_with model: @grant, url: grant_duplicate_path, method: :post, local: true, data: { turbo: false } do |f|
       = render 'grants/form', f: f, grant: @grant, disable_fields: false

@@ -3,6 +3,6 @@
     = grant.state.capitalize
   .button.warning.small
     - if grant.published?
-      = link_to 'Switch to Draft Mode', draft_grant_state_path(grant)
+      = link_to 'Switch to Draft Mode', draft_grant_state_path(grant), data: { turbo: false }
     - else
-      = link_to 'Publish this Grant', publish_grant_state_path(grant)
+      = link_to 'Publish this Grant', publish_grant_state_path(grant), data: { turbo: false }

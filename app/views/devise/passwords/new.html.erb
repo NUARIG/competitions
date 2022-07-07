@@ -5,7 +5,7 @@
       <h3>Forgot your password?</h3>
       <%= render "devise/shared/login_prepend_links" %>
       <div class="cell">
-        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }, data: { turbo: false }) do |f| %>
           <div id="fields">
             <div class="field">
               <%= f.label :email %>
