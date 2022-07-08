@@ -8,8 +8,8 @@ gem 'rails', '6.1.5'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 5'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+# Use Terser as compressor for JavaScript assets
+gem 'terser', '~> 1.1'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 # gem 'turbolinks', '~> 5'
