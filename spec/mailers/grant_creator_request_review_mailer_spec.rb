@@ -24,7 +24,7 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
 
     it 'addresses the requester by their full name' do
       requester = approved_request.requester
-      expect(mailer.body.encoded).to include "Dear #{requester.first_name} #{CGI.escapeHTML(requester.last_name)}"
+      expect(mailer.body.encoded).to include CGI.escapeHTML("Dear #{requester.first_name} #{requester.last_name}")
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe GrantCreatorRequestReviewMailer, type: :mailer do
 
     it 'addressed the requester by their full name' do
       requester = rejected_request.requester
-      expect(mailer.body.encoded).to include "Dear #{requester.first_name} #{CGI.escapeHTML(requester.last_name)}"
+      expect(mailer.body.encoded).to include CGI.escapeHTML("Dear #{requester.first_name} #{requester.last_name}")
     end
   end
 

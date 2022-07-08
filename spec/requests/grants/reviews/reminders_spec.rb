@@ -36,7 +36,7 @@ RSpec.describe 'grant reviews reminders requests', type: :request do
           email = (ActionMailer::Base.deliveries).first
           expect(email.to).to eq([reviewer.email])
           expect(email.subject).to eq I18n.t('mailers.reminder.grant_reviews.subject', grant_name: grant.name)
-          expect(email.body.decoded.to_s).to include ("Dear #{reviewer.first_name} #{reviewer.last_name}")
+          expect(email.body.decoded.to_s).to include CGI.escapeHTML("Dear #{reviewer.first_name} #{reviewer.last_name}")
         end
       end
 
