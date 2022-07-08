@@ -8,6 +8,8 @@ gem 'rails', '6.1.5'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 5'
+# Use Terser as compressor for JavaScript assets
+gem 'terser', '~> 1.1'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 # gem 'turbolinks', '~> 5'
@@ -21,7 +23,6 @@ gem 'redis', '~> 4.0'
 gem 'hotwire-rails'
 gem 'jsbundling-rails'
 gem 'turbo-rails', '~> 1.1'
-gem 'terser', '~> 1.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.1.0', require: false
