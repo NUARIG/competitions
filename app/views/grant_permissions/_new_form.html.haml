@@ -6,6 +6,10 @@
     = f.label :role, 'Grant Role'
     = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
 .grid-x
+  .cell.small-12
+    Receive Notifications for:
+    = render partial: 'grant_permissions/notification_checkboxes', locals: { f: f }
+.grid-x
   .actions
     = f.hidden_field :grant_id, value: grant.id
     = f.submit 'Save', class: 'button'

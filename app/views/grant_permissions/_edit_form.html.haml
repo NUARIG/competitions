@@ -10,7 +10,7 @@
 .grid-x
   .cell.small-12
     Receive Notifications for:
-    = render partial: 'grant_permissions/notification_checkboxes', locals: { f: f, user: @user }
+    = render partial: 'grant_permissions/notification_checkboxes', locals: { f: f }
 .grid-x
   .cell.small-12.actions
     = f.submit 'Update', class: 'button'
