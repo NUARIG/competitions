@@ -162,6 +162,7 @@ GEM
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
     childprocess (4.1.0)
+    closure-compiler (1.1.14)
     cocoon (1.2.15)
     coderay (1.1.3)
     concurrent-ruby (1.1.10)
@@ -475,6 +476,7 @@ DEPENDENCIES
   capybara-select-2
   caxlsx
   caxlsx_rails
+  closure-compiler (~> 1.1)
   cocoon
   devise (>= 4.7.1)
   devise_saml_authenticatable (~> 1.6.3)
