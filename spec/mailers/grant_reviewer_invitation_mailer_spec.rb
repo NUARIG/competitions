@@ -28,7 +28,7 @@ RSpec.describe GrantReviewerInvitationMailer, type: :mailer do
 
       context 'body' do
         it 'includes the inviter name and email address' do
-          expect(saml_mailer.body.encoded).to include "#{saml_invite.inviter.first_name} #{saml_invite.inviter.last_name}".html_safe
+          expect(saml_mailer.body.encoded).to include CGI.escapeHTML("#{saml_invite.inviter.first_name} #{saml_invite.inviter.last_name}")
           expect(saml_mailer.body.encoded).to include saml_invite.inviter.email
         end
 
@@ -45,7 +45,7 @@ RSpec.describe GrantReviewerInvitationMailer, type: :mailer do
 
       context 'body' do
         it 'includes the inviter name and email address' do
-          expect(registerable_mailer.body.encoded).to include "#{registerable_invite.inviter.first_name} #{registerable_invite.inviter.last_name}".html_safe
+          expect(registerable_mailer.body.encoded).to include CGI.escapeHTML("#{registerable_invite.inviter.first_name} #{registerable_invite.inviter.last_name}")
           expect(registerable_mailer.body.encoded).to include registerable_invite.inviter.email
         end
 

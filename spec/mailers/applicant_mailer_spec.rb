@@ -27,7 +27,7 @@ RSpec.describe ApplicantMailer, type: :mailer do
       end
 
       it 'addresses the applicant by their full name' do
-        expect(mailer.body.encoded).to include "Dear #{new_applicant.first_name} #{CGI.escapeHTML(new_applicant.last_name)}"
+        expect(mailer.body.encoded).to include CGI.escapeHTML("Dear #{new_applicant.first_name} #{new_applicant.last_name}")
       end
 
       it 'includes a link to the submission page' do
@@ -39,7 +39,7 @@ RSpec.describe ApplicantMailer, type: :mailer do
       end
 
       it "includes the editor/'s name" do
-        expect(mailer.body.encoded).to have_content "#{editor.first_name} #{CGI.escapeHTML(editor.last_name)}"
+        expect(mailer.body.encoded).to have_content CGI.escapeHTML("#{editor.first_name} #{editor.last_name}")
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe ApplicantMailer, type: :mailer do
       end
 
       it 'addresses the applicant by their full name' do
-        expect(mailer.body.encoded).to include "Dear #{applicant.first_name} #{applicant.last_name}"
+        expect(mailer.body.encoded).to include CGI.escapeHTML("Dear #{applicant.first_name} #{applicant.last_name}")
       end
 
       it 'includes name to the submission page' do
