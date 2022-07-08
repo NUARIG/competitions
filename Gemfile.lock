@@ -520,7 +520,6 @@ DEPENDENCIES
   sprockets-es6
   terser (~> 1.1)
   trix
-  turbo-rails (~> 1.1)
   tzinfo-data
   validates_timeliness (= 6.0.0.alpha1)
   web-console (>= 3.3.0)
