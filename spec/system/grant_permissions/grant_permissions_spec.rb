@@ -116,6 +116,14 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect(GrantPermission.last.submission_notification).to eql false
       end
 
+      scenario 'new grant permission can be set to true for submission notification' do
+        select2(@unassigned_user.email, from: 'Email Address', search: true)
+        select('Editor', from:'grant_permission[role]')
+        find(:css, "#grant_permission_submission_notification").set(true)
+        click_button 'Save'
+        expect(GrantPermission.last.submission_notification).to eql true
+      end
+
       context 'select2 search' do
         scenario 'select2 dropdown includes unassigned emails' do
           select2 @select2_user.email, from: 'Email Address', search: true
