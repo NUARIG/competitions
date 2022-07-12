@@ -11,6 +11,8 @@ class GrantReviewer::Invitation < ApplicationRecord
 
   validates_presence_of   :email
   validates_uniqueness_of :email, scope: :grant, message: 'has already been invited.'
+  validates               :email, format: { with: Devise.email_regexp }
+
   validate :inviter_may_invite
 
   scope :with_inviter,-> { includes(:inviter) }
