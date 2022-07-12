@@ -19,11 +19,6 @@ Rails.application.configure do
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
-    # As part of ticket #235
-    #   Fix TypeError related to caching.
-    #   See: https://stackoverflow.com/a/7838450
-    config.cache_classes = true
-
     config.cache_store = :memory_store
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
@@ -60,6 +55,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.reload_classes_only_on_change = true
 
   # Time zone
   config.time_zone = 'Central Time (US & Canada)'
@@ -76,12 +72,4 @@ Rails.application.configure do
                                                port: COMPETITIONS_CONFIG[:default_url_options][:port] }
   config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
   config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
-
-  Bullet
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
-    Bullet.console = true
-    Bullet.add_footer = true
-  end
 end
