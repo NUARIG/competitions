@@ -71,9 +71,9 @@ Rails.application.routes.draw do
     resources :reviewers,         only: %i[index create destroy], controller: 'grant_reviewers' do
       collection do
         post      'invite',       to: 'grant_reviewers/invitations#create'
-        resources 'invitations',  only: %i[index update], controller: 'grant_reviewers/invitations' do
+        resources 'invitations',  only: %i[index update destroy], controller: 'grant_reviewers/invitations' do
           collection do
-            resources :reminders, only: :index, as: 'invitation_reminders', controller: 'grant_reviewers/invitations/reminders'
+            resources :reminders, only: %i[index show], as: 'invitation_reminders', controller: 'grant_reviewers/invitations/reminders'
           end
         end
       end
