@@ -1,10 +1,10 @@
 - user_is_signed_in = user_signed_in?
 
 !!!
-%html
+%html{ lang: 'en' }
   %head
-    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}/
+    %meta{ content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type" }/
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0" }/
     %title
       = title_tag_content(page_title: yield(:page_title))
     = csrf_meta_tags
