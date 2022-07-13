@@ -34,15 +34,31 @@ RSpec.describe 'grant_reviewer_invitation requests', type: :request do
       login_user inviter
     end
 
-    it 'sends reminder mail to the invitee' do
-      get(grant_invitation_reminders_path(grant))
-      expect(ActionMailer::Base.deliveries.count).to be 1
+    context 'index of all open invitations' do
+      it 'sends reminder mail to the invitee as part' do
+        get(grant_invitation_reminders_path(grant))
+        expect(ActionMailer::Base.deliveries.count).to be 1
+      end
+
+      it "updates the invitation's reminded_at attribute" do
+        expect do
+          get(grant_invitation_reminders_path(grant))
+        end.to change{invited.reload.reminded_at}.from nil
+      end
     end
 
-    it "updates the invitation's reminded_at attribute" do
-      expect do
-        get(grant_invitation_reminders_path(grant))
-      end.to change{invited.reload.reminded_at}.from nil
+    context 'one open invitation' do
+      it 'sends reminder mail to the invitee as part' do
+        get(grant_invitation_reminder_path(grant.id, invited))
+        expect(ActionMailer::Base.deliveries.count).to be 1
+      end
+
+      it "updates the invitation's reminded_at attribute" do
+        expect do
+          get(grant_invitation_reminder_path(grant.id, invited))
+        end.to change{invited.reload.reminded_at}.from nil
+      end
     end
+
   end
 end

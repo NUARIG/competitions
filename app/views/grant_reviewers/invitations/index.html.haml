@@ -31,9 +31,12 @@
             Actions:
           - if @has_open_invitations
             %li
-              = link_to 'Send Reminder to Invited Reviewers', grant_invitation_reminders_path(@grant)
+              = link_to 'Send Reminder to All Invited Reviewers', grant_invitation_reminders_path(@grant)
           %li
             = link_to 'Back to Reviewers', grant_reviewers_path(@grant)
+
+        %p
+          Individual reminders may also be sent to specific Invitations using the "Manage" links below.
 
   %table#grant-reviewer-invitations
     %thead
@@ -46,5 +49,7 @@
           Confirmed On
         %th
           Invited By
+        %th
+          Manage
     %tbody
-      = render partial: 'invitation', collection: @invitations, as: :invitation
+      = render partial: 'invitation', collection: @invitations, locals: { grant: @grant }
