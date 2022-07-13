@@ -72,4 +72,12 @@ Rails.application.configure do
                                                port: COMPETITIONS_CONFIG[:default_url_options][:port] }
   config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
   config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
+
+  # Bullet
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.add_footer = true
+  end
 end
