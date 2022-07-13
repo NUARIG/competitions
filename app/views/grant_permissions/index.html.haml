@@ -41,6 +41,8 @@
           %th
             Role
           %th
+            Notifications
+          %th
 
       %tbody
         - @grant_permissions.each do |grant_permission|
@@ -50,5 +52,7 @@
               = grant_permission_user_name
             %td
               = grant_permission.role.capitalize
+            %td
+              = on_off_boolean(grant_permission.submission_notification)
             %td
               = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { grant_permission: grant_permission, grant: @grant, grant_permission_user_name: grant_permission_user_name }

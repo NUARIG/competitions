@@ -32,6 +32,11 @@ module ApplicationHelper
     page_title.empty? ? base_title : "#{page_title} | #{base_title}"
   end
 
+  # Boolean value changes
+  def on_off_boolean(boolean)
+    boolean ? 'On' : 'Off'
+  end
+
   # Dates
   def date_mmddyyyy(date)
     date.blank? ? '' : date.strftime('%m/%d/%Y')
