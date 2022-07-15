@@ -159,6 +159,55 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     end
   end
 
+  describe 'grant admin user' do
+    before(:each) do
+      login_as(@grant_admin, scope: :saml_user)
+      visit grant_grant_permissions_path(@grant)
+    end
+
+    context '#index' do
+      scenario 'includes link to add permission' do
+        visit grant_grant_permissions_path(@grant)
+        expect(page).to have_link 'Grant access to another user', href: new_grant_grant_permission_path(@grant)
+      end
+    end
+
+    context '#edit' do
+      scenario 'can visit the permissions index' do
+        visit grant_grant_permissions_path(@grant)
+        expect(page).not_to have_content authorization_error_text
+      end
+
+      scenario 'includes edit and delete links' do
+        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
+        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
+        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_editor_role)
+        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_editor_role)
+        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_viewer_role)
+        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role)
+      end
+    end
+
+    context '#delete' do
+      scenario 'cannot delete last admin grant_permission' do
+        expect do
+          click_link('Delete', href: grant_grant_permission_path(@grant, @grant_admin_role))
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content('This user\'s role cannot be deleted.')
+        end.not_to change{@grant.grant_permissions.count}
+      end
+
+      scenario 'can delete a grant_permission' do
+        expect do
+          expect(page).to have_content(full_name(@grant_viewer))
+          click_link('Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role))
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content("#{full_name(@grant_viewer)}'s role was removed for this grant.")
+        end.to change{@grant.grant_permissions.count}.by (-1)
+      end
+    end
+  end
+
   describe 'grant viewer user' do
     before(:each) do
       login_as(@grant_viewer, scope: :saml_user)
