@@ -47,7 +47,7 @@
       %tbody
         - @grant_permissions.each do |grant_permission|
           - grant_permission_user_name = full_name(grant_permission.user)
-          %tr
+          %tr{ id: "#{dom_id(grant_permission)}" }
             %td
               = grant_permission_user_name
             %td
