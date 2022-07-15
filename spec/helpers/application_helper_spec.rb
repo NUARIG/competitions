@@ -36,4 +36,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(title_tag_content(page_title: 'Page Name')).to eql 'Page Name | TEST'
     end
   end
+
+  context 'booleans' do
+    describe '#on_off_boolean(boolean)' do
+      it 'returns On when given a true boolean' do
+        boolean = true
+        helper.on_off_boolean(boolean).should eql("On")
+      end
+
+      it 'returns Off when given a false boolean' do
+        boolean = false
+        helper.on_off_boolean(boolean).should eql("Off")
+      end
+    end
+  end
 end
