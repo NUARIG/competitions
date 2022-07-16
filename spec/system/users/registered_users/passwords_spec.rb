@@ -14,13 +14,6 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
     end
 
     describe 'existing users' do
-      context 'saml_user' do
-        scenario 'shows link to SSO' do
-          pending 'is directed to log in via SSO'
-          fail
-        end
-      end
-
       context 'registered_user' do
         scenario 'has form' do
           find_field('Email').set(registered_user.email)
@@ -67,17 +60,23 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
             login_as(saml_user, scope: :saml_user)
           end
 
-          scenario 'Change Your Password link not on SAML user profiles' do
+          scenario 'change Your Password link not on SAML user profiles' do
             visit profile_path(saml_user)
             expect(page).not_to have_content 'Change Your Password'
           end
 
-          scenario 'Visiting password page redirects to root' do
+          scenario 'visiting registration page redirects to root' do
             visit profile_path(saml_user)
             visit edit_registered_user_registration_path
             expect(page).not_to have_content 'Change Your Password'
             expect(page).to have_content 'You are already logged in.'
             expect(current_path).to eq root_path
+          end
+
+          scenario 'visiting password reset page redirects to root' do
+            visit new_registered_user_confirmation_path
+            expect(page).to have_current_path(root_path)
+            expect(page).to have_content 'You are already logged in.'
           end
         end
 
