@@ -87,4 +87,16 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
       end
     end
   end
+
+  context 'logged in users' do
+    describe 'saml_user' do
+      scenario 'visiting registration page redirects to root' do
+        saml_user = create(:saml_user)
+        login_as(saml_user, scope: :saml_user)
+        visit new_registered_user_confirmation_path
+        expect(page).to have_current_path(root_path)
+        expect(page).to have_content 'You are already logged in.'
+      end
+    end
+  end
 end

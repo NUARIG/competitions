@@ -82,6 +82,6 @@ class ApplicationController < ActionController::Base
 
     def redirect_logged_in_user_to_root
       flash[:notice] = 'You are already logged in.'
-      redirect_to root_path
+      redirect_back(fallback_location: root_path)
     end
 end

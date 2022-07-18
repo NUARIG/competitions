@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class  RegisteredUsers::PasswordsController < Devise::PasswordsController
+  before_action :redirect_logged_in_user_to_root, if: -> { saml_user_signed_in? }
+
   def create
     self.resource = resource_class.send_reset_password_instructions(resource_params)
     yield resource if block_given?
