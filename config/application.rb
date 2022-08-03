@@ -31,14 +31,6 @@ module Competitions
     # Was not in Rails 6.0. Default in rails 6.1 is :lax, not :strict
     # This suppresses browser messages in console.
     config.action_dispatch.cookies_same_site_protection = :lax
-
-    config.hosts = [
-      IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
-      IPAddr.new("::/0"),             # All IPv6 addresses.
-      "localhost",                    # The localhost reserved domain.
-      'localhost:3000', '127.0.0.1:3000', 'localhost:8080'
-      # ENV["RAILS_DEVELOPMENT_HOSTS"]  # Additional comma-separated hosts for development.
-    ]
   end
 end
 

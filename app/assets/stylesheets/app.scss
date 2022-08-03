@@ -25,6 +25,32 @@ header {
 
 .grid-container {
   header {
+    .top-bar {
+      .devise-dropdown-list-button {
+        background: #fefefe;
+        color: #4E2A84;
+        display: block;
+        width: 100%;
+        text-align: left;
+        font-size: 1rem;
+        transition: 0s;
+          &:hover {
+            background: none;
+            color: #4E2A84;
+          }
+      }
+
+      .devise-login-button {
+        background: #fefefe;
+        color: #4E2A84;
+        font-size: 1rem;
+          &:hover {
+            background: #fefefe;
+            color: #4E2A84;
+          }
+      }
+    }
+
     .top-bar-left {
       .home {
         font-weight: bold;
