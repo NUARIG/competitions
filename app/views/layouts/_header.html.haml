@@ -24,4 +24,4 @@
     .top-bar-right
       %ul.dropdown.menu{"data-dropdown-menu" => ""}
         = render 'layouts/header_help_links'
-        = render partial: 'devise/menu/login_items', locals: { user_is_signed_in: user_is_signed_in }
+        = render partial: 'devise/menu/login_items', locals: { user_is_signed_in: user_is_signed_in }, data: { turbo: false }

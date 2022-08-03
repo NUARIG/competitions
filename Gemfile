@@ -20,6 +20,9 @@ gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
+gem "rack-cors"
+
 gem 'hotwire-rails'
 gem 'jsbundling-rails'
 gem 'turbo-rails', '~> 1.1'
@@ -27,8 +30,8 @@ gem 'turbo-rails', '~> 1.1'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.1.0', require: false
 
-gem 'devise',                       '>= 4.7.1'
-gem 'devise_saml_authenticatable',  '~> 1.6.3'
+gem 'devise',                       '>= 4.8.1'
+gem 'devise_saml_authenticatable',  '~> 1.9.0'
 gem 'draper'
 gem 'pundit'
 gem 'rubyzip',                      '~> 2.3.0'
