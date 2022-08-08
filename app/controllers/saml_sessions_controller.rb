@@ -1,8 +1,9 @@
 # require "ruby-saml"
 
 class SamlSessionsController < Devise::SamlSessionsController
+  skip_before_action :verify_authenticity_token, raise: false
   after_action :set_saml_session_index_on_session, only: :create
-  prepend_before_action :store_info_for_sp_initiated_logout, only: :destroy
+  prepend_before_action :verify_signed_out_user, :store_info_for_sp_initiated_logout, only: :destroy
   prepend_before_action :set_saml_session_index_on_current_user, only: :destroy
 
   def create

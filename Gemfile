@@ -27,8 +27,8 @@ gem 'turbo-rails', '~> 1.1'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.1.0', require: false
 
-gem 'devise',                       '>= 4.7.1'
-gem 'devise_saml_authenticatable',  '~> 1.6.3'
+gem 'devise',                       '>= 4.8.1'
+gem 'devise_saml_authenticatable',  '~> 1.9.0'
 gem 'draper'
 gem 'pundit'
 gem 'rubyzip',                      '~> 2.3.0'

@@ -10,8 +10,8 @@ RSpec.describe 'Login', type: :system do
   describe 'Home page', js: true do
     scenario 'home page login link navigates to login page' do
       visit root_path
-      expect(page).to have_link 'Log In'
-      click_link 'Log In'
+      expect(page).to have_button 'Log In'
+      click_button 'Log In'
       expect(current_path).to eq(login_index_path)
     end
   end
@@ -51,14 +51,14 @@ RSpec.describe 'Login', type: :system do
         editor_permission
         visit grant_reviews_path(grant)
 
-        expect(page).to have_link REGISTERED_USER_LOGIN_BUTTON_TEXT, href: new_registered_user_session_path
-        click_link REGISTERED_USER_LOGIN_BUTTON_TEXT
+        expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
+        click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
         expect(current_path).to eq('/registered_users/sign_in')
 
         find(:css, "#registered_user_uid").set(registered_editor.email)
         find(:css, "#registered_user_password").set(registered_editor.password)
 
-        click_button 'Log In'
+        find('#registered-user-login-button').click
         expect(page).to have_current_path grant_reviews_path(grant)
       end
     end
