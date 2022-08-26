@@ -87,6 +87,18 @@ RSpec.describe GrantReviewer::Invitation, type: :system do
 
         expect(page).to have_content "#{registered_reviewer_invitation.email} has been deleted"
       end
+
+      it 'displays a reminder email confirmation message' do
+        invite_dom_id = "manage-#{dom_id(saml_reviewer_invitation)}"
+        page.find("##{invite_dom_id}").hover
+        expect(page).to have_link('Send Reminder')
+      end
+
+      it 'displays a delete invitation confirmation message' do
+        invite_dom_id = "manage-#{dom_id(saml_reviewer_invitation)}"
+        page.find("##{invite_dom_id}").hover
+        expect(page).to have_link('Delete')
+      end
     end
 
     context 'confirmed invites' do
