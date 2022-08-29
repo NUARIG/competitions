@@ -2,7 +2,7 @@
   %legend
     %span
       Question
-    = question.link_to_remove 'Delete', id: "delete-question-#{get_question_id(question.object)}", class: 'delete-question button tiny btn-pill hollow alert' if has_edit_permission
+    = question.link_to_remove 'Delete', id: "delete-question-#{get_question_id(question.object)}", data: { confirm: "Please submit the form to confirm your changes." }, class: 'delete-question button tiny btn-pill hollow alert' if has_edit_permission
 
   .grid-x.grid-margin-x
     .cell.small-12.medium-8

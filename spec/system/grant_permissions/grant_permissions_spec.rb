@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+include ApplicationHelper
 include UsersHelper
 
 RSpec.describe 'GrantPermissions', type: :system, js: true do
@@ -23,22 +24,29 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
   describe 'grant editor user' do
     before(:each) do
       login_as(@grant_editor, scope: :saml_user)
+      visit grant_grant_permissions_path(@grant)
     end
 
     context '#index' do
       scenario 'includes link to add permission' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).to have_link 'Grant access to another user', href: new_grant_grant_permission_path(@grant)
       end
 
       scenario 'includes edit link, excludes delete link' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_editor_role)
         expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_editor_role)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_viewer_role)
         expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role)
+      end
+
+      scenario 'includes information in grant admin table row' do
+        within("tr#grant_permission_#{@grant_admin_role.id}") do
+          expect(page).to have_content(full_name(@grant_admin))
+          expect(page).to have_content(@grant_admin_role.role.capitalize)
+          expect(page).to have_content(on_off_boolean(@grant.grant_permissions.role_admin.first.submission_notification))
+        end
       end
     end
 
@@ -114,6 +122,14 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         select('Editor', from:'grant_permission[role]')
         click_button 'Save'
         expect(GrantPermission.last.submission_notification).to eql false
+      end
+
+      scenario 'new grant permission can be set to true for submission notification' do
+        select2(@unassigned_user.email, from: 'Email Address', search: true)
+        select('Editor', from:'grant_permission[role]')
+        find(:css, "#grant_permission_submission_notification").set(true)
+        click_button 'Save'
+        expect(GrantPermission.last.submission_notification).to eql true
       end
 
       context 'select2 search' do

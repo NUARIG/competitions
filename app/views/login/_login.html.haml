@@ -1,14 +1,13 @@
-
 %h3
   Log In
 
 .cell
   .instructions.saml
-  = link_to "With your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}",  new_saml_user_session_path, class: 'saml-log-in button expanded'
+  = button_to "With your #{COMPETITIONS_CONFIG[:devise][:saml_authenticatable][:idp_entity_name]}",  new_saml_user_session_path, method: :get, data: { turbo: "false" }, class: 'saml-log-in button expanded'
 .cell.or
   OR
 .cell
-  = link_to "Continue with your #{COMPETITIONS_CONFIG[:application_name]} account",  new_registered_user_session_path, class: 'registered-user-log-in button expanded'
+  = button_to "Continue with your #{COMPETITIONS_CONFIG[:application_name]} account",  new_registered_user_session_path, method: :get, class: 'registered-user-log-in button expanded'
 
   %p
 

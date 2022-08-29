@@ -18,10 +18,10 @@
         = link_to 'Edit Your Profile', profile_path
       - if current_user.registered_user?
         %li
-          = link_to 'Log Out', destroy_registered_user_session_path, method: :delete
+          = button_to 'Log Out', destroy_registered_user_session_path, method: :delete, data: { turbo: "false" }, class: 'devise-dropdown-list-button button expanded'
       - if current_user.saml_user?
         %li
-          = link_to 'Log Out', destroy_saml_user_session_path, method: :delete
+          = button_to 'Log Out', destroy_saml_user_session_path, method: :delete, data: { turbo: "false" }, class: 'devise-dropdown-list-button button expanded'
 - else
   %li
-    = link_to 'Log In', login_index_path
+    = button_to 'Log In', login_index_path, method: :get, data: { turbo: "false" }, class: 'devise-login-button button expanded'

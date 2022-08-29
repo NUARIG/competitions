@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe GrantReviewer::Invitation, type: :system do
+  include ActionView::RecordIdentifier
+
   let!(:grant)                          { create(:published_open_grant_with_users) }
   let!(:admin)                          { grant.administrators.first }
   let!(:inviter)                        { grant.editors.first }
@@ -64,7 +66,38 @@ RSpec.describe GrantReviewer::Invitation, type: :system do
       end
 
       it 'includes link to send reminder emails' do
-        expect(page).to have_link 'Send Reminder to Invited Reviewers', href: grant_invitation_reminders_path(grant)
+        expect(page).to have_link 'Send Reminder to All Invited Reviewers', href: grant_invitation_reminders_path(grant)
+      end
+
+      it 'includes links to manage the invite' do
+        registered_invite_row = find("tr[data-invite='#{registered_reviewer_invitation.id}']").text(:all)
+        saml_invite_row       = find("tr[data-invite='#{saml_reviewer_invitation.id}']").text(:all)
+
+        expect(registered_invite_row).to have_content 'Manage'
+        expect(saml_invite_row).to have_content 'Manage'
+      end
+
+      it 'can be deleted' do
+        invite_dom_id = "manage-#{dom_id(registered_reviewer_invitation)}"
+        page.find("##{invite_dom_id}").hover
+
+        accept_alert do
+          click_link('Delete')
+        end
+
+        expect(page).to have_content "#{registered_reviewer_invitation.email} has been deleted"
+      end
+
+      it 'displays a reminder email confirmation message' do
+        invite_dom_id = "manage-#{dom_id(saml_reviewer_invitation)}"
+        page.find("##{invite_dom_id}").hover
+        expect(page).to have_link('Send Reminder')
+      end
+
+      it 'displays a delete invitation confirmation message' do
+        invite_dom_id = "manage-#{dom_id(saml_reviewer_invitation)}"
+        page.find("##{invite_dom_id}").hover
+        expect(page).to have_link('Delete')
       end
     end
 
@@ -95,6 +128,13 @@ RSpec.describe GrantReviewer::Invitation, type: :system do
         expect(page).to have_text 'There are no open reviewer invitations for this grant. No reminders have been sent'
       end
 
+      it 'does not include links to manage the invite' do
+        registered_invite_row = find("tr[data-invite='#{registered_reviewer_invitation.id}']").text(:all)
+        saml_invite_row       = find("tr[data-invite='#{saml_reviewer_invitation.id}']").text(:all)
+
+        expect(registered_invite_row).not_to have_content 'Manage'
+        expect(saml_invite_row).not_to have_content 'Manage'
+      end
     end
   end
 

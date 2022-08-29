@@ -22,7 +22,7 @@ class PanelsController < ApplicationController
       redirect_to edit_grant_panel_path(@grant)
     else
       flash.now[:alert] = @panel.errors.full_messages
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

@@ -1,17 +1,18 @@
 - user_is_signed_in = user_signed_in?
 
 !!!
-%html
+%html{ lang: 'en' }
   %head
-    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}/
+    %meta{ content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type" }/
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0" }/
     %title
       = title_tag_content(page_title: yield(:page_title))
     = csrf_meta_tags
     = csp_meta_tag
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = stylesheet_link_tag     wicked_pdf_asset_base64("pdf")
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'application', media: 'all', "data-turbo-track": "reload", defer: true
+    = wicked_pdf_stylesheet_link_tag "pdf"
+    = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+
 
   %body.grid-container
     = render partial: 'layouts/header', locals: { user_is_signed_in: user_is_signed_in }
@@ -19,6 +20,8 @@
     #content.grid-x.grid-margin-x.grid-margin-y
       %main.cell{ class: controller_name }
         = render partial: 'layouts/flash', locals: { user_is_signed_in: user_is_signed_in }
+
+        = render 'banners/public_banner' if visible_banners.any?
 
         = yield
 

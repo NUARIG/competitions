@@ -328,6 +328,7 @@ Rails.application.reloader.to_prepare do
     # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
     # by setting this to a custom reader class, or use the default.
     # config.idp_entity_id_reader = "DeviseSamlAuthenticatable::DefaultIdpEntityIdReader"
+    config.idp_entity_id_reader = DeviseSamlAuthenticatable::CompetitionsIdpEntityIdReader
 
     # https://github.com/apokalipto/devise_saml_authenticatable#attribute-map-initializer
     config.saml_attribute_map_resolver = DeviseSamlAuthenticatable::CompetitionsAttributeMapResolver

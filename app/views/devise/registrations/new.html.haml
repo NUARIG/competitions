@@ -12,9 +12,9 @@
           If you already have an account,
           = link_to 'return to the log in page', login_index_path
           = '.'
-        = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+        = form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false} ) do |f|
           #fields
-            .cell.small-10
+            .cell
               = f.label :first_name
               = f.text_field :first_name, autofocus: true , required: true
             .cell

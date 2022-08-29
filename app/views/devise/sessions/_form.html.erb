@@ -1,9 +1,9 @@
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
   <div id="fields">
     <div class="grid-x">
       <div class="cell">
         <%= f.label :uid %>
-        <%= f.text_field :uid, autocomplete: "email", placeholder: 'Email address', class: 'small-12 medium-4' %>
+        <%= f.text_field :uid, autocomplete: "email", placeholder: 'Email address' %>
       </div>
     </div>
     <div class="grid-x ">
@@ -14,7 +14,7 @@
     </div>
     <div class="grid-x">
       <div class="cell actions">
-        <%= f.submit 'Log In', class: 'button' %>
+        <%= f.submit 'Log In', class: 'button', id: 'registered-user-login-button' %>
       </div>
     </div>
   </div>

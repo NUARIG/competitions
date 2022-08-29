@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe BannersController, type: :controller do
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+  let(:cache) { Rails.cache }
+
+  before do
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
+  end
 
   describe 'with a logged in System Admin User' do
     before(:each) do

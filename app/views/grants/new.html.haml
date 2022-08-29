@@ -2,7 +2,7 @@
 
 %h1#grant-name Create a New Grant
 
-= form_with model: @grant, local: true do |f|
+= form_with model: @grant, local: true, data: { turbo: false } do |f|
   = render 'form', f: f, grant: @grant, disable_fields: false
 
 = link_to 'Back', grants_path

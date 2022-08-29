@@ -25,6 +25,32 @@ header {
 
 .grid-container {
   header {
+    .top-bar {
+      .devise-dropdown-list-button {
+        background: #fefefe;
+        color: #4E2A84;
+        display: block;
+        width: 100%;
+        text-align: left;
+        font-size: 1rem;
+        transition: 0s;
+          &:hover {
+            background: none;
+            color: #4E2A84;
+          }
+      }
+
+      .devise-login-button {
+        background: #fefefe;
+        color: #4E2A84;
+        font-size: 1rem;
+          &:hover {
+            background: #fefefe;
+            color: #4E2A84;
+          }
+      }
+    }
+
     .top-bar-left {
       .home {
         font-weight: bold;
@@ -54,11 +80,12 @@ header {
 
   main {
     .callout {
+      height: fit-content;
+      width: 100%;
       a {
         text-decoration: underline;
       }
     }
-
     #submenu {
       background: none;
       display: flex;
@@ -149,13 +176,17 @@ header {
   }
 }
 
-th {
+th,
+#turbo-table .header {
+  background-color: $table-head-background;
   font-size: .85em;
+  font-weight: bold;
   text-align: left;
   vertical-align: bottom;
 }
 
-td {
+td,
+#turbo-table .row .columns {
   vertical-align: top;
   ul.menu a {
     padding-top: 0.25em;
@@ -223,24 +254,38 @@ h2#section {
 }
 
 // grant dates
-  #grant-dates {
-    .card-divider {
-      padding: .5rem 1rem;
+#grant-dates {
+  .card-divider {
+    padding: .5rem 1rem;
+  }
+  .card-section {
+    padding: 0.5rem 1rem;
+  }
+  dl {
+    dt {
+      font-size: .95rem;
+      font-weight: bold;
+      margin-bottom: 0;
     }
-    .card-section {
-      padding: 0.5rem 1rem;
+    dd {
+      margin-top: 0;
     }
-    dl {
-      dt {
-        font-size: .95rem;
-        font-weight: bold;
-        margin-bottom: 0;
-      }
-      dd {
-        margin-top: 0;
-      }
-      hr {
-        margin: .5rem;
-      }
+    hr {
+      margin: .5rem;
     }
   }
+}
+
+#turbo-table {
+  margin: 2rem 0;
+  border: $table-border;
+
+  .columns {
+    border-bottom: $table-border;
+    padding: $table-padding;
+  }
+
+  .turbo-row:nth-of-type(even) {
+    background-color: #f1f1f1;
+  }
+}

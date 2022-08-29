@@ -37,6 +37,13 @@ RSpec.describe GrantReviewer::Invitation, type: :model do
         expect(invitation.errors).to include(:inviter)
         expect(invitation.errors.full_messages).to include 'Inviter does not have permission on this grant.'
       end
+
+      it 'requires a valid email address' do
+        invitation.email = 'not an email address'
+        expect(invitation).not_to be_valid
+        expect(invitation.errors).to include(:email)
+        expect(invitation.errors.full_messages).to include 'Email is invalid'
+     end
     end
   end
 

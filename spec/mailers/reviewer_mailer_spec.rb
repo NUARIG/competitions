@@ -19,7 +19,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
     end
 
     it 'addresses the reviewer by their full name' do
-      expect(mailer.body.encoded).to include "Dear #{reviewer.first_name} #{CGI.escapeHTML(reviewer.last_name)}"
+      expect(mailer.body.encoded).to include CGI.escapeHTML("Dear #{reviewer.first_name} #{reviewer.last_name}")
     end
 
     it 'includes a link to the submission page' do
@@ -27,7 +27,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
     end
 
     it 'includes the submitter\'s full name' do
-      expect(mailer.body.encoded).to have_content "#{review.submission.submitter.first_name} #{review.submission.submitter.last_name}"
+      expect(mailer.body.encoded).to have_content CGI.escapeHTML("#{review.submission.submitter.first_name} #{review.submission.submitter.last_name}")
     end
 
     it 'includes the grant name' do
@@ -52,7 +52,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
     end
 
     it 'addresses the reviewer by their full name' do
-      expect(mailer.body.encoded).to include "Dear #{reviewer.first_name} #{reviewer.last_name}"
+      expect(mailer.body.encoded).to include CGI.escapeHTML("Dear #{reviewer.first_name} #{reviewer.last_name}")
     end
 
     it 'includes a link to the grants page' do
@@ -91,7 +91,7 @@ RSpec.describe ReviewerMailer, type: :mailer do
 
     it 'includes the reviewer name in the body' do
       @mailer = described_class.opt_out(review: review)
-      expect(@mailer.body.encoded).to include "#{reviewer.first_name} #{CGI.escapeHTML(reviewer.last_name)}"
+      expect(@mailer.body.encoded).to include CGI.escapeHTML("#{reviewer.first_name} #{reviewer.last_name}")
     end
 
     it 'includes a link to the grant in the body' do

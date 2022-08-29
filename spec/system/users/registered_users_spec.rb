@@ -95,14 +95,14 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
       @user3 = create(:registered_user, email: 'user3@example.com', password: 'password')
       visit login_index_path
 
-      expect(page).to have_link REGISTERED_USER_LOGIN_BUTTON_TEXT, href: new_registered_user_session_path
-      click_link REGISTERED_USER_LOGIN_BUTTON_TEXT
+      expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
+      click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
       expect(current_path).to eq("/registered_users/sign_in")
 
       page.fill_in('registered_user_uid', with: @user3.email)
       page.fill_in('registered_user_password', with: 'password')
 
-      click_button 'Log In'
+      find('#registered-user-login-button').click
       expect(page).to have_content("#{@user3.first_name} #{@user3.last_name}")
     end
   end

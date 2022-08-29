@@ -23,7 +23,6 @@ RSpec.describe 'RegisteredUsers::Confirmations', type: :system, js: true do
         end
       end
 
-
       context 'confirmed user' do
         scenario 'does not resend ' do
           page.fill_in 'Email', with: confirmed_user.email
@@ -31,11 +30,25 @@ RSpec.describe 'RegisteredUsers::Confirmations', type: :system, js: true do
           expect(page).to have_content 'Email was already confirmed, please try signing in'
         end
       end
+    end
 
-      context 'saml_user' do
-        scenario 'shows link to SSO log-in' do
-          pending 'to be directed to log in via SSO'
-          fail
+    context 'logged in users' do
+      describe 'saml_user' do
+        scenario 'redirects to root path and shows flash message' do
+          saml_user = create(:saml_user)
+          login_as(saml_user, scope: :saml_user)
+          visit new_registered_user_confirmation_path
+          expect(page).to have_current_path(root_path)
+          expect(page).to have_content 'You are already logged in.'
+        end
+      end
+
+      describe 'registered_user' do
+        scenario 'redirects to root path and shows flash message' do
+          registered_user = create(:registered_user)
+          login_as(registered_user, scope: :registered_user)
+          visit new_registered_user_confirmation_path
+          expect(page).to have_current_path(new_registered_user_confirmation_path)
         end
       end
     end
