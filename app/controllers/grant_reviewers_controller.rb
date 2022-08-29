@@ -15,19 +15,22 @@ class GrantReviewersController < ApplicationController
   def create
     authorize @grant, :edit?
 
-    email   = grant_reviewer_params[:reviewer_email].downcase.strip
+    email    = grant_reviewer_params[:reviewer_email].downcase.strip
     reviewer = User.find_by(email: email)
 
-    if reviewer.nil?
+    # TODO: catch this any other way
+    if email.blank?
+      flash[:alert] = 'Please enter a valid email address.'
+    elsif reviewer.nil?
       flash[:alert] = "Could not find a user with the email: #{email}. #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant, email: email), method: :post, data: { confirm: "An email will be sent to #{email}. You will be notified when they accept or opt out."} }"
     else
       grant_reviewer = GrantReviewer.create(grant: @grant, reviewer: reviewer)
+
       if grant_reviewer.errors.none?
         flash[:success] = "Added #{helpers.full_name(grant_reviewer.reviewer)} as reviewer."
       else
         flash[:alert]   = grant_reviewer.errors.full_messages
       end
-
     end
 
     redirect_to grant_reviewers_path(@grant)

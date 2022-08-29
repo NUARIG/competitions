@@ -11,9 +11,9 @@
     - if invitation.confirmed_at.nil?
       %ul.dropdown.menu{ data: { "dropdown-menu": '' } }
         %li.text
-          = link_to 'Manage', '#', id: "manage-#{dom_id(invitation)}"
+          = link_to 'Manage', '', id: "manage-#{dom_id(invitation)}"
           %ul.menu
             %li
-              = link_to 'Send Reminder', grant_invitation_reminder_url(grant.id, invitation)
-              = link_to 'Delete', grant_invitation_path(grant.id, invitation), method: :delete, data: { confirm: 'This inviation will be deleted and the recipient will need to be invited again.' }
+              = link_to 'Send Reminder', grant_invitation_reminder_url(grant.id, invitation), data: {turbo: false}
+              = link_to 'Delete', grant_invitation_path(grant.id, invitation), method: :delete, data: { turbo: false, confirm: 'This inviation will be deleted and the recipient will need to be invited again.' }
 
