@@ -1,7 +1,7 @@
 <div class="grid-container grid-container-padded">
   <div class="grid-x grid-padding-x align-center">
     <div class="cell align-center-middle">
-      <h3>Sign In with Your COMPETITIONS_CONFIG[:application_name] Account</h3>
+      <h3><%= "Sign In with Your #{COMPETITIONS_CONFIG[:application_name]} Account"  %></h3>
       <%= render "devise/shared/login_prepend_links" %>
       <br />
       <%= render 'devise/sessions/form' %>
