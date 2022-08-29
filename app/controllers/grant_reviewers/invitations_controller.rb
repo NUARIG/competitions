@@ -13,25 +13,27 @@ module GrantReviewers
 
     def create
       invitation = GrantReviewer::Invitation.new(grant: @grant, inviter: current_user, email: params[:email])
-      if invitation.save
-        GrantReviewerInvitationMailer.invite(invitation: invitation, grant: @grant, inviter: current_user).deliver_now
-        flash[:alert] = "Invitation to #{invitation.email} has been sent. #{helpers.link_to 'View all invitations', grant_invitations_path(@grant)}"
-      else
-        flash[:warning] = invitation.errors.full_messages
+
+      respond_to do |format|
+        if invitation.save
+          GrantReviewerInvitationMailer.invite(invitation: invitation, grant: @grant, inviter: current_user).deliver_now
+          format.html { redirect_to grant_reviewers_url(@grant), notice: "Invitation to #{invitation.email} has been sent. #{helpers.link_to 'View all invitations', grant_invitations_path(@grant)}" }
+        else
+          format.html { redirect_to grant_reviewers_url(@grant), warning: invitation.errors.full_messages }
+        end
       end
-      redirect_back fallback_location: grant_reviewers_path(@grant)
     end
 
     def destroy
       invitation = GrantReviewer::Invitation.find(params[:id])
 
-      if invitation.invitee.nil? && invitation.destroy
-        flash[:success] = "The invitation to #{invitation.email} has been deleted."
-      else
-        flash[:warning] = "Could not delete the invitation to #{invitation.email}."
+      respond_to do |format|
+        if invitation.invitee.nil? && invitation.destroy
+          format.html { redirect_to grant_reviewers_url(@grant), notice: "The invitation to #{invitation.email} has been deleted." }
+        else
+          format.html { redirect_to grant_reviewers_url(@grant), warning: "Could not delete the invitation to #{invitation.email}." }
+        end
       end
-
-      redirect_back fallback_location: grant_reviewers_path(@grant)
     end
 
     private

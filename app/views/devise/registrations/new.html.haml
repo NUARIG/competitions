@@ -14,7 +14,7 @@
           = '.'
         = form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false} ) do |f|
           #fields
-            .cell.small-10
+            .cell
               = f.label :first_name
               = f.text_field :first_name, autofocus: true , required: true
             .cell

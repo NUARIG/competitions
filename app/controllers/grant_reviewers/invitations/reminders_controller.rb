@@ -6,26 +6,27 @@ module GrantReviewers
                               .with_inviter
                               .where(grant_id: @grant.id)
                               .open
-        if @open_invitations.any?
-          send_reminder_emails
-          flash[:notice] = 'Reminder emails have been sent to those who have not yet responded.'
-        else
-          flash[:warning] = 'There are no open reviewer invitations for this grant. No reminders have been sent'
+        respond_to do |format|
+          if @open_invitations.any?
+            send_reminder_emails
+            format.html { redirect_to grant_invitations_url(@grant), notice: 'Reminder emails have been sent to those who have not yet responded.' }
+          else
+            format.html { redirect_to grant_invitations_url(@grant), alert: 'There are no open reviewer invitations for this grant. No reminders have been sent' }
+          end
         end
-        redirect_back fallback_location: grant_invitations_path(@grant)
       end
 
       def show
         invitation = GrantReviewer::Invitation.find(params[:id])
 
-        if invitation.present? && invitation.invitee.nil?
-          send_reminder_email(invitation)
-          flash[:success] = "A reminder has been sent to #{invitation.email}."
-        else
-          flash[:warning] = 'A reminder could not be sent to the selected email address.'
+        respond_to do |format|
+          if invitation.present? && invitation.invitee.nil?
+            send_reminder_email(invitation)
+            format.html { redirect_to grant_invitations_url(@grant), notice: "A reminder has been sent to #{invitation.email}." }
+          else
+            format.html { redirect_to grant_invitations_url(@grant), alert: 'A reminder could not be sent to the selected email address.' }
+          end
         end
-
-        redirect_back fallback_location: grant_invitations_path(@grant)
       end
 
       private
