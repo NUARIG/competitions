@@ -26,7 +26,7 @@ The following are required to install competitions:
 
 # Shibboleth IDP
 
-  The [Devise SAML AUTHENTICATABLE gem](https://github.com/apokalipto/devise_saml_authenticatable) has been used for authentication. Please see their documentation for more information on configuration.
+  The [Devise SAML Authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable) has been used for authentication. Please see their documentation for more information on configuration.
 
   You will need an IDP for your staging and production instances which may be coordinated with your university, the NIH, or another IDP.
 
