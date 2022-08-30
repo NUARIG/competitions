@@ -26,9 +26,13 @@ The following are required to install competitions:
 
 # Shibboleth IDP
 
-  You will need an IDP for your staging and production instances which may be coordinated with your university or the NIH.
+  You will need an IDP for your staging and production instances which may be coordinated with your university, the NIH, or another IDP.
 
-  [One Login](https://www.onelogin.com/developer-signup) can be used to set up an IDP for development.
+  We have used a docker container for development and instructions on setting up a local IDP for development can be found in our [WIKI](https://github.com/NUARIG/competitions/wiki/Installation-and-configuration-of-test-saml-idp).
+
+  Third party venders like [One Login](https://www.onelogin.com/developer-signup) can also be used for a development IDP.
+
+  The [Devise SAML AUTHENTICATABLE gem](https://github.com/apokalipto/devise_saml_authenticatable) has been used for authentication. Please see their documentation for more information on configuration.
 
 
 # Installation
