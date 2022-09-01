@@ -6,6 +6,16 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.17.1 (September 1, 2022)
+    .accordion-content{"data-tab-content" => ""}
+      %p
+        %ul
+          %li
+            Fix javascript load on reviewers page.
+            #{github_issue_link(issue: 975)}
+
+%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.17 (August 8, 2022)
     .accordion-content{"data-tab-content" => ""}
       %p
