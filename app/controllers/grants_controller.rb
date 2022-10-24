@@ -3,7 +3,7 @@
 class GrantsController < ApplicationController
   skip_before_action :authenticate_user!, only: :show
   before_action :store_user_location!, only: :show, unless: :user_signed_in?
-  before_action :set_grant, except: %i[index new create]
+  before_action :set_grant, except: %i[index show new create]
 
   # GET /grants
   # GET /grants.json
@@ -16,6 +16,8 @@ class GrantsController < ApplicationController
   # GET /grants/1
   # GET /grants/1.json
   def show
+    @grant = Grant.includes(:contacts).kept.friendly.find(params[:id])
+
     if authorize @grant
       draft_banner
     end
