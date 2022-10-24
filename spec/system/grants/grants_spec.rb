@@ -187,6 +187,8 @@ RSpec.describe 'Grants', type: :system, js: true do
     let(:admin)                 { grant.admins.first }
     let(:editor)                { grant.editors.first }
     let(:viewer)                { grant.viewers.first }
+    let(:contact)               { create(:grant_permission, :contact, grant: grant) }
+    let(:contact2)              { create(:grant_permission, :contact, grant: grant) }
 
     context 'panel information' do
       it 'does not display dates to anonymous users' do
@@ -357,6 +359,47 @@ RSpec.describe 'Grants', type: :system, js: true do
 
           it 'displays panel edit link' do
             expect(page).to have_link 'Set Panel Time', href: edit_grant_panel_path(grant)
+          end
+        end
+      end
+    end
+
+    context 'contact' do
+      context 'grant with no contact' do
+        it 'does not display contact card' do
+          visit grant_path(grant)
+          expect(page).to have_no_selector('div#grant-contacts')
+        end
+      end
+      context 'grant with contact' do
+        before(:each) do
+          contact
+        end
+
+        it 'displays a contact card with contact info' do
+          visit grant_path(grant)
+          within('div#grant-contacts') do
+            expect(page).to have_text 'Contact'
+            expect(page).to have_content "#{full_name(contact.user)}"
+            expect(page).to have_link contact.user.email
+          end
+        end
+      end
+
+      context 'grant with multiple contacts' do
+        before(:each) do
+          contact
+          contact2
+        end
+
+        it 'displays a contact card with all contact info' do
+          visit grant_path(grant)
+          within('div#grant-contacts') do
+            expect(page).to have_text 'Contacts'
+            expect(page).to have_content "#{full_name(contact.user)}"
+            expect(page).to have_link contact.user.email
+            expect(page).to have_content "#{full_name(contact2.user)}"
+            expect(page).to have_link contact2.user.email
           end
         end
       end
