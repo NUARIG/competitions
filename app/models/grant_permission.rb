@@ -26,6 +26,7 @@ class GrantPermission < ApplicationRecord
   validate :prevent_last_admin_edit, on: :update, if: -> { role_changed? && role_changed_from_admin? && is_last_grant_admin? }
 
   scope :with_user, -> { includes(:user) }
+  scope :contacts,  -> { where(contact: true) }
 
   def self.role_by_user_and_grant(user:, grant:)
     return GrantPermission::ROLES[:admin] if user.system_admin?
