@@ -1,0 +1,17 @@
+.grid-x.grid-padding-x
+  .cell.small-12
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label 'Grant Contact:'
+      .cell.small-12.medium-8.notification-checkbox
+        = f.check_box :contact
+        %i.small
+          When checked, this user's name and email will be displayed on the grant
+
+    .grid-x
+      .cell.small-12.medium-3
+        = f.label 'Submission Notifications:'
+      .cell.small-12.medium-8.notification-checkbox
+        = f.check_box :submission_notification
+        %i.small
+          When checked, notification emails will be sent to this email when submissions are complete.

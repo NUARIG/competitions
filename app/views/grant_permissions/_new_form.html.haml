@@ -1,14 +1,13 @@
 .grid-x.grid-padding-x
-  .cell.small-12.medium-6
+  .cell.small-12.medium-4
     = f.label :user_id, 'Add a Permission by Email Address'
     = f.select(:user_id, [], { include_blank: true }, data: { users_query_source: users_query_grant_grant_permissions_path(grant_id: @grant.id) })
-  .cell.small-12.medium-4
+  .cell.small-12.medium-6
     = f.label :role, 'Grant Role'
-    = f.select :role, grant_permission_role_select_options, include_blank: 'Please select'
-.grid-x
-  .cell.small-12
-    Receive Notifications for:
-    = render partial: 'grant_permissions/notification_checkboxes', locals: { f: f }
+    = f.select :role, grant_permission_role_select_options, include_blank: 'Please select a role'
+
+= render partial: 'grant_permissions/checkboxes', locals: { f: f }
+
 .grid-x
   .actions
     = f.hidden_field :grant_id, value: grant.id

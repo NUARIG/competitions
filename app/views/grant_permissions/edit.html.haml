@@ -20,9 +20,6 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-
-  = render 'permissions_header'
-
   .grid-x
     .cell
       = form_with model: [@grant, @grant_permission], local: true, data: { turbo: false } do |f|
