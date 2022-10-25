@@ -92,7 +92,8 @@ class GrantPermissionsController < ApplicationController
       :grant_id,
       :user_id,
       :role,
-      :submission_notification
+      :submission_notification,
+      :contact
     )
   end
 end
