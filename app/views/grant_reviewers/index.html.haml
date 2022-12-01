@@ -25,7 +25,7 @@
         %li
           Add Reviewer by Email Address
           %div{ style: 'display: inline-block' }
-            = form_for :grant_reviewer, url: grant_reviewers_path(@grant) do |f|
+            = form_for :grant_reviewer, url: grant_reviewers_path(@grant), local: true, data: { turbo: false } do |f|
               .input-group
                 = f.email_field :reviewer_email, placeholder: 'Email', class: 'input-group-field', required: true
                 .input-group-button

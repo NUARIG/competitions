@@ -15,6 +15,6 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-  = form_with model: @grant, local: true, data: { turbo: false }, id: 'grant-edit' do |f|
+  = form_with model: @grant, id: 'grant-edit', local: true, data: { turbo: false } do |f|
     = render 'form', f: f, grant: @grant, disable_fields: disable_fields
 

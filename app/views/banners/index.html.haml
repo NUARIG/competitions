@@ -4,7 +4,7 @@
   %h3
     = yield(:page_title)
 
-  = link_to 'Create New Banner', new_banner_path, class: 'button primary'
+  = link_to 'Create New Banner', new_banner_path, class: 'button primary', data: { turbo: false }
 
   - if @banners.none?
     %p

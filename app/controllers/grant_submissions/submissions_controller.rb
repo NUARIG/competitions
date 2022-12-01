@@ -3,6 +3,7 @@ module GrantSubmissions
     before_action :set_grant, except: %i[index new]
 
     def index
+      flash.keep
       @grant      = Grant.kept.friendly.with_administrators.find(params[:grant_id])
 
       if Pundit.policy(current_user, @grant).show?
