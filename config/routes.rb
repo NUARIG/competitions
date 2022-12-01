@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   end
 
   resources :grants do
-    resources :grant_permissions, except: :show,            controller: 'grant_permissions' do
+    resources :grant_permissions, except: :show, controller: 'grant_permissions' do
       get :users_query, on: :collection, to: 'grant_permissions/users_query#index', as: :users_query
     end
 
