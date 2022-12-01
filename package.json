@@ -9,7 +9,7 @@
   "private": true,
   "dependencies": {
     "@hotwired/stimulus": "^3.0.1",
-    "@hotwired/turbo-rails": "^7.0.1",
+    "@hotwired/turbo-rails": "^7.2.4",
     "@nathanvda/cocoon": "^1.2.14",
     "@rails/actioncable": "^6.0.0",
     "@rails/actiontext": "^6.1.4-1",
