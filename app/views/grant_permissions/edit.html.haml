@@ -22,5 +22,4 @@
 .tabs-panel.is-active
   .grid-x
     .cell
-      = form_with model: [@grant, @grant_permission], local: true, data: { turbo: false } do |f|
-        = render 'edit_form', f: f, grant: @grant
+      = render 'form', grant: @grant, grant_permission: @grant_permission

@@ -16,4 +16,13 @@ module GrantPermissionsHelper
          .where(submission_notification: true)
          .map{ |permission| permission.user.email }
   end
+
+  def role_can_be_deleted?(user_permission:, grant_admins:)
+    return true unless user_permission.role == GrantPermission::ROLES[:admin]
+    grant_admins.one? ? false : true
+  end
+
+  def render_turbo_stream_grant_permission(grant:, permission:)
+    turbo_stream.replace dom_id(permission), partial: 'grant_permission', locals: { grant: grant, grant_permission: permission }
+  end
 end

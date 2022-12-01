@@ -1,0 +1,22 @@
+- include_blank_content = @grant_permission.persisted? ? false : 'Please select role'
+- user = @grant_permission.user
+
+= turbo_frame_tag(dom_id(@grant_permission)) do
+  = inline_error_notifications(object: @grant_permission)
+
+  = form_with model: [@grant, @grant_permission] do |f|
+    .grid-x.grid-padding-x.grid-padding-y
+      .cell.small-12.medium-3
+        - if @grant_permission.persisted?
+          = full_name(user)
+          %br
+          .small= user.email
+      .cell.small-12.medium-1
+        = f.check_box :contact
+      .cell.small-12.medium-2
+        = f.check_box :submission_notification
+      .cell.small-12.medium-4.small
+        = f.select :role, grant_permission_role_select_options, include_blank: include_blank_content, class: 'small'
+      .cell.small-12.medium-2.actions.small
+        = f.submit 'Update', class: 'button'
+        = link_to 'Cancel', grant_grant_permissions_path(grant), class: 'button secondary clear small'

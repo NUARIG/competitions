@@ -1,4 +1,4 @@
-%div.pagy-header
+%div#pagy-header.pagy-header
   != pagy_info(pagy)
   - unless params[:q].nil? || params[:q].values.all?(&:blank?)
     \-

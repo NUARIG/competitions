@@ -102,6 +102,9 @@ RSpec.configure do |config|
   # Pause for AJAX actions to complete
   # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara
   config.include WaitForAjax, type: :system
+
+  # Pause for Turbo actions to complete
+  config.include WaitForTurbo, type: :system
 end
 
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]

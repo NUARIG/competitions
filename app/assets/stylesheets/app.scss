@@ -182,6 +182,7 @@ th,
   font-size: .85em;
   font-weight: bold;
   text-align: left;
+  padding: .25em 0;
   vertical-align: bottom;
 }
 
@@ -277,8 +278,13 @@ h2#section {
 }
 
 #turbo-table {
-  margin: 2rem 0;
   border: $table-border;
+  .header {
+    .cell {
+      font-size: .85em;
+      margin-bottom: 0em;
+    }
+  }
 
   .columns {
     border-bottom: $table-border;

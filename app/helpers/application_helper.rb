@@ -26,6 +26,14 @@ module ApplicationHelper
     array.map { |item| "<li>#{item}</li>" }.join
   end
 
+  def inline_error_notifications(object:, type: 'alert')
+    if object.errors.any?
+      tag.div class: "callout #{type} small"  do
+        object.errors.full_messages.to_sentence
+      end
+    end
+  end
+
   # Returns the full title on a per-page basis.
   def title_tag_content(page_title: '')
     base_title = COMPETITIONS_CONFIG[:application_name]
