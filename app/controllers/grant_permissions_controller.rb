@@ -6,12 +6,14 @@ class GrantPermissionsController < ApplicationController
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    @grant = Grant.kept.includes(grant_permissions: :user).friendly.find(params[:grant_id])
-    @pagy, @grant_permissions = pagy(@grant.grant_permissions, i18n_key: 'activerecord.models.grant_permission')
+    flash.keep
+    @grant = Grant.kept.friendly.find(params[:grant_id])
     authorize_grant_viewer
+
+    @grant_permissions  = GrantPermission.joins(:user).where(grant: @grant).merge(User.order(last_name: :asc))
+    set_pagination
   end
 
-  # GET /grants/:id/grant_permission/new
   def new
     @grant_permission = GrantPermission.new(grant: @grant)
   end
@@ -21,58 +23,54 @@ class GrantPermissionsController < ApplicationController
     @role = @grant_permission.role
   end
 
-  # POST /grants/:id/grant_permission
-  # POST /grants/:id/grant_permission.json
   def create
     @grant_permission = GrantPermission.new(grant_permission_params)
     respond_to do |format|
       if @grant_permission.save
-        flash[:notice] = helpers.full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role + '\' permissions for this grant.'
+        flash[:notice] = helpers.full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role.capitalize + '\' permissions for this grant.'
         format.html { redirect_to grant_grant_permissions_path(@grant) }
-        format.json { render :show, status: :created, location: @grant_permission }
       else
         flash[:alert] = @grant_permission.errors.full_messages
         format.html { render :new }
-        format.json { render json: @grant_permission.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /grants/:id/grant_permission/1
-  # PATCH/PUT /grants/:id/grant_permission/1.json
   def update
-    respond_to do |format|
-      if @grant_permission.update(grant_permission_params)
-        # TODO: user may have changed their own permissions. authorize @grant, @grant_permission, :index?
-        flash[:notice] = helpers.full_name(@grant_permission.user) + '\'s permission was changed to \'' + @grant_permission.role + '\' for this grant.'
-        format.html { redirect_to grant_grant_permissions_path(@grant) }
-        format.json { render :show, status: :ok, location: @grant_permission }
-      else
-        format.html { redirect_to edit_grant_grant_permission_path(@grant, @grant_permission), alert: @grant_permission.errors.full_messages }
-        format.json { render json: @grant_permission.errors, status: :unprocessable_entity }
+    if @grant_permission.update(grant_permission_params)
+      notice = "#{user_flash_display} role on this grant was successfully updated."
+      respond_to do |format|
+        format.html         { redirect_to grant_grant_permissions_path(@grant), notice: notice }
+        format.turbo_stream { flash.now[:notice] = notice }
       end
+    else
+      alert = @grant_permission.errors.full_messages
+
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /grant_permission/1
-  # DELETE /grant_permission/1.json
   def destroy
     @grant_permission.destroy
     if @grant_permission.errors.any?
       flash[:alert] = @grant_permission.errors.full_messages
+      render :edit, status: :unprocessable_entity
     else
-      flash[:notice] = helpers.full_name(@grant_permission.user) + '\'s role was removed for this grant.'
-    end
-    respond_to do |format|
-      format.html { redirect_to grant_grant_permissions_path(@grant) }
-      format.json { head :no_content }
+      # Need to set pagination in order to update the header permission count
+      set_pagination
+      notice = "#{user_flash_display} role on this grant was removed."
+
+      respond_to do |format|
+        # format.html          { redirect_to grant_grant_permissions_path(@grant), notice: notice }
+        format.turbo_stream  { flash.now[:notice] = notice }
+      end
     end
   end
 
   private
 
   def set_grant
-    @grant = Grant.kept.friendly.find(params[:grant_id])
+    @grant = Grant.includes(:grant_permissions).kept.friendly.find(params[:grant_id])
   end
 
   def set_grant_permission
@@ -95,5 +93,13 @@ class GrantPermissionsController < ApplicationController
       :submission_notification,
       :contact
     )
+  end
+
+  def set_pagination
+    @pagy, @grant_permissions = pagy((@grant_permissions || @grant.grant_permissions), i18n_key: 'activerecord.models.grant_permission')
+  end
+
+  def user_flash_display
+    @grant_permission.user == current_user ? 'Your' : "#{helpers.full_name(@grant_permission.user)}'s"
   end
 end
