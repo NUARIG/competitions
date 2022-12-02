@@ -2,8 +2,9 @@
   %h4.card-divider
     = 'Contact'.pluralize(contacts.size)
   .card-section
-    - contacts.each do |contact|
-      %dt
-        = full_name(contact)
-      %dd
-        = mail_to contact.email, contact.email ,subject: "#{grant.name}"
+    %dl
+      - contacts.each do |contact|
+        %dt
+          = full_name(contact)
+        %dd
+          = mail_to contact.email, contact.email, subject: "#{grant.name}", class: 'small'
