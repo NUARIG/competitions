@@ -6,7 +6,6 @@ class GrantPermissionsController < ApplicationController
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
-    flash.keep
     @grant = Grant.kept.friendly.find(params[:grant_id])
     authorize_grant_viewer
 
@@ -25,14 +24,18 @@ class GrantPermissionsController < ApplicationController
 
   def create
     @grant_permission = GrantPermission.new(grant_permission_params)
-    respond_to do |format|
-      if @grant_permission.save
-        flash[:notice] = helpers.full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role.capitalize + '\' permissions for this grant.'
-        format.html { redirect_to grant_grant_permissions_path(@grant) }
-      else
-        flash[:alert] = @grant_permission.errors.full_messages
-        format.html { render :new }
+
+    if @grant_permission.save
+      set_pagination
+
+      respond_to do |format|
+        notice = helpers.full_name(@grant_permission.user) + ' was granted \'' + @grant_permission.role.capitalize + '\' permissions for this grant.'
+        format.html         { redirect_to grant_grant_permissions_path(@grant), notice: notice }
+        format.turbo_stream { flash.now[:notice] = notice }
       end
+    else
+      flash.now[:alert] = @grant_permission.errors.full_messages
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -61,7 +64,7 @@ class GrantPermissionsController < ApplicationController
       notice = "#{user_flash_display} role on this grant was removed."
 
       respond_to do |format|
-        # format.html          { redirect_to grant_grant_permissions_path(@grant), notice: notice }
+        format.html          { redirect_to grant_grant_permissions_path(@grant), notice: notice }
         format.turbo_stream  { flash.now[:notice] = notice }
       end
     end

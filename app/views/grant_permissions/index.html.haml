@@ -26,7 +26,6 @@
           %li
             = link_to 'Grant access to another user', |
                         new_grant_grant_permission_path(@grant), |
-                        target: '_top', |
                         data: { turbo_frame: 'new_permission' }
 
   %p
@@ -41,18 +40,20 @@
     = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
   #permissions
-    #turbo-table.grid-x.grid-padding-x.align-bottom.header
-      .cell.small-12.medium-3
-        Name
-      .cell.small-12.medium-1
-        Grant Contact
-      .cell.small-12.medium-2
-        Submission Notifications
-      .cell.small-12.medium-4
-        Role
-      .cell.small-12.medium-2
+    #turbo-table
+      .grid-x.grid-padding-x.align-bottom.header
+        .cell.small-12.medium-3
+          Name
+        .cell.small-12.medium-1
+          Grant Contact
+        .cell.small-12.medium-2
+          Submission Notifications
+        .cell.small-12.medium-4
+          Role
+        .cell.small-12.medium-2
 
-    - @grant_permissions.each_with_index do |grant_permission, i|
-      .permission
-        = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
+      #grant-permissions
+        - @grant_permissions.each_with_index do |grant_permission, i|
+          .permission
+            = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
 

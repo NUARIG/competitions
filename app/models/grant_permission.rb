@@ -36,11 +36,11 @@ class GrantPermission < ApplicationRecord
   private
 
   def prevent_last_admin_edit
-    errors.add(:base, 'There must be at least one Admin on the grant. This user\'s role cannot be changed.')
+    errors.add(:base, 'There must be at least one Admin on the grant. This user\'s role cannot be changed')
   end
 
   def prevent_last_admin_destroy
-    errors.add(:base, 'There must be at least one Admin on the grant.')
+    errors.add(:base, 'There must be at least one Admin on the grant')
     throw :abort
   end
 

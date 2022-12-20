@@ -19,12 +19,13 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
-
   %p
     = "Add someone to this Grant and control their access. They will need to have logged in to #{COMPETITIONS_CONFIG[:application_name]} first."
 
   = turbo_frame_tag 'new_permission' do
+    = inline_error_notifications(object: @grant_permission)
+
     .grid-x.grid-padding-x.grid-padding-y
       .cell
-        = form_with model: [@grant, @grant_permission], local: true, data: { turbo: false } do |f|
+        = form_with model: [@grant, @grant_permission] do |f|
           = render partial: 'new_form', locals: { f: f, grant: @grant, users: @users, grant_permission: @grant_permission }

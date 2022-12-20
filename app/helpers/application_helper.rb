@@ -29,7 +29,7 @@ module ApplicationHelper
   def inline_error_notifications(object:, type: 'alert')
     if object.errors.any?
       tag.div class: "callout #{type} small"  do
-        object.errors.full_messages.to_sentence
+        "#{object.errors.full_messages.to_sentence}."
       end
     end
   end
