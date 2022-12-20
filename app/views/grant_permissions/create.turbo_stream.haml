@@ -1,5 +1,7 @@
 = turbo_stream.replace 'flash', partial: 'layouts/flash'
 
+= turbo_stream.replace 'new_permission'
+
 = turbo_stream.prepend 'grant-permissions', partial: 'grant_permission', locals: { grant: @grant, grant_permission: @grant_permission }
 
 = turbo_stream.replace 'pagy-header', partial: 'shared/pagy_header', locals: { pagy: @pagy }
