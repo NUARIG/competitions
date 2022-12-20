@@ -22,6 +22,7 @@ gem 'redis', '~> 4.0'
 
 gem 'hotwire-rails'
 gem 'jsbundling-rails'
+gem 'requestjs-rails'
 gem 'turbo-rails',                  '~> 1.3.2'
 
 # Reduces boot times through caching; required in config/boot.rb
