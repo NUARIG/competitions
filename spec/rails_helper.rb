@@ -121,3 +121,13 @@ end
 def scroll_to_half_of_the_page
   page.execute_script 'window.scrollBy(0,2000)'
 end
+
+def tom_select_input(label_dom_id:, value:, select_option: true)
+  find(label_dom_id).click
+  send_keys(value)
+  pause(time: 0.35) # The lowest viable time
+  if select_option == true
+    send_keys(:tab)
+    pause
+  end
+end

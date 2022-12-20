@@ -3,6 +3,7 @@
 require 'rails_helper'
 include ApplicationHelper
 include UsersHelper
+include ActionView::RecordIdentifier
 
 RSpec.describe 'GrantPermissions', type: :system, js: true do
   before(:each) do
@@ -17,8 +18,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     @grant_editor_role = @grant.grant_permissions.role_editor.first
     @grant_viewer_role = @grant.grant_permissions.role_viewer.first
 
-    @unassigned_user   = create(:saml_user)
-    @select2_user      = create(:saml_user, email: 'select2_user@school.edu')
+    @unassigned_user = create(:saml_user)
   end
 
   describe 'grant editor user' do
@@ -77,12 +77,17 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect(page).to have_content 'Your role on this grant was successfully updated.'
       end
 
-
       scenario 'last grant_permission_admin cannot be assigned a different role' do
-        visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
-        select('Viewer', from: 'grant_permission[role]')
-        click_button 'Update'
-        expect(page).to have_content 'There must be at least one Admin on the grant'
+        visit grant_grant_permissions_path(@grant) #, @grant_admin_role)
+        role_dom_id = "##{dom_id(@grant_admin_role)}"
+        within(role_dom_id) do
+          click_link 'Edit'
+          # wait_for_turbo
+          select('Viewer', from: 'grant_permission[role]')
+          click_button 'Update'
+          # wait_for_turbo
+          expect(page).to have_content 'There must be at least one Admin on the grant. This user\'s role cannot be changed.'
+        end
         expect(@grant_admin_role.role).to eql('admin')
       end
 
@@ -101,69 +106,73 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
     context '#new' do
       before(:each) do
-        visit new_grant_grant_permission_path(@grant.id)
+        visit grant_grant_permissions_path(@grant)
+        click_link 'Grant access to another user'
       end
 
-      scenario 'assigned grant_permission does not appear in select' do
-        expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
+      # scenario 'assigned grant_permission does not appear in select' do
+      #   expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
+      # end
+
+      scenario 'requires a selected user' do
+        within '#new_permission' do
+          select('Editor', from:'grant_permission[role]')
+          click_button 'Save'
+          wait_for_turbo
+          expect(page).to have_content('User must exist and User must be selected.')
+        end
       end
 
       scenario 'requires a selected user' do
-        visit new_grant_grant_permission_path(@grant.id)
-        select('Editor', from:'grant_permission[role]')
-        click_button 'Save'
-        expect(page).to have_content('User must exist and user must be selected.')
-      end
-
-      scenario 'requires a selected user' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        click_button 'Save'
-        expect(page).to have_content('Role must be selected.')
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email)
+          click_button 'Save'
+          expect(page).to have_content('Role must be selected.')
+        end
       end
 
       scenario 'unassigned user can be granted a role' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        select('Editor', from:'grant_permission[role]')
-        click_button 'Save'
-        wait_for_turbo
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.chop)
+          select('Editor', from:'grant_permission[role]')
+          click_button 'Save'
+        end
         expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'Editor'"
       end
 
       scenario 'new grant permission defaults to false for submission notification' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        select('Editor', from:'grant_permission[role]')
-        click_button 'Save'
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email)
+          select('Editor', from:'grant_permission[role]')
+          click_button 'Save'
+        end
         expect(GrantPermission.last.submission_notification).to eql false
       end
 
       scenario 'new grant permission can be set to true for submission notification' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        select('Editor', from:'grant_permission[role]')
-        find(:css, "#grant_permission_submission_notification").set(true)
-        click_button 'Save'
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.chop)
+          select('Editor', from:'grant_permission[role]')
+          find(:css, "#grant_permission_submission_notification").set(true)
+          click_button 'Save'
+        end
+        wait_for_turbo
         expect(GrantPermission.last.submission_notification).to eql true
       end
 
-      context 'select2 search' do
-        scenario 'select2 dropdown includes unassigned emails' do
-          select2 @select2_user.email, from: 'Email Address', search: true
-          select2 @select2_user.email, from: 'Email Address', search: 'select2'
+      context 'tom-select search' do
+        scenario 'displays search email, if exists' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.first(6), select_option: false)
+          expect(page).to have_content(@unassigned_user.email)
         end
 
-        scenario 'select2 displays search email, if exists' do
-          select2_open label: 'Email Address'
-          select2_search 'select2_user', from: 'Email Address'
-          expect(page).to have_content(@select2_user.email)
+        scenario 'requires at least one character entered' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: '', select_option: false)
+          expect(page).to have_field(placeholder: 'Enter 3 characters to search')
         end
 
-        scenario 'select2 requires at least one character entered' do
-          select2_open label: 'Email Address'
-          expect(page).to have_content('Please enter 3 or more characters')
-        end
-
-        scenario 'select2 limits dropdown options with' do
-          select2_open label: 'Email Address'
-          select2_search 'zzzzzzzzzz', from: 'Email Address'
+        scenario 'limits dropdown options based on input' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: 'zzzzzzz', select_option: false)
           expect(page).to have_content('No results found')
           expect(page).to have_select('grant_permission_user_id', :with_options => [])
         end
