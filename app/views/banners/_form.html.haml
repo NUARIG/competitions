@@ -25,6 +25,6 @@
       = f.submit 'Save', class: 'button'
       = link_to 'Cancel', banners_path, class: 'button secondary clear'
     - else
-      = f.submit 'Update', class: 'button'
+      = f.submit 'Update', class: 'button', data: { turbo: false }
       = link_to 'Cancel', banners_path, class: 'button secondary clear'
       = link_to 'Delete', banner, method: :delete, data: { confirm: 'Are you sure you want to delete this banner entirely? To take it down without deleting it, uncheck the Visible box.'}, class: 'button alert clear'

@@ -7,7 +7,7 @@
 .cell.or
   OR
 .cell
-  = button_to "Continue with your #{COMPETITIONS_CONFIG[:application_name]} account",  new_registered_user_session_path, method: :get, class: 'registered-user-log-in button expanded'
+  = button_to "Continue with your #{COMPETITIONS_CONFIG[:application_name]} account",  new_registered_user_session_path, method: :get, class: 'registered-user-log-in button expanded', data: { turbo: false }
 
   %p
 

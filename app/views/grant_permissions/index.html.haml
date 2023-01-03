@@ -24,35 +24,36 @@
           %li.menu-text
             Actions:
           %li
-            = link_to 'Grant access to another user', new_grant_grant_permission_path(@grant)
+            = link_to 'Grant access to another user', |
+                        new_grant_grant_permission_path(@grant), |
+                        data: { turbo_frame: 'new_permission' }
+
+  %p
+    Note: All Grants must have at least one Admin.
+
+  = turbo_frame_tag 'new_permission'
 
   - unless @grant_permissions.present?
     %p
       No roles have been assigned on this grant.
   - else
-
     = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
-    %table.hover
-      %thead
-        %tr
-          %th
-            Name
-          %th
-            Role
-          %th
-            Notifications
-          %th
+  #permissions
+    #turbo-table
+      .grid-x.grid-padding-x.align-bottom.header
+        .cell.small-12.medium-3
+          Name
+        .cell.small-12.medium-1
+          Grant Contact
+        .cell.small-12.medium-2
+          Submission Notifications
+        .cell.small-12.medium-4
+          Role
+        .cell.small-12.medium-2
 
-      %tbody
-        - @grant_permissions.each do |grant_permission|
-          - grant_permission_user_name = full_name(grant_permission.user)
-          %tr{ id: "#{dom_id(grant_permission)}" }
-            %td
-              = grant_permission_user_name
-            %td
-              = grant_permission.role.capitalize
-            %td
-              = on_off_boolean(grant_permission.submission_notification)
-            %td
-              = render partial: "#{current_user.get_role_by_grant(grant: @grant)}_links", locals: { grant_permission: grant_permission, grant: @grant, grant_permission_user_name: grant_permission_user_name }
+      #grant-permissions
+        - @grant_permissions.each_with_index do |grant_permission, i|
+          .permission
+            = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
+

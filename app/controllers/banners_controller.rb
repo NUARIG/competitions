@@ -21,11 +21,14 @@ class BannersController < ApplicationController
   def create
     @banner = Banner.new(banner_params)
     authorize @banner
-    if @banner.save
-      redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success')
-    else
-      flash.now[:alert] = @banner.errors.full_messages
-      render :new, status: :unprocessable_entity
+
+    respond_to do |format|
+      if @banner.save
+        format.html { redirect_to banners_path, notice: t(@banner.visible? ? '.visible_success' : '.not_visible_success') }
+      else
+        flash.now[:alert] = @banner.errors.full_messages
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -6,6 +6,7 @@ class GrantReviewersController < ApplicationController
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
+    flash.keep
     authorize @grant, :grant_editor_access?
 
     @grant_reviewers        = @grant.grant_reviewers.includes(:reviewer).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
@@ -22,7 +23,7 @@ class GrantReviewersController < ApplicationController
     if email.blank?
       flash[:alert] = 'Please enter a valid email address.'
     elsif reviewer.nil?
-      flash[:alert] = "Could not find a user with the email: #{email}. #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant, email: email), method: :post, data: { confirm: "An email will be sent to #{email}. You will be notified when they accept or opt out."} }"
+      flash[:alert] = "Could not find a user with the email: #{email}. #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant, email: email), method: :post, data: { turbo: false, confirm: "An email will be sent to #{email}. You will be notified when they accept or opt out." }, turbo: false }"
     else
       grant_reviewer = GrantReviewer.create(grant: @grant, reviewer: reviewer)
 

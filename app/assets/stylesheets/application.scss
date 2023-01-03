@@ -15,10 +15,11 @@
  *= require_self
  *= require select2
  */
+@import "tom-select/dist/scss/tom-select.default.scss";
 @import "app";
 @import "foundation_and_overrides";
 @import "foundation-datepicker";
 @import "trix/dist/trix";
 @import "./actiontext.scss";
 @import "font-awesome";
-@import "./jquery-ui.css"
+@import "./jquery-ui.css";

@@ -1,0 +1,12 @@
+= turbo_stream.replace 'flash', partial: 'layouts/flash'
+
+= turbo_stream.replace dom_id(@grant_permission), partial: 'grant_permission', locals: { grant: @grant, grant_permission: @grant_permission }
+
+-# conditionally updates all admins when the grant.admins.size increases to or decreases from 2
+- if (@grant_permission.role_previously_changed?(to: 'admin') && @grant.admins.size == 2) || (@grant_permission.role_previously_changed?(from: 'admin') && @grant.admins.size == 1)
+  - @grant.grant_permissions.where(role: 'admin').each do |admin|
+    = render_turbo_stream_grant_permission(grant: @grant, permission: admin)
+- else
+  = render_turbo_stream_grant_permission(grant: @grant, permission: @grant_permission)
+
+

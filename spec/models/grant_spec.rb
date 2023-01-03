@@ -17,7 +17,8 @@ RSpec.describe Grant, type: :model do
   it { is_expected.to respond_to(:review_open_date) }
   it { is_expected.to respond_to(:review_close_date) }
   it { is_expected.to respond_to(:discarded_at) }
-  it { is_expected.to respond_to(:reviewer_invitations)}
+  it { is_expected.to respond_to(:reviewer_invitations) }
+  it { is_expected.to respond_to(:contacts) }
 
   let(:grant) { build(:grant) }
 

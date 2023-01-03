@@ -6,6 +6,7 @@ module GrantSubmissions
       before_action     :set_submission_and_grant
 
       def index
+        flash.keep
         authorize @submission, :edit?
         @submission_applicants = @submission.submission_applicants.includes(:applicant).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
       end

@@ -2,6 +2,7 @@ en:
   activerecord:
     attributes:
       grant_permission:
+        user: User
     models:
       grant_permission:
         one: permission
@@ -11,7 +12,7 @@ en:
         grant_permission:
           attributes:
             user:
-              blank: must be selected.
+              blank: must be selected
             role:
-              blank: must be selected.
+              blank: must be selected
 

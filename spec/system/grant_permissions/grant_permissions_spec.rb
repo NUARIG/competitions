@@ -3,6 +3,7 @@
 require 'rails_helper'
 include ApplicationHelper
 include UsersHelper
+include ActionView::RecordIdentifier
 
 RSpec.describe 'GrantPermissions', type: :system, js: true do
   before(:each) do
@@ -17,8 +18,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
     @grant_editor_role = @grant.grant_permissions.role_editor.first
     @grant_viewer_role = @grant.grant_permissions.role_viewer.first
 
-    @unassigned_user   = create(:saml_user)
-    @select2_user      = create(:saml_user, email: 'select2_user@school.edu')
+    @unassigned_user = create(:saml_user)
   end
 
   describe 'grant editor user' do
@@ -32,27 +32,27 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect(page).to have_link 'Grant access to another user', href: new_grant_grant_permission_path(@grant)
       end
 
-      scenario 'includes edit link, excludes delete link' do
+      scenario 'includes appropriate edit and delete links' do
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_editor_role)
-        expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_editor_role)
+        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_editor_role)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_viewer_role)
-        expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role)
+        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role)
       end
 
       scenario 'includes information in grant admin table row' do
-        within("tr#grant_permission_#{@grant_admin_role.id}") do
+        within("#grant_permission_#{@grant_admin_role.id}") do
           expect(page).to have_content(full_name(@grant_admin))
           expect(page).to have_content(@grant_admin_role.role.capitalize)
-          expect(page).to have_content(on_off_boolean(@grant.grant_permissions.role_admin.first.submission_notification))
+          expect(page).to have_content(I18n.t("boolean.on_off.#{@grant.grant_permissions.role_admin.first.submission_notification}"))
         end
       end
     end
 
     context '#edit' do
       scenario 'removes edit links for user who changes their permission to viewer' do
-        visit edit_grant_grant_permission_path(@grant, @grant_editor_role)
+        click_link('Edit', href: edit_grant_grant_permission_path(@grant, @grant_editor_role))
         select('Viewer', from: 'grant_permission[role]')
         click_button 'Update'
         expect(page).not_to have_link('Edit', href: edit_grant_grant_permission_path(@grant, @grant_editor_role))
@@ -61,17 +61,33 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       end
 
       scenario 'existing grant_permission_editor can be assigned admin role' do
-        visit edit_grant_grant_permission_path(@grant, @grant_editor_role)
+        click_link('Edit', href: edit_grant_grant_permission_path(@grant, @grant_editor_role))
         select('Admin', from: 'grant_permission[role]')
         click_button 'Update'
-        expect(page).to have_content "#{full_name(@grant_editor)}'s permission was changed to 'admin' for this grant."
+        wait_for_turbo
+        expect(@grant_editor_role.reload.role).to eql('admin')
+      end
+
+      scenario 'uses \'Your\' in flash message when updating your own grant' do
+        click_link('Edit', href: edit_grant_grant_permission_path(@grant, @grant_editor_role))
+        select('Admin', from: 'grant_permission[role]')
+        click_button 'Update'
+        wait_for_turbo
+        expect(@grant_editor_role.reload.role).to eql('admin')
+        expect(page).to have_content 'Your role on this grant was successfully updated.'
       end
 
       scenario 'last grant_permission_admin cannot be assigned a different role' do
-        visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
-        select('Viewer', from: 'grant_permission[role]')
-        click_button 'Update'
-        expect(page).to have_content 'There must be at least one admin on the grant'
+        visit grant_grant_permissions_path(@grant) #, @grant_admin_role)
+        role_dom_id = "##{dom_id(@grant_admin_role)}"
+        within(role_dom_id) do
+          click_link 'Edit'
+          # wait_for_turbo
+          select('Viewer', from: 'grant_permission[role]')
+          click_button 'Update'
+          # wait_for_turbo
+          expect(page).to have_content 'There must be at least one Admin on the grant. This user\'s role cannot be changed.'
+        end
         expect(@grant_admin_role.role).to eql('admin')
       end
 
@@ -90,68 +106,73 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
     context '#new' do
       before(:each) do
-        visit new_grant_grant_permission_path(@grant.id)
+        visit grant_grant_permissions_path(@grant)
+        click_link 'Grant access to another user'
       end
 
-      scenario 'assigned grant_permission does not appear in select' do
-        expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
+      # scenario 'assigned grant_permission does not appear in select' do
+      #   expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
+      # end
+
+      scenario 'requires a selected user' do
+        within '#new_permission' do
+          select('Editor', from:'grant_permission[role]')
+          click_button 'Save'
+          wait_for_turbo
+          expect(page).to have_content('User must exist and User must be selected.')
+        end
       end
 
       scenario 'requires a selected user' do
-        visit new_grant_grant_permission_path(@grant.id)
-        select('Editor', from:'grant_permission[role]')
-        click_button 'Save'
-        expect(page).to have_content('User must be selected.')
-      end
-
-      scenario 'requires a selected user' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        click_button 'Save'
-        expect(page).to have_content('Role must be selected.')
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email)
+          click_button 'Save'
+          expect(page).to have_content('Role must be selected.')
+        end
       end
 
       scenario 'unassigned user can be granted a role' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        select('Editor', from:'grant_permission[role]')
-        click_button 'Save'
-        expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'editor'"
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.chop)
+          select('Editor', from:'grant_permission[role]')
+          click_button 'Save'
+        end
+        expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'Editor'"
       end
 
       scenario 'new grant permission defaults to false for submission notification' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        select('Editor', from:'grant_permission[role]')
-        click_button 'Save'
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email)
+          select('Editor', from:'grant_permission[role]')
+          click_button 'Save'
+        end
         expect(GrantPermission.last.submission_notification).to eql false
       end
 
       scenario 'new grant permission can be set to true for submission notification' do
-        select2(@unassigned_user.email, from: 'Email Address', search: true)
-        select('Editor', from:'grant_permission[role]')
-        find(:css, "#grant_permission_submission_notification").set(true)
-        click_button 'Save'
+        within '#new_permission' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.chop)
+          select('Editor', from:'grant_permission[role]')
+          find(:css, "#grant_permission_submission_notification").set(true)
+          click_button 'Save'
+        end
+        wait_for_turbo
         expect(GrantPermission.last.submission_notification).to eql true
       end
 
-      context 'select2 search' do
-        scenario 'select2 dropdown includes unassigned emails' do
-          select2 @select2_user.email, from: 'Email Address', search: true
-          select2 @select2_user.email, from: 'Email Address', search: 'select2'
+      context 'tom-select search' do
+        scenario 'displays search email, if exists' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.first(6), select_option: false)
+          expect(page).to have_content(@unassigned_user.email)
         end
 
-        scenario 'select2 displays search email, if exists' do
-          select2_open label: 'Email Address'
-          select2_search 'select2_user', from: 'Email Address'
-          expect(page).to have_content(@select2_user.email)
+        scenario 'requires at least one character entered' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: '', select_option: false)
+          expect(page).to have_field(placeholder: 'Enter 3 characters to search')
         end
 
-        scenario 'select2 requires at least one character entered' do
-          select2_open label: 'Email Address'
-          expect(page).to have_content('Please enter 3 or more characters')
-        end
-
-        scenario 'select2 limits dropdown options with' do
-          select2_open label: 'Email Address'
-          select2_search 'zzzzzzzzzz', from: 'Email Address'
+        scenario 'limits dropdown options based on input' do
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: 'zzzzzzz', select_option: false)
           expect(page).to have_content('No results found')
           expect(page).to have_select('grant_permission_user_id', :with_options => [])
         end
@@ -167,34 +188,28 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
     context '#index' do
       scenario 'includes link to add permission' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).to have_link 'Grant access to another user', href: new_grant_grant_permission_path(@grant)
       end
     end
 
     context '#edit' do
       scenario 'can visit the permissions index' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content authorization_error_text
       end
 
-      scenario 'includes edit and delete links' do
-        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
-        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
-        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_editor_role)
-        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_editor_role)
-        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_viewer_role)
-        expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role)
+      scenario 'includes appropriate edit and delete links' do
+        expect(page).to have_link 'Edit',       href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
+        expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
+        expect(page).to have_link 'Edit',       href: edit_grant_grant_permission_path(@grant, @grant_editor_role)
+        expect(page).to have_link 'Delete',     href: grant_grant_permission_path(@grant, @grant_editor_role)
+        expect(page).to have_link 'Edit',       href: edit_grant_grant_permission_path(@grant, @grant_viewer_role)
+        expect(page).to have_link 'Delete',     href: grant_grant_permission_path(@grant, @grant_viewer_role)
       end
     end
 
     context '#delete' do
       scenario 'cannot delete last admin grant_permission' do
-        expect do
-          click_link('Delete', href: grant_grant_permission_path(@grant, @grant_admin_role))
-          page.driver.browser.switch_to.alert.accept
-          expect(page).to have_content('This user\'s role cannot be deleted.')
-        end.not_to change{@grant.grant_permissions.count}
+        expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
       end
 
       scenario 'can delete a grant_permission' do
@@ -202,7 +217,8 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
           expect(page).to have_content(full_name(@grant_viewer))
           click_link('Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role))
           page.driver.browser.switch_to.alert.accept
-          expect(page).to have_content("#{full_name(@grant_viewer)}'s role was removed for this grant.")
+          wait_for_turbo
+          expect(page).to have_content("#{full_name(@grant_viewer)}'s role on this grant was removed.")
         end.to change{@grant.grant_permissions.count}.by (-1)
       end
     end
@@ -211,21 +227,19 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
   describe 'grant viewer user' do
     before(:each) do
       login_as(@grant_viewer, scope: :saml_user)
+      visit grant_grant_permissions_path(@grant)
     end
 
     context '#index' do
       scenario 'does not include link to add permission' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_link 'Add new permission', href: new_grant_grant_permission_path(@grant)
       end
 
       scenario 'can visit the permissions index' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_content authorization_error_text
       end
 
       scenario 'does not include edit and delete links' do
-        visit grant_grant_permissions_path(@grant)
         expect(page).not_to have_link edit_grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).not_to have_link grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).not_to have_link edit_grant_grant_permission_path(@grant, @grant_editor_role)

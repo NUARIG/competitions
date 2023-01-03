@@ -3,9 +3,10 @@
 FactoryBot.define do
   factory :grant_permission, class: 'GrantPermission' do
     association :grant, factory: :grant
-    association :user, factory: :saml_user
+    association :user,  factory: :saml_user
     submission_notification { false }
-    role { 'admin' }
+    contact                 { false }
+    role                    { 'admin' }
 
     trait :admin do
       association :user, factory: :grant_creator_saml_user
@@ -23,10 +24,15 @@ FactoryBot.define do
       submission_notification { true }
     end
 
+    trait :contact do
+      contact { true }
+    end
+
     factory :admin_grant_permission,  traits: %i[admin]
     factory :editor_grant_permission, traits: %i[editor]
     factory :viewer_grant_permission, traits: %i[viewer]
 
     factory :admin_grant_permission_with_submission_notification, traits: %i[admin with_submission_notification]
+    factory :contactable_grant_admin, traits: %i[contact]
   end
 end

@@ -21,6 +21,8 @@
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
     = render partial: 'dates_card', locals: { grant: @grant }
+    - if @grant.contacts.present?
+      = render partial: 'contacts_card', locals: { grant: @grant, contacts: @grant.contacts.map(&:user) }
   .small-12.medium-9.cell#rfa
     = @grant.rfa.html_safe
 

@@ -21,6 +21,8 @@
 .grid-x.grid-margin-x
   %aside.small-12.medium-3.cell
     = render partial: 'grants/dates_card', locals: { grant: @grant }
+    - if @grant.contacts.any?
+      = render partial: 'grants/contacts_card', locals: { grant: @grant, contacts: @grant.contacts.map(&:user) }
   .small-12.medium-9.cell#rfa
     - unless @submission.form.submission_instructions.empty?
       = @submission.form.submission_instructions.html_safe
