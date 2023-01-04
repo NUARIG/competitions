@@ -54,6 +54,5 @@
 
       #grant-permissions
         - @grant_permissions.each_with_index do |grant_permission, i|
-          .permission
-            = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
+          = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
 

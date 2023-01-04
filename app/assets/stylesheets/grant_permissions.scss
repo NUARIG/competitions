@@ -4,17 +4,6 @@ main.grant_permissions {
     padding-top: .3rem;
   }
 
-  .select2-selection {
-    border-radius: 0 !important;
-    border: 1px solid #cacaca !important;
-    height: 2.4375rem !important;
-    padding-top: .25rem !important;
-  }
-
-  .select2-selection__arrow {
-    top: 6px !important;
-  }
-
   #permissions {
     border: 1px solid $light-gray;
     .grid-x {
@@ -30,13 +19,16 @@ main.grant_permissions {
       }
     }
 
-    .permission {
-      border-bottom: 1px solid $light-gray;
-      &:nth-of-type(odd) {
-        background-color: $table-striped-background;
-      }
-      &:nth-of-type(even) {
-        background-color: $white;
+    #grant-permissions {
+      [id^='grant_permission_'].permission {
+        border-bottom: 1px solid $light-gray;
+        display: block;
+        &:nth-of-type(odd) {
+          background-color: $table-striped-background;
+        }
+        &:nth-of-type(even) {
+          background-color: $white;
+        }
       }
     }
   }
