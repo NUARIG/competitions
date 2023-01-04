@@ -2,7 +2,11 @@
 
 = turbo_stream.update 'new_permission', ''
 
-= turbo_stream.prepend 'grant-permissions', partial: 'grant_permission', locals: { grant: @grant, grant_permission: @grant_permission }
+- insert_after_permission = GrantPermission.joins(:user).where(grant: @grant).where('users.last_name < ?', @grant_permission.user.last_name).order('users.last_name, users.first_name DESC').last
+- if insert_after_permission
+  = turbo_stream.after dom_id(insert_after_permission), partial: 'grant_permission', locals: { grant: @grant, grant_permission: @grant_permission }
+- else
+  = turbo_stream.prepend 'grant-permissions', partial: 'grant_permission', locals: { grant: @grant, grant_permission: @grant_permission }
 
 = turbo_stream.replace 'pagy-header', partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
