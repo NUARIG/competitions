@@ -1,6 +1,6 @@
 = turbo_stream.replace 'flash', partial: 'layouts/flash'
 
-= turbo_stream.replace 'new_permission'
+= turbo_stream.update 'new_permission', ''
 
 = turbo_stream.prepend 'grant-permissions', partial: 'grant_permission', locals: { grant: @grant, grant_permission: @grant_permission }
 
@@ -9,3 +9,5 @@
 - if @grant_permission.role == 'admin' && @grant.admins.size == 1
   - @grant.grant_permissions.where(role: 'admin').each do |admin|
     = turbo_stream.replace dom_id(admin), partial: 'grant_permission', locals: { grant: @grant, grant_permission: admin }
+
+
