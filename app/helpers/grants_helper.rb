@@ -34,4 +34,17 @@ module GrantsHelper
   def submission_period(grant:)
     "#{time_tag(grant.submission_open_date.beginning_of_day, grant.submission_open_date, class: 'open')} &mdash; #{time_tag(grant.submission_close_date.end_of_day, grant.submission_close_date, class: 'close')}".html_safe
   end
+
+  def grant_name_class(grant:)
+    name_length = grant.name.length
+
+    case
+    when name_length > 85
+      'long'
+    when name_length > 50
+      'medium'
+    else
+      nil
+    end
+  end
 end
