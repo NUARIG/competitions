@@ -10,12 +10,18 @@
     .section-intro
       %h3.subheader.text-align-center
         Current Grants
-.grid-x.grid-padding-x.small-up-1.medium-up-2.large-up-3#public-grants
-  - if @grants.present?
-    - @grants.each do |grant|
-      .cell
-        = render 'card', grant: grant
-  - else
-    .small-12.text-center
-      %h5
-        There are no open grants available.
+  .small-12.medium-10.large-4
+    .text-align-center
+      = search_form_for @q, url: root_path, html: { data: { controller: 'filters', 'turbo-frame': 'grants' } } do |f|
+        = f.search_field :name_cont, data: { action: "filters#submit" }, class: 'small-up-12 medium-up-4', placeholder: 'Search grant titles'
+
+= turbo_frame_tag 'grants' do
+  #public-grants.grid-x.grid-padding-x.small-up-1.medium-up-2.large-up-3.align-center-middle
+    - if @grants.present?
+      - @grants.each do |grant|
+        .cell
+          = render 'card', grant: grant
+    - else
+      .small-12.text-center
+        %h5
+          There are no open grants available.
