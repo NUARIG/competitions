@@ -1,8 +1,19 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Dynamic search
 export default class extends Controller {
-  submit(event) {
-    this.element.requestSubmit()
+  static targets = ['search', 'filterable']
+
+  filter() {
+    let searchTerm = this.searchTarget.value.toLowerCase()
+
+    this.filterableTargets.forEach((el, i) => {
+      let grantTitle = (el.querySelector('.name > a').innerText.toLowerCase())
+
+      if (!grantTitle.includes(searchTerm)) {
+        el.closest('.cell').classList.add('filtered')
+      } else {
+        el.closest('.cell').classList.remove('filtered')
+      }
+    })
   }
 }

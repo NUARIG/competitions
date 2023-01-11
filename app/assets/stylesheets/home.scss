@@ -16,6 +16,11 @@ main.home {
 
   #public-grants {
     padding-top: 1rem;
+    .cell {
+      &.filtered {
+        display: none;
+      }
+    }
     .card {
       @include breakpoint(medium) {
         height: 20rem;

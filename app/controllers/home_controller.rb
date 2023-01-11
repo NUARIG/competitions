@@ -3,8 +3,7 @@ class HomeController < ApplicationController
   skip_before_action :audit_action, if: -> { params[:q].present? }
 
   def index
-    @q      = Grant.kept.public_grants.includes(:grant_permissions).ransack(params[:q])
-    @grants = @q.result(distinct: true)
+    @grants = Grant.kept.public_grants.includes(:grant_permissions)
 
     skip_policy_scope
   end
