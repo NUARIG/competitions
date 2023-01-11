@@ -133,6 +133,19 @@ RSpec.describe 'Home', type: :system do
       end
     end
 
+    describe 'filtering' do
+      before(:each) do
+        open_grant.update_attribute(:name, 'Aaaa bbbb ccc')
+        second_open_grant.update_attribute(:name, 'Zzzz xxxx yyy')
+        visit root_path
+      end
+
+      scenario 'hides grants that do not match input' do
+        find_field('name_cont', with: '').set('a b')
+        within('#public-grants') do
+          expect(page).to have_content open_grant.name
+          expect(page).not_to have_content second_open_grant.name
+        end
       end
     end
   end

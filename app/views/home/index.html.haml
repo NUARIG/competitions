@@ -12,7 +12,7 @@
         Current Grants
   .small-12.medium-10.large-4
     .text-align-center
-      %div
+      #filter
         = text_field_tag 'name_cont', nil, class: 'small-up-12 medium-up-4', placeholder: 'Search grant titles', maxlength: 20, data: { 'filters_target': 'search', action: "keyup->filters#filter" }
 
   #public-grants.small-12
