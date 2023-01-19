@@ -82,7 +82,7 @@
       = link_to 'Delete', grant, disabled: disable_fields, method: :delete, data: { turbo: false, confirm: 'Are you sure you want to delete this grant entirely?' }, class: 'button alert clear'
 
 :javascript
-  $(function() {
+  document.addEventListener('turbo:load', function() {
     yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({

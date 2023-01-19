@@ -1,7 +1,7 @@
 %div{data: { date_optional_time_picker: true } }
   = f.text_field(attribute: dt_input, options: options.merge( { value: value, id: css_id } ) )
   :javascript
-    $(function() {
+    document.addEventListener('turbo:load', function() {
       $('##{css_id}').fdatepicker({
         format: 'mm/dd/yyyy',
         closeIcon: ' X ',
