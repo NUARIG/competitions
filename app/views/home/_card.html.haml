@@ -1,6 +1,6 @@
 - name_length_class = grant_name_class(grant: grant)
 
-.card{ id: dom_id(grant) }
+.card{ id: dom_id(grant), data: { filters_target: 'filterable' } }
   .card-section.grant-name
     %h4.name{ class: name_length_class }
       = link_to truncate(grant.name, length: 150), grant_path(grant)
