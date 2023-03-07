@@ -96,8 +96,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           end
 
           scenario 'submission with no review shows dashes' do
-            overall   = page.find("td[data-overall-impact='#{submission.id}']")
-            composite = page.find("td[data-composite='#{submission.id}']")
+            overall   = page.find("div[data-overall-impact='#{submission.id}']")
+            composite = page.find("div[data-composite='#{submission.id}']")
             expect(overall).to have_text '-'
             expect(composite).to have_text '-'
           end
@@ -114,8 +114,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             scenario 'submission with one review shows scores' do
               review.save
               visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
+              overall   = page.find("div[data-overall-impact='#{submission.id}']")
+              composite = page.find("div[data-composite='#{submission.id}']")
               expect(overall).to have_text review.overall_impact_score
               expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
             end
@@ -123,8 +123,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             scenario 'submission with one review shows scores' do
               review.save
               visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
+              overall   = page.find("div[data-overall-impact='#{submission.id}']")
+              composite = page.find("div[data-composite='#{submission.id}']")
               expect(overall).to have_text review.overall_impact_score
               expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
             end
@@ -133,8 +133,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               reviews = [review, new_review]
               review.save
               visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
+              overall   = page.find("div[data-overall-impact='#{submission.id}']")
+              composite = page.find("div[data-composite='#{submission.id}']")
 
               expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
               expected_composite       = (submission.criteria_reviews.to_a.map(&:score).sum.to_f / submission.criteria_reviews.count).round(2)
@@ -147,8 +147,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               reviews = [review, new_review, unscored_review]
               visit grant_submissions_path(grant)
 
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
+              overall   = page.find("div[data-overall-impact='#{submission.id}']")
+              composite = page.find("div[data-composite='#{submission.id}']")
               completed = page.find("div[data-completed-reviews='#{submission.id}'")
 
               expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
