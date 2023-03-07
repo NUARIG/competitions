@@ -1,4 +1,12 @@
-- title_text = current_user.get_role_by_grant(grant: @grant) ? 'Submissions' : 'Your Submissions'
+-# Set the current_user's permissions on the grant...
+- user_grant_role = current_user.get_role_by_grant(grant: @grant)
+-# and use that role to help w/ some display logic
+- user_has_grant_permissions = user_grant_role.present?
+-# if user_has_grant_permissions to see reviews, two review columns are displayed.
+-#  otherwise the title column should be adjusted to fill the table
+- submission_title_class = user_has_grant_permissions ? 'medium-4' : 'medium-6'
+
+- title_text = (user_has_grant_permissions) ? 'Submissions' : 'Your Submissions'
 - content_for(:page_title, "#{title_text} - #{@grant.name}")
 
 = render 'shared/grant_header', { grant: @grant, section_title: title_text }
@@ -9,7 +17,7 @@
       = link_to 'Home', root_path
     %li
       = link_to 'Grant Home', grant_path(@grant)
-    - if current_user.get_role_by_grant(grant: @grant)
+    - if user_has_grant_permissions
       %li
         = link_to 'Edit', edit_grant_path(@grant)
     %li
@@ -20,14 +28,13 @@
 .tabs-panel.is-active
   #submenu.top-bar
     - if @submissions.none?
-      - if current_user.get_role_by_grant(grant: @grant)
-        %p
+      %p
+        - if user_has_grant_permissions
           There are no submissions to this grant.
-      - else
-        %p
+        - else
           You have no submissions to this grant.
     - else
-      - if current_user.get_role_by_grant(grant: @grant)
+      - if user_has_grant_permissions
         .top-bar-left
           %ul.menu
             %li.menu-text
@@ -49,72 +56,69 @@
 
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
-  %table#grant-submissions
-    %thead
-      - if current_user.get_role_by_grant(grant: @grant)
-        %tr
-          %th{ colspan: 5 }
-          %th{ colspan: 3 }
+  #grant-submissions
+    .turbo-table
+      - if user_has_grant_permissions
+        .grid-x.grid-padding-x.header
+          .align-right.cell.small-12.medium-offset-9.medium-2
             Scores
-      %tr
-        %th
-          = sort_link(@q, :applicants_last_name, 'Applicants',{}, {title: 'Sort on Applicants'})
-        %th
-          = sort_link(@q, :title, 'Title',{}, { title: 'Sort on Title'} )
-        %th
-          = sort_link(@q, :state, 'State',{}, { title: 'Sort on State'} )
-        %th
-          = sort_link(@q, :user_updated_at, 'Updated',{}, { title: 'Sort on Updated'} )
-        - if current_user.get_role_by_grant(grant: @grant)
-          %th
-            Reviews
-          %th
 
+      .grid-x.grid-padding-x.align-bottom.header
+        .cell.small-12.medium-1
+          = sort_link(@q, :user_updated_at, 'Updated', {}, { title: 'Sort on Updated'} )
+        .cell.small-12.medium-2
+          = sort_link(@q, :applicants_last_name, 'Applicants',{}, {title: 'Sort on Applicants'})
+        .cell.small-12{ class: submission_title_class }
+          = sort_link(@q, :title, 'Title', {}, { title: 'Sort on Title'} )
+        .cell.small-12.medium-1
+          = sort_link(@q, :state, 'State', {}, { title: 'Sort on State'} )
+        - if user_has_grant_permissions # current_user.get_role_by_grant(grant: @grant)
+          .cell.small-12.medium-1
+            Reviews
+          .cell.small-12.medium-1
             %span{ title: 'Average of scored reviews - scored first' }
               = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact',{}, { title: 'Sort on  Overal Impact Score'})
-          %th
+          .cell.small-12.medium-1
             %span{ title: 'Average of scored Criteria - scored first' }
               = sort_link(@q, :composite_score_nulls_last, 'Composite',{}, { title: 'Sort on Composite Score'} )
 
-    %tbody
-      - @submissions.each do |submission|
-        - review_data = review_data(submission)
 
-        %tr.submission{ data: { submission: submission.id } }
-          %td
-            - submission.applicants.each do |applicant|
-              = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
-              %br
+      .rows
+        - @submissions.each do |submission|
+          - review_data = review_data(submission)
+          = turbo_frame_tag(dom_id(submission), class: 'item') do
+            .grid-x.grid-padding-x.grid-padding-y.row
+              .cell.small-12.medium-1.small
+                = date_time_separate_lines(submission.user_updated_at)
+              .cell.small-12.medium-2
+                - submission.applicants.each do |applicant|
+                  = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+              .cell.small-12{ class: submission_title_class }
+                = link_to submission.title, grant_submission_path(@grant, submission)
+              .cell.small-12.medium-1
+                %div.status{ data: { status: submission.id } }
+                  = submission.state.titleize
+                  - if user_has_grant_permissions
+                    = render 'submission_administrator_links', { grant: @grant, submission: submission }
+                  - else
+                    = render 'submission_submitter_links', { grant: @grant, submission: submission }
+              - if user_has_grant_permissions
+                .cell.small-12.medium-1
+                  - if submission.draft? && review_data.assigned_review_count == '0'
+                    %span.not-allowed{ title: 'Draft submissions may not be assigned for review' } -
+                  - elsif submission.submitted? && review_data.assigned_review_count == '0'
+                    = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
+                  - else
+                    = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
+                    = link_to "#{image_tag 'PDF_24.png', class: 'icon', title: 'Save reviews summary as a PDF' }".html_safe, grant_submission_reviews_path(@grant, submission, { format: 'pdf' } )
+                    %div.count.small{ title: 'Completed / Assigned', data: { completed: {reviews: submission.id}} }
+                      #{review_data.completed_review_count} / #{review_data.assigned_review_count}
+                .cell.small-12.medium-1.overall-impact{ data: { overall: { impact: submission.id } } }
+                  %div.average{ title: 'Average of Completed' }
+                    = review_data.overall_impact_average
+                .cell.small-12.medium-1.composite{ data: { composite: submission.id } }
+                  %span{ title: 'Average of Scored Criteria' }
+                    = review_data.composite_score
 
-          %td
-            = link_to submission.title, grant_submission_path(@grant, submission)
-          %td
-            %div.status{ data: { status: submission.id } }
-              = submission.state.titleize
-              - if current_user.get_role_by_grant(grant: @grant).nil?
-                = render 'submission_submitter_links', { grant: @grant, submission: submission }
-              - else
-                = render 'submission_administrator_links', { grant: @grant, submission: submission }
-
-
-          %td
-            = date_time_separate_lines(submission.user_updated_at)
-          - if current_user.get_role_by_grant(grant: @grant)
-            %td
-              - if submission.draft? && review_data.assigned_review_count == '0'
-                %span.not-allowed{ title: 'Draft submissions may not be assigned for review' } -
-              - elsif submission.submitted? && review_data.assigned_review_count == '0'
-                = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
-              - else
-                = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
-                = link_to "#{image_tag 'PDF_24.png', class: 'icon', title: 'Save reviews summary as a PDF' }".html_safe, grant_submission_reviews_path(@grant, submission, { format: 'pdf' } )
-                %div.count.small{ title: 'Completed / Assigned', data: { completed: {reviews: submission.id}} }
-                  #{review_data.completed_review_count} / #{review_data.assigned_review_count}
-            %td.overall-impact{ data: { overall: { impact: submission.id } } }
-              %div.average{ title: 'Average of Completed' }
-                = review_data.overall_impact_average
-            %td.composite{ data: { composite: submission.id } }
-              %span{ title: 'Average of Scored Criteria' }
-                = review_data.composite_score
 
   != pagy_foundation_nav(@pagy)
