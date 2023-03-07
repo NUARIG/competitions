@@ -2,8 +2,8 @@
 - permission      = grant_permission.role&.capitalize
 - user_full_name  = full_name(user)
 
-= turbo_frame_tag(dom_id(grant_permission), class: 'permission') do
-  .grid-x.grid-padding-x.grid-padding-y
+= turbo_frame_tag(dom_id(grant_permission), class: 'item') do
+  .grid-x.grid-padding-x.grid-padding-y.row
     .cell.small-12.medium-3
       .name
         = user_full_name
