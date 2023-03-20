@@ -55,6 +55,7 @@ module GrantSubmission
     validate :can_be_unsubmitted?, on: :update,
                                    if: -> () { will_save_change_to_attribute?('state', from: SUBMISSION_STATES[:submitted],
                                                                                        to: SUBMISSION_STATES[:draft]) }
+    validate :can_be_awarded?, if: :awarded?
 
     scope :with_responses,      -> { includes( form: [sections: [questions: [responses: :multiple_choice_option]]] ) }
 
@@ -72,7 +73,7 @@ module GrantSubmission
     scope :sort_by_composite_score_nulls_last_asc,  -> { order(Arel.sql("composite_score = 0 nulls last, composite_score ASC")) }
     scope :sort_by_composite_score_nulls_last_desc, -> { order(Arel.sql("composite_score = 0 nulls last, composite_score DESC")) }
 
-    scope :reviewed,            -> { where("average_overall_impact_score > 0") }
+    scope :reviewed, -> { where("average_overall_impact_score > 0") }
 
     # TODO: available? to...edit? delete?
     def available?
@@ -127,6 +128,11 @@ module GrantSubmission
 
     def can_be_unsubmitted?
       errors.add(:base, :reviewed_submission_cannot_be_unsubmitted) if self.reviews.completed.any?
+    end
+
+    def can_be_awarded?
+      errors.add(:base, :draft_submission_cannot_be_awarded) if self.state == 'draft'
+      errors.add(:base, :unreviewed_submission_cannot_be_awarded) unless self.average_overall_impact_score&.nonzero?
     end
 
     def prevent_delete_from_published_grant

@@ -1,0 +1,3 @@
+= turbo_frame_tag("award_#{submission.id}") do
+  = form_with model: [@grant, submission], url: award_grant_submission_path(grant, submission, format: :turbo_stream), local: true do |f|
+    = f.check_box :awarded, disabled: (user_role == 'viewer'), data: { action: 'change->checkbox-submit#toggle' }
