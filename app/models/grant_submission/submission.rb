@@ -55,7 +55,7 @@ module GrantSubmission
     validate :can_be_unsubmitted?, on: :update,
                                    if: -> () { will_save_change_to_attribute?('state', from: SUBMISSION_STATES[:submitted],
                                                                                        to: SUBMISSION_STATES[:draft]) }
-    validate :can_be_awarded?, if: :awarded?
+    validate :can_be_awarded?, if: -> () { will_save_change_to_attribute?('awarded', to: true) }
 
     scope :with_responses,      -> { includes( form: [sections: [questions: [responses: :multiple_choice_option]]] ) }
 
@@ -131,8 +131,8 @@ module GrantSubmission
     end
 
     def can_be_awarded?
-      errors.add(:base, :draft_submission_cannot_be_awarded) if self.state == 'draft'
-      errors.add(:base, :unreviewed_submission_cannot_be_awarded) unless self.average_overall_impact_score&.nonzero?
+      return errors.add(:base, :draft_submission_cannot_be_awarded) if self.state == 'draft'
+      return errors.add(:base, :unreviewed_submission_cannot_be_awarded) unless self.average_overall_impact_score&.nonzero?
     end
 
     def prevent_delete_from_published_grant

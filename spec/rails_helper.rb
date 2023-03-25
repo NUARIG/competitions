@@ -105,6 +105,9 @@ RSpec.configure do |config|
 
   # Pause for Turbo actions to complete
   config.include WaitForTurbo, type: :system
+
+  # i18n / locales
+  config.include AbstractController::Translation
 end
 
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]

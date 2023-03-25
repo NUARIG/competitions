@@ -53,7 +53,6 @@ RSpec.describe GrantSubmission::Submission, type: :model do
 
     it 'cannot be awarded without being reviewed' do
       submission.awarded = true
-      submission.save
       expect(submission).not_to be_valid
       expect(submission.errors.messages[:base]).to eq ["A submission must have at least one review before being awarded."]
     end
