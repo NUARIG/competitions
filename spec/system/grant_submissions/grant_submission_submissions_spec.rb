@@ -1,6 +1,5 @@
 require 'rails_helper'
 include UsersHelper
-include ActionView::RecordIdentifier
 
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }

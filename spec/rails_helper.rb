@@ -108,6 +108,9 @@ RSpec.configure do |config|
 
   # i18n / locales
   config.include AbstractController::Translation
+
+  # use dom_id helper in system specs
+  config.include ActionView::RecordIdentifier, type: :system
 end
 
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]
