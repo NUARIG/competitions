@@ -175,85 +175,111 @@ RSpec.describe 'Panels', type: :system, js: true do
   end
 
   describe 'Show' do
-    before(:each) do
-      review.save
-      login_user grant.editors.first
-    end
+    context 'as editor' do
+      before(:each) do
+        review.save
+        login_user grant.editors.first
+      end
 
-    context 'banner' do
-      context 'panel is open' do
-        context 'close is today' do
-          scenario 'banner does not include date' do
-            grant.panel.update(start_datetime: 1.hour.ago, end_datetime: 1.minute.from_now)
+      context 'banner' do
+        context 'panel is open' do
+          context 'close is today' do
+            scenario 'banner does not include date' do
+              grant.panel.update(start_datetime: 1.hour.ago, end_datetime: 1.minute.from_now)
 
+              visit grant_panel_path(grant)
+              expect(page).to have_content(panel_time_portion(panel: grant.panel, which_date: 'end'))
+              expect(page).not_to have_content(panel_date_portion(panel: grant.panel, which_date: 'end'))
+            end
+          end
+
+          context 'close is tomorrow' do
+            scenario 'banner includes date' do
+              grant.panel.update(start_datetime: 1.hour.ago, end_datetime: 1.day.from_now)
+              visit grant_panel_path(grant)
+              expect(page).to have_content(panel_time_portion(panel: grant.panel, which_date: 'end'))
+              expect(page).to have_content(panel_date_portion(panel: grant.panel, which_date: 'end'))
+            end
+          end
+        end
+      end
+
+      context 'metadata' do
+        scenario 'instructions' do
+          visit grant_panel_path(grant)
+          expect(page).to have_content grant.panel.instructions
+        end
+
+        context 'meeting_location' do
+          scenario 'displays when set' do
             visit grant_panel_path(grant)
-            expect(page).to have_content(panel_time_portion(panel: grant.panel, which_date: 'end'))
-            expect(page).not_to have_content(panel_date_portion(panel: grant.panel, which_date: 'end'))
+            expect(page.has_css?('.location')).to be true
+            expect(page).to have_content grant.panel.meeting_location.html_safe
+          end
+
+          scenario 'excluded when not set' do
+            grant.panel.update(meeting_location: nil)
+            visit grant_panel_path(grant)
+            expect(page.has_css?('.location')).to be false
+            expect(page).not_to have_content 'Location:'
           end
         end
 
-        context 'close is tomorrow' do
-          scenario 'banner includes date' do
-            grant.panel.update(start_datetime: 1.hour.ago, end_datetime: 1.day.from_now)
+        context 'meeting_link' do
+          scenario 'displays when set' do
             visit grant_panel_path(grant)
-            expect(page).to have_content(panel_time_portion(panel: grant.panel, which_date: 'end'))
-            expect(page).to have_content(panel_date_portion(panel: grant.panel, which_date: 'end'))
+            expect(page.has_css?('.link')).to be true
+            expect(page).to have_link grant.panel.meeting_link, href: grant.panel.meeting_link
+          end
+
+          scenario 'excluded when not set' do
+            grant.panel.update(meeting_link: nil)
+            visit grant_panel_path(grant)
+            expect(page.has_css?('.link')).to be false
+          end
+        end
+      end
+
+      context 'submissions' do
+        scenario 'does not include draft submission' do
+          draft_submission.save
+          visit grant_panel_path(grant)
+
+          expect(page).to have_content grant.submissions.first.title
+          expect(page).not_to have_content draft_submission.title
+        end
+
+        scenario 'does not include unreviewed submitted submission' do
+          unreviewed_submission.save
+          visit grant_panel_path(grant)
+
+          expect(page).to have_content grant.submissions.first.title
+          expect(page).not_to have_content unreviewed_submission.title
+        end
+
+        scenario 'includes award form' do
+          visit grant_panel_path(grant)
+
+          within "##{dom_id(review.submission)}" do
+            expect(page).to have_selector('.awarded input[type="checkbox"]')
           end
         end
       end
     end
 
-    context 'metadata' do
-      scenario 'instructions' do
-        visit grant_panel_path(grant)
-        expect(page).to have_content grant.panel.instructions
+    context 'as reviewer' do
+      before(:each) do
+        grant.panel.update(start_datetime: 1.minute.ago, end_datetime: 1.hour.from_now)
+        review.save
+        login_user review.reviewer
       end
 
-      context 'meeting_location' do
-        scenario 'displays when set' do
-          visit grant_panel_path(grant)
-          expect(page.has_css?('.location')).to be true
-          expect(page).to have_content grant.panel.meeting_location.html_safe
-        end
-
-        scenario 'excluded when not set' do
-          grant.panel.update(meeting_location: nil)
-          visit grant_panel_path(grant)
-          expect(page.has_css?('.location')).to be false
-          expect(page).not_to have_content 'Location:'
-        end
-      end
-
-      context 'meeting_link' do
-        scenario 'displays when set' do
-          visit grant_panel_path(grant)
-          expect(page.has_css?('.link')).to be true
-          expect(page).to have_link grant.panel.meeting_link, href: grant.panel.meeting_link
-        end
-
-        scenario 'excluded when not set' do
-          grant.panel.update(meeting_link: nil)
-          visit grant_panel_path(grant)
-          expect(page.has_css?('.link')).to be false
-        end
-      end
-    end
-
-    context 'submissions' do
-      scenario 'does not include draft submission' do
-        draft_submission.save
+      scenario 'excludes award form' do
         visit grant_panel_path(grant)
 
-        expect(page).to have_content grant.submissions.first.title
-        expect(page).not_to have_content draft_submission.title
-      end
-
-      scenario 'does not include unreviewed submitted submission' do
-        unreviewed_submission.save
-        visit grant_panel_path(grant)
-
-        expect(page).to have_content grant.submissions.first.title
-        expect(page).not_to have_content unreviewed_submission.title
+        within "##{dom_id(review.submission)}" do
+          expect(page).not_to have_selector('.awarded input[type="checkbox"]')
+        end
       end
     end
   end
@@ -279,10 +305,10 @@ RSpec.describe 'Panels', type: :system, js: true do
 
     context 'overall impact' do
       scenario 'defaults to overall impact score asc' do
-        within 'tr.submission:nth-child(1)' do
+        within "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
       end
@@ -290,18 +316,19 @@ RSpec.describe 'Panels', type: :system, js: true do
       scenario 'reverse sorts on overall impact score' do
         visit grant_panel_path(grant)
         click_link 'Overall Impact'
-        within 'tr.submission:nth-child(1)' do
+
+        within "##{dom_id(@high_scored_submission)}" do # do
           expect(page).to have_text @high_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+
+        within "##{dom_id(@low_scored_submission)}" do # do
           expect(page).to have_text @low_scored_submission.title
         end
 
         click_link 'Overall Impact'
-        within 'tr.submission:nth-child(1)' do
-          expect(page).to have_text @low_scored_submission.title
+        within "##{dom_id(@low_scored_submission)}" do
         end
-        within 'tr.submission:nth-child(2)' do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
       end
@@ -314,20 +341,20 @@ RSpec.describe 'Panels', type: :system, js: true do
         # ascending first
         click_link 'Composite'
         pause
-        within 'tr.submission:nth-child(1)' do
+        within  "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within  "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
 
         # descending
         click_link 'Composite'
         pause
-        within 'tr.submission:nth-child(1)' do
+        within  "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within  "##{dom_id(@low_scored_submission)}" do # 'tr.submission:nth-child(2)' do
           expect(page).to have_text @low_scored_submission.title
         end
       end
@@ -338,19 +365,19 @@ RSpec.describe 'Panels', type: :system, js: true do
         visit grant_panel_path(grant)
         # ascending first
         click_link 'Applicants'
-        within 'tr.submission:nth-child(1)' do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within "##{dom_id(@low_scored_submission)}" do # 'tr.submission:nth-child(2)' do
           expect(page).to have_text @low_scored_submission.title
         end
 
         # descending
         click_link 'Applicants'
-        within 'tr.submission:nth-child(1)' do
+        within  "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within  "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
       end
@@ -362,19 +389,19 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # ascending first
         click_link 'Submission'
-        within 'tr.submission:nth-child(1)' do
+        within  "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within  "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
 
         # descending
         click_link 'Submission'
-        within 'tr.submission:nth-child(1)' do
+        within  "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within 'tr.submission:nth-child(2)' do
+        within  "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
       end
