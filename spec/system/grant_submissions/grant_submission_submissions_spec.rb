@@ -150,26 +150,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               end
 
               scenario 'can award a submission' do
-                review.save
-                visit grant_submissions_path(grant)
-
-                within "##{dom_id(submission)}" do
-                  expect(page).to have_unchecked_field('grant_submission_submission[awarded]')
-                  find_field('grant_submission_submission[awarded]').check
-                end
-                expect(page).to have_text 'has been awarded'
+                can_award(grant, submission)
               end
 
               scenario 'can unaward a submission' do
-                review.save
-                submission.update(awarded: true)
-                visit grant_submissions_path(grant)
-
-                within "##{dom_id(submission)}" do
-                  expect(page).to have_checked_field('grant_submission_submission[awarded]')
-                  find_field('grant_submission_submission[awarded]').uncheck
-                end
-                expect(page).to have_text 'has been unawarded'
+                can_unaward(grant, submission)
               end
             end
 
@@ -284,26 +269,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'can award a submission' do
-          review.save
-          visit grant_submissions_path(grant)
-
-          within "##{dom_id(submission)}" do
-            expect(page).to have_unchecked_field('grant_submission_submission[awarded]')
-            find_field('grant_submission_submission[awarded]').check
-          end
-          expect(page).to have_text 'has been awarded'
+          can_award(grant, submission)
         end
 
         scenario 'can unaward a submission' do
-          review.save
-          submission.update(awarded: true)
-          visit grant_submissions_path(grant)
-
-          within "##{dom_id(submission)}" do
-            expect(page).to have_checked_field('grant_submission_submission[awarded]')
-            find_field('grant_submission_submission[awarded]').uncheck
-          end
-          expect(page).to have_text 'has been unawarded'
+          can_unaward(grant, submission)
         end
 
         context 'administrator submissions' do
@@ -347,26 +317,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'can award a submission' do
-          review.save
-          visit grant_submissions_path(grant)
-
-          within "##{dom_id(submission)}" do
-            expect(page).to have_unchecked_field('grant_submission_submission[awarded]')
-            find_field('grant_submission_submission[awarded]').check
-          end
-          expect(page).to have_text 'has been awarded'
+          can_award(grant, submission)
         end
 
         scenario 'can unaward a submission' do
-          review.save
-          submission.update(awarded: true)
-          visit grant_submissions_path(grant)
-
-          within "##{dom_id(submission)}" do
-            expect(page).to have_checked_field('grant_submission_submission[awarded]')
-            find_field('grant_submission_submission[awarded]').uncheck
-          end
-          expect(page).to have_text 'has been unawarded'
+          can_unaward(grant, submission)
         end
 
         context 'administrator submissions' do
@@ -879,5 +834,30 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
     expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
     expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+  end
+
+  def can_award(grant, submission)
+    review.save
+    visit grant_submissions_path(grant)
+
+    within "##{dom_id(submission)}" do
+      expect(page).to have_unchecked_field('grant_submission_submission[awarded]')
+      find_field('grant_submission_submission[awarded]').check
+    end
+    expect(page).to have_text 'has been awarded'
+    expect(submission.reload.awarded).to be true
+  end
+
+  def can_unaward(grant, submission)
+    review.save
+    submission.update(awarded: true)
+    visit grant_submissions_path(grant)
+
+    within "##{dom_id(submission)}" do
+    expect(page).to have_checked_field('grant_submission_submission[awarded]')
+    find_field('grant_submission_submission[awarded]').uncheck
+    end
+    expect(page).to have_text 'has been unawarded'
+    expect(submission.reload.awarded).to be false
   end
 end
