@@ -274,12 +274,14 @@ RSpec.describe 'Panels', type: :system, js: true do
         login_user review.reviewer
       end
 
-      scenario 'excludes award form' do
+      scenario 'excludes award form and reviewer warning notice' do
         visit grant_panel_path(grant)
 
         within "##{dom_id(review.submission)}" do
           expect(page).not_to have_selector('.awarded input[type="checkbox"]')
         end
+
+        expect(page).not_to have_content 'Reviewers will not see Awarded information.'
       end
     end
   end
