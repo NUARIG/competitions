@@ -4,7 +4,8 @@
       = date_time_separate_lines(submission.user_updated_at)
     .cell.small-12.medium-2.applicants
       - submission.applicants.each do |applicant|
-        = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+        .applicant
+          = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
     .cell.small-12{ class: submission_title_class }
       = link_to submission.title, grant_submission_path(@grant, submission)
     .cell.small-12.medium-1.title
