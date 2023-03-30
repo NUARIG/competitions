@@ -58,6 +58,10 @@ Rails.application.routes.draw do
     resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
       resources 'applicants',     only: %i[index create destroy], controller: 'grant_submissions/submissions/submission_applicants'
 
+      collection do
+        get 'export',             only: :index, to: 'grant_submissions/submissions/export#index'
+      end
+
       member do
         patch 'unsubmit', to: 'grant_submissions/submissions/unsubmit#update'
         patch 'award',    to: 'grant_submissions/submissions/award#update'

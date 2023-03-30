@@ -41,7 +41,7 @@
               Actions:
             - unless @grant.submissions.none?
               %li
-                = link_to "Export All Submissions #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_submissions_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
+                = link_to "Export All Submissions #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, export_grant_submissions_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
 
         = search_form_for @q, url: grant_submissions_path(@grant), class: 'top-bar-right' do |f|
           .text-right

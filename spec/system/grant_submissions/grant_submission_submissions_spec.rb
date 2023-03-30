@@ -248,7 +248,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can view the submissions admin links' do
           visit grant_submissions_path(grant)
-          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, { format: 'xlsx' })
+          expect(page).to have_link 'Export All Submissions', href: export_grant_submissions_path(grant, { format: 'xlsx' })
 
           within "##{dom_id(submission)}" do
             expect(page).to have_content submission.title
@@ -304,7 +304,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can view the appropriate admin links' do
           visit grant_submissions_path(grant)
-          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, { format: 'xlsx' })
+          expect(page).to have_link 'Export All Submissions', href: export_grant_submissions_path(grant, { format: 'xlsx' })
 
           within "##{dom_id(submission)}" do
             expect(page).to have_content submission.title
@@ -349,7 +349,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can view the appropriate admin links' do
           visit grant_submissions_path(grant)
-          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, { format: 'xlsx' })
+          expect(page).to have_link 'Export All Submissions', href: export_grant_submissions_path(grant, { format: 'xlsx' })
 
           within "##{dom_id(submission)}" do
             expect(page).to have_content submission.title
