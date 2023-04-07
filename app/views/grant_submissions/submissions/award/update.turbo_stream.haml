@@ -1,5 +1,3 @@
-- user_grant_role = current_user.get_role_by_grant(grant: @grant)
-
 = turbo_stream.replace 'flash', partial: 'layouts/flash'
 
-= turbo_stream.update "award_#{@submission.id}", partial: 'grant_submissions/submissions/award/award_form', locals: { grant: @grant, submission: @submission, user_grant_role: user_grant_role }
+= turbo_stream.update "award_#{@submission.id}", partial: 'grant_submissions/submissions/award/award_form', locals: { grant: @grant, submission: @submission, user_grant_role: @user_grant_role }

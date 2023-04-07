@@ -9,6 +9,8 @@ module GrantSubmissions
       if Pundit.policy(current_user, @grant).show?
         @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
         @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
+
+        set_user_grant_role
         @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
       else
         skip_policy_scope
@@ -66,6 +68,8 @@ module GrantSubmissions
     def update
       set_submission
       authorize @submission
+      set_user_grant_role
+
       @submission.user_submitted_state = params[:state]
 
       if @submission.update(submission_params)
@@ -143,6 +147,10 @@ module GrantSubmissions
                                 recipients: @admin_notification_emails,
                                 submission: @submission)
         .deliver_now
+    end
+
+    def set_user_grant_role
+      @user_grant_role = current_user.get_role_by_grant(grant: @grant)
     end
 
     def submission_params

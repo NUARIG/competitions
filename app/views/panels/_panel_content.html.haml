@@ -1,7 +1,4 @@
--# Set the current_user's permissions on the grant...
-- user_grant_role = current_user.get_role_by_grant(grant: grant)
--# and use that role to help w/ some display logic
-- user_has_grant_permissions = user_grant_role.present?
+- user_has_grant_permissions = @user_grant_role.present?
 
 %h4
   Reviewed Submissions
@@ -55,5 +52,5 @@
               - if user_has_grant_permissions
                 .cell.small-12.medium-1.awarded
                   = turbo_frame_tag "award_#{submission.id}" do
-                    = render partial: 'grant_submissions/submissions/award/award_form', locals: { grant: grant, submission: submission, user_grant_role: user_grant_role }
+                    = render partial: 'grant_submissions/submissions/award/award_form', locals: { grant: grant, submission: submission, user_grant_role: @user_grant_role }
 
