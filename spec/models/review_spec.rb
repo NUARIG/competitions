@@ -21,6 +21,9 @@ RSpec.describe Review, type: :model do
   let(:invalid_review) { build(:review, assigner: assigner,
                                         reviewer: grant.grant_reviewers.first.reviewer,
                                         submission: submission) }
+  let(:draft_review) { build(:review, assigner: assigner,
+                               reviewer: grant.grant_reviewers.first.reviewer,
+                               submission: submission) }
   let(:system_admin)   { create(:system_admin_saml_user) }
   let(:invalid_user)   { create(:saml_user) }
 

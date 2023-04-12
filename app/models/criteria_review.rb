@@ -2,7 +2,6 @@ class CriteriaReview < ApplicationRecord
   include WithScoring
   has_paper_trail versions: { class_name: 'PaperTrail::CriteriaReviewVersion' },
                   meta:     { review_id: :review_id }
-
   belongs_to :criterion
   belongs_to :review, touch: true
 
@@ -17,8 +16,6 @@ class CriteriaReview < ApplicationRecord
                                     unless: -> { score.blank? }
   validates_numericality_of :score, less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                     unless: -> { score.blank? }
-
-  validate :criteria_is_from_grant
 
   validate :score_if_mandatory,   if: -> { criterion.is_mandatory? }
 

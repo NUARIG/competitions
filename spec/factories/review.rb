@@ -17,6 +17,10 @@ FactoryBot.define do
       reminded_at { 1.day.ago }
     end
 
+    trait :draft do
+      draft { true }
+    end
+
     trait :with_score do
       overall_impact_score { rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE) }
     end
@@ -50,6 +54,7 @@ FactoryBot.define do
     end
 
     factory :incomplete_review,                                   traits: %i[incomplete reload_submission]
+    factory :draft_review,                                        traits: %i[ reload_submission]
     factory :review_with_score,                                   traits: %i[with_score reload_submission]
     factory :review_with_comment,                                 traits: %i[with_comment reload_submission]
     factory :review_with_score_and_comment,                       traits: %i[with_score with_comment reload_submission]

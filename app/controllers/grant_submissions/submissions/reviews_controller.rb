@@ -66,9 +66,15 @@ module GrantSubmissions
         authorize @review
         respond_to do |format|
           if @review.update(review_params)
-            set_redirect_path
-            format.html { redirect_to @redirect_path,
-                          notice: 'Review was successfully updated.' }
+            if params['commit'] == 'Save Your Review'
+              flash.now[:alert] = 'Review Saved'
+              build_criteria_reviews
+              format.html { render :edit }
+            else
+              set_redirect_path
+              format.html { redirect_to @redirect_path,
+                            notice: 'Review was successfully updated.' }
+            end
             format.json { render :show, status: :ok, location: @review }
           else
             flash.now[:alert] = @review.errors.full_messages
@@ -116,8 +122,10 @@ module GrantSubmissions
       end
 
       def review_params
+        params[:review][:draft] = false if params[:commit] == "Submit Your Review"
         params.require(:review).permit(:overall_impact_score,
                                        :overall_impact_comment,
+                                       :draft,
                                        criteria_reviews_attributes: [
                                         :id,
                                         :criterion_id,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_21_160717) do
+ActiveRecord::Schema.define(version: 2023_03_23_122123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2022_10_21_160717) do
     t.string "name", null: false
     t.text "body"
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
+    t.integer "record_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2022_10_21_160717) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
+    t.integer "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(version: 2022_10_21_160717) do
   end
 
   create_table "grant_reviewer_invitations", force: :cascade do |t|
-    t.bigint "grant_id", null: false
+    t.integer "grant_id", null: false
     t.bigint "invited_by_id", null: false
     t.bigint "invitee_id"
     t.string "email", null: false
@@ -380,7 +380,7 @@ ActiveRecord::Schema.define(version: 2022_10_21_160717) do
   end
 
   create_table "grant_submission_submission_applicants", force: :cascade do |t|
-    t.bigint "grant_submission_submission_id", null: false
+    t.integer "grant_submission_submission_id", null: false
     t.bigint "applicant_id", null: false
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
@@ -508,6 +508,7 @@ ActiveRecord::Schema.define(version: 2022_10_21_160717) do
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.datetime "reminded_at"
+    t.boolean "draft", default: true, null: false
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
     t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"

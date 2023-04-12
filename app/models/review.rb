@@ -2,8 +2,8 @@ class Review < ApplicationRecord
   include WithScoring
   include Discard::Model
 
-  after_commit     :update_submission_averages, on: %i[create update destroy]
-  after_touch      :update_submission_averages
+  after_commit     :update_submission_averages, on: %i[create update destroy], if: :is_complete?
+  after_touch      :update_submission_averages, if: :is_complete?
 
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
                   meta:     { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
@@ -29,14 +29,14 @@ class Review < ApplicationRecord
   accepts_nested_attributes_for :criteria_reviews
 
   validates_presence_of     :reviewer
-  validates_presence_of     :overall_impact_score, unless: :new_record?
+  validates_presence_of     :overall_impact_score, unless: -> { new_record? || draft }
 
   validates_uniqueness_of   :reviewer, scope: :submission
 
   validates_numericality_of :overall_impact_score, only_integer: true,
                                                    greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
                                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
-                                                   unless: :new_record?
+                                                   unless: -> { new_record? || draft }
 
   validate :reviewer_is_a_grant_reviewer
   validate :assigner_is_a_grant_editor
@@ -56,13 +56,14 @@ class Review < ApplicationRecord
   scope :order_by_created_at,                     -> { order(created_at: :desc) }
   scope :by_reviewer,                             -> (reviewer)   { where(reviewer_id: reviewer.id) }
   scope :by_submission,                           -> (submission) { where(grant_submission_submission_id: submission.id) }
-  scope :completed,                               -> { where.not(overall_impact_score: nil) }
+  scope :submitted,                               -> { where(draft: false) }
+  scope :completed,                               -> { where.not(overall_impact_score: nil).submitted }
   scope :incomplete,                              -> { where(overall_impact_score: nil) }
   # TODO: could be used to throttle reminders to a given timeframe
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
-    !overall_impact_score.nil?
+    !overall_impact_score.nil? && !draft
   end
 
   def scored_criteria_scores
