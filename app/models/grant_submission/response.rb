@@ -52,7 +52,6 @@ module GrantSubmission
     validate :validate_by_response_type
     validate :response_if_mandatory, if: -> { question.is_mandatory? && (submission.submitted? || submission&.user_submitted_state == 'submitted') }
     validate :attachment_is_valid,   if: -> { document.attached? }
-    # validate :attachment_not_removed_on_submit, if: -> { question.response_type == 'file_upload' && submission&.user_submitted_state == 'submitted' && remove_document == '1' }
 
     after_save :purge_document, if: -> { question.response_type == 'file_upload' && remove_document == '1' }
 

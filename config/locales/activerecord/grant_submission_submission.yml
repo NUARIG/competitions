@@ -11,6 +11,8 @@ en:
             base:
               reviewed_submission_cannot_be_unsubmitted: This submission has already been scored and may not be edited.
               may_not_delete_from_published_grant: Grant must be in Draft mode in order to delete a submission.
+              draft_submission_cannot_be_awarded: A submission cannot be awarded when it is in draft mode.
+              unreviewed_submission_cannot_be_awarded: A submission must have at least one review before being awarded.
             responses:
               invalid: have highlighted errors.
     models:

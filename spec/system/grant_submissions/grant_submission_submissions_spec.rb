@@ -62,7 +62,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
                                         created_at: grant.submission_close_date - 1.hour) }
 
   def not_authorized_text
-    'You are not authorized to perform this action.'
+    t("pundit.default")
+    # 'You are not authorized to perform this action.'
   end
 
   def successfully_saved_submission_message
@@ -83,80 +84,107 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         context 'system_admin' do
           before(:each) do
             login_user system_admin
-            visit grant_submissions_path(grant)
           end
 
-          scenario 'can visit the submissions index page' do
-            visit grant_submissions_path(grant)
-            expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
-          end
+          context 'with one submission' do
+            context 'without reviews' do
+              before(:each) do
+                visit grant_submissions_path(grant)
+              end
 
-          scenario 'submission with no review shows dashes' do
-            overall   = page.find("td[data-overall-impact='#{submission.id}']")
-            composite = page.find("td[data-composite='#{submission.id}']")
-            expect(overall).to have_text '-'
-            expect(composite).to have_text '-'
-          end
+              scenario 'can visit the submissions index page' do
+                expect(page).not_to have_content not_authorized_text
+              end
 
-          scenario 'discarded submission is not included' do
-            expect(page).to have_content submission.title
-            submission.update(discarded_at: Time.now)
+              scenario 'can view the submissions admin links' do
+                within "##{dom_id(submission)}" do
+                  expect(page).to have_content submission.title
+                  expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+                  expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+                  expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+                  expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+                end
+              end
 
-            visit grant_submissions_path(grant)
-            expect(page).not_to have_content submission.title
-          end
+              scenario 'submission with no review shows dashes for score columns' do
+                within "##{dom_id(submission)}" do
+                  expect(page).to have_selector('.overall-impact', text: '-')
+                  expect(page).to have_selector('.composite', text: '-')
+                end
+              end
 
-          context 'with reviews' do
-            scenario 'submission with one review shows scores' do
-              review.save
-              visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
-              expect(overall).to have_text review.overall_impact_score
-              expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
+              scenario 'submission with no review does not include the award checkbox' do
+                within "##{dom_id(submission)}" do
+                  expect(page).not_to have_selector('.awarded input[type="checkbox"]')
+                end
+              end
+
+              scenario 'discarded submission is not included' do
+                expect(page).to have_content submission.title
+                submission.update(discarded_at: Time.now)
+
+                visit grant_submissions_path(grant)
+                expect(page).not_to have_content submission.title
+              end
             end
 
-            scenario 'submission with one review shows scores' do
-              review.save
-              visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
-              expect(overall).to have_text review.overall_impact_score
-              expect(composite).to have_text (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2)
+            context 'with a review' do
+              scenario 'submission with one review shows scores' do
+                review.save
+                visit grant_submissions_path(grant)
+
+                within "##{dom_id(submission)}" do
+                  expect(page).to have_selector('.overall-impact', text: review.overall_impact_score)
+                  expect(page).to have_selector('.composite', text: (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2))
+                end
+              end
+
+              scenario 'submission includes checkbox for award' do
+                review.save
+                visit grant_submissions_path(grant)
+
+                within "##{dom_id(submission)}" do
+                  expect(page).to have_field('grant_submission_submission[awarded]', disabled: false)
+                end
+              end
+
+              scenario 'can award a submission' do
+                can_award(grant, submission)
+              end
+
+              scenario 'can unaward a submission' do
+                can_unaward(grant, submission)
+              end
             end
 
-            scenario 'submission with multiple reviews shows proper scores' do
-              reviews = [review, new_review]
-              review.save
-              visit grant_submissions_path(grant)
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
+            context 'with multiple reviews' do
+              scenario 'submission shows proper scores' do
+                reviews = [review, new_review]
+                review.touch # trigger callback to recalculate scores. why is required here? callback should have happened on create of ea review.
+                visit grant_submissions_path(grant)
 
-              expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
-              expected_composite       = (submission.criteria_reviews.to_a.map(&:score).sum.to_f / submission.criteria_reviews.count).round(2)
+                expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
+                expected_composite       = (submission.criteria_reviews.to_a.map(&:score).sum.to_f / submission.criteria_reviews.count).round(2)
 
-              expect(overall).to have_text expected_average_overall
-              expect(composite).to have_text expected_composite
-            end
+                within "##{dom_id(submission)}" do
+                  expect(page).to have_selector('.overall-impact', text: expected_average_overall)
+                  expect(page).to have_selector('.composite', text: expected_composite)
+                end
+              end
 
-            scenario 'submission with multiple reviews shows proper scores' do
-              reviews = [review, new_review, unscored_review]
-              visit grant_submissions_path(grant)
+              scenario 'submission with an unscored review shows proper scores' do
+                reviews = [review, new_review, unscored_review]
+                visit grant_submissions_path(grant)
 
-              overall   = page.find("td[data-overall-impact='#{submission.id}']")
-              composite = page.find("td[data-composite='#{submission.id}']")
-              completed = page.find("div[data-completed-reviews='#{submission.id}'")
+                expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
+                expected_composite       = (submission.criteria_reviews.to_a.map(&:score).compact.sum.to_f / submission.criteria_reviews.count).round(2)
 
-              expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
-              expected_composite       = (submission.criteria_reviews.to_a.map(&:score).compact.sum.to_f / submission.criteria_reviews.count).round(2)
-
-              expect(overall).to have_text expected_average_overall
-              expect(completed).to have_text '2 / 3'
-              expect(composite).to have_text expected_composite
+                within "##{dom_id(submission)}" do
+                  expect(page).to have_selector('.overall-impact', text: expected_average_overall)
+                  expect(page).to have_selector('.completed-reviews', text: '2 / 3')
+                  expect(page).to have_selector('.composite', text: expected_composite)
+                end
+              end
             end
           end
 
@@ -211,17 +239,40 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       context 'grant_admin' do
         before(:each) do
           login_user grant_admin
-          visit grant_submissions_path(grant)
         end
 
         scenario 'can visit the submissions index page' do
-          login_user grant_admin
+          visit grant_submissions_path(grant)
+          expect(page).not_to have_content not_authorized_text
+        end
 
-          expect(page).to have_content submission.title
-          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
-          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-          expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+        scenario 'can view the submissions admin links' do
+          visit grant_submissions_path(grant)
+          expect(page).to have_link 'Export All Submissions', href: export_grant_submissions_path(grant, { format: 'xlsx' })
+
+          within "##{dom_id(submission)}" do
+            expect(page).to have_content submission.title
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+        end
+
+        scenario 'submission includes checkbox for award' do
+          review.save
+          visit grant_submissions_path(grant)
+
+          within "##{dom_id(submission)}" do
+            expect(page).to have_field('grant_submission_submission[awarded]', disabled: false)
+          end
+        end
+
+        scenario 'can award a submission' do
+          can_award(grant, submission)
+        end
+
+        scenario 'can unaward a submission' do
+          can_unaward(grant, submission)
         end
 
         context 'administrator submissions' do
@@ -248,12 +299,28 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
-          expect(page).to have_content submission.title
-          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
-          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-          expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-          expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          expect(page).not_to have_content not_authorized_text
+        end
+
+        scenario 'can view the appropriate admin links' do
+          visit grant_submissions_path(grant)
+          expect(page).to have_link 'Export All Submissions', href: export_grant_submissions_path(grant, { format: 'xlsx' })
+
+          within "##{dom_id(submission)}" do
+            expect(page).to have_content submission.title
+            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+        end
+
+        scenario 'can award a submission' do
+          can_award(grant, submission)
+        end
+
+        scenario 'can unaward a submission' do
+          can_unaward(grant, submission)
         end
 
         context 'administrator submissions' do
@@ -277,12 +344,41 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
-          expect(page).to have_content submission.title
-          expect(page).to have_link 'Export All Submissions', href: grant_submissions_path(grant, {format: 'xlsx'})
-          expect(page).not_to have_link 'Assign Reviews', href: grant_submission_reviews_path(grant, submission)
-          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-          expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-          expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          expect(page).not_to have_content not_authorized_text
+        end
+
+        scenario 'can view the appropriate admin links' do
+          visit grant_submissions_path(grant)
+          expect(page).to have_link 'Export All Submissions', href: export_grant_submissions_path(grant, { format: 'xlsx' })
+
+          within "##{dom_id(submission)}" do
+            expect(page).to have_content submission.title
+            expect(page).not_to have_link 'Assign Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+          end
+        end
+
+        scenario 'cannot awarded an unawarded submission' do
+          review.save
+          visit grant_submissions_path(grant)
+
+          within "##{dom_id(submission)}" do
+            expect(page).not_to have_field('grant_submission_submission[awarded]')
+            expect(page).to have_unchecked_field('awarded', disabled: true)
+          end
+        end
+
+        scenario 'cannot submit unawarded form' do
+          review.save
+          submission.update(awarded: true)
+          visit grant_submissions_path(grant)
+
+          within "##{dom_id(submission)}" do
+            expect(page).not_to have_field('grant_submission_submission[awarded]')
+            expect(page).to have_checked_field('awarded', disabled: true)
+          end
         end
 
         context 'administrator submissions' do
@@ -313,12 +409,15 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           end
 
           scenario 'does not have admin links' do
-            expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-            expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
-            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-            expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
-            expect(page).not_to have_link 'Save all Submissions', href: grant_submissions_path(grant)
+            within "##{dom_id(submission)}" do
+              expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+              expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
+              expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+              expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+              expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
+              expect(page).not_to have_link 'Save all Submissions', href: grant_submissions_path(grant)
+              expect(page).not_to have_selector('.awarded')
+            end
           end
 
           scenario 'does not include other submitter submission' do
@@ -734,5 +833,30 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
     expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
     expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+  end
+
+  def can_award(grant, submission)
+    review.save
+    visit grant_submissions_path(grant)
+
+    within "##{dom_id(submission)}" do
+      expect(page).to have_unchecked_field('grant_submission_submission[awarded]')
+      find_field('grant_submission_submission[awarded]').check
+    end
+    expect(page).to have_text 'has been awarded'
+    expect(submission.reload.awarded).to be true
+  end
+
+  def can_unaward(grant, submission)
+    review.save
+    submission.update(awarded: true)
+    visit grant_submissions_path(grant)
+
+    within "##{dom_id(submission)}" do
+    expect(page).to have_checked_field('grant_submission_submission[awarded]')
+    find_field('grant_submission_submission[awarded]').uncheck
+    end
+    expect(page).to have_text 'has been unawarded'
+    expect(submission.reload.awarded).to be false
   end
 end

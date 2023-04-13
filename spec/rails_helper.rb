@@ -105,6 +105,12 @@ RSpec.configure do |config|
 
   # Pause for Turbo actions to complete
   config.include WaitForTurbo, type: :system
+
+  # i18n / locales
+  config.include AbstractController::Translation
+
+  # use dom_id helper in system specs
+  config.include ActionView::RecordIdentifier, type: :system
 end
 
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]

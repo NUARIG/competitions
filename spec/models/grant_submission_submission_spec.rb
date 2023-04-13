@@ -11,6 +11,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
   it { is_expected.to respond_to(:reviews_count) }
   it { is_expected.to respond_to(:state) }
   it { is_expected.to respond_to(:user_updated_at) }
+  it { is_expected.to respond_to(:awarded) }
 
   let(:submission) { build(:submission_with_responses) }
 
@@ -41,6 +42,19 @@ RSpec.describe GrantSubmission::Submission, type: :model do
       submission.title = ''
       expect(submission).not_to be_valid
       expect(submission.errors).to include(:title)
+    end
+
+    it 'cannot be awarded in draft state' do
+      submission.state = 'draft'
+      submission.awarded = true
+      expect(submission).not_to be_valid
+      expect(submission.errors.messages[:base]).to eq ["A submission cannot be awarded when it is in draft mode."]
+    end
+
+    it 'cannot be awarded without being reviewed' do
+      submission.awarded = true
+      expect(submission).not_to be_valid
+      expect(submission.errors.messages[:base]).to eq ["A submission must have at least one review before being awarded."]
     end
   end
 
@@ -136,7 +150,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
         it 'may not be unsubmitted' do
           scored_review.reload
           submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
-          expect(submission.errors).to include(:base)
+          expect(submission.errors.messages[:base]).to eq ['This submission has already been scored and may not be edited.']
         end
       end
     end

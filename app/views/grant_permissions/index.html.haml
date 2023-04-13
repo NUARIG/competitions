@@ -40,7 +40,7 @@
     = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
   #permissions
-    #turbo-table
+    .turbo-table
       .grid-x.grid-padding-x.align-bottom.header
         .cell.small-12.medium-3
           Name
@@ -52,7 +52,7 @@
           Role
         .cell.small-12.medium-2
 
-      #grant-permissions
+      .rows
         - @grant_permissions.each_with_index do |grant_permission, i|
           = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
 

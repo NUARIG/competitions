@@ -46,6 +46,8 @@ class Grant < ApplicationRecord
                                     foreign_key:  :grant_id,
                                     inverse_of:   :grant,
                                     dependent:    :destroy
+  has_many   :awarded_submissions,  -> { where(awarded: true) },
+                                    class_name:   'GrantSubmission::Submission'
 
   has_many   :reviews,              through: :submissions
 

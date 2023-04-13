@@ -3,7 +3,6 @@
 require 'rails_helper'
 include ApplicationHelper
 include UsersHelper
-include ActionView::RecordIdentifier
 
 RSpec.describe 'GrantPermissions', type: :system, js: true do
   before(:each) do

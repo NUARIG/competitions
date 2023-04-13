@@ -57,6 +57,10 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     grant_editor_access?
   end
 
+  def award?
+    grant_editor_access?  || user.system_admin?
+  end
+
   private
 
   def submission
