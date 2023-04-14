@@ -18,9 +18,9 @@
     %li
       Panel
 
-= render 'panel_schedule_info'
+= render partial: 'panel_schedule_info', locals: { panel: @panel, user_has_grant_viewer_access: user_has_grant_viewer_access }
 
-= render 'panel_metadata'
+= render partial: 'panel_metadata', locals: { panel: @panel }
 
 - if policy(@panel).view_content?
-  = render 'panel_content'
+  = render partial: 'panel_content', locals: { grant: @grant, submissions: @submissions, query: @q }

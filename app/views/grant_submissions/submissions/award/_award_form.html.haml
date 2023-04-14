@@ -1,0 +1,5 @@
+- unless user_grant_role == 'viewer'
+  = form_with model: [grant, submission], url: award_grant_submission_path(grant, submission) do |f|
+    = f.check_box :awarded, { data: { action: 'change->checkbox-submit#submit' } }, 'true', 'false'
+- else
+  = check_box_tag :awarded, "#{submission.awarded}", submission.awarded, disabled: true

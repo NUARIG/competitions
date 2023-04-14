@@ -3,33 +3,4 @@ main.grant_permissions {
   .notification-checkbox{
     padding-top: .3rem;
   }
-
-  #permissions {
-    border: 1px solid $light-gray;
-    .grid-x {
-      &.header {
-        background-color: $table-head-background;
-        padding: .5em 0;
-        .cell {
-          align-items: baseline;
-          display: table-cell;
-          font-size: .85em;
-          font-weight: bold;
-        }
-      }
-    }
-
-    #grant-permissions {
-      [id^='grant_permission_'].permission {
-        border-bottom: 1px solid $light-gray;
-        display: block;
-        &:nth-of-type(odd) {
-          background-color: $table-striped-background;
-        }
-        &:nth-of-type(even) {
-          background-color: $white;
-        }
-      }
-    }
-  }
 }

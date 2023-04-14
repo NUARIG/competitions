@@ -1,0 +1,36 @@
+@import 'settings';
+
+.turbo-table {
+  border: 1px solid $light-gray;
+  margin-bottom: 1em;
+
+  .header {
+    background-color: $table-head-background;
+    padding: .5em 0;
+    .cell {
+      align-items: baseline;
+      display: table-cell;
+      font-size: .85em;
+      font-weight: bold;
+    }
+  }
+
+  .rows {
+    border-top: 1px solid $light-gray;
+    .item {
+      border-bottom: 1px solid $light-gray;
+      display: block;
+      &:nth-of-type(odd) {
+        background-color: $white;
+      }
+      &:nth-of-type(even) {
+        background-color: $table-striped-background;
+      }
+      .row {
+        &:hover {
+          background: #FAFAFA;
+        }
+      }
+    }
+  }
+}

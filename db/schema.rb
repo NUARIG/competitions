@@ -417,8 +417,10 @@ ActiveRecord::Schema.define(version: 2023_03_23_122123) do
     t.datetime "discarded_at"
     t.decimal "average_overall_impact_score", precision: 5, scale: 2
     t.decimal "composite_score", precision: 5, scale: 2
+    t.boolean "awarded", default: false, null: false
     t.index ["created_id", "grant_submission_form_id"], name: "i_gss_on_created_id_and_submission_form_id"
     t.index ["discarded_at"], name: "index_grant_submission_submissions_on_discarded_at"
+    t.index ["grant_id", "awarded"], name: "index_grant_submission_submissions_on_grant_id_and_awarded"
     t.index ["grant_id", "created_id"], name: "i_gss_on_grant_id_and_created_id"
     t.index ["grant_id"], name: "index_grant_submission_submissions_on_grant_id"
     t.index ["grant_submission_form_id"], name: "index_grant_submission_submissions_on_grant_submission_form_id"

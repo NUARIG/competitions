@@ -4,26 +4,18 @@ module GrantSubmissions
 
     def index
       flash.keep
-      @grant      = Grant.kept.friendly.with_administrators.find(params[:grant_id])
+      @grant = Grant.kept.friendly.with_administrators.find(params[:grant_id])
 
       if Pundit.policy(current_user, @grant).show?
-        if params[:format] == 'xlsx'
-          @questions  = @grant.questions
-          @submissions = policy_scope(GrantSubmission::Submission.with_responses, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
-        else
-          @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
-          @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-          @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
-        end
+        @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+        @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
+
+        set_user_grant_role
+        @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
       else
         skip_policy_scope
         flash[:alert] = I18n.t('pundit.default')
         redirect_to root_path
-      end
-
-      respond_to do |format|
-        format.html
-        format.xlsx { response.headers['Content-Disposition'] = "attachment; filename=submissions-#{@grant.name.gsub(/\W/,'')}-#{DateTime.now.strftime('%Y_%m%d')}.xlsx"}
       end
     end
 
@@ -36,10 +28,7 @@ module GrantSubmissions
     def new
       @grant = Grant.kept
                     .friendly
-                    .includes( :contacts,
-                               form:
-                                { sections:
-                                  { questions: :multiple_choice_options} } )
+                    .includes( :contacts, form: { sections: { questions: :multiple_choice_options} } )
                     .with_reviewers.with_panel
                     .find(params[:grant_id])
       set_submission
@@ -79,6 +68,8 @@ module GrantSubmissions
     def update
       set_submission
       authorize @submission
+      set_user_grant_role
+
       @submission.user_submitted_state = params[:state]
 
       if @submission.update(submission_params)
@@ -156,6 +147,10 @@ module GrantSubmissions
                                 recipients: @admin_notification_emails,
                                 submission: @submission)
         .deliver_now
+    end
+
+    def set_user_grant_role
+      @user_grant_role = current_user.get_role_by_grant(grant: @grant)
     end
 
     def submission_params

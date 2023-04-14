@@ -1,0 +1,3 @@
+= turbo_stream.replace 'flash', partial: 'layouts/flash'
+
+= turbo_stream.update "award_#{@submission.id}", partial: 'grant_submissions/submissions/award/award_form', locals: { grant: @grant, submission: @submission, user_grant_role: @user_grant_role }
