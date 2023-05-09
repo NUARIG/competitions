@@ -77,12 +77,12 @@
         = f.submit 'Save as Draft', class: 'button warning', name: 'draft', confirm: 'Drafts will not become visible until Completed', disabled: disable_fields
         = link_to 'Cancel', profile_grants_path, class: 'button secondary clear'
       - else
-        = f.submit 'Update', class: 'button'
+        = f.submit 'Update', class: 'button', data: { turbo: false }
         = link_to 'Cancel', grant, class: 'button secondary clear'
-      = link_to 'Delete', grant, method: :delete, disabled: disable_fields, data: { confirm: 'Are you sure you want to delete this grant entirely?'}, class: 'button alert clear'
+      = link_to 'Delete', grant, disabled: disable_fields, method: :delete, data: { turbo: false, confirm: 'Are you sure you want to delete this grant entirely?' }, class: 'button alert clear'
 
 :javascript
-  $(function() {
+  document.addEventListener('turbo:load', function() {
     yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     $( "#grant_publish_date, #grant_submission_open_date, #grant_submission_close_date, #grant_panel_date, #grant_review_open_date, #grant_review_close_date" ).fdatepicker({

@@ -1,0 +1,9 @@
+= turbo_stream.replace 'flash', partial: 'layouts/flash'
+
+= turbo_stream.remove @grant_permission
+
+= turbo_stream.replace 'pagy-header', partial: 'shared/pagy_header', locals: { pagy: @pagy }
+
+- if @grant_permission.role == 'admin' && @grant.admins.size == 1
+  - @grant.grant_permissions.where(role: 'admin').each do |admin|
+    = turbo_stream.replace dom_id(admin), partial: 'grant_permission', locals: { grant: @grant, grant_permission: admin }

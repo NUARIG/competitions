@@ -1,12 +1,17 @@
-base_headers = ["Applicants",
-                "Applicant Emails",
-                "Submitter",
-                "Submitter Email",
-                "Submission Title",
-                "State",
-                "Last Updated",
-                "Completed Reviews",
-               ]
+# avoid empty columns in output
+# only included awarded column when there is an awarded submission
+has_awarded_submissions = @submissions.any?(&:awarded)
+column_offset = has_awarded_submissions ? 8 : 7
+
+base_headers = ['Applicants',
+                'Applicant Emails',
+                'Submitter',
+                'Submitter Email',
+                'Submission Title',
+                'State',
+                'Last Updated',
+                'Completed Reviews']
+base_headers << 'Awarded' if has_awarded_submissions
 
 question_headers  = []
 
@@ -64,22 +69,31 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       response_column_widths << 45
     end
 
-    row = sheet.add_row [ applicants.to_sentence(words_connector: '; '),  # A
-                          emails.to_sentence,                             # B
-                          sortable_full_name(submitter),                  # C
-                          submitter.email,                                # D
-                          submission.title,                               # E
-                          submission.state,                               # F
-                          submission.updated_at.to_s(:long_ordinal),      # G
-                          reviews_completed                               # H
-                        ].concat(response_columns)                        # I...
+    base_submission_info = [applicants.to_sentence(words_connector: '; '),  # A
+                            emails.to_sentence,                             # B
+                            sortable_full_name(submitter),                  # C
+                            submitter.email,                                # D
+                            submission.title,                               # E
+                            submission.state,                               # F
+                            submission.updated_at.to_s(:long_ordinal),      # G
+                            reviews_completed]                              # H
+
+    base_submission_info << t("boolean.yes_no.#{submission.awarded}") if has_awarded_submissions # I
+
+    row = sheet.add_row(base_submission_info.concat(response_columns))      # I/J
 
     alphabet_array = ('A'..'ZZ').to_a
     file_upload_links.each do |column, link|
       sheet.add_hyperlink(:location => link,
-                          :ref => "#{alphabet_array[column + 7]}#{row_index + 2}") # account for columns in lines 57-62 and header row
-      row.cells[column + 7].style = link_style
+                          :ref => "#{alphabet_array[column + column_offset]}#{row_index + 2}") # account for columns in lines 57-62 and header row
+      row.cells[column + column_offset].style = link_style
     end
   end
-  sheet.column_widths(30, 25, 45, 15, 25, 25, *response_column_widths)
+
+  if has_awarded_submissions
+    sheet.column_widths(30, 25, 45, 15, 25, 25, 25, 25, *response_column_widths)
+  else
+    sheet.column_widths(30, 25, 45, 15, 25, 25, 25, *response_column_widths)
+  end
+
 end

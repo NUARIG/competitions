@@ -1,16 +1,6 @@
+@import 'settings';
 main.grant_permissions {
   .notification-checkbox{
     padding-top: .3rem;
-  }
-
-  .select2-selection {
-    border-radius: 0 !important;
-    border: 1px solid #cacaca !important;
-    height: 2.4375rem !important;
-    padding-top: .25rem !important;
-  }
-
-  .select2-selection__arrow {
-    top: 6px !important;
   }
 }

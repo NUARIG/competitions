@@ -1,0 +1,38 @@
+= turbo_frame_tag dom_id(submission), class: 'item' do
+  .grid-x.grid-padding-x.grid-padding-y.row
+    .cell.small-12.medium-1.small.updated
+      = date_time_separate_lines(submission.user_updated_at)
+    .cell.small-12.medium-2.applicants
+      - submission.applicants.each do |applicant|
+        .applicant
+          = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+    .cell.small-12{ class: submission_title_class }
+      = link_to submission.title, grant_submission_path(@grant, submission)
+    .cell.small-12.medium-1.title
+      %div.status{ data: { status: submission.id } }
+        = submission.state.titleize
+        - if user_has_grant_permissions
+          = render 'submission_administrator_links', { grant: @grant, submission: submission }
+        - else
+          = render 'submission_submitter_links', { grant: @grant, submission: submission }
+    - if user_has_grant_permissions
+      .cell.small-12.medium-1.state
+        - if submission.draft? && review_data.assigned_review_count == '0'
+          %span.not-allowed{ title: 'Draft submissions may not be assigned for review' } -
+        - elsif submission.submitted? && review_data.assigned_review_count == '0'
+          = link_to 'Assign Reviews', grant_reviewers_path(@grant, submission)
+        - else
+          = link_to 'Reviews', grant_submission_reviews_path(@grant, submission)
+          = link_to "#{image_tag 'PDF_24.png', class: 'icon', title: 'Save reviews summary as a PDF' }".html_safe, grant_submission_reviews_path(@grant, submission, { format: 'pdf' } )
+          %div.count.small.completed-reviews{ title: 'Completed / Assigned', data: { completed: {reviews: submission.id}} }
+            #{review_data.completed_review_count} / #{review_data.assigned_review_count}
+      .cell.small-12.medium-1.overall-impact{ data: { overall: { impact: submission.id } } }
+        %div.average{ title: 'Average of Completed' }
+          = review_data.overall_impact_average
+      .cell.small-12.medium-1.composite{ data: { composite: submission.id } }
+        %span{ title: 'Average of Scored Criteria' }
+          = review_data.composite_score
+      .cell.small-12.medium-1.awarded
+        - if submission.submitted? && review_data&.overall_impact_average.to_f > 0
+          = turbo_frame_tag "award_#{submission.id}" do
+            = render partial: 'grant_submissions/submissions/award/award_form', locals: { grant: @grant, submission: submission, user_grant_role: user_grant_role }

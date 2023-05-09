@@ -1,10 +1,10 @@
-#frozen_string_literal: true
-
 class HomeController < ApplicationController
   skip_before_action :authenticate_user!
+  skip_before_action :audit_action, if: -> { params[:q].present? }
 
   def index
-    @grants = Grants::PublicDecorator.decorate_collection(Grant.kept.public_grants)
+    @grants = Grant.kept.public_grants.includes(:grant_permissions)
+
     skip_policy_scope
   end
 end

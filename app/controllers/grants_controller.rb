@@ -3,11 +3,12 @@
 class GrantsController < ApplicationController
   skip_before_action :authenticate_user!, only: :show
   before_action :store_user_location!, only: :show, unless: :user_signed_in?
-  before_action :set_grant, except: %i[index new create]
+  before_action :set_grant, except: %i[index show new create]
 
   # GET /grants
   # GET /grants.json
   def index
+    flash.keep
     @q = policy_scope(Grant).ransack(params[:q])
     @q.sorts = 'created_at desc' if @q.sorts.empty?
     @pagy, @grants = pagy(@q.result, i18n_key: 'activerecord.models.grant')
@@ -16,6 +17,9 @@ class GrantsController < ApplicationController
   # GET /grants/1
   # GET /grants/1.json
   def show
+    flash.keep
+    @grant = Grant.includes(:contacts).kept.friendly.find(params[:id])
+
     if authorize @grant
       draft_banner
     end
@@ -31,6 +35,7 @@ class GrantsController < ApplicationController
   def edit
     if authorize @grant
       draft_banner
+      flash.keep
     end
   end
 
@@ -70,7 +75,7 @@ class GrantsController < ApplicationController
     authorize @grant
     respond_to do |format|
       if @grant.valid?(:discard) && @grant.discard
-        format.html { redirect_to grants_url, notice: 'Grant was successfully deleted.' }
+        format.html { redirect_to grants_url, status: :see_other, notice: 'Grant was successfully deleted.' }
       else
         flash[:alert] = @grant.errors.full_messages
         format.html { redirect_back(fallback_location: edit_grant_url(@grant)) }

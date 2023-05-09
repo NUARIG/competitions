@@ -9,8 +9,7 @@ Rails.application.routes.draw do
                                   sessions:       'registered_users/sessions'
                                 }
 
-  devise_for :saml_users, path: 'users',
-                          controllers: { saml_sessions: 'saml_sessions' }
+  devise_for :saml_users, path: 'users', controllers: { saml_sessions: 'saml_sessions' }
 
   resources :users, only: %i[index edit update]
 
@@ -30,7 +29,7 @@ Rails.application.routes.draw do
   end
 
   resources :grants do
-    resources :grant_permissions, except: :show,            controller: 'grant_permissions' do
+    resources :grant_permissions, except: :show, controller: 'grant_permissions' do
       get :users_query, on: :collection, to: 'grant_permissions/users_query#index', as: :users_query
     end
 
@@ -59,8 +58,13 @@ Rails.application.routes.draw do
     resources :submissions,       except: %i[new],  controller: 'grant_submissions/submissions' do
       resources 'applicants',     only: %i[index create destroy], controller: 'grant_submissions/submissions/submission_applicants'
 
+      collection do
+        get 'export',             only: :index, to: 'grant_submissions/submissions/export#index'
+      end
+
       member do
-        patch 'unsubmit',         to: 'grant_submissions/submissions/unsubmit#update'
+        patch 'unsubmit', to: 'grant_submissions/submissions/unsubmit#update'
+        patch 'award',    to: 'grant_submissions/submissions/award#update'
       end
 
       resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews' do

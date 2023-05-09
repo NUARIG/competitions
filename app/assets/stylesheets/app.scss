@@ -182,6 +182,7 @@ th,
   font-size: .85em;
   font-weight: bold;
   text-align: left;
+  padding: .25em 0;
   vertical-align: bottom;
 }
 
@@ -254,7 +255,8 @@ h2#section {
 }
 
 // grant dates
-#grant-dates {
+#grant-dates,
+#grant-contacts {
   .card-divider {
     padding: .5rem 1rem;
   }
@@ -277,8 +279,13 @@ h2#section {
 }
 
 #turbo-table {
-  margin: 2rem 0;
   border: $table-border;
+  .header {
+    .cell {
+      font-size: .85em;
+      margin-bottom: 0em;
+    }
+  }
 
   .columns {
     border-bottom: $table-border;
@@ -286,6 +293,37 @@ h2#section {
   }
 
   .turbo-row:nth-of-type(even) {
-    background-color: #f1f1f1;
+    background-color: #F1F1F1;
+  }
+}
+
+.ts-wrapper {
+  height: 2.4375rem;
+  background-color: #FEFEFE;
+  ::placeholder {
+    color: #000;
+  }
+  &.single {
+    .ts-control {
+      box-shadow: none;
+      background-color: #FEFEFE;
+      background-image: none;
+      border-radius: 0;
+      font-size: 1em;
+    }
+  }
+
+  .ts-dropdown {
+    color: #0A0A0A;
+    font-size: 1em;
+    .ts-dropdown-content {
+      font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    }
+    .active {
+      border: none;
+      background: #F9F9F9;
+      border-radius: 0;
+      color: #0A0A0A;
+    }
   }
 }

@@ -5,6 +5,7 @@ module GrantReviewers
     skip_after_action :verify_policy_scoped, only: %i[index]
 
     def index
+      flash.keep
       @invitations          = GrantReviewer::Invitation.with_inviter.by_grant(@grant)
       @has_open_invitations = @invitations.any?{ |invite| invite.confirmed_at.nil? && invite.opted_out_at.nil? }
     end
@@ -29,7 +30,7 @@ module GrantReviewers
 
       respond_to do |format|
         if invitation.invitee.nil? && invitation.destroy
-          format.html { redirect_to grant_reviewers_url(@grant), notice: "The invitation to #{invitation.email} has been deleted." }
+          format.html { redirect_to grant_invitations_url(@grant), notice: "The invitation to #{invitation.email} has been deleted." }
         else
           format.html { redirect_to grant_reviewers_url(@grant), warning: "Could not delete the invitation to #{invitation.email}." }
         end

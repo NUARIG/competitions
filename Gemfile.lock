@@ -164,7 +164,7 @@ GEM
     childprocess (4.1.0)
     cocoon (1.2.15)
     coderay (1.1.3)
-    concurrent-ruby (1.1.10)
+    concurrent-ruby (1.2.2)
     crass (1.0.6)
     debug_inspector (1.1.0)
     devise (4.8.1)
@@ -187,7 +187,7 @@ GEM
       activesupport (>= 5.0)
       request_store (>= 1.0)
       ruby2_keywords
-    erubi (1.11.0)
+    erubi (1.12.0)
     erubis (2.7.0)
     exception_notification (4.5.0)
       actionmailer (>= 5.2, < 8)
@@ -208,7 +208,7 @@ GEM
       sprockets-es6 (>= 0.9.0)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
-    globalid (1.0.0)
+    globalid (1.1.0)
       activesupport (>= 5.0)
     haml (5.2.2)
       temple (>= 0.8.0)
@@ -248,7 +248,7 @@ GEM
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.18.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -257,16 +257,16 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    minitest (5.16.2)
+    minitest (5.18.0)
     msgpack (1.5.1)
     nested_form (0.3.2)
     net-scp (3.0.0)
       net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (6.1.0)
     nio4r (2.5.8)
-    nokogiri (1.13.8-x86_64-darwin)
+    nokogiri (1.14.2-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.8-x86_64-linux)
+    nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     pagy (4.10.2)
@@ -284,9 +284,9 @@ GEM
       activesupport (>= 3.0.0)
     pundit-matchers (1.6.0)
       rspec-rails (>= 3.0.0)
-    racc (1.6.0)
-    rack (2.2.4)
-    rack-test (2.0.2)
+    racc (1.6.2)
+    rack (2.2.6.4)
+    rack-test (2.1.0)
       rack (>= 1.3)
     rails (6.1.5)
       actioncable (= 6.1.5)
@@ -310,8 +310,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.3)
-      loofah (~> 2.3)
+    rails-html-sanitizer (1.5.0)
+      loofah (~> 2.19, >= 2.19.1)
     railties (6.1.5)
       actionpack (= 6.1.5)
       activesupport (= 6.1.5)
@@ -327,6 +327,8 @@ GEM
     regexp_parser (2.3.0)
     request_store (1.5.1)
       rack (>= 1.4)
+    requestjs-rails (0.0.10)
+      rails (>= 6.0.0)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -425,11 +427,11 @@ GEM
     timeliness (0.4.4)
     trix (0.10.1)
       rails
-    turbo-rails (1.1.1)
+    turbo-rails (1.4.0)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
       railties (>= 6.0.0)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.1.0)
     uniform_notifier (1.16.0)
@@ -451,7 +453,7 @@ GEM
     wkhtmltopdf-binary (0.12.6.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.0)
+    zeitwerk (2.6.7)
 
 PLATFORMS
   x86_64-darwin-18
@@ -508,6 +510,7 @@ DEPENDENCIES
   rails-controller-testing
   ransack!
   redis (~> 4.0)
+  requestjs-rails
   rspec
   rspec-rails (~> 5.0.0)
   rubocop
@@ -520,7 +523,7 @@ DEPENDENCIES
   sprockets-es6
   terser (~> 1.1)
   trix
-  turbo-rails (~> 1.1)
+  turbo-rails (~> 1.4.0)
   tzinfo-data
   validates_timeliness (= 6.0.0.alpha1)
   web-console (>= 3.3.0)

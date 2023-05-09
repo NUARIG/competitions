@@ -1,6 +1,8 @@
-.card{ id: "grant_#{grant.id}" }
+- name_length_class = grant_name_class(grant: grant)
+
+.card{ id: dom_id(grant), data: { filters_target: 'filterable' } }
   .card-section.grant-name
-    %h4.name{ class: grant.name_length_class }
+    %h4.name{ class: name_length_class }
       = link_to truncate(grant.name, length: 150), grant_path(grant)
   .card-section.grant-dates
     .dates
@@ -15,5 +17,8 @@
           = submission_period(grant: grant)
   .card-divider.grant-links
     %ul.menu
-      = grant.show_menu_link
-      = grant.edit_menu_link
+      %li
+        = link_to 'RFA', grant_path(grant), id: "show-#{dom_id(grant)}-link"
+      - if current_user && policy(grant).edit?
+        %li
+          = link_to 'Edit', edit_grant_path(grant), id: "edit-#{dom_id(grant)}-link"

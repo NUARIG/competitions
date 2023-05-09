@@ -3,3 +3,12 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
+
+import CheckboxSubmitController from "./checkbox_submit_controller.js"
+application.register("checkbox-submit", CheckboxSubmitController)
+
+import FiltersController from "./filters_controller.js"
+application.register("filters", FiltersController)
+
+import Ts__SearchController from "./ts/search_controller.js"
+application.register("ts--search", Ts__SearchController)

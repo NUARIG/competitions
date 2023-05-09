@@ -1,4 +1,11 @@
 en:
+  boolean:
+    yes_no:
+      'true': 'Yes'
+      'false': 'No'
+    on_off:
+      'true': 'On'
+      'false': 'Off'
   activerecord:
     errors:
       messages:

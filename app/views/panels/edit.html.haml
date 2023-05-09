@@ -82,7 +82,7 @@
         = f.submit 'Update Panel Information', class: 'button'
 
 :javascript
-  $(function() {
+  document.addEventListener('turbo:load', function() {
     $('#panel_start_datetime, #panel_end_datetime').fdatepicker({
       format: 'mm/dd/yyyy h:iia',
       formatText: 'mm/dd/yyyy h:iia',

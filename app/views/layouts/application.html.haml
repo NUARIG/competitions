@@ -12,6 +12,7 @@
     = stylesheet_link_tag 'application', media: 'all', "data-turbo-track": "reload", defer: true
     = wicked_pdf_stylesheet_link_tag "pdf"
     = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+    %meta{ name: 'turbo-visit-control', content: 'reload' }
 
 
   %body.grid-container

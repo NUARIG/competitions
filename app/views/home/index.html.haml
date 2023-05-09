@@ -5,17 +5,23 @@
 
 %hr.small-11
 
-.grid-x.align-center-middle
+.grid-x.align-center-middle{ data: { controller: 'filters'} }
   .small-12.text-center
     .section-intro
       %h3.subheader.text-align-center
         Current Grants
-.grid-x.grid-padding-x.small-up-1.medium-up-2.large-up-3#public-grants
-  - if @grants.present?
-    - @grants.each do |grant|
-      .cell
-        = render 'card', grant: grant
-  - else
-    .small-12.text-center
-      %h5
-        There are no open grants available.
+  .small-12.medium-10.large-4
+    .text-align-center
+      #filter
+        = text_field_tag 'name_cont', nil, class: 'small-up-12 medium-up-4', placeholder: 'Search grant titles', maxlength: 20, data: { 'filters_target': 'search', action: "keyup->filters#filter" }
+
+  #public-grants.small-12
+    .grid-x.grid-padding-x.small-up-1.medium-up-2.large-up-3.align-center-middle
+      - if @grants.present?
+        - @grants.each do |grant|
+          .cell
+            = render 'card', grant: grant
+      - else
+        .small-12.text-center
+          %h5
+            There are no open grants available.

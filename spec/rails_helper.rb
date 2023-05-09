@@ -102,6 +102,15 @@ RSpec.configure do |config|
   # Pause for AJAX actions to complete
   # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara
   config.include WaitForAjax, type: :system
+
+  # Pause for Turbo actions to complete
+  config.include WaitForTurbo, type: :system
+
+  # i18n / locales
+  config.include AbstractController::Translation
+
+  # use dom_id helper in system specs
+  config.include ActionView::RecordIdentifier, type: :system
 end
 
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]
@@ -117,4 +126,14 @@ end
 
 def scroll_to_half_of_the_page
   page.execute_script 'window.scrollBy(0,2000)'
+end
+
+def tom_select_input(label_dom_id:, value:, select_option: true)
+  find(label_dom_id).click
+  send_keys(value)
+  pause(time: 0.35) # The lowest viable time
+  if select_option == true
+    send_keys(:tab)
+    pause
+  end
 end

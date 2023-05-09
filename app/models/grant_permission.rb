@@ -26,6 +26,7 @@ class GrantPermission < ApplicationRecord
   validate :prevent_last_admin_edit, on: :update, if: -> { role_changed? && role_changed_from_admin? && is_last_grant_admin? }
 
   scope :with_user, -> { includes(:user) }
+  scope :contacts,  -> { where(contact: true) }
 
   def self.role_by_user_and_grant(user:, grant:)
     return GrantPermission::ROLES[:admin] if user.system_admin?
@@ -35,11 +36,11 @@ class GrantPermission < ApplicationRecord
   private
 
   def prevent_last_admin_edit
-    errors.add(:base, 'There must be at least one admin on the grant')
+    errors.add(:base, 'There must be at least one Admin on the grant. This user\'s role cannot be changed')
   end
 
   def prevent_last_admin_destroy
-    errors.add(:base, 'This user\'s role cannot be deleted.')
+    errors.add(:base, 'There must be at least one Admin on the grant')
     throw :abort
   end
 
