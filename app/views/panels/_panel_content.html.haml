@@ -28,7 +28,7 @@
             = sort_link(query, :composite_score, 'Composite Score')
         - if user_has_grant_permissions
           .cell.small-12.medium-1
-            Awarded
+            = sort_link(query, :awarded, 'Awarded', { default_order: :desc }, { title: 'Sort on Awarded' })
 
       .rows{ data: { controller: 'checkbox-submit' } }
         - @submissions.each do |submission|
