@@ -15,21 +15,34 @@ RSpec.describe Review, type: :model do
   let(:new_reviewer)   { create(:grant_reviewer, grant: grant)}
   let(:submission)     { grant.submissions.first }
   let(:assigner)       { grant.administrators.first }
-  let(:review)         { build(:review, assigner: assigner,
-                                        reviewer: grant.grant_reviewers.first.reviewer,
-                                        submission: submission) }
-  let(:invalid_review) { build(:review, assigner: assigner,
-                                        reviewer: grant.grant_reviewers.first.reviewer,
-                                        submission: submission) }
-  let(:draft_review) { build(:review, assigner: assigner,
-                               reviewer: grant.grant_reviewers.first.reviewer,
-                               submission: submission) }
+  let(:review)         do
+    build(:review, assigner: assigner,
+                   reviewer: grant.grant_reviewers.first.reviewer,
+                   submission: submission)
+  end
+  let(:invalid_review) do
+    build(:review, assigner: assigner,
+                   reviewer: grant.grant_reviewers.first.reviewer,
+                   submission: submission)
+  end
   let(:system_admin)   { create(:system_admin_saml_user) }
   let(:invalid_user)   { create(:saml_user) }
 
-  let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.administrators.first,
-                                                                                                           submission: grant.submissions.first,
-                                                                                                           reviewer: grant.reviewers.first)}
+  let(:scored_review_with_criteria_reviews) do
+    create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.administrators.first,
+                                                                 submission: grant.submissions.first,
+                                                                 reviewer: grant.reviewers.first)
+  end
+  let(:incomplete_draft_review) do
+    create(:draft_review_with_incomplete_criteria_review, assigner: assigner,
+                                                          reviewer: grant.grant_reviewers.first.reviewer,
+                                                          submission: submission)
+  end
+  let(:scored_draft_review) do
+    create(:draft_review_with_scored_criteria_review, assigner: assigner,
+                                                      reviewer: grant.grant_reviewers.first.reviewer,
+                                                      submission: submission)
+  end
 
   describe 'validations' do
     context '#new' do
@@ -141,6 +154,17 @@ RSpec.describe Review, type: :model do
         end.to (change{review.scored_criteria_scores.count}.by(-1))
       end
     end
+
+    describe '#draft update' do
+      it 'does not require scores' do
+        incomplete_draft_review.update(overall_impact_score: nil)
+        expect(incomplete_draft_review).to be_valid
+      end
+      it 'updates criteria reviews to published when exiting draft' do
+        scored_draft_review.update(draft: false)
+        expect(scored_draft_review.criteria_reviews).to all have_attributes(draft: false)
+      end
+    end
   end
 
 
@@ -159,8 +183,8 @@ RSpec.describe Review, type: :model do
                                                         assigner: assigner,
                                                         reviewer: reviewer2.reviewer)
       @reminded_a_day_ago  = create(:reminded_review, submission: submission,
-                                                        assigner: assigner,
-                                                        reviewer: reviewer3.reviewer)
+                                                      assigner: assigner,
+                                                      reviewer: reviewer3.reviewer)
       @reminded_a_week_ago = create(:incomplete_review, submission: submission,
                                                         assigner: assigner,
                                                         reviewer: reviewer4.reviewer,

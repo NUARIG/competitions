@@ -15,7 +15,7 @@ module GrantSubmissions
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
         respond_to do |format|
           format.html { render :index }
-          format.pdf  { render pdf:                     "reviews_#{@submission.submitter.last_name}_#{@submission.title.truncate_words(5, omission: '').gsub(/\W/,'-')}",
+          format.pdf  do render pdf:                     "reviews_#{@submission.submitter.last_name}_#{@submission.title.truncate_words(5, omission: '').gsub(/\W/,'-')}",
                                disable_smart_shrinking: true,
                                disable_external_links:  true,
                                disable_internal_links:  true,
@@ -23,7 +23,7 @@ module GrantSubmissions
                                layout:                  'pdf',
                                print_media_type:        true,
                                template:                'grant_submissions/submissions/reviews/index',
-                               formats:                 [:html] }
+                               formats:                 [:html] end
         end
       end
 
@@ -66,19 +66,16 @@ module GrantSubmissions
         authorize @review
         respond_to do |format|
           if @review.update(review_params)
-            if params['commit'] == 'Save Your Review'
-              flash.now[:alert] = 'Review Saved'
-              build_criteria_reviews
-              format.html { render :edit }
-            else
+            format.js { render json: { success: true } }
+            format.html do
               set_redirect_path
-              format.html { redirect_to @redirect_path,
-                            notice: 'Review was successfully updated.' }
+              redirect_to @redirect_path,
+                          notice: 'Review was successfully updated.'
             end
             format.json { render :show, status: :ok, location: @review }
           else
+            format.js   { render json: { errors: @review.errors.full_messages, success: false } }
             flash.now[:alert] = @review.errors.full_messages
-            build_criteria_reviews
             format.html { render :edit }
             format.json { render json: @review.errors, status: :unprocessable_entity }
           end
@@ -122,15 +119,16 @@ module GrantSubmissions
       end
 
       def review_params
-        params[:review][:draft] = false if params[:commit] == "Submit Your Review"
         params.require(:review).permit(:overall_impact_score,
                                        :overall_impact_comment,
                                        :draft,
-                                       criteria_reviews_attributes: [
-                                        :id,
-                                        :criterion_id,
-                                        :score,
-                                        :comment])
+                                       criteria_reviews_attributes: %i[
+                                         id
+                                         criterion_id
+                                         score
+                                         comment
+                                         draft
+                                       ])
       end
     end
   end

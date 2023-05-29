@@ -20,6 +20,7 @@
           Exceptional
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
           = ff.hidden_field :criterion_id
+          = ff.hidden_field :draft
           .score_value{class: "score_value_#{value}"}
             = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}", required:criterion.is_mandatory, disabled: disabled })
             = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}", disabled: disabled }

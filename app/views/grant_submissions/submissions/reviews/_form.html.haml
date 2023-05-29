@@ -5,7 +5,6 @@
     Review period is closed
 
 = form_for (review), url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } }, local: true, data: { turbo: false } do |f|
-  = review.draft
   - if review.criteria_reviews.any?
     %h3
       Review Criteria
@@ -22,5 +21,25 @@
       Please check the required scores.
 
   .actions
-    = f.submit 'Submit Your Review', class: 'button', disabled: disabled
-    = f.submit 'Save Your Review', class: 'button', disabled: disabled
+    = button_tag 'Save Your Review', id: 'async-save', type: 'button', onclick: "saveForm()", class: 'secondary button', disabled: disabled
+    = f.button "Submit Your Review", class: 'success button', name:"review[draft]", value: "false", disabled: disabled
+
+- if disabled == false
+  :javascript
+    window.setInterval(saveForm, 60000);
+    async function saveForm() {
+      var asyncSave = document.getElementById("async-save")
+      asyncSave.toggleAttribute("disabled")
+      var form = document.getElementById("edit_review_#{review.id}")
+      let response = await fetch("#{grant_submission_review_url}", {
+        method: 'PATCH',
+        body: new FormData(form)
+      });
+      let result = await response.json();
+      if(result.success) { $("#save").text("Review Saved"); }
+      else { $("#save").text("Review Could Not Be Saved"); }
+
+      asyncSave.toggleAttribute("disabled")
+      $("#save").fadeToggle();
+      window.setTimeout(function(){ $("#save").fadeToggle(); }, 3000);
+    };

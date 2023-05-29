@@ -17,13 +17,17 @@ class CriteriaReview < ApplicationRecord
   validates_numericality_of :score, less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                     unless: -> { score.blank? }
 
-  validate :score_if_mandatory,   if: -> { criterion.is_mandatory? }
+  validate :score_if_mandatory,   if: -> { criterion.is_mandatory? && !draft }
 
-  validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? }
+  validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? || draft }
 
   scope :by_criterion,  -> (criterion)  { where(criterion: criterion.id) }
   scope :by_submission, -> (submission) { joins(:submission).where('grant_submission_submission_id = ?', submission.id) }
   scope :scored,        -> { where.not(score: nil) }
+
+  def exit_draft
+    self.draft = false
+  end
 
   private
 

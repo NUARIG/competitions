@@ -1,6 +1,8 @@
 - content_for(:page_title, "Reviewing #{@submission.title}")
 
 %h1 Reviewer Form
+#save{:style => "position:fixed; right:2%; top:2%;", :hidden => true}
+  Review Saved
 
 = render 'review_header', locals: { grant: @grant, submission: @submission, review: @review }
 

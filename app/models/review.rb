@@ -2,11 +2,12 @@ class Review < ApplicationRecord
   include WithScoring
   include Discard::Model
 
-  after_commit     :update_submission_averages, on: %i[create update destroy], if: :is_complete?
-  after_touch      :update_submission_averages, if: :is_complete?
+  after_commit      :update_submission_averages, on: %i[create update destroy], if: :is_complete?
+  before_validation :update_criteria_reviews,    on: %i[update], if: :will_save_change_to_draft?
+  after_touch       :update_submission_averages, if: :is_complete?
 
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
-                  meta:     { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
+                  meta: { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
 
   belongs_to :assigner,       class_name: 'User',
                               foreign_key: 'assigner_id'
@@ -22,7 +23,7 @@ class Review < ApplicationRecord
                               source: :criteria
   has_many :applicants,       through: :submission
 
-  has_many :criteria_reviews, -> { order("criteria_reviews.created_at") },
+  has_many :criteria_reviews, -> { order('criteria_reviews.created_at') },
                               dependent: :destroy
   has_many :criteria,         through: :criteria_reviews
 
@@ -51,14 +52,15 @@ class Review < ApplicationRecord
   scope :with_reviewer,                           -> { includes(:reviewer) }
   scope :with_grant,                              -> { includes(submission: :grant) }
   scope :with_grant_and_submitter_and_applicants, -> { includes(submission: [:grant, :submitter, :applicants]) }
-  scope :by_grant,                                -> (grant) { with_grant.where(grants: { id: grant.id}) }
+  scope :by_grant,                                ->(grant) { with_grant.where(grants: { id: grant.id}) }
 
   scope :order_by_created_at,                     -> { order(created_at: :desc) }
-  scope :by_reviewer,                             -> (reviewer)   { where(reviewer_id: reviewer.id) }
-  scope :by_submission,                           -> (submission) { where(grant_submission_submission_id: submission.id) }
+  scope :by_reviewer,                             ->(reviewer)   { where(reviewer_id: reviewer.id) }
+  scope :by_submission,                           ->(submission) { where(grant_submission_submission_id: submission.id) }
   scope :submitted,                               -> { where(draft: false) }
+  scope :unsubmitted,                             -> { where(draft: true) }
   scope :completed,                               -> { where.not(overall_impact_score: nil).submitted }
-  scope :incomplete,                              -> { where(overall_impact_score: nil) }
+  scope :incomplete,                              -> { where(overall_impact_score: nil).or(unsubmitted) }
   # TODO: could be used to throttle reminders to a given timeframe
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
@@ -85,6 +87,10 @@ class Review < ApplicationRecord
   end
 
   private
+
+  def update_criteria_reviews
+    criteria_reviews.each(&:exit_draft)
+  end
 
   def reviewer_is_a_grant_reviewer
     errors.add(:reviewer, :is_not_a_reviewer) unless grant.reviewers.include?(reviewer)
