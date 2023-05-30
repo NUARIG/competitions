@@ -2,7 +2,7 @@ module GrantSubmissions::SubmissionsHelper
   def review_data(submission)
     if submission.reviews.any?
       reviews = submission.reviews.to_a
-      OpenStruct.new(completed_review_count: reviews.count(&:is_complete?),
+      OpenStruct.new(completed_review_count: reviews.completed.count,
                      assigned_review_count: reviews.count,
                      overall_impact_average: submission.average_overall_impact_score,
                      composite_score: submission.composite_score)

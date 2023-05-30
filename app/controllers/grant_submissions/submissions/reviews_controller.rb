@@ -76,6 +76,7 @@ module GrantSubmissions
           else
             format.js   { render json: { errors: @review.errors.full_messages, success: false } }
             flash.now[:alert] = @review.errors.full_messages
+            build_criteria_reviews
             format.html { render :edit }
             format.json { render json: @review.errors, status: :unprocessable_entity }
           end

@@ -62,12 +62,14 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let!(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let!(:submission)   { grant.submissions.first }
     let(:grant_admin)   { grant.grant_permissions.role_admin.first.user }
-    let(:scored_review) { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
-                                                                                       assigner:   grant_admin,
-                                                                                       reviewer:   grant.reviewers.first) }
-    let(:incomplete_review) { create(:incomplete_review, submission: submission,
-                                                     assigner: grant_admin,
-                                                     reviewer: grant.reviewers.first) }
+    let(:scored_review) { 
+      create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                   assigner: grant_admin,
+                                                                   reviewer: grant.reviewers.first) }
+    let(:incomplete_review) { 
+      create(:incomplete_review, submission: submission,
+                                 assigner: grant_admin,
+                                 reviewer: grant.reviewers.first) }
 
     context 'published grant' do
       describe '#destroy' do
@@ -122,12 +124,14 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let(:submission)        { grant.submissions.first }
     let(:grant_admin)       { grant.grant_permissions.role_admin.first.user }
 
-    let(:scored_review)     { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
-                                                                                           assigner:   grant_admin,
-                                                                                           reviewer:   grant.reviewers.first) }
-    let(:incomplete_review) { create(:incomplete_review, submission: submission,
-                                                         assigner: grant_admin,
-                                                         reviewer: grant.reviewers.first) }
+    let(:scored_review)     { 
+      create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                   assigner: grant_admin,
+                                                                   reviewer: grant.reviewers.first) }
+    let(:incomplete_review) { 
+      create(:incomplete_review, submission: submission,
+                                 assigner: grant_admin,
+                                 reviewer: grant.reviewers.first) }
 
     context 'with no reviews' do
       it 'may be unsubmitted' do
@@ -162,44 +166,58 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let(:grant_reviewer)    { create(:grant_reviewer, grant: grant) }
     let(:reviewer1)         { grant.reviewers.first }
     let(:reviewer2)         { grant_reviewer.reviewer }
+    let(:reviewer3)         { create(:grant_reviewer, grant: grant) }
     let(:grant_submission)  { grant.submissions.first }
-    let(:scored_review)     { create(:scored_review_with_scored_mandatory_criteria_review, submission: grant_submission,
-                                                                                           assigner: grant_admin,
-                                                                                           reviewer: reviewer1) }
-    let(:incomplete_review) { create(:incomplete_review, submission: grant_submission,
-                                                         assigner: grant_admin,
-                                                         reviewer: reviewer2) }
-    let(:add_score)         { create(:scored_criteria_review, review: incomplete_review,
-                                                              criterion: grant.criteria.first)}
+    let(:scored_review)     { 
+      create(:scored_review_with_scored_mandatory_criteria_review, submission: grant_submission,
+                                                                   assigner: grant_admin,
+                                                                   reviewer: reviewer1) }
+    let(:incomplete_review) { 
+      create(:incomplete_review, submission: grant_submission,
+                                 assigner: grant_admin,
+                                 reviewer: reviewer2) }
+    let(:scored_draft_review) {
+      create(:draft_review_with_scored_criteria_review, submission: grant_submission,
+                                                        assigner: grant_admin,
+                                                        reviewer: reviewer3.reviewer) }
+    let(:add_score) { 
+      create(:scored_criteria_review, review: incomplete_review,
+                                      criterion: grant.criteria.first)}
 
 
     before(:each) do
         scored_review.save
+        scored_draft_review.save
         incomplete_review.save
     end
 
     context '#overall_impact_scores' do
       it 'returns overall_impact_score for scored and incomplete reviews' do
-        expect(grant_submission.overall_impact_scores.length).to be 2
+        expect(grant_submission.overall_impact_scores.length).to be 3
         expect(grant_submission.overall_impact_scores).to include scored_review.overall_impact_score
+        expect(grant_submission.overall_impact_scores).to include scored_draft_review.overall_impact_score
         expect(grant_submission.overall_impact_scores).to include nil
+        expect(grant_submission.average_overall_impact_score).to eql(scored_review.overall_impact_score)
       end
     end
 
     context '#all_scored_criteria' do
       it 'returns only scored criteria scores' do
         expect(grant_submission.all_scored_criteria).not_to include nil
-        expect(grant_submission.all_scored_criteria.length).to be scored_review.criteria.length
+        expect(grant_submission.all_scored_criteria.length).to be scored_review.criteria.length +
+                                                                  scored_draft_review.criteria.length
         expect do
           add_score
         end.to change{grant_submission.reload.all_scored_criteria.length}.by 1
+        scores = scored_review.criteria.pluck(:score)
+        expect(grant_submission.composite_score).to eql((scores.sum.to_f / scores.count).round(2))
       end
     end
 
     context '#scores_by_criterion' do
       it 'returns only scored criteria score' do
         expect(grant_submission.scores_by_criterion(grant.criteria.first)).not_to include nil
-        expect(grant_submission.scores_by_criterion(grant.criteria.first).length).to be 1
+        expect(grant_submission.scores_by_criterion(grant.criteria.first).length).to be 2
         expect do
           add_score
         end.to change{grant_submission.reload.scores_by_criterion(grant.criteria.first).length}.by 1
