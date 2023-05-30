@@ -136,13 +136,13 @@ RSpec.describe Review, type: :model do
     describe '#scored criteria review' do
       it 'calculates a criterion average score' do
         scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
-        expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
+        expect(scored_review_with_criteria_reviews.composite_score).to eql((scores.sum.to_f / scores.count).round(2))
       end
 
       it 'includes non-mandatory scores in criterion average score' do
         scored_review_with_criteria_reviews.criteria.first.update(is_mandatory: false)
         scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
-        expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
+        expect(scored_review_with_criteria_reviews.composite_score).to eql((scores.sum.to_f / scores.count).round(2))
       end
 
       it 'does not include unscored scores in criterion average score' do
@@ -160,6 +160,14 @@ RSpec.describe Review, type: :model do
         incomplete_draft_review.update(overall_impact_score: nil)
         expect(incomplete_draft_review).to be_valid
       end
+      
+      it 'does not update composite or average score of submission' do
+        incomplete_draft_review.update(overall_impact_score: 9)
+        cr = incomplete_draft_review.criteria_reviews.first
+        cr.update(score: 5)
+        expect(submission).to have_attributes(composite_score: nil, average_overall_impact_score: nil)
+      end
+      
       it 'updates criteria reviews to published when exiting draft' do
         scored_draft_review.update(draft: false)
         expect(scored_draft_review.criteria_reviews).to all have_attributes(draft: false)
