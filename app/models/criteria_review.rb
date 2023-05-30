@@ -3,7 +3,7 @@ class CriteriaReview < ApplicationRecord
   has_paper_trail versions: { class_name: 'PaperTrail::CriteriaReviewVersion' },
                   meta:     { review_id: :review_id }
   belongs_to :criterion
-  belongs_to :review, touch: true
+  belongs_to :review, touch: true, inverse_of: :criteria_reviews
 
   has_one :submission, through: :review
   has_one :grant,      through: :review
@@ -17,17 +17,15 @@ class CriteriaReview < ApplicationRecord
   validates_numericality_of :score, less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                     unless: -> { score.blank? }
 
-  validate :score_if_mandatory,   if: -> { criterion.is_mandatory? && !draft }
+  validate :score_if_mandatory,   if: -> { criterion.is_mandatory? && !review.draft }
 
-  validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? || draft }
+  validate :criteria_is_from_grant
+
+  validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? || review.draft }
 
   scope :by_criterion,  -> (criterion)  { where(criterion: criterion.id) }
   scope :by_submission, -> (submission) { joins(:submission).where('grant_submission_submission_id = ?', submission.id) }
   scope :scored,        -> { where.not(score: nil) }
-
-  def exit_draft
-    self.draft = false
-  end
 
   private
 

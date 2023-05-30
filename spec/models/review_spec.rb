@@ -167,10 +167,10 @@ RSpec.describe Review, type: :model do
         cr.update(score: 5)
         expect(submission).to have_attributes(composite_score: nil, average_overall_impact_score: nil)
       end
-      
-      it 'updates criteria reviews to published when exiting draft' do
-        scored_draft_review.update(draft: false)
-        expect(scored_draft_review.criteria_reviews).to all have_attributes(draft: false)
+
+      it 'does not update if criteria_review scores are missing and exiting draft' do
+        incomplete_draft_review.update(draft: false)
+        expect(incomplete_draft_review).not_to be_valid
       end
     end
   end

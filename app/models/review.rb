@@ -3,7 +3,6 @@ class Review < ApplicationRecord
   include Discard::Model
 
   after_commit      :update_submission_averages, on: %i[create update destroy], if: :is_complete?
-  before_validation :update_criteria_reviews,    on: %i[update], if: :will_save_change_to_draft?
   after_touch       :update_submission_averages, if: :is_complete?
 
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
@@ -24,11 +23,12 @@ class Review < ApplicationRecord
   has_many :applicants,       through: :submission
 
   has_many :criteria_reviews, -> { order('criteria_reviews.created_at') },
-                              dependent: :destroy
+           dependent: :destroy,
+           inverse_of: :review
   has_many :criteria,         through: :criteria_reviews
 
   accepts_nested_attributes_for :criteria_reviews
-
+  validates_associated :criteria_reviews, if: :will_save_change_to_draft?
   validates_presence_of     :reviewer
   validates_presence_of     :overall_impact_score, unless: -> { new_record? || draft }
 
@@ -87,10 +87,6 @@ class Review < ApplicationRecord
   end
 
   private
-
-  def update_criteria_reviews
-    criteria_reviews.each(&:exit_draft)
-  end
 
   def reviewer_is_a_grant_reviewer
     errors.add(:reviewer, :is_not_a_reviewer) unless grant.reviewers.include?(reviewer)

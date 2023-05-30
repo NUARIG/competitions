@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_19_113513) do
+ActiveRecord::Schema.define(version: 2023_03_23_122123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2023_05_19_113513) do
     t.string "name", null: false
     t.text "body"
     t.string "record_type", null: false
-    t.integer "record_id", null: false
+    t.bigint "record_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
@@ -115,7 +115,6 @@ ActiveRecord::Schema.define(version: 2023_05_19_113513) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "draft", default: true, null: false
     t.index ["criterion_id"], name: "index_criteria_reviews_on_criterion_id"
     t.index ["review_id"], name: "index_criteria_reviews_on_review_id"
   end
