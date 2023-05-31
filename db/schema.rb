@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2023_03_23_122123) do
     t.string "name", null: false
     t.text "body"
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
+    t.integer "record_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2023_03_23_122123) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.integer "blob_id", null: false
+    t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(version: 2023_03_23_122123) do
   end
 
   create_table "grant_reviewer_invitations", force: :cascade do |t|
-    t.integer "grant_id", null: false
+    t.bigint "grant_id", null: false
     t.bigint "invited_by_id", null: false
     t.bigint "invitee_id"
     t.string "email", null: false
@@ -380,7 +380,7 @@ ActiveRecord::Schema.define(version: 2023_03_23_122123) do
   end
 
   create_table "grant_submission_submission_applicants", force: :cascade do |t|
-    t.integer "grant_submission_submission_id", null: false
+    t.bigint "grant_submission_submission_id", null: false
     t.bigint "applicant_id", null: false
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
