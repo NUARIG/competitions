@@ -1,6 +1,6 @@
 # This file is used to populate the deploy.rb file
 # for each environment (https://github.com/capistrano/rails).
-application: #competitions
+application: # competitions
 repository: # https://github.com/NUARIG/competitions.git
 deployer: # <USER_ON_DEPLOYMENT_SERVER>
 deployer_roles: # Capistrano roles
@@ -10,14 +10,12 @@ deployer_roles: # Capistrano roles
 deploy_to: # <TARGET_DIRECTORY_ON_DEPLOYMENT_SERVER>
 linked_files: # <ARRAY_OF_SYMLINKED_FILES>
   # - app/assets/stylesheets/_settings
-  # - config/master.key
-  # - config/attribute-map.yml
   # - config/competitions_config.yml
-  # - config/database.yml
-  # - config/secrets.yml
   # - config/storage.yml
+  # - config/database.yml
   # - config/environments/production.yml
   # - config/environments/staging.yml
+  # - config/secrets.yml
 development:
   server_name: # e.g. localhost
 test:
