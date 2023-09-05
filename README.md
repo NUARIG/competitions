@@ -14,14 +14,14 @@ The following are required to install competitions:
   * Mailcatcher(https://mailcatcher.me) is used in the development environment for emails.
   * Postgres database
   * RVM installed on the server
-  # Yarn installed on the server
+  * Yarn installed on the server
   * Capistrano for deployment
 
 
 # Compatibility
 
   * Ruby:   3.0.2
-  * Rails:  6.1.4
+  * Rails:  6.1.7
 
 
 # Shibboleth IDP
@@ -34,8 +34,6 @@ The following are required to install competitions:
 
 
 # Installation
-
-
 
 Configure the following files with your instance's attributes and store the files on the server.
 
@@ -57,10 +55,10 @@ A default [\_settings.scss file](https://get.foundation/sites/docs/sass.html#the
 ### config/competitions_config.yml
 The application's configuration has been consolidated into this file. Here you will configure your instance's values for your mailers, saml authentication, and application variables. Keys, passwords, and secrets will be stored in /config/secrets.yml
 
-Further information on the configurations associated with the [devise_saml_authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable).
+Also see further information regarding [devise_saml_authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable) configurations.
 
 ### config/database.yml
-You will need to configure your database connection. For more details please see the rails docs (https://guides.rubyonrails.org/v6.0.3.4/configuring.html#configuring-a-database).
+You will need to configure your database connection. For more details please see [the rails docs](https://guides.rubyonrails.org/v6.1.7.6/configuring.html#configuring-a-database).
 ```
 development:
   adapter: # postgresql
@@ -72,9 +70,9 @@ development:
 
 ### config/deploy_config.yml
 
-Here you will find instance specific values for Capistrano deployment of the application (https://github.com/capistrano/rails).
+Here you will find instance specific values for [Capistrano deployment](https://github.com/capistrano/rails) of the application.
 
-If you are symlinking your instance's configuration files on your deployment server, these should be included under the linked_files in config/deploy_config.yml.
+Any symlinked configuration files on your instance's deployment server should be included under the `linked_files` in the config/deploy_config.yml.
 
 ### config/storage.yml
 You will need to configure your instance's storage. The configurations for local or AWS storage are included. It is possible to use other services with further changes.
@@ -105,7 +103,7 @@ The included staging and production environment files require the following to b
   * time_zone
 
 ### config/secrets.yml
-Keys, passwords, secrets, and other sensitive information in a secure file.
+Keep keys, passwords, secrets, and other sensitive information in this secure file.
 
 You could use config/credentials.yml for this purpose also.
 https://guides.rubyonrails.org/security.html#environmental-security
