@@ -93,6 +93,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
     scenario 'grant with reviews is not editable' do
       review.touch
       login_as(admin2, scope: :saml_user)
+
       visit criteria_grant_path(grant_with_submission)
       criterion = grant_with_submission.criteria.first
       expect(page).to have_content 'This form is locked because a review has already been submitted'

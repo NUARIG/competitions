@@ -53,16 +53,16 @@
       #criteria.grid-x
         .cell
           = f.fields_for :criteria, @criteria do |criterion|
-            = render partial: 'criterion_fields', locals: { f: criterion }
+            = render partial: 'grants/criteria/criterion_fields', locals: { f: criterion }
 
           
-      - unless @disable_fields
+      - if @editable
         .links
           = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small'
 
       .cell.overall_impact_score
         = render partial: 'overall_impact_fields'
 
-      - unless @disable_fields        
+      - if @editable        
         .cell
           = f.submit 'Save Changes', class: 'button'

@@ -15,7 +15,7 @@ module Grants
       #  current_user does not have grant_editor_access permissions
       #  or
       #  there are completed reviews
-      @disable_fields = !(policy(@grant).grant_editor_access? && @grant.reviews.completed.none?)
+      @editable = (policy(@grant).grant_editor_access? && @grant.reviews.completed.none?)
     end
 
     def update
