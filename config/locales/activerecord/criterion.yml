@@ -9,6 +9,7 @@ en:
     errors:
       models:
         criterion:
+          may_not_change_criterion_after_reviews_submitted: This grant has recieved completed reviews. Its review criteria cannot be changed. 
           attributes:
   helpers:
     label:

@@ -1,7 +1,5 @@
 - content_for(:page_title, 'Edit Review Form')
 
-- disable_fields = !policy(@grant).grant_editor_access?
-
 = render 'shared/grant_header', { grant: @grant, section_title: 'Review Form' }
 
 .grid-x
@@ -19,6 +17,10 @@
 = render 'shared/grant_edit_tabbed_menu', { grant: @grant }
 
 .tabs-panel.is-active
+  - if @grant.reviews.completed.any?
+    %div.callout.warning
+      This form is locked because #{@grant.reviews.one? ? 'a review has' : 'reviews have' } already been submitted.
+
   = form_for @grant, url: update_criteria_grant_path(@grant), local: true, data: { turbo: false } do |f|
     .grid-x
       .cell
@@ -53,14 +55,14 @@
           = f.fields_for :criteria, @criteria do |criterion|
             = render partial: 'criterion_fields', locals: { f: criterion }
 
-      - unless disable_fields
+          
+      - unless @disable_fields
         .links
           = link_to_add_association 'Add a New Review Criterion', f, :criteria, class: 'button hollow small'
 
+      .cell.overall_impact_score
+        = render partial: 'overall_impact_fields'
 
-        .cell.overall_impact_score
-          = render partial: 'overall_impact_fields'
-
-
+      - unless @disable_fields        
         .cell
           = f.submit 'Save Changes', class: 'button'
