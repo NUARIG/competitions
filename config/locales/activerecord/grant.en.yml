@@ -7,11 +7,14 @@ en:
         publish_date: Publish Date
         submission_open_date: Submission Open Date
         submission_close_date: Submission Close Date
+        review_open_date: Review Open Date
         review_close_date: Review Close Date
     errors:
       models:
         grant:
-          <<: *grant
+          attributes:
+            <<: *grant
+          invalid_date: is not valid.
     models:
       grant:
         one: grant
