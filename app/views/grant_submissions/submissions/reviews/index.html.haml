@@ -32,8 +32,6 @@
           %p.small
             = link_to "Save this page as a PDF #{image_tag 'PDF_24.png', class: 'icon' }".html_safe, grant_submission_reviews_path(@grant, @submission, { format: 'pdf' } )
 
-
-
     .grid-x.grid-padding-y
       .cell.small-12
         - if @reviews.empty?
@@ -44,7 +42,6 @@
             - elsif @submission.draft?
               This submission must be completed before it can be reviewed.
         - else
-
           = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
           %table.hover.stack
@@ -63,54 +60,6 @@
             %tbody
               = render @reviews
 
-    - if @reviews.completed.any?
+          - if @reviews.completed.any?
+            = render partial: 'shared/reviews_by_criteria', locals: { grant: @grant, reviews: @reviews.completed, show_review_comments: true }
 
-      .grid-x.grid-padding-y
-        .cell.small-12
-          %h3
-            Criteria Scores and Comments
-
-      - @grant.criteria.each do |criterion|
-        .grid-x.grid-y.criterion
-          .row
-            .cell.small-12
-              %h5{id: "criterion-#{criterion.id}"}
-                = criterion.name
-          .row
-            .cell.small-12.reviews
-              - @reviews.completed.each do |review|
-                .grid-x.grid-margin-x.review{id: "review-#{review.id}" }
-                  .cell.small-12.medium-2.reviewer.text-right
-                    = full_name(review.reviewer)
-                  .cell.small-12.medium-10.responses
-                    .grid-y
-                      - scored_criterion = review.criteria_reviews.to_a.detect {|score| score.criterion_id == criterion.id}
-                      .row{id: "criterion-#{criterion.id}-score"}
-                        - if scored_criterion.score.present?
-                          = scored_criterion.score
-                        - else
-                          %span{ title: 'No Score' }
-                            NS
-                      - if scored_criterion.comment.present?
-                        .row{id: "criterion-#{criterion.id}-comment"}
-                          = simple_format(scored_criterion.comment)
-
-
-      .grid-x.grid-padding-y
-        .cell.small-12
-          %h3#overall-impact
-            Overall Impact Scores and Comments
-
-          #overall-impact.grid-x.grid-y
-            .row
-              .cell.small-12.reviews
-                - @reviews.completed.each do |review|
-                  .grid-x.grid-margin-x.review
-                    .cell.small-12.medium-2.reviewer
-                      = full_name(review.reviewer)
-                    .cell.small-12.medium-10.responses
-                      .grid-y
-                        .row
-                          = review.overall_impact_score
-                        .row
-                          = review.overall_impact_comment

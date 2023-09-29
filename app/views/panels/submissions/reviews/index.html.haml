@@ -32,9 +32,9 @@
       = full_name(@submission.submitter)
 
   .cell.small-12.medium-3
+    
     = render partial: 'panels/submissions/card', locals: { submission: @submission, section: 'reviews', grant: @grant }
 
-.grid-x.grid-margin-x
   .small-12.cell
     %h4
       Summary of Reviews
@@ -60,60 +60,10 @@
       %tbody
         = render @reviews
 
-    .grid-container
-      %h4#criteria-reviews
-        Scores
-        = ' and Comments' if @panel.show_review_comments?
+    = render partial: 'shared/reviews_by_criteria', locals: { grant: @grant, reviews: @reviews, show_review_comments: @panel.show_review_comments? }
 
-
-    - @grant.criteria.each do |criterion|
-      .grid-x.grid-y.criterion
-        .row
-          .cell.small-12
-            %h5{id: "criterion-#{criterion.id}"}
-              = criterion.name
-        .row
-          .cell.small-12.reviews
-            - @reviews.each do |review|
-              .grid-x.grid-margin-x.review{id: "review-#{review.id}" }
-                .cell.small-12.medium-2.large-2.reviewer.text-right
-                  = full_name(review.reviewer)
-                .cell.small-12.medium-1.large-2.score
-                  - scored_criterion = review.criteria_reviews.to_a.detect {|score| score.criterion_id == criterion.id}
-                  .row{id: "criterion-#{criterion.id}-score"}
-                    - if scored_criterion.score.present?
-                      = scored_criterion.score
-                    - else
-                      %span{ title: 'No Score' }
-                        NS
-                - if @panel.show_review_comments?
-                  .cell.small-12.medium-9.large-8.comment
-                    - if scored_criterion.comment.present?
-                      .row{id: "criterion-#{criterion.id}-comment"}
-                        = simple_format(scored_criterion.comment)
-        %hr
-
-    .grid-x.grid-padding-y
-      .cell.small-12
-        %h4#overall-impact-scores
-          Overall Impact Scores
-          = ' and Comments' if @panel.show_review_comments?
-
-        #overall-impact.grid-x.grid-y
-          .row
-            .cell.small-12.reviews
-              - @reviews.each do |review|
-                .grid-x.grid-margin-x.review
-                  .cell.small-12.medium-2.reviewer.text-right
-                    = full_name(review.reviewer)
-                  .cell.small-12.medium-10.responses
-                    .grid-y
-                      .row
-                        = review.overall_impact_score
-                      - if @panel.show_review_comments?
-                        .row
-                          = review.overall_impact_comment
-
+.grid-x.grid-margin-y
+  .cell
     %h6
       = link_to 'Return to Submission', grant_panel_submission_path(@grant, @submission)
     %h6
