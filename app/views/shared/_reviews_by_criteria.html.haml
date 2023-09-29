@@ -1,0 +1,38 @@
+.grid-container
+  %h4#criteria-reviews
+    Scores
+    = ' and Comments' if show_review_comments
+
+  - grant.criteria.each do |criterion|
+    %h5{ id: "criterion-#{criterion.id}" }
+      = criterion.name
+
+    - @reviews.completed.each do |review|
+      .grid-x.grid-margin-x.review{ id: "review-#{review.id}" }
+        .cell.small-12.medium-2.medium-text-right.reviewer
+          = full_name(review.reviewer)
+        .cell.small-12.medium-9.responses
+          - scored_criterion = review.criteria_reviews.detect { |score| score.criterion_id == criterion.id }
+          .score{ id: "criterion-#{criterion.id}-score" }
+            = scored_criterion&.score.present? ? scored_criterion.score : no_score_abbreviation
+          - if show_review_comments && scored_criterion&.comment.present?
+            .comment{ id: "criterion-#{criterion.id}-comment" }
+              = simple_format(scored_criterion.comment)
+
+  %hr
+
+  #overall-impact-scores
+    %h4
+      Overall Impact Scores
+      = ' and Comments' if show_review_comments
+
+    - @reviews.completed.each do |review|
+      .grid-x.grid-margin-x
+        .cell.small-12.medium-2.medium-text-right
+          = full_name(review.reviewer)
+        .cell.small-12.medium-9
+          .score
+            = review.overall_impact_score
+          - if show_review_comments
+            .comment
+              = review.overall_impact_comment
