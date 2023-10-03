@@ -3,6 +3,19 @@
     font-size: .975em;
   }
 
+  .reviewer,
+  .responses {
+    /* account for https://github.com/mileszs/wicked_pdf/issues/1041 */
+    display: inline-block !important;
+    float: left !important;
+  }
+
+  #reviews-overview {  
+    hr {
+      padding: 1em !important;
+    }
+  }
+
   .pdf-hide {
     display: none !important;
   }
