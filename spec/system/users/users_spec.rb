@@ -79,6 +79,8 @@ RSpec.describe 'Users', type: :system, js: true  do
         scenario 'reverse sort by current_sign_in_at, unconfirmed last' do
           visit users_path
           click_on(I18n.t('activerecord.attributes.user.current_sign_in_at'))
+          pause
+
           within 'tr.user:nth-child(8)' do
             expect(page).to have_text "#{sortable_full_name(@unconfirmed_registered_user)} #{@unconfirmed_registered_user.email}"
           end
@@ -117,6 +119,8 @@ RSpec.describe 'Users', type: :system, js: true  do
 
         visit users_path
         click_on('Joined')
+        pause
+
         within 'tr.user:nth-child(7)' do
           expect(page).to have_text "#{sortable_full_name(@saml_user2)} #{@saml_user2.email}"
         end
@@ -173,7 +177,8 @@ RSpec.describe 'Users', type: :system, js: true  do
         scenario 'sort by type' do
           visit users_path
           click_on(I18n.t('activerecord.attributes.user.type'))
-
+          pause
+          
           within 'tr.user:nth-child(1)' do
             expect(page).to have_text REGISTEREDUSER_TEXT
           end
