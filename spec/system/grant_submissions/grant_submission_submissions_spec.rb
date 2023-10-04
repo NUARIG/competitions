@@ -478,6 +478,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit grant_submissions_path(grant)
             accept_alert do
               click_link 'Delete', href: grant_submission_path(grant, submission)
+              pause
             end
             expect(page).to have_text 'Submission was deleted'
           end
@@ -521,6 +522,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit grant_submissions_path(grant)
             accept_alert do
               click_link 'Delete', href: grant_submission_path(grant, submission)
+              pause
             end
             expect(page).to have_text 'Submission was deleted'
           end
