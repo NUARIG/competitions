@@ -16,7 +16,7 @@
     .grid-x
       .cell.small-12.medium-2
         %strong
-          = 'Applicant'.pluralize(@submission.applicants) + ':'
+          = applicant_label(@submission.applicants)
       .cell.small-12.medium-10
         = full_name_list(@submission.applicants)
     .grid-x
