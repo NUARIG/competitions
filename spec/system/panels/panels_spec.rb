@@ -318,7 +318,7 @@ RSpec.describe 'Panels', type: :system, js: true do
       scenario 'reverse sorts on overall impact score' do
         visit grant_panel_path(grant)
         click_link 'Overall Impact'
-
+        pause
         within "##{dom_id(@high_scored_submission)}" do # do
           expect(page).to have_text @high_scored_submission.title
         end
@@ -328,6 +328,7 @@ RSpec.describe 'Panels', type: :system, js: true do
         end
 
         click_link 'Overall Impact'
+        pause
         within "##{dom_id(@low_scored_submission)}" do
         end
         within "##{dom_id(@high_scored_submission)}" do

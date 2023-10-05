@@ -74,6 +74,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
         scenario 'new_grant_duplicate does not create a new grant' do
           expect do
             click_link('Duplicate', href: new_grant_duplicate_path(grant))
+            pause
             expect(page).to have_content "Information from #{grant.name} has been copied below."
           end.not_to change{Grant.count}
         end

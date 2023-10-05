@@ -10,7 +10,7 @@
       = link_to @submission.title, grant_submission_path(@grant, @submission)
     .grid-x.cell.small-12.medium-2
       %strong
-        = 'Applicant'.pluralize(@submission.applicants.count) + ':'
+        = applicant_label(@submission.applicants)
     .grid-x.cell.small-12.medium-10
       = full_name_list(@submission.applicants)
     .grid-x.cell.small-12.medium-2

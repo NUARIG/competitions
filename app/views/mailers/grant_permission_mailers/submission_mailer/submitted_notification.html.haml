@@ -5,7 +5,7 @@
   has a new submission for Grant:
   #{ link_to @grant.name, grant_url(@grant) }.
 %p
-  = 'Applicant'.pluralize(@applicants.count) + ':'
+  = applicant_label(@applicants)
   = full_name_list(@applicants)
   %br
   - unless @applicants.include?(@submitter)
