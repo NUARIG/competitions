@@ -64,6 +64,6 @@ FactoryBot.define do
     factory :draft_submission,                                  traits: %i[draft]
     factory :draft_submission_with_responses,                   traits: %i[draft with_responses]
     factory :draft_submission_with_responses_with_applicant,    traits: %i[draft with_applicant with_responses]
-    factory :reviewed_submission,                               traits: %i[with_responses with_review]
+    factory :reviewed_submission,                               traits: %i[with_responses with_review with_applicant]
   end
 end

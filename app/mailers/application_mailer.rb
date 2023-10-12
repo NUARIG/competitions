@@ -7,5 +7,6 @@ class ApplicationMailer < ActionMailer::Base
 
   layout 'mailer'
 
-  helper :users
+  helper UsersHelper
+  helper GrantSubmissions::SubmissionsHelper
 end

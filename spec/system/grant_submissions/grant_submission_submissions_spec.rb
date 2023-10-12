@@ -89,6 +89,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           context 'with one submission' do
             context 'without reviews' do
               before(:each) do
+                submission.touch
                 visit grant_submissions_path(grant)
               end
 
@@ -477,6 +478,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit grant_submissions_path(grant)
             accept_alert do
               click_link 'Delete', href: grant_submission_path(grant, submission)
+              pause
             end
             expect(page).to have_text 'Submission was deleted'
           end
@@ -520,6 +522,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit grant_submissions_path(grant)
             accept_alert do
               click_link 'Delete', href: grant_submission_path(grant, submission)
+              pause
             end
             expect(page).to have_text 'Submission was deleted'
           end
@@ -635,6 +638,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         expect(page).to have_content draft_submission.title
         page.fill_in 'q_applicants_first_name_or_applicants_last_name_or_title_cont_all', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
+        pause
         expect(page).not_to have_content draft_submission.title
       end
     end
