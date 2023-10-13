@@ -49,6 +49,10 @@ FactoryBot.define do
       end
     end
 
+    trait :submitted do
+      state { 'submitted' }
+    end
+
     factory :incomplete_review,                                   traits: %i[incomplete reload_submission]
     factory :review_with_score,                                   traits: %i[with_score reload_submission]
     factory :review_with_comment,                                 traits: %i[with_comment reload_submission]
