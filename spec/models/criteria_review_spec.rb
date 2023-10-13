@@ -70,7 +70,7 @@ RSpec.describe CriteriaReview, type: :model do
     end
 
     context '#comment' do
-      it 'rejects a comment if criteria\'s comment is not shown' do
+      it 'rejects a comment when shown_comment_field is false' do
         expect(@criteria_review).to be_valid
         @criteria_review.criterion.show_comment_field = false
         @criteria_review.comment = Faker::Lorem.sentence

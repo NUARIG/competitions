@@ -122,12 +122,14 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let(:submission)        { grant.submissions.first }
     let(:grant_admin)       { grant.grant_permissions.role_admin.first.user }
 
-    let(:scored_review)     { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
-                                                                                           assigner:   grant_admin,
-                                                                                           reviewer:   grant.reviewers.first) }
-    let(:incomplete_review) { create(:incomplete_review, submission: submission,
-                                                         assigner: grant_admin,
-                                                         reviewer: grant.reviewers.first) }
+    let(:submitted_scored_review) { create(:scored_review_with_scored_mandatory_criteria_review, :submitted,
+                                              submission: submission,
+                                              assigner:   grant_admin,
+                                              reviewer:   grant.reviewers.first) }
+    let(:incomplete_review)       { create(:incomplete_review, 
+                                              submission: submission,
+                                              assigner: grant_admin,
+                                              reviewer: grant.reviewers.first) }
 
     context 'with no reviews' do
       it 'may be unsubmitted' do
@@ -148,7 +150,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
 
       context 'scored' do
         it 'may not be unsubmitted' do
-          scored_review.reload
+          submitted_scored_review.touch
           submission.update(state: GrantSubmission::Submission::SUBMISSION_STATES[:draft])
           expect(submission.errors.messages[:base]).to eq ['This submission has already been scored and may not be edited.']
         end

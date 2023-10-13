@@ -35,14 +35,14 @@ class Review < ApplicationRecord
   accepts_nested_attributes_for :criteria_reviews
 
   validates_presence_of     :reviewer
-  validates_presence_of     :overall_impact_score, unless: :new_record?
+  validates_presence_of     :overall_impact_score, if: -> { self.submitted? }
 
   validates_uniqueness_of   :reviewer, scope: :submission
 
   validates_numericality_of :overall_impact_score, only_integer: true,
                                                    greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
                                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
-                                                   unless: :new_record?
+                                                   if: -> { overall_impact_score.present? && !self.state != 'assigned' }
 
   validate :reviewer_is_a_grant_reviewer
   validate :assigner_is_a_grant_editor
@@ -52,7 +52,7 @@ class Review < ApplicationRecord
                                             if: :reviewer_id_changed?
   validate :submission_is_not_draft
   validate :is_not_after_close_date
-
+  
   scope :with_criteria_reviews,                   -> { includes(:criteria_reviews) }
   scope :with_reviewer,                           -> { includes(:reviewer) }
   scope :with_grant,                              -> { includes(submission: :grant) }
@@ -62,13 +62,13 @@ class Review < ApplicationRecord
   scope :order_by_created_at,                     -> { order(created_at: :desc) }
   scope :by_reviewer,                             -> (reviewer)   { where(reviewer_id: reviewer.id) }
   scope :by_submission,                           -> (submission) { where(grant_submission_submission_id: submission.id) }
-  scope :completed,                               -> { where.not(overall_impact_score: nil) }
-  scope :incomplete,                              -> { where(overall_impact_score: nil) }
+  scope :completed,                               -> { submitted }
+  scope :incomplete,                              -> { where(state: %w[draft assigned]) }
   # TODO: could be used to throttle reminders to a given timeframe
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
-    !overall_impact_score.nil?
+    submitted || !overall_impact_score.nil?
   end
 
   def scored_criteria_scores
