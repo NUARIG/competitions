@@ -2,6 +2,12 @@ class Review < ApplicationRecord
   include WithScoring
   include Discard::Model
 
+  REVIEW_STATES = { assigned: 'assigned',
+                    draft: 'draft',
+                    submitted: 'submitted' }.freeze
+
+  enum state: REVIEW_STATES, _default: 'assigned'
+
   after_commit     :update_submission_averages, on: %i[create update destroy]
   after_touch      :update_submission_averages
 

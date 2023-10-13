@@ -1,22 +1,17 @@
 class AddStateToReviews < ActiveRecord::Migration[6.1]
   def up
-    execute <<-SQL
-      CREATE TYPE review_states AS ENUM ('assigned', 'draft', 'submitted');
-    SQL
+    add_column :reviews, :state, :string
 
-    add_column :reviews, :state, :review_states
+    Review.where(overall_impact_score: nil).update_all(state: 'assigned')
+    Review.where.not(overall_impact_score: nil).update_all(state: 'submitted')
 
-    Review.completed.update_all(state: 'submitted')
-    Review.incomplete.update_all(state: 'assigned')
-
-    change_column :reviews, :state, :review_states, null: false, default: 'assigned'
+    change_column :reviews, :state, :string, null: false, default: 'assigned'
+    
+    add_index :reviews, :state
   end
 
   def down
+    remove_index :reviews, :state
     remove_column :reviews, :state
-
-    execute <<-SQL
-      DROP TYPE review_states;
-    SQL
   end
 end
