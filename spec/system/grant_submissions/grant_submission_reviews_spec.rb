@@ -210,6 +210,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           click_button 'Submit Your Review'
           expect(page).to have_text 'Review was successfully updated.'
           expect(review.reload.is_complete?).to be true
+          expect(review.submitted?).to be true
         end
 
         scenario 'redirects to Grant Submissions path' do
