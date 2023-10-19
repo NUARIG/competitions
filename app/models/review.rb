@@ -62,13 +62,14 @@ class Review < ApplicationRecord
   scope :order_by_created_at,                     -> { order(created_at: :desc) }
   scope :by_reviewer,                             -> (reviewer)   { where(reviewer_id: reviewer.id) }
   scope :by_submission,                           -> (submission) { where(grant_submission_submission_id: submission.id) }
+  # legacy methods
   scope :completed,                               -> { submitted }
   scope :incomplete,                              -> { where(state: %w[draft assigned]) }
   # TODO: could be used to throttle reminders to a given timeframe
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
-    submitted || !overall_impact_score.nil?
+    submitted?
   end
 
   def scored_criteria_scores
