@@ -118,6 +118,7 @@ module GrantSubmissions
       def review_params
         params.require(:review).permit(:overall_impact_score,
                                        :overall_impact_comment,
+                                       :state,
                                        criteria_reviews_attributes: [
                                         :id,
                                         :criterion_id,

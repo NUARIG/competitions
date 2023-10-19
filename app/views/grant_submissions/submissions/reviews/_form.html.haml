@@ -21,4 +21,4 @@
       Please check the required scores.
 
   .actions
-    = f.submit 'Submit Your Review', class: 'button', disabled: disabled
+    = f.button 'Submit Your Review', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
