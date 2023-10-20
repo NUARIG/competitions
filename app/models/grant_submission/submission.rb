@@ -107,11 +107,11 @@ module GrantSubmission
     end
 
     def set_average_overall_impact_score
-      self.update(average_overall_impact_score: calculate_average_score(reviews.to_a.map(&:overall_impact_score)))
+      self.update(average_overall_impact_score: calculate_average_score(reviews.submitted.map(&:overall_impact_score)))
     end
 
     def set_composite_score
-      self.update(composite_score: calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
+      self.update(composite_score: calculate_average_score(get_submitted_criteria_reviews.flat_map(&:score)))
     end
 
     # USERS
@@ -146,6 +146,10 @@ module GrantSubmission
         review.criteria_reviews.destroy_all
         review.delete
       end
+    end
+
+    def get_submitted_criteria_reviews
+      self.reviews.submitted.flat_map(&:criteria_reviews)
     end
   end
 end
