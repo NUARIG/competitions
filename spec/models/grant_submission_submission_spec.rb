@@ -62,7 +62,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let!(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let!(:submission)   { grant.submissions.first }
     let(:grant_admin)   { grant.grant_permissions.role_admin.first.user }
-    let(:scored_review) { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+    let(:submitted_scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: submission,
                                                                                        assigner:   grant_admin,
                                                                                        reviewer:   grant.reviewers.first) }
     let(:incomplete_review) { create(:incomplete_review, submission: submission,
@@ -94,9 +94,9 @@ RSpec.describe GrantSubmission::Submission, type: :model do
 
       describe '#destroy' do
         context 'with reviews' do
-          context 'scored review' do
+          context 'submitted_scored review' do
             it 'may be deleted' do
-              scored_review.save
+              submitted_scored_review.save
               expect do
                 submission.destroy
               end.to change{GrantSubmission::Submission.count}.by(-1).and change{Review.count}.by(-1)
@@ -122,7 +122,7 @@ RSpec.describe GrantSubmission::Submission, type: :model do
     let(:submission)        { grant.submissions.first }
     let(:grant_admin)       { grant.grant_permissions.role_admin.first.user }
 
-    let(:submitted_scored_review) { create(:scored_review_with_scored_mandatory_criteria_review, :submitted,
+    let(:submitted_scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review, :submitted,
                                               submission: submission,
                                               assigner:   grant_admin,
                                               reviewer:   grant.reviewers.first) }

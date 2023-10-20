@@ -10,13 +10,13 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
   let(:grant2)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "Second #{Faker::Lorem.sentence(word_count: 3)}") }
   let(:grant2_reviewer)    { create(:grant_reviewer, grant: grant2,
                                                      reviewer: reviewer) }
-  let(:grant2_review)      { create(:scored_review_with_scored_mandatory_criteria_review, submission: grant2.submissions.first,
+  let(:grant2_review)      { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: grant2.submissions.first,
                                                                                           assigner: grant2.grant_permissions.role_admin.first.user,
                                                                                           reviewer: grant2_reviewer.reviewer)}
   let(:draft_grant)             { create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer, name: "Second #{Faker::Lorem.sentence(word_count: 3)}") }
   let(:draft_grant_reviewer)    { create(:grant_reviewer, grant: draft_grant,
                                                      reviewer: reviewer) }
-  let(:draft_grant_review)      { create(:scored_review_with_scored_mandatory_criteria_review, submission: draft_grant.submissions.first,
+  let(:draft_grant_review)      { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: draft_grant.submissions.first,
                                                                                           assigner: draft_grant.grant_permissions.role_admin.first.user,
                                                                                           reviewer: draft_grant_reviewer.reviewer)}
   let(:registered_user)         { create(:registered_user) }

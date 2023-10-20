@@ -144,7 +144,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
       criteria.comment = Faker::Lorem.sentence
       criteria.save
     end
-    review.update(overall_impact_score: random_score)
+    review.update(overall_impact_score: random_score, state: 'submitted')
   end
 
   def random_score

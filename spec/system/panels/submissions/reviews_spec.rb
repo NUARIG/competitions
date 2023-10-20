@@ -12,9 +12,9 @@ RSpec.describe 'Panel Submission Reviews', type: :system, js: true do
   let(:review1)     { submission.review.first}
 
   let!(:reviewer2)  { create(:grant_reviewer, grant: grant).reviewer }
-  let!(:review2)    { create(:scored_review_with_scored_commented_criteria_review,  submission: submission,
-                                                                                    reviewer: reviewer2,
-                                                                                    assigner: admin) }
+  let!(:review2)    { create(:submitted_scored_review_with_scored_commented_criteria_review, submission: submission,
+                                                                                              reviewer: reviewer2,
+                                                                                              assigner: admin) }
   let!(:reviewer3)  { create(:grant_reviewer, grant: grant).reviewer }
   let!(:review3)    { create(:incomplete_review,  submission: submission,
                                                   reviewer: reviewer3,

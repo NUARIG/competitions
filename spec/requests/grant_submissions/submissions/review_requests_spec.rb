@@ -127,7 +127,8 @@ RSpec.describe 'grant_submission review requests', type: :request do
                                            params: {
                                              review: {
                                                overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE),
-                                               criteria_reviews_attributes: criteria_params
+                                               criteria_reviews_attributes: criteria_params,
+                                               state: 'submitted'
                                              }
                                            }))
       end.to change{ submission.reload.average_overall_impact_score }
@@ -143,7 +144,8 @@ RSpec.describe 'grant_submission review requests', type: :request do
                                            params: {
                                              review: {
                                                overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE),
-                                               criteria_reviews_attributes: criteria_params
+                                               criteria_reviews_attributes: criteria_params,
+                                               state: 'submitted'
                                              }
                                            }))
       end.to change{ submission.reload.composite_score }

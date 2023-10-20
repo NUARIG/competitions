@@ -86,7 +86,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
                                             review: @submission_review,
                                             score: random_score)
           end
-          @submission_review.update(overall_impact_score: random_score)
+          @submission_review.update(overall_impact_score: random_score, state: 'submitted')
 
           @unscored_criterion = @submission_review.criteria_reviews.first
           @unscored_criterion.update(score: nil)
@@ -231,6 +231,16 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         visit edit_grant_submission_review_path(grant, submission, review)
       end
 
+      scenario 'completed review changes state ' do
+        expect(review.reload.assigned?).to be true
+        grant.criteria.each do |criterion|
+          find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+        end
+        find("label[for='overall-#{random_score}']").click
+        click_button 'Submit Your Review'
+        expect(review.reload.submitted?).to be true
+      end
+
       scenario 'redirects to MyReviews path' do
         grant.criteria.each do |criterion|
           find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
@@ -309,7 +319,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
     end
 
     context 'failure' do
-      let(:scored_review) { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
+      let(:scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: submission,
                                                                                          assigner: grant_admin,
                                                                                          reviewer: new_grant_reviewer.reviewer)}
 
@@ -379,7 +389,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         visit grant_reviewers_path(grant)
       end
 
-      scenario 'creates a review' do
+      scenario 'creates an assigned review' do
         submission_to_assign = find_by_id("submission_#{submission.id}")
         unassigned_reviewer  = find("#reviews_#{new_grant_reviewer.reviewer.id} ul.review_list")
 
@@ -387,6 +397,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           submission_to_assign.drag_to unassigned_reviewer
           wait_for_ajax
         end.to change{grant.reviews.count}.by 1
+        expect(grant.reviews.last.assigned?).to be true
 
         expect(page).to have_text "Notification email was sent to #{full_name(new_grant_reviewer.reviewer)}"
       end

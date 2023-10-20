@@ -28,7 +28,7 @@ RSpec.describe Review, type: :model do
   let(:system_admin)   { create(:system_admin_saml_user) }
   let(:invalid_user)   { create(:saml_user) }
 
-  let(:scored_review_with_criteria_reviews) { create(:scored_review_with_scored_mandatory_criteria_review, assigner: grant.administrators.first,
+  let(:submitted_scored_review_with_criteria_reviews) { create(:submitted_scored_review_with_scored_mandatory_criteria_review, assigner: grant.administrators.first,
                                                                                                            submission: grant.submissions.first,
                                                                                                            reviewer: grant.reviewers.first)}
 
@@ -133,22 +133,22 @@ RSpec.describe Review, type: :model do
     describe '#scored criteria review' do
       context 'submitted' do
         before(:each) do
-          scored_review_with_criteria_reviews.update(state: 'submitted')
+          submitted_scored_review_with_criteria_reviews.update(state: 'submitted')
         end
 
         it 'calculates a criterion average score' do
-          scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
-          expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
+          scores = submitted_scored_review_with_criteria_reviews.criteria.pluck(:score)
+          expect(submitted_scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
         end
 
         it 'includes non-mandatory scores in criterion average score' do
-          scored_review_with_criteria_reviews.criteria.first.update(is_mandatory: false)
-          scores = scored_review_with_criteria_reviews.criteria.pluck(:score)
-          expect(scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
+          submitted_scored_review_with_criteria_reviews.criteria.first.update(is_mandatory: false)
+          scores = submitted_scored_review_with_criteria_reviews.criteria.pluck(:score)
+          expect(submitted_scored_review_with_criteria_reviews.composite_score).to eql( (scores.sum.to_f / scores.count).round(2))
         end
 
         it 'does not include unscored scores in criterion average score' do
-          review = scored_review_with_criteria_reviews
+          review = submitted_scored_review_with_criteria_reviews
           expect do
             updated_criterion = review.criteria.where(is_mandatory: true).first
             updated_criterion.update(is_mandatory: false)
@@ -165,11 +165,10 @@ RSpec.describe Review, type: :model do
     let(:reviewer3) { create(:grant_reviewer, grant: grant) }
     let(:reviewer4) { create(:grant_reviewer, grant: grant) }
 
-    let!(:submitted_completed)  { create(:scored_review_with_scored_mandatory_criteria_review,
+    let!(:submitted_completed)  { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
                                                         submission: submission,
                                                         assigner: assigner,
-                                                        reviewer: reviewer1.reviewer,
-                                                        state: 'submitted') }
+                                                        reviewer: reviewer1.reviewer) }
     let!(:incomplete)           { create(:incomplete_review, submission: submission,
                                                         assigner: assigner,
                                                         reviewer: reviewer2.reviewer) }

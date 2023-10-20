@@ -6,9 +6,9 @@ RSpec.describe 'grant_submission unsubmit requests', type: :request do
   let(:grant_viewer)    { grant.grant_permissions.role_viewer.first.user }
   let(:submission)      { grant.submissions.first }
   let(:reviewer)        { grant.reviewers.first }
-  let(:scored_review)   { create(:scored_review_with_scored_mandatory_criteria_review, submission: submission,
-                                                                                       assigner: grant_editor,
-                                                                                       reviewer: reviewer) }
+  let(:scored_review)   { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                                                  assigner: grant_editor,
+                                                                                                  reviewer: reviewer) }
   let(:unscored_review) { create(:incomplete_review, submission: submission,
                                                      assigner: grant_editor,
                                                      reviewer: reviewer) }

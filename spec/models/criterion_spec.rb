@@ -13,7 +13,7 @@ RSpec.describe Criterion, type: :model do
     let(:criterion)   { build(:criterion, grant: grant) }
     let(:submission)  { create(:submission_with_responses, grant: grant) }
     
-    let(:submitted_review)  { create(:scored_review_with_scored_mandatory_criteria_review, :submitted,
+    let(:submitted_review)  { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
                                         submission: submission,
                                         reviewer: grant.reviewers.first,
                                         assigner: grant.admins.first,
