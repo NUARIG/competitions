@@ -40,8 +40,6 @@ module GrantSubmissions
         build_criteria_reviews
       end
 
-      # # POST /reviews
-      # # POST /reviews.json
       def create
         @review = Review.new(grant_submission_submission_id: params[:submission_id],
                              reviewer_id: params[:reviewer_id],
@@ -60,8 +58,6 @@ module GrantSubmissions
         end
       end
 
-      # PATCH/PUT /reviews/1
-      # PATCH/PUT /reviews/1.json
       def update
         authorize @review
         respond_to do |format|
