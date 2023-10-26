@@ -6,4 +6,8 @@ module ReviewsHelper
   def no_score_abbreviation
     content_tag(:abbr, 'NS', title: 'No Score')
   end
+
+  def display_review_state(state)
+    I18n.t("activerecord.attributes.review.state.#{state}")
+  end
 end

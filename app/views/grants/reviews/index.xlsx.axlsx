@@ -41,14 +41,14 @@ wb.add_worksheet(name: sheet_name) do |sheet|
       end
     end
 
-    row = sheet.add_row [(review_is_complete ? 'Complete' : 'Incomplete'), # A
-                         sortable_full_name(review.reviewer),               # B
-                         sortable_full_name_list(submission.applicants),         # C
-                         submission.title,                                  # D
-                         (review.overall_impact_score ||= '0'),             # E
-                         (review.overall_impact_comment || ''),             # F
-                         review.composite_score ||= '0'                     # G
-                        ].concat(review_columns)                            # H...
+    row = sheet.add_row [display_review_state(review.state),             # A
+                         sortable_full_name(review.reviewer),             # B
+                         sortable_full_name_list(submission.applicants),  # C
+                         submission.title,                                # D
+                         (review.overall_impact_score ||= '0'),           # E
+                         (review.overall_impact_comment || ''),           # F
+                         review.composite_score ||= '0'                   # G
+                        ].concat(review_columns)                          # H...
     sheet.add_hyperlink(:location => grant_submission_review_url(@grant, submission, review),
                         :ref => "B#{row_index + 2}") # account for header row
     row.cells[1].style = link_style

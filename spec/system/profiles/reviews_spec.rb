@@ -69,7 +69,7 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
         expect(page).to have_text(grant1.name)
         expect(page).to have_text(grant2.name)
         expect(page).to have_text(draft_grant.name)
-        expect(page).to have_link('Incomplete', href: edit_grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
+        expect(page).to have_link('Assigned', href: edit_grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
         expect(page).to have_link('Completed', href: grant_submission_review_path(grant2, grant2.submissions.first, grant2_review))
         expect(page).not_to have_link('Completed', href: grant_submission_review_path(draft_grant, draft_grant.submissions.first, draft_grant_review))
       end

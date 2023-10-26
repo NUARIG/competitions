@@ -78,7 +78,7 @@
           %td
             = sortable_full_name(review.reviewer)
           %td
-            = link_to (review.is_complete? ? 'Full Review' : 'Incomplete'), grant_submission_review_path(review.grant, submission, review)
+            = link_to (review.submitted? ? 'Full Review' : display_review_state(review.state)), grant_submission_review_path(review.grant, submission, review)
           %td
             = (review.overall_impact_score || 0)
           %td

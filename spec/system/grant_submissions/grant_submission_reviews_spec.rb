@@ -69,7 +69,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
         scenario 'includes table of assigned reviews' do
           expect(page).to have_text sortable_full_name(@reviewer)
-          expect(page).to have_text 'Incomplete'
+          expect(page).to have_text 'Assigned'
         end
 
         scenario 'does not include score and comment summary' do
