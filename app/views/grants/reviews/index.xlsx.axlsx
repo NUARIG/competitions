@@ -24,7 +24,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
 
   review_column_widths = []
   @reviews.each_with_index do |review, row_index|
-    review_is_complete = review.is_complete?
+    review_is_complete = review.submitted?
     submission = review.submission
     review.criteria_reviews
 
