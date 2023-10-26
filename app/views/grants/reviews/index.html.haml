@@ -32,7 +32,7 @@
               = link_to "Export All Reviews #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_reviews_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
           - if policy(@grant).grant_editor_access? && @grant.reviews.incomplete.any?
             %li
-              = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete reviews on this grant.', turbo: false }
+              = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete and draft reviews on this grant.', turbo: false }
     = search_form_for @q, url: grant_reviews_path(@grant), class: 'top-bar-right' do |f|
       .text-right
         %ul.menu

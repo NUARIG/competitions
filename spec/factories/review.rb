@@ -7,6 +7,7 @@ FactoryBot.define do
     association :submission, factory: :grant_submission_submission
     association :assigner,   factory: :saml_user
     association :reviewer,   factory: :saml_user
+    state { :assigned }
 
     trait :incomplete do
       overall_impact_score   {}
