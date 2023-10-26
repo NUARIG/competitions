@@ -21,4 +21,5 @@
       Please check the required scores.
 
   .actions
+    = f.button 'Save as Draft', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:draft], data: { confirm: "You are saving this review as a draft. Scores here will not count toward the submission until this review has been submitted. You may submit it until #{grant.review_close_date}.", disable_with: 'Please wait'}, class: 'secondary button'
     = f.button 'Submit Your Review', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
