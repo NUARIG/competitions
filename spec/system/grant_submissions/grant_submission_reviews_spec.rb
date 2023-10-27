@@ -2,20 +2,39 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
-  let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
+  let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer, 
+                                          :with_unrequired_commentable_criterion) }
   let(:grant_admin)           { grant.grant_permissions.role_admin.first.user }
   let(:grant_editor)          { grant.grant_permissions.role_editor.first.user }
   let(:grant_viewer)          { grant.grant_permissions.role_viewer.first.user }
   let(:submission)            { grant.submissions.first }
   let(:reviewer)              { grant.reviewers.first }
-  let(:review)                { create(:review, submission: submission,
-                                                assigner: grant_admin,
-                                                reviewer: reviewer) }
+  let(:review)                { create(:review, 
+                                          submission: submission,
+                                          assigner: grant_admin,
+                                          reviewer: reviewer) }
   let(:new_grant_reviewer)    { create(:grant_reviewer, grant: grant) }
   let(:applicant)             { create(:saml_user) }
   let(:submission_applicant)  { create(:grant_submission_submission_applicant,
                                           submission: submission,
                                           applicant: applicant) }
+  
+  let(:reviewer2)             { create(:grant_reviewer, grant: grant).reviewer }
+  let(:reviewer3)             { create(:grant_reviewer, grant: grant).reviewer }
+
+  let(:assigned_review)       { create(:review, 
+                                          submission: submission,
+                                          assigner: grant_admin,
+                                          reviewer: reviewer) }
+  let(:draft_scored_review)   { create(:draft_scored_review_with_scored_mandatory_criteria_review,
+                                          submission: submission,
+                                          assigner: grant_admin,
+                                          reviewer: reviewer2) }
+  let(:submitted_scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
+                                            submission: submission,
+                                            assigner: grant_admin,
+                                            reviewer: reviewer3) }
+  let(:unscored_criterion_id) { submitted_scored_review.criteria_reviews.last.criterion.id }
 
   def random_score
     rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE)
@@ -27,48 +46,43 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
   describe '#index', js: true do
     before(:each) do
-      @grant      = create(:open_grant_with_users_and_form_and_submission_and_reviewer)
-      @admin      = @grant.grant_permissions.role_admin.first.user
-      @submission = @grant.submissions.first
-      @reviewer   = @grant.reviewers.first
-      @submission_review = create(:review, submission: @submission,
-                                           assigner: @admin,
-                                           reviewer: @reviewer)
+      assigned_review.touch
     end
 
     context 'submission with no reviews' do
       context 'Admin' do
         before(:each) do
-          @submission.reviews.destroy_all
-          login_as(@admin, scope: :saml_user)
-          visit grant_submission_reviews_path(@grant, @submission)
+          submission.reviews.destroy_all
+          login_as(grant_admin, scope: :saml_user)
+
+          visit grant_submission_reviews_path(grant, submission)
         end
 
         scenario 'prompts to assign review when there are none' do
           expect(page).to have_text 'There are no reviews for this submission.'
-          expect(page).to have_link 'Assign it to a reviewer', href: grant_reviewers_path(@grant)
+          expect(page).to have_link 'Assign it to a reviewer', href: grant_reviewers_path(grant)
         end
       end
     end
 
     context 'submission with reviews' do
       before(:each) do
-        login_as(@admin, scope: :saml_user)
+        login_as(grant_admin, scope: :saml_user)
       end
 
-      context 'incomplete review' do
+      context 'assigned review' do
         before(:each) do
-          visit grant_submission_reviews_path(@grant, @submission)
+          visit grant_submission_reviews_path(grant, submission)
         end
 
         scenario 'displays table with all criteria' do
-          criteria = @grant.criteria.pluck(:name)
+          criteria = grant.criteria.pluck(:name)
           headers  = all('th').map {|column| column.text.strip }
           expect(criteria.all? { |criterion| headers.include?(criterion) }).to be true
         end
 
         scenario 'includes table of assigned reviews' do
-          expect(page).to have_text sortable_full_name(@reviewer)
+          expect(page).to have_text sortable_full_name(reviewer)
           expect(page).to have_text 'Assigned'
         end
 
@@ -78,22 +92,41 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
       end
 
-      context 'complete review' do
+      context 'draft review' do
         before(:each) do
-          @submission_review.grant_criteria.each do |criterion|
-            criterion.update(show_comment_field: true, is_mandatory: false)
-            create(:scored_criteria_review, criterion: criterion,
-                                            review: @submission_review,
-                                            score: random_score)
+          draft_scored_review.touch
+          visit grant_submission_reviews_path(grant, submission)
+        end
+
+        scenario 'includes table of draft and assigned reviews' do
+          within "#review-#{assigned_review.id}" do
+            expect(page).to have_text sortable_full_name(reviewer)
+            expect(page).to have_text 'Assigned'
           end
-          @submission_review.update(overall_impact_score: random_score, state: 'submitted')
+          within "#review-#{draft_scored_review.id}" do
+            expect(page).to have_text sortable_full_name(reviewer2)
+            expect(page).to have_text 'Draft'
+          end
+        end
 
-          @unscored_criterion = @submission_review.criteria_reviews.first
-          @unscored_criterion.update(score: nil)
-          @unscored_criterion.update(comment: 'Commented criterion.')
+        scenario 'does not include score and comment summary' do
+          expect(page).not_to have_text 'Scores and Comments'
+          expect(page).not_to have_text 'Overall Impact Scores and Comments'
+        end
 
-          @uncommented_criterion = @submission_review.criteria_reviews.last.criterion
-          visit grant_submission_reviews_path(@grant, @submission)
+      end
+
+      context 'completed review' do
+        before(:each) do
+          grant.criteria.first.update(show_comment_field: true, is_mandatory: false)
+          
+          # last criterion is not required b/c of additional trait 
+          submitted_scored_review.criteria_reviews.last.update(score: nil, comment: 'Commented criterion.')
+          submitted_scored_review.criteria_reviews.last
+
+          # grant.criteria.first.update(show_comment_field: true, is_mandatory: false)
+          submitted_scored_review.criteria_reviews.last.criterion
+          visit grant_submission_reviews_path(grant, submission)
         end
 
         scenario 'includes scores and comments' do
@@ -102,15 +135,16 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
 
         scenario 'displays NS for unscored criteria' do
-          expect(find_by_id("criterion-#{@unscored_criterion.criterion.id}-score")).to have_text 'NS'
+          expect(find_by_id("criterion-#{unscored_criterion_id}-score")).to have_text 'NS'
         end
 
         scenario 'displays comment when commented' do
-          expect(find_by_id("criterion-#{@unscored_criterion.criterion.id}-comment")).to have_text 'Commented criterion.'
+          expect(find_by_id("criterion-#{unscored_criterion_id}-comment")).to have_text 'Commented criterion.'
         end
 
         scenario 'does not have comment selector if no comment' do
-          expect(page).not_to have_selector"criterion-#{@uncommented_criterion.id}-comment"
+          uncommented_criterion_id = submitted_scored_review.criteria_reviews.first.criterion.id
+          expect(page).not_to have_selector"criterion-#{uncommented_criterion_id}-comment"
         end
       end
     end
@@ -150,9 +184,10 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         grant.criteria.first.update(show_comment_field: true)
 
         login_as(review.reviewer, scope: :saml_user)
+        
         visit edit_grant_submission_review_path(grant, submission, review)
         expect(page).to have_selector("##{criterion_id_selector(grant.criteria.first)}-comment")
-        expect(page).not_to have_selector("##{criterion_id_selector(grant.criteria.last)}-comment")
+        expect(page).not_to have_selector("##{criterion_id_selector(grant.criteria.second)}-comment")
       end
 
       context 'closed review period' do
@@ -231,7 +266,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         visit edit_grant_submission_review_path(grant, submission, review)
       end
 
-      scenario 'completed review changes state ' do
+      scenario 'completed review changes state' do
         expect(review.reload.assigned?).to be true
         grant.criteria.each do |criterion|
           find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
@@ -256,10 +291,16 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           # login_as reviewer
           click_button 'Submit Your Review'
           expect(page).not_to have_text 'Review was successfully updated.'
-          grant.criteria.each do |criterion|
+          grant.required_criteria.each do |criterion|
             expect(page).to have_text "\'#{criterion.name}\' must be scored"
           end
           expect(review.reload.is_complete?).to be false
+        end
+
+        scenario 'does not provide feedback when an unrequired criterion is not scored' do
+          click_button 'Submit Your Review'
+          expect(page).not_to have_text 'Review was successfully updated.'
+          expect(page).not_to have_text "\'#{grant.criteria.last.name}\' must be scored"
         end
 
         scenario 'provides feedback when overall impact score is not scored' do
