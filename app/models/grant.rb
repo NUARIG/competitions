@@ -58,7 +58,9 @@ class Grant < ApplicationRecord
                                     through:    :submissions
 
 
-  has_many   :criteria,             inverse_of: :grant
+  has_many   :criteria,          inverse_of: :grant
+  has_many   :required_criteria, -> { where(is_mandatory: true) },
+                                 class_name: 'Criterion'
 
   accepts_nested_attributes_for :criteria, allow_destroy: true
 
