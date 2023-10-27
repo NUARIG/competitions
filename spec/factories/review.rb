@@ -58,10 +58,15 @@ FactoryBot.define do
       state { 'assigned' }
     end
 
+    trait :draft do
+      state { 'draft' }
+    end
+
     factory :incomplete_review, traits: %i[incomplete reload_submission assigned]
     factory :review_with_score, traits: %i[with_score reload_submission]
     factory :review_with_comment, traits: %i[with_comment reload_submission]
     factory :review_with_score_and_comment, traits: %i[with_score with_comment reload_submission]
+    factory :draft_scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review draft reload_submission]
     factory :submitted_scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review submitted reload_submission]
     factory :submitted_scored_review_with_scored_commented_criteria_review, traits: %i[with_score with_comment with_scored_and_commented_criteria_review submitted reload_submission]
     factory :reminded_review, traits: %i[incomplete reminded reload_submission]
