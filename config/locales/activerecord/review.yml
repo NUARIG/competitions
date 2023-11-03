@@ -9,7 +9,7 @@ en:
         overall_impact_comment: Overall Impact Comment
         state:
           draft: "Draft"
-          submitted: "Completed"
+          submitted: "Submitted"
           assigned: "Assigned"
     errors:
       models:

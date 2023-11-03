@@ -14,7 +14,6 @@ module GrantSubmissionSubmissionServices
     rescue ServiceError::InputInvalid => invalid
       OpenStruct.new(success?: false,
                      messages: invalid.record.errors.full_messages)
-      # submission.errors.to_a
     end
   end
 end

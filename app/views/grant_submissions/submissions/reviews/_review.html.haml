@@ -2,7 +2,7 @@
   %td
     = sortable_full_name(review.reviewer)
   %td.pdf-hide
-    = review.is_complete? ? link_to('Full Review', grant_submission_review_path(@grant, @submission, review)) : display_review_state(review.state)
+    = review.is_complete? ? link_to(display_review_state(review.state), grant_submission_review_path(@grant, @submission, review)) : display_review_state(review.state)
   %td
     = (review.overall_impact_score || 0)
   %td
