@@ -4,6 +4,7 @@ en:
       review: &review
         reviewer: Reviewer
         submission: Submission
+        criteria_reviews: Criteria Scores
         overall_impact: Overall Impact
         overall_impact_score: Overall Impact Score
         overall_impact_comment: Overall Impact Comment
@@ -27,6 +28,10 @@ en:
               taken: 'has already been assigned this submission.'
             submission:
               may_not_be_draft: 'is a draft submission and must be completed before it can be reviewed.'
+            criteria_reviews:
+              invalid: 'contain errors. See more below.'
+            overall_impact_score:
+              blank: 'must be scored.'
     models:
       review:
         one: review

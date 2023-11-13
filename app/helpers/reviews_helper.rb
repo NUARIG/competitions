@@ -1,4 +1,8 @@
 module ReviewsHelper
+  def score_range_array
+    (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).to_a
+  end
+
   def display_review_data(review:, user:, grant: review.grant, submission: review.submission)
     link  = review_link_based_on_state(review)
 

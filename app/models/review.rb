@@ -2,6 +2,11 @@ class Review < ApplicationRecord
   include WithScoring
   include Discard::Model
 
+  attr_accessor :user_submitted_state
+  
+  after_validation :set_state, on: :update,
+                               if: -> { user_submitted_state.present?  }
+
   REVIEW_STATES = { assigned: 'assigned',
                     draft: 'draft',
                     submitted: 'submitted' }.freeze
@@ -29,11 +34,14 @@ class Review < ApplicationRecord
   has_many :applicants,       through: :submission
 
   has_many :criteria_reviews, -> { order("criteria_reviews.created_at") },
-                              dependent: :destroy
+                              dependent: :destroy,
+                              inverse_of: :review
   has_many :criteria,         through: :criteria_reviews
 
   accepts_nested_attributes_for :criteria_reviews
-
+  validates_associated :criteria_reviews, on: :update, 
+                                          if: -> { self.submitted? || self.user_submitted_state == REVIEW_STATES[:submitted] }
+  
   validates_presence_of     :reviewer
   validates_presence_of     :overall_impact_score, if: -> { self.submitted? }
 
@@ -42,7 +50,7 @@ class Review < ApplicationRecord
   validates_numericality_of :overall_impact_score, only_integer: true,
                                                    greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
                                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
-                                                   if: -> { overall_impact_score.present? && !self.state != 'assigned' }
+                                                   if: -> { overall_impact_score.present? && !self.state != REVIEW_STATES[:assigned] }
 
   validate :reviewer_is_a_grant_reviewer
   validate :assigner_is_a_grant_editor
@@ -69,7 +77,7 @@ class Review < ApplicationRecord
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
-    submitted?
+    submitted? || self.user_submitted_state == REVIEW_STATES[:submitted]
   end
 
   def scored_criteria_scores
@@ -118,6 +126,10 @@ class Review < ApplicationRecord
 
   def is_not_after_close_date
     errors.add(:base, :may_not_review_after_close_date, review_close_date: grant.review_close_date) if review_period_closed?
+  end
+
+  def set_state
+    self.state = user_submitted_state
   end
 
   # TODO: use this for every review load?

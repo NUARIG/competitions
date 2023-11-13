@@ -1,9 +1,10 @@
-- criterion    = criterion_review.criterion
+- index = criterion_index
+- criterion = criterion_review.criterion
 - criterion_id = criterion.name.parameterize(separator: '_')
 
-.criterion{id: criterion_id}
+.criterion{ id: criterion_id, data: { controller: 'reviews' } }
   %h4
-    = criterion_review.criterion.name
+    = criterion.name
   - if criterion.description.present?
     .grid-x
       .cell.small-12
@@ -13,23 +14,25 @@
     .cell.small-12.medium-3
       = ff.label :score, class: "required-#{criterion.is_mandatory}"
     .cell.small-12.medium-9
-      %div.form-error{ data: {form: {error: {for: "#{criterion_id}-1"}}} }
-        = "* #{criterion.name} Score is required"
-      .button-group.scoring{id: "#{criterion_id}-button-group"}
+      - if criterion_review.errors.any?
+        %div.form-error{ style: 'display: block' }
+          = "* #{criterion.name} Score is required"
+      .button-group.scoring{ id: "#{criterion_id}-button-group", data: { 'reviews_target': 'score' } }
         %label.scoring-guidance
           Exceptional
+        = ff.hidden_field(:criterion_id, value: criterion.id)
+        = ff.hidden_field(:score, value: '')
         - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
-          = ff.hidden_field :criterion_id
-          .score_value{class: "score_value_#{value}"}
-            = ff.radio_button('score', value, { id: "#{criterion_id}-#{value}", required: criterion.is_mandatory, disabled: disabled })
+          .score_value{ class: "score_value_#{value}" }
+            = ff.radio_button('score', value, { name: "review[criteria_reviews_attributes][#{index}][score]", id: "#{criterion_id}-#{value}", required: criterion.is_mandatory, disabled: disabled })
             = ff.label "#{value}", { class: 'button', for: "#{criterion_id}-#{value}", disabled: disabled }
         %label.scoring-guidance
           Poor
         -unless disabled
-          = button_tag 'Clear', class: 'secondary button hollow small clear-button', id: "#{criterion_id}-clear-button"
+          = button_tag 'Clear', class: 'secondary button hollow small clear-button', id: "#{criterion_id}-clear-button", title: "Clear #{criterion.name}", data: { action: 'reviews#clear_score' } 
   - if criterion_review.criterion.show_comment_field
     .comment.grid-x
       .cell.small-12.medium-3
         = ff.label :comments
-      .cell.small-12.medium-9
-        = ff.text_area :comment, { id: "#{criterion_id}-comment", class: 'comment', disabled: disabled}
+      .cell.small-12.medium-8
+        = ff.text_area :comment, { id: "#{criterion_id}-comment", class: 'comment', disabled: disabled, data: { 'reviews_target': 'comment', action: 'reviews#expand_comment_area'  } }

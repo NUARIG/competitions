@@ -124,7 +124,6 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           submitted_scored_review.criteria_reviews.last.update(score: nil, comment: 'Commented criterion.')
           submitted_scored_review.criteria_reviews.last
 
-          # grant.criteria.first.update(show_comment_field: true, is_mandatory: false)
           submitted_scored_review.criteria_reviews.last.criterion
           visit grant_submission_reviews_path(grant, submission)
         end
@@ -290,10 +289,13 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         scenario 'provides feedback when a required criterion score is not scored' do
           # login_as reviewer
           click_button 'Submit Your Review'
+
           expect(page).not_to have_text 'Review was successfully updated.'
+          
           grant.required_criteria.each do |criterion|
             expect(page).to have_text "\'#{criterion.name}\' must be scored"
           end
+          
           expect(review.reload.is_complete?).to be false
         end
 
@@ -309,52 +311,82 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           end
           click_button 'Submit Your Review'
           expect(page).not_to have_text 'Review was successfully updated.'
-          expect(page).to have_text 'Overall Impact Score is required'
+          expect(page).to have_text 'Overall Impact Score must be scored.'
           expect(review.reload.is_complete?).to be false
         end
       end
 
       context 'criterion clear button' do
-        scenario 'criterion clear button removes required criterion score' do
-          criteria = []
-          grant_criteria = grant.criteria
-          grant_criteria.each do |criterion|
-            find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
-            criteria << "#{criterion_id_selector(criterion)}"
-          end
-          find("label[for='overall-#{random_score}']").click
+        context 'submitted review' do
+          scenario 'criterion clear button removes required criterion score' do
+            criteria = []
+            grant_criteria = grant.criteria
+            grant_criteria.each do |criterion|
+              find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+              criteria << "#{criterion_id_selector(criterion)}"
+            end
+            find("label[for='overall-#{random_score}']").click
 
-          within("##{criteria.first}-button-group") do
-            click_button("Clear")
+            within("##{criteria.first}-button-group") do
+              click_button("Clear")
+            end
+
+            click_button 'Submit Your Review'
+
+            expect(page).to have_text "\'#{grant_criteria.first.name}\' must be scored"
           end
-          click_button 'Submit Your Review'
-          expect(page).to have_text "\'#{grant_criteria.first.name}\' must be scored"
+
+          scenario 'criterion clear button removes unrequired criterion score' do
+            unrequired_criterion = grant.criteria.first
+            unrequired_criterion.update(is_mandatory: false)
+            unrequired_criterion_label = criterion_id_selector(unrequired_criterion)
+            visit edit_grant_submission_review_path(grant, submission, review)
+
+            grant.criteria.each do |criterion|
+              find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+            end
+            find("label[for='overall-#{random_score}']").click
+
+            within("##{unrequired_criterion_label}-button-group") do
+              click_button("Clear")
+            end
+            click_button 'Submit Your Review'
+            expect(page).to have_text SUBMITTED_TEXT
+
+            within("##{dom_id(review)}") do
+              click_link(SUBMITTED_TEXT)
+            end
+
+            within("##{unrequired_criterion_label}-criterion") do
+              expect(page).to have_text "-"
+            end
+          end
         end
+      end
+    end
 
-        scenario 'criterion clear button removes unrequired criterion score' do
-          unrequired_criterion = grant.criteria.first
-          unrequired_criterion.update(is_mandatory: false)
-          unrequired_criterion_label = criterion_id_selector(unrequired_criterion)
-          visit edit_grant_submission_review_path(grant, submission, review)
+    context 'draft scored review' do
+      before(:each) do
+        login_as(reviewer2, scope: :saml_user)
+        visit edit_grant_submission_review_path(grant, submission, draft_scored_review)
+      end
 
-          grant.criteria.each do |criterion|
-            find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
-          end
-          find("label[for='overall-#{random_score}']").click
-
-          within("##{unrequired_criterion_label}-button-group") do
-            click_button("Clear")
-          end
-          click_button 'Submit Your Review'
-          expect(page).to have_text "Completed"
-
-          within(:xpath, "//table/tbody") do
-            click_link('Completed')
-          end
-
-          within("##{unrequired_criterion_label}-criterion") do
-            expect(page).to have_text "-"
-          end
+      context 'criterion clear button' do
+        scenario 'criterion cleared score changes it to nil when saved' do
+          criterion_to_clear = grant.criteria.first
+          expect do
+            within("##{criterion_id_selector(criterion_to_clear)}-button-group") do
+              click_button("Clear")
+              pause
+            end
+            
+            accept_alert do
+              click_button 'Save as Draft'
+            end
+            pause
+          end.to change{draft_scored_review.reload.criteria_reviews.first.score}
+  
+          expect(draft_scored_review.criteria_reviews.first.score).to be nil
         end
       end
     end

@@ -22,8 +22,19 @@ RSpec.describe 'Panels', type: :system, js: true do
                                         grant: grant,
                                         form: grant.form,
                                         user_updated_at: grant.submission_close_date - 1.minute) }
-  let(:reviewed_submission)   { create(:reviewed_submission,  grant: grant,
-                                                              form: grant.form) }
+  let(:reviewed_submission) { create(:reviewed_submission,
+                                        grant: grant,
+                                        form: grant.form) }
+  let(:reviewer2) { create(:grant_reviewer, 
+                              grant: grant,
+                              reviewer: admin) }
+  let(:unreviewed_submission) { create(:submission_with_responses_with_applicant,
+                                          grant: grant,
+                                          form: grant.form) }
+  let(:draft_review) { create(:draft_scored_review_with_scored_mandatory_criteria_review,
+                                submission: unreviewed_submission,
+                                assigner: admin,
+                                reviewer: reviewer2.reviewer) }
 
   describe 'Edit' do
     context 'user' do
@@ -255,6 +266,21 @@ RSpec.describe 'Panels', type: :system, js: true do
 
           expect(page).to have_content grant.submissions.first.title
           expect(page).not_to have_content unreviewed_submission.title
+        end
+
+        scenario 'does not include submission where there is only a draft review' do
+          draft_review.save
+          visit grant_panel_path(grant)
+          expect(page).not_to have_content draft_review.submission.title
+        end
+
+        scenario 'does not includes draft submission totals or calculations' do
+          draft_review.update(submission: submitted_review.submission)
+          visit grant_panel_path(grant)
+          expect(submitted_review.submission.reviews.count).to be 2
+          within("#grant_submission_submission_#{submitted_review.submission.id}") do
+            expect(page).to have_content 'Review (1)'
+          end
         end
 
         scenario 'includes award form' do

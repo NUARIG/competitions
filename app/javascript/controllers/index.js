@@ -12,3 +12,6 @@ application.register("filters", FiltersController)
 
 import Ts__SearchController from "./ts/search_controller.js"
 application.register("ts--search", Ts__SearchController)
+
+import ReviewsController from "./reviews_controller.js"
+application.register('reviews', ReviewsController)
