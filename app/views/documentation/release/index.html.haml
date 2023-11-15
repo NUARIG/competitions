@@ -6,6 +6,25 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item.is-active{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.19 (November 15, 2023)
+    .accordion-content{"data-tab-content" => ""}
+      %ul
+        %li
+          Ability to save reviews in draft form.
+          #{github_issue_link(issue: 823)}
+        %li
+          Fix criteria review display issue when there is comment.
+          #{github_issue_link(issue: 1017)}
+        %li
+          Prevent changes to grant review criteria once a review has been submitted.
+        %li
+          Award tracking for grant administrators.
+          #{github_issue_link(issue: 1001)}
+        %li
+          Update rails version to 6.1.7
+
+
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.18 (May 8, 2022)
     .accordion-content{"data-tab-content" => ""}
       %ul
