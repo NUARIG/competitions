@@ -137,8 +137,8 @@ module GrantSubmissions
         # This caused unexpectedly missing errors
         @review.criteria_reviews.each do |criteria_review|
           next if criteria_review.errors.none?
-          criteria_review.errors.each do |attribute, message|
-            @review.errors.add(attribute, message)
+          criteria_review.errors.each do |error|
+            @review.errors.add(error.attribute, error.message)
           end
         end
       end
