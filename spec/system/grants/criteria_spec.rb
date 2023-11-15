@@ -8,7 +8,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
   
   let(:grant_with_submission) { create(:open_grant_with_users_and_form_and_submission_and_reviewer, review_open_date: Date.current) }
   let(:admin2)  { grant_with_submission.administrators.first }
-  let(:review)  { create(:scored_review_with_scored_mandatory_criteria_review, submission: grant_with_submission.submissions.first,
+  let(:review)  { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: grant_with_submission.submissions.first,
                                                                                reviewer: grant_with_submission.reviewers.first,
                                                                                assigner: admin2) }
 

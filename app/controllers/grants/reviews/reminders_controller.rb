@@ -11,9 +11,9 @@ module Grants
 
         if @incomplete_reviews_by_reviewer.any?
           send_reminder_emails
-          flash[:notice] = 'Reviewers with incomplete reviews have been sent an email reminder.'
+          flash[:notice] = 'Reviewers with incomplete and draft reviews have been sent an email reminder.'
         else
-          flash[:warning] = 'There are no reviewers with incomplete reviews'
+          flash[:warning] = 'There are no reviewers with incomplete or draft reviews.'
         end
         redirect_to grant_reviews_path(@grant)
       end

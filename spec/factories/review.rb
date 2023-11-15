@@ -7,6 +7,7 @@ FactoryBot.define do
     association :submission, factory: :grant_submission_submission
     association :assigner,   factory: :saml_user
     association :reviewer,   factory: :saml_user
+    state { :assigned }
 
     trait :incomplete do
       overall_impact_score   {}
@@ -49,12 +50,25 @@ FactoryBot.define do
       end
     end
 
-    factory :incomplete_review,                                   traits: %i[incomplete reload_submission]
-    factory :review_with_score,                                   traits: %i[with_score reload_submission]
-    factory :review_with_comment,                                 traits: %i[with_comment reload_submission]
-    factory :review_with_score_and_comment,                       traits: %i[with_score with_comment reload_submission]
-    factory :scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review reload_submission]
-    factory :scored_review_with_scored_commented_criteria_review, traits: %i[with_score with_comment with_scored_and_commented_criteria_review reload_submission]
-    factory :reminded_review,                                     traits: %i[incomplete reminded reload_submission]
+    trait :submitted do
+      state { 'submitted' }
+    end
+
+    trait :assigned do
+      state { 'assigned' }
+    end
+
+    trait :draft do
+      state { 'draft' }
+    end
+
+    factory :incomplete_review, traits: %i[incomplete reload_submission assigned]
+    factory :review_with_score, traits: %i[with_score reload_submission]
+    factory :review_with_comment, traits: %i[with_comment reload_submission]
+    factory :review_with_score_and_comment, traits: %i[with_score with_comment reload_submission]
+    factory :draft_scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review draft reload_submission]
+    factory :submitted_scored_review_with_scored_mandatory_criteria_review, traits: %i[with_score with_scored_mandatory_criteria_review submitted reload_submission]
+    factory :submitted_scored_review_with_scored_commented_criteria_review, traits: %i[with_score with_comment with_scored_and_commented_criteria_review submitted reload_submission]
+    factory :reminded_review, traits: %i[incomplete reminded reload_submission]
   end
 end

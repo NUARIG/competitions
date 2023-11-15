@@ -53,11 +53,31 @@ RSpec.describe CriteriaReview, type: :model do
         expect(@criteria_review).to be_valid
       end
 
-      it 'requires a score if criterion is mandatory' do
-        @criteria_review.criterion.is_mandatory = true
-        @criteria_review.score = nil
-        expect(@criteria_review).not_to be_valid
-        expect(@criteria_review.errors.messages[:base]).to eq ["'#{@criteria_review.criterion.name}' must be scored."]
+      context 'review state' do
+        context 'submitted' do
+          before(:each) do
+            allow_any_instance_of(Review).to receive(:submitted?).and_return(true)
+          end
+
+          it 'requires a score if criterion is mandatory' do
+            @criteria_review.criterion.is_mandatory = true
+            @criteria_review.score = nil
+            expect(@criteria_review).not_to be_valid
+            expect(@criteria_review.errors.messages[:base]).to eq ["'#{@criteria_review.criterion.name}' must be scored."]
+          end
+        end
+
+        context 'draft' do
+          before(:each) do
+            allow_any_instance_of(Review).to receive(:submitted?).and_return(false)
+          end
+
+          it 'does not require a score if criterion is mandatory' do
+            @criteria_review.criterion.is_mandatory = true
+            @criteria_review.score = nil
+            expect(@criteria_review).to be_valid
+          end
+        end
       end
 
       it 'requires score to be from the correct grant' do
@@ -70,7 +90,7 @@ RSpec.describe CriteriaReview, type: :model do
     end
 
     context '#comment' do
-      it 'rejects a comment if criteria\'s comment is not shown' do
+      it 'rejects a comment when shown_comment_field is false' do
         expect(@criteria_review).to be_valid
         @criteria_review.criterion.show_comment_field = false
         @criteria_review.comment = Faker::Lorem.sentence

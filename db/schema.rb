@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_02_200608) do
+ActiveRecord::Schema.define(version: 2023_09_29_200356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -510,9 +510,11 @@ ActiveRecord::Schema.define(version: 2023_03_02_200608) do
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.datetime "reminded_at"
+    t.string "state", default: "assigned", null: false
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
     t.index ["grant_submission_submission_id"], name: "index_reviews_on_grant_submission_submission_id"
+    t.index ["state"], name: "index_reviews_on_state"
   end
 
   create_table "user_versions", force: :cascade do |t|

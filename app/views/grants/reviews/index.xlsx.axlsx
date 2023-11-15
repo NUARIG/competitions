@@ -6,10 +6,12 @@ base_headers = ["Review Status",
                 "Overall Impact Comment",
                 "Composite Score"]
 criteria_headers = []
+
 @criteria.each do |criterion|
-                    criteria_headers << criterion.name
-                    criteria_headers << 'Comment' if criterion.show_comment_field?
-                  end
+  criteria_headers << criterion.name
+  criteria_headers << 'Comment' if criterion.show_comment_field?
+end
+
 headers = (base_headers + criteria_headers)
 
 wb = xlsx_package.workbook
@@ -24,37 +26,57 @@ wb.add_worksheet(name: sheet_name) do |sheet|
 
   review_column_widths = []
   @reviews.each_with_index do |review, row_index|
-    review_is_complete = review.is_complete?
     submission = review.submission
-    review.criteria_reviews
+    # review.criteria_reviews
 
     review_columns =  []
+    
     @criteria.map do |criterion|
-      criteria_review_score = review.criteria_reviews
-                                 .to_a
-                                 .detect { |score| score.criterion_id == criterion.id }
-      review_columns << ((!review_is_complete) ? '' : criteria_review_score.nil? ? 'NS' : criteria_review_score.score)
+      unless review.submitted?
+        criteria_score = ''
+        criteria_comment = nil
+      else
+        submitted_criteria_review = review.criteria_reviews.detect { |score| score.criterion_id == criterion.id }
+        
+        # Submitted review may have a nil (i.e. unscored/uncommented) criteria_reviews 
+        criteria_score = submitted_criteria_review&.score 
+        criteria_comment = submitted_criteria_review&.comment
+      end
+
+      # Submitted review may have unscored criteria
+      review_columns << (criteria_score.nil? ? 'NS' : criteria_score)
       review_column_widths << 15
+
       if criterion.show_comment_field?
-        review_columns << (!review_is_complete || criteria_review_score.comment.nil? ? '' : criteria_review_score.comment)
+        review_columns << (criteria_comment.present? ? criteria_comment : '')
         review_column_widths << 45
       end
     end
 
-    row = sheet.add_row [(review_is_complete ? 'Complete' : 'Incomplete'), # A
-                         sortable_full_name(review.reviewer),               # B
-                         sortable_full_name_list(submission.applicants),         # C
-                         submission.title,                                  # D
-                         (review.overall_impact_score ||= '0'),             # E
-                         (review.overall_impact_comment || ''),             # F
-                         review.composite_score ||= '0'                     # G
-                        ].concat(review_columns)                            # H...
+    composite_score = (review.submitted? ? review.composite_score : '')
+    overall_impact_score = (review.submitted? ? review.overall_impact_score : '')
+    overall_impact_comment = (review.submitted? ? review.overall_impact_comment :  '')
+
+    row = sheet.add_row [display_review_state(review.state),              # A
+                         sortable_full_name(review.reviewer),             # B
+                         sortable_full_name_list(submission.applicants),  # C
+                         submission.title,                                # D
+                         overall_impact_score,                            # E
+                         overall_impact_comment,                          # F
+                         composite_score                                  # G
+                        ].concat(review_columns)                          # H...
+    
     sheet.add_hyperlink(:location => grant_submission_review_url(@grant, submission, review),
                         :ref => "B#{row_index + 2}") # account for header row
     row.cells[1].style = link_style
+    
     sheet.add_hyperlink(:location => grant_submission_url(@grant, submission),
                         :ref => "D#{row_index + 2}")
     row.cells[3].style = link_style
   end
   sheet.column_widths(20, 20, 20, 45, 15, 45, 15, *review_column_widths)
+end
+
+def return_true
+  true
 end

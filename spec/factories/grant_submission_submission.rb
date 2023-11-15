@@ -47,15 +47,15 @@ FactoryBot.define do
       end
     end
 
-    trait :with_review do
+    trait :with_submitted_review do
       after(:create) do |submission|
         grant     = submission.grant
         assigner  = grant.admins.first.present? ? grant.admins.first : create(:grant_permission, grant: grant).user
         reviewer  = create(:grant_reviewer, grant: grant).reviewer
-        review    = create(:scored_review_with_scored_mandatory_criteria_review,  submission: submission,
-                                                                                  assigner: assigner,
-                                                                                  reviewer: reviewer,
-                                                                                  created_at: grant.review_close_date - 1.hour)
+        review    = create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: submission,
+                                                                                            assigner: assigner,
+                                                                                            reviewer: reviewer,
+                                                                                            created_at: grant.review_close_date - 1.hour)
       end
     end
 
@@ -64,6 +64,6 @@ FactoryBot.define do
     factory :draft_submission,                                  traits: %i[draft]
     factory :draft_submission_with_responses,                   traits: %i[draft with_responses]
     factory :draft_submission_with_responses_with_applicant,    traits: %i[draft with_applicant with_responses]
-    factory :reviewed_submission,                               traits: %i[with_responses with_review with_applicant]
+    factory :reviewed_submission,                               traits: %i[with_responses with_submitted_review with_applicant]
   end
 end

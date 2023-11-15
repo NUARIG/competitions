@@ -37,7 +37,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
             scenario 'displays reminder notice' do
               find("a[href='#{reminders_grant_reviews_path(grant)}']").click
               page.driver.browser.switch_to.alert.accept()
-              expect(page).to have_content 'Reviewers with incomplete reviews have been sent an email reminder'
+              expect(page).to have_content 'Reviewers with incomplete and draft reviews have been sent an email reminder'
             end
           end
         end
@@ -144,7 +144,7 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
       criteria.comment = Faker::Lorem.sentence
       criteria.save
     end
-    review.update(overall_impact_score: random_score)
+    review.update(overall_impact_score: random_score, state: 'submitted')
   end
 
   def random_score

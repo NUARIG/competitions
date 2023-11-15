@@ -12,7 +12,8 @@ RSpec.describe Criterion, type: :model do
     let(:grant)       { create(:published_open_grant_with_users, :with_reviewer) }
     let(:criterion)   { build(:criterion, grant: grant) }
     let(:submission)  { create(:submission_with_responses, grant: grant) }
-    let(:review)      { create(:scored_review_with_scored_mandatory_criteria_review, 
+    
+    let(:submitted_review)  { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
                                         submission: submission,
                                         reviewer: grant.reviewers.first,
                                         assigner: grant.admins.first,
@@ -44,7 +45,7 @@ RSpec.describe Criterion, type: :model do
 
     context '#with_submitted_reviews' do
       it 'is not valid when there is a submitted review' do
-        review.touch
+        submitted_review.touch
         expect(criterion).not_to be_valid
         expect(criterion.errors.full_messages).to include I18n.t('activerecord.errors.models.criterion.may_not_change_criterion_after_reviews_submitted')
       end

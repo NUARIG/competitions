@@ -58,7 +58,6 @@ module GrantSubmission
     validate :can_be_awarded?, if: -> () { will_save_change_to_attribute?('awarded', to: true) }
 
     scope :with_responses,      -> { includes( form: [sections: [questions: [responses: :multiple_choice_option]]] ) }
-
     scope :order_by_created_at, -> { order(created_at: :desc) }
     scope :by_grant,            -> (grant) { where(grant_id: grant.id) }
     scope :to_be_assigned,      -> (max) { where(["reviews_count < ?", max]) }
@@ -94,24 +93,12 @@ module GrantSubmission
     end
 
     # REVIEWS
-    def all_scored_criteria
-      criteria_reviews.scored.pluck(:score)
-    end
-
-    def scores_by_criterion(criterion)
-      criteria_reviews.by_criterion(criterion).pluck(:score)
-    end
-
-    def overall_impact_scores
-      reviews.pluck(:overall_impact_score)
-    end
-
     def set_average_overall_impact_score
-      self.update(average_overall_impact_score: calculate_average_score(reviews.to_a.map(&:overall_impact_score)))
+      self.update(average_overall_impact_score: calculate_average_score(reviews.submitted.map(&:overall_impact_score)))
     end
 
     def set_composite_score
-      self.update(composite_score: calculate_average_score(self.criteria_reviews.to_a.map(&:score)))
+      self.update(composite_score: calculate_average_score(get_submitted_criteria_reviews.flat_map(&:score)))
     end
 
     # USERS
@@ -146,6 +133,10 @@ module GrantSubmission
         review.criteria_reviews.destroy_all
         review.delete
       end
+    end
+
+    def get_submitted_criteria_reviews
+      self.reviews.submitted.flat_map(&:criteria_reviews)
     end
   end
 end

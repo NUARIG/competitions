@@ -4,21 +4,23 @@
   .callout.warning
     Review period is closed
 
-= form_for (review), url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } }, local: true, data: { turbo: false } do |f|
+= form_for review, url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } }, local: true, data: { turbo: false } do |f|
   - if review.criteria_reviews.any?
     %h3
       Review Criteria
     %p
       Please score this submission using the following criteria:
-    - review.criteria_reviews.each do |criterion_review|
+    - review.criteria_reviews.each_with_index do |criterion_review, i|
       = f.fields_for :criteria_reviews, criterion_review do |criterion_review_fields|
-        = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review, disabled: disabled }
+        = render partial: 'criterion', locals: { ff: criterion_review_fields, criterion_review: criterion_review, disabled: disabled, criterion_index: i}
 
   = render partial: 'overall_impact', locals: { f: f, disabled: disabled }
 
-  .alert.callout{style: 'display: none', data: {abide: { error: true }}}
+  .alert.callout{ style: 'display: none', data: { abide: { error: true } } }
     %p
       Please check the required scores.
 
   .actions
-    = f.submit 'Submit Your Review', class: 'button', disabled: disabled
+    = f.button 'Save as Draft', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:draft], data: { confirm: "You are saving this review as a draft. Scores here will not count toward the submission until this review has been submitted. You may submit it until #{grant.review_close_date}.", disable_with: 'Please wait'}, class: 'secondary button'
+    = f.button 'Submit Your Review', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
+    

@@ -19,8 +19,12 @@ main {
       }
     }
     form {
-      textarea.comment {
-        overflow: hidden;
+      comment {
+        min-height: auto;
+        textarea {
+          min-height: auto;
+          overflow-y: hidden !important;
+        }
       }
       #overall,
       .criterion {
@@ -37,16 +41,23 @@ main {
       .button-group {
         .scoring-guidance {
           color: $dark-gray;
-          padding: 0.5em 1em;
+          padding: 0.25em 1em;
         }
         .clear-button {
           margin-left: 2em;
+          opacity: .4;
+          &:hover {
+            opacity: .8;
+          }
         }
-        .score_value,{
+        .score_value {
           display: inline-block;
           margin-right: .5em;
           &:last-of-type {
             margin-right: none;
+          }
+          field_with_errors { 
+            display: inline; 
           }
           label {
             border: 1px solid $dark-gray;

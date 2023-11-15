@@ -1,4 +1,8 @@
-#overall
+-# NOTE: field_with_errors behavior has been overridden in environment.rb
+-#       due to conflicts with nested divs/css affecting scoring.
+
+
+#overall{ data: { controller: 'reviews' } }
   %h4
     Overall
   #overall_score_value.grid-x
@@ -7,19 +11,19 @@
     .cell.small-12.medium-9
       %div.form-error{ data: {form: {error: {for: 'overall-1'}}} }
         * Overall Impact Score is required
-      .button-group.scoring{id: "overall-button-group"}
+      .button-group.scoring{ id: "overall-button-group", data: { 'reviews_target': 'score' } }
         %label.scoring-guidance
           Exceptional
-        - (Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE).each do |value|
+        = collection_radio_buttons(:review, :overall_impact_score, score_range_array, :to_s, :to_s) do |b|
           .score_value
-            = f.radio_button('overall_impact_score', value, { id: "overall-#{value}", required: true, disabled: disabled } )
-            = f.label "#{value}", { class: 'button', for: "overall-#{value}", disabled: disabled }
+            = b.radio_button(id: "overall-#{b.value}", disabled: disabled) 
+            = b.label(class: 'button', for: "overall-#{b.value}", disabled: disabled)
         %label.scoring-guidance
           Poor
         -unless disabled
-          = button_tag 'Clear', class: 'secondary button hollow small clear-button', id: "#overall-clear-button"
+          = button_tag 'Clear', class: 'secondary button hollow small clear-button', id: "#overall-clear-button", data: { action: 'click->reviews#clear_score' }
   #overall_comment.comment.grid-x
     .cell.small-12.medium-3
       = f.label :overall_impact_comment, disabled: disabled
-    .cell.small-12.medium-9
-      = f.text_area :overall_impact_comment, disabled: disabled
+    .cell.small-12.medium-8
+      = f.text_area :overall_impact_comment, disabled: disabled, data: { 'reviews_target': 'comment', action: 'keyup->reviews#expand_comment_area' }

@@ -1,6 +1,5 @@
 - content_for(:page_title, "Reviews - #{@grant.name}")
 
-
 = render 'shared/grant_header', { grant: @grant, section_title: 'Reviews' }
 
 .grid-x
@@ -32,7 +31,7 @@
               = link_to "Export All Reviews #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, grant_reviews_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
           - if policy(@grant).grant_editor_access? && @grant.reviews.incomplete.any?
             %li
-              = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete reviews on this grant.', turbo: false }
+              = link_to "Send Reminder to Reviewers", reminders_grant_reviews_path, data: { confirm: 'An email reminder will be sent to all reviewers with incomplete and draft reviews on this grant.', turbo: false }
     = search_form_for @q, url: grant_reviews_path(@grant), class: 'top-bar-right' do |f|
       .text-right
         %ul.menu
@@ -60,7 +59,7 @@
         %th
           = sort_link(@q, :reviewer_last_name, 'Reviewer', {}, { title: 'Sort on Reviewer' })
         %th
-          = sort_link(@q, :overall_impact_score, 'Review', {}, { title: 'Sort on Overall Impact Score' })
+          = sort_link(@q, :state, 'Status', {}, { title: 'Sort on Overall Impact Score' })
         %th
           = sort_link(@q, :overall_impact_score, {}, { title: 'Sort on Overall Impact Score' })
         %th Composite Score
@@ -68,20 +67,21 @@
     %tbody
       - @reviews.each do |review|
         - submission = review.submission
-        %tr
+        - review_data = display_review_data(review: review, user: current_user)
+        %tr{id: dom_id(review)}
           %td
             - submission.applicants.each do |applicant|
               = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
               %br
           %td
-            = link_to truncate(submission.title), grant_submission_path(review.grant, submission)
+            = link_to truncate(submission.title), grant_submission_path(@grant, submission)
           %td
             = sortable_full_name(review.reviewer)
           %td
-            = link_to (review.is_complete? ? 'Full Review' : 'Incomplete'), grant_submission_review_path(review.grant, submission, review)
+            = review_data.link 
           %td
-            = (review.overall_impact_score || 0)
+            = review_data.overall_impact_score
           %td
-            = review.composite_score
+            = review_data.composite_score
 
   != pagy_foundation_nav(@pagy)
