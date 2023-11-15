@@ -54,14 +54,15 @@ wb.add_worksheet(name: sheet_name) do |sheet|
     end
 
     composite_score = (review.submitted? ? review.composite_score : '')
-    overall_impact_score = (review.submitted? ? review.composite_score : '')
+    overall_impact_score = (review.submitted? ? review.overall_impact_score : '')
+    overall_impact_comment = (review.submitted? ? review.overall_impact_comment :  '')
 
     row = sheet.add_row [display_review_state(review.state),              # A
                          sortable_full_name(review.reviewer),             # B
                          sortable_full_name_list(submission.applicants),  # C
                          submission.title,                                # D
-                         (review.overall_impact_score ||= '0'),           # E
-                         (review.overall_impact_comment || ''),           # F
+                         overall_impact_score,                            # E
+                         overall_impact_comment,                          # F
                          composite_score                                  # G
                         ].concat(review_columns)                          # H...
     
