@@ -27,13 +27,10 @@ module GrantSubmissions
         end
       end
 
-      # GET /reviews/1
-      # GET /reviews/1.json
       def show
         authorize @review
       end
 
-      # GET /reviews/1/edit
       def edit
         authorize @review
         @reviewer = @review.reviewer
@@ -69,8 +66,10 @@ module GrantSubmissions
                           notice: 'Review was successfully updated.' }
             format.json { render :show, status: :ok, location: @review }
           else
-            merge_criteria_review_errors
-            build_criteria_reviews
+            unless @review.state_was == Review::REVIEW_STATES[:assigned]
+              merge_criteria_review_errors
+              build_criteria_reviews
+            end
             
             flash.now[:alert] = @review.errors.full_messages
 
@@ -132,11 +131,12 @@ module GrantSubmissions
       end
 
       def merge_criteria_review_errors
-        # Submitted reviews may contain previously valid entries 
-        # (e.g.an unscored req'd criterion in a draft review)
-        # This caused unexpectedly missing errors
+        # Submitted reviews may contain previously valid entries
+        # (e.g. a previously draft review w/ an unscored, req'd criteria) 
+        # This caused unexpectedly missing errors.
         @review.criteria_reviews.each do |criteria_review|
           next if criteria_review.errors.none?
+          
           criteria_review.errors.each do |error|
             @review.errors.add(error.attribute, error.message)
           end

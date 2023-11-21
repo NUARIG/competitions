@@ -9,10 +9,6 @@ module ReviewsHelper
     if review.submitted?
       overall_impact_score = review.overall_impact_score
       composite_score = review.composite_score
-    elsif review.reviewer == user
-      # Assigned/Draft overall impact score may be nil   
-      overall_impact_score = (review.overall_impact_score || '-')
-      composite_score = '-'
     else 
       overall_impact_score = '-'
       composite_score = '-'
