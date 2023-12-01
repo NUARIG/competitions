@@ -71,7 +71,7 @@ module GrantSubmissions
               build_criteria_reviews
             end
             
-            flash.now[:alert] = @review.errors.full_messages
+            flash.now[:alert] = minimized_error_messages
 
             format.html { render 'edit', status: :unprocessable_entity }
             format.json { render json: @review.errors, status: :unprocessable_entity }
@@ -132,7 +132,7 @@ module GrantSubmissions
 
       def merge_criteria_review_errors
         # Submitted reviews may contain previously valid entries
-        # (e.g. a previously draft review w/ an unscored, req'd criteria) 
+        # (e.g. a draft review had an unscored criteria that is now req'd) 
         # This caused unexpectedly missing errors.
         @review.criteria_reviews.each do |criteria_review|
           next if criteria_review.errors.none?
@@ -141,6 +141,12 @@ module GrantSubmissions
             @review.errors.add(error.attribute, error.message)
           end
         end
+      end
+
+      def minimized_error_messages
+        # Remove redundant message in favor of nested attribute errors 
+        @review.errors.delete(:criteria_reviews, :invalid) if @review.errors.include?(:criteria_reviews)
+        @review.errors.full_messages
       end
     end
   end
