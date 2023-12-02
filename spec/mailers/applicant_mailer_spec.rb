@@ -39,7 +39,7 @@ RSpec.describe ApplicantMailer, type: :mailer do
       end
 
       it "includes the editor/'s name" do
-        expect(mailer.body.encoded).to have_content CGI.escapeHTML("#{editor.first_name} #{editor.last_name}")
+        expect(mailer.body.encoded).to have_content CGI.escapeHTML(full_name(editor))
       end
     end
 

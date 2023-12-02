@@ -56,7 +56,7 @@ RSpec.describe GrantPermissionMailers::SubmissionMailer, type: :mailer do
         end
 
         it "includes the applicant's name" do
-          expect(mailer.body).to include(full_name(submitter_applicant.applicant))
+          expect(mailer.body).to include(CGI.escapeHTML(full_name(submitter_applicant.applicant)))
         end
 
         it 'does not include submitter when same as applicant' do
@@ -70,11 +70,11 @@ RSpec.describe GrantPermissionMailers::SubmissionMailer, type: :mailer do
 
         it 'includes submitter when different from applicant' do
           expect(mailer.body).to include('Submitter')
-          expect(mailer.body).to include(full_name(submission.submitter))
+          expect(mailer.body).to include(CGI.escapeHTML(full_name(submission.submitter)))
         end
 
         it "includes the applicant\'s name" do
-          expect(mailer.body).to include(full_name(different_applicant.applicant))
+          expect(mailer.body).to include(CGI.escapeHTML(full_name(different_applicant.applicant)))
         end
       end
     end

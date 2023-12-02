@@ -27,13 +27,10 @@ module GrantSubmissions
         end
       end
 
-      # GET /reviews/1
-      # GET /reviews/1.json
       def show
         authorize @review
       end
 
-      # GET /reviews/1/edit
       def edit
         authorize @review
         @reviewer = @review.reviewer
@@ -69,10 +66,12 @@ module GrantSubmissions
                           notice: 'Review was successfully updated.' }
             format.json { render :show, status: :ok, location: @review }
           else
-            merge_criteria_review_errors
-            build_criteria_reviews
+            unless @review.state_was == Review::REVIEW_STATES[:assigned]
+              merge_criteria_review_errors
+              build_criteria_reviews
+            end
             
-            flash.now[:alert] = @review.errors.full_messages
+            flash.now[:alert] = minimized_error_messages
 
             format.html { render 'edit', status: :unprocessable_entity }
             format.json { render json: @review.errors, status: :unprocessable_entity }
@@ -132,15 +131,22 @@ module GrantSubmissions
       end
 
       def merge_criteria_review_errors
-        # Submitted reviews may contain previously valid entries 
-        # (e.g.an unscored req'd criterion in a draft review)
-        # This caused unexpectedly missing errors
+        # Submitted reviews may contain previously valid entries
+        # (e.g. a draft review had an unscored criteria that is now req'd) 
+        # This caused unexpectedly missing errors.
         @review.criteria_reviews.each do |criteria_review|
           next if criteria_review.errors.none?
+          
           criteria_review.errors.each do |error|
             @review.errors.add(error.attribute, error.message)
           end
         end
+      end
+
+      def minimized_error_messages
+        # Remove redundant message in favor of nested attribute errors 
+        @review.errors.delete(:criteria_reviews, :invalid) if @review.errors.include?(:criteria_reviews)
+        @review.errors.full_messages
       end
     end
   end
