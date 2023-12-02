@@ -42,7 +42,8 @@ RSpec.describe 'grant reviews reminders requests', type: :request do
 
       context 'with a completed review' do
         it 'does not send email' do
-          review.update(overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE))
+          review.update(overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE), state: 'submitted' )
+          pause
           get reminders_grant_reviews_path(grant_id: grant.id)
           expect(ActionMailer::Base.deliveries.count.zero?).to be true
           expect(response).to have_http_status :redirect

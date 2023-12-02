@@ -3,24 +3,33 @@
 require 'rails_helper'
 
 RSpec.describe 'Criteria', type: :system, js: true do
-  describe 'Index' do
-    let(:grant) { create(:draft_grant) }
-    let(:admin) { grant.administrators.first }
+  let(:grant)   { create(:draft_grant) }
+  let(:admin)   { grant.administrators.first }
+  
+  let(:grant_with_submission) { create(:open_grant_with_users_and_form_and_submission_and_reviewer, review_open_date: Date.current) }
+  let(:admin2)  { grant_with_submission.administrators.first }
+  let(:review)  { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: grant_with_submission.submissions.first,
+                                                                               reviewer: grant_with_submission.reviewers.first,
+                                                                               assigner: admin2) }
 
+  context '#index' do
+    scenario "it displays the grant's criteria" do
+      login_as(admin, scope: :saml_user)
+      visit criteria_grant_path(grant)
+
+      grant.criteria.each do |criterion|
+        expect(page).to have_field('Criterion Name', with: criterion.name)
+      end
+    end
+  end
+
+  context '#update' do
     before(:each) do
       login_as(admin, scope: :saml_user)
       visit criteria_grant_path(grant)
     end
 
-    context '#index' do
-      scenario "it displays the grant's criteria" do
-        grant.criteria.each do |criterion|
-          expect(page).to have_field('Criterion Name', with: criterion.name)
-        end
-      end
-    end
-
-    context '#update' do
+    context '#criterion' do 
       scenario 'it deletes a criterion' do
         expect do
           find('.remove', match: :first).click
@@ -70,15 +79,36 @@ RSpec.describe 'Criteria', type: :system, js: true do
         end.not_to change{grant.criteria.count}
         expect(page).to have_content 'Must have at least one review criteria.'
       end
+    end
+  end
 
-      context 'paper_trail', versioning: true do
-        scenario 'it tracks whodunnit' do
-          find_field('Criterion Name', with: grant.criteria.last.name).set(Faker::Lorem.sentence)
-          click_button 'Save'
-          pause
-          expect(grant.criteria.last.versions.last.whodunnit).to be admin.id
-        end
-      end
+  context '#diabled_fields' do
+    scenario 'grant without reviews is editable' do
+      login_as(admin2, scope: :saml_user)
+      criterion = grant_with_submission.criteria.first
+      visit criteria_grant_path(grant_with_submission)
+      expect(page).not_to have_content 'This form is locked because a review has already been submitted'
+    end
+
+    scenario 'grant with reviews is not editable' do
+      review.touch
+      login_as(admin2, scope: :saml_user)
+
+      visit criteria_grant_path(grant_with_submission)
+      criterion = grant_with_submission.criteria.first
+      expect(page).to have_content 'This form is locked because a review has already been submitted'
+    end
+  end
+
+  context 'paper_trail', versioning: true do
+    scenario 'it tracks whodunnit' do
+      login_as(admin, scope: :saml_user)
+      visit criteria_grant_path(grant)
+
+      find_field('Criterion Name', with: grant.criteria.last.name).set(Faker::Lorem.sentence)
+      click_button 'Save'
+
+      expect(grant.criteria.last.versions.last.whodunnit).to be admin.id
     end
   end
 end

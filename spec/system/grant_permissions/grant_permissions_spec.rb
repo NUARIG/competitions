@@ -215,6 +215,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         expect do
           expect(page).to have_content(full_name(@grant_viewer))
           click_link('Delete', href: grant_grant_permission_path(@grant, @grant_viewer_role))
+          pause
           page.driver.browser.switch_to.alert.accept
           wait_for_turbo
           expect(page).to have_content("#{full_name(@grant_viewer)}'s role on this grant was removed.")

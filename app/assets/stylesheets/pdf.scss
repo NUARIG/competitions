@@ -3,6 +3,44 @@
     font-size: .975em;
   }
 
+  h1 { 
+    font-size: 1.5em;
+    margin-left: .75em;
+  }
+
+  #reviews-overview {
+    h5.criterion {
+      clear: both !important;
+      padding-left: 0em !important;
+    }
+    #overall-impact-scores > .review,
+    .review {
+      display: block !important;
+      .reviewer {
+        display: inline-block !important;
+        float: left !important;
+        text-align: left !important;
+        width: 19% !important;
+      }
+      .responses {
+        display: block !important;
+        float: right !important;
+        margin-top: -1.5em !important;
+        width: 80% !important;
+      }
+    }
+    hr {
+      padding: 1em !important;
+    }
+    #overall-impact-scores {
+      .grid-x {
+        &:last-of-type {
+          padding-bottom: 2em !important;
+        }
+      }
+    }
+  }
+
   .pdf-hide {
     display: none !important;
   }
@@ -14,6 +52,8 @@
   }
 
   footer {
+    clear: both;
     font-size: .75rem;
+    margin-top: 1em;
   }
 }

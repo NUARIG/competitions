@@ -29,37 +29,37 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
                                         applicant: draft_applicant) }
   let(:draft_grant)           { create(:draft_grant) }
   let(:other_submission)      { create(:grant_submission_submission, grant: grant) }
-  let(:review)                { create(:scored_review_with_scored_mandatory_criteria_review,
-                                        submission: submission,
-                                        assigner: grant_admin,
-                                        reviewer: grant.reviewers.first) }
+  let(:submitted_review)      { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
+                                          submission: submission,
+                                          assigner: grant_admin,
+                                          reviewer: grant.reviewers.first) }
   let(:new_reviewer)          { create(:grant_reviewer, grant: grant) }
-  let(:new_review)            { create(:scored_review_with_scored_mandatory_criteria_review,
-                                        submission: submission,
-                                        assigner: grant_admin,
-                                        reviewer: new_reviewer.reviewer) }
+  let(:new_review)            { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
+                                          submission: submission,
+                                          assigner: grant_admin,
+                                          reviewer: new_reviewer.reviewer) }
   let(:unscored_review)       { create(:incomplete_review,
-                                        submission: submission,
-                                        assigner: grant_admin,
-                                        reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
+                                          submission: submission,
+                                          assigner: grant_admin,
+                                          reviewer: create(:grant_reviewer, grant: grant).reviewer ) }
   let(:unreviewed_submission) { create(:submission_with_responses,
-                                        grant: grant,
-                                        form: grant.form) }
+                                          grant: grant,
+                                          form: grant.form) }
   let(:admin_submission)      { create(:submission_with_responses,
-                                        grant: grant,
-                                        form: grant.form,
-                                        submitter: grant_admin,
-                                        created_at: grant.submission_close_date - 1.hour) }
+                                          grant: grant,
+                                          form: grant.form,
+                                          submitter: grant_admin,
+                                          created_at: grant.submission_close_date - 1.hour) }
   let(:editor_submission)     { create(:submission_with_responses,
-                                        grant: grant,
-                                        form: grant.form,
-                                        submitter: grant_editor,
-                                        created_at: grant.submission_close_date - 1.hour) }
+                                          grant: grant,
+                                          form: grant.form,
+                                          submitter: grant_editor,
+                                          created_at: grant.submission_close_date - 1.hour) }
   let(:viewer_submission)     { create(:submission_with_responses,
-                                        grant: grant,
-                                        form: grant.form,
-                                        submitter: grant_viewer,
-                                        created_at: grant.submission_close_date - 1.hour) }
+                                          grant: grant,
+                                          form: grant.form,
+                                          submitter: grant_viewer,
+                                          created_at: grant.submission_close_date - 1.hour) }
 
   def not_authorized_text
     t("pundit.default")
@@ -89,6 +89,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           context 'with one submission' do
             context 'without reviews' do
               before(:each) do
+                submission.touch
                 visit grant_submissions_path(grant)
               end
 
@@ -130,17 +131,17 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             context 'with a review' do
               scenario 'submission with one review shows scores' do
-                review.save
+                submitted_review.save
                 visit grant_submissions_path(grant)
 
                 within "##{dom_id(submission)}" do
-                  expect(page).to have_selector('.overall-impact', text: review.overall_impact_score)
-                  expect(page).to have_selector('.composite', text: (review.criteria_reviews.to_a.map(&:score).sum.to_f / review.criteria_reviews.count).round(2))
+                  expect(page).to have_selector('.overall-impact', text: submitted_review.overall_impact_score)
+                  expect(page).to have_selector('.composite', text: (submitted_review.criteria_reviews.to_a.map(&:score).sum.to_f / submitted_review.criteria_reviews.count).round(2))
                 end
               end
 
               scenario 'submission includes checkbox for award' do
-                review.save
+                submitted_review.save
                 visit grant_submissions_path(grant)
 
                 within "##{dom_id(submission)}" do
@@ -159,8 +160,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             context 'with multiple reviews' do
               scenario 'submission shows proper scores' do
-                reviews = [review, new_review]
-                review.touch # trigger callback to recalculate scores. why is required here? callback should have happened on create of ea review.
+                reviews = [submitted_review, new_review]
+                submitted_review.touch # trigger callback to recalculate scores. why is required here? callback should have happened on create of ea review.
                 visit grant_submissions_path(grant)
 
                 expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
@@ -173,7 +174,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               end
 
               scenario 'submission with an unscored review shows proper scores' do
-                reviews = [review, new_review, unscored_review]
+                reviews = [submitted_review, new_review, unscored_review]
                 visit grant_submissions_path(grant)
 
                 expected_average_overall = (reviews.map(&:overall_impact_score).compact.sum.to_f / 2).round(2)
@@ -190,7 +191,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           context 'with multiple submissions' do
             before(:each) do
-              review.save
+              submitted_review.touch
               unreviewed_submission.update(user_updated_at: submission.user_updated_at + 1.minute)
 
               login_user grant_admin
@@ -259,7 +260,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'submission includes checkbox for award' do
-          review.save
+          submitted_review.save
           visit grant_submissions_path(grant)
 
           within "##{dom_id(submission)}" do
@@ -361,7 +362,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'cannot awarded an unawarded submission' do
-          review.save
+          submitted_review.save
           visit grant_submissions_path(grant)
 
           within "##{dom_id(submission)}" do
@@ -371,7 +372,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         end
 
         scenario 'cannot submit unawarded form' do
-          review.save
+          submitted_review.save
           submission.update(awarded: true)
           visit grant_submissions_path(grant)
 
@@ -477,6 +478,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit grant_submissions_path(grant)
             accept_alert do
               click_link 'Delete', href: grant_submission_path(grant, submission)
+              pause
             end
             expect(page).to have_text 'Submission was deleted'
           end
@@ -500,45 +502,46 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       end
 
       context 'grant_admin' do
+        before(:each) do
+         login_user grant_admin
+        end
+
+        scenario 'can visit the submissions index page' do
+          visit grant_submissions_path(grant)
+
+          expect(page).to have_content submission.title
+          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+          expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
+          expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+          expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
+        end
+
+        scenario 'can delete a submission' do
+          unscored_review.save
+
+          visit grant_submissions_path(grant)
+          accept_alert do
+            click_link 'Delete', href: grant_submission_path(grant, submission)
+            pause
+          end
+          expect(page).to have_text 'Submission was deleted'
+        end
+
+        context 'administrator submissions' do
           before(:each) do
-           login_user grant_admin
+            admin_submission.save
+            editor_submission.save
+            viewer_submission.save
+            visit grant_submissions_path(grant)
           end
 
-          scenario 'can visit the submissions index page' do
-            visit grant_submissions_path(grant)
-
-            expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-            expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-            expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
+          scenario 'includes proper submission delete links' do
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
+            expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
           end
-
-          scenario 'can delete a submission' do
-            unscored_review.save
-
-            visit grant_submissions_path(grant)
-            accept_alert do
-              click_link 'Delete', href: grant_submission_path(grant, submission)
-            end
-            expect(page).to have_text 'Submission was deleted'
-          end
-
-          context 'administrator submissions' do
-            before(:each) do
-              admin_submission.save
-              editor_submission.save
-              viewer_submission.save
-              visit grant_submissions_path(grant)
-            end
-
-            scenario 'includes proper submission delete links' do
-              expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
-              expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
-              expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
-              expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
-            end
-          end
+        end
       end
 
       context 'editor' do
@@ -635,6 +638,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         expect(page).to have_content draft_submission.title
         page.fill_in 'q_applicants_first_name_or_applicants_last_name_or_title_cont_all', with: submission.title.truncate_words(2, omission: '')
         click_button 'Search'
+        pause
         expect(page).not_to have_content draft_submission.title
       end
     end
@@ -836,7 +840,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   end
 
   def can_award(grant, submission)
-    review.save
+    submitted_review.touch
     visit grant_submissions_path(grant)
 
     within "##{dom_id(submission)}" do
@@ -848,7 +852,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   end
 
   def can_unaward(grant, submission)
-    review.save
+    submitted_review.touch
     submission.update(awarded: true)
     visit grant_submissions_path(grant)
 

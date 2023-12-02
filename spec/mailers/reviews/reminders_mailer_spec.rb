@@ -61,7 +61,7 @@ RSpec.describe ReminderMailer, type: :mailer do
       end
 
       it 'does not include link to completed review' do
-        other_review.update(overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE))
+        other_review.update(overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE), state: 'submitted')
 
         expect(mailer.body.encoded).to have_link submission.title, href: grant_submission_url(grant, submission)
         expect(mailer.body.encoded).not_to have_link other_submission.title, href: grant_submission_url(grant, other_submission)

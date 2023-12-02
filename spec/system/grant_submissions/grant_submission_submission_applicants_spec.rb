@@ -409,11 +409,13 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               expect(page).not_to have_text(new_applicant.email)
               find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
               click_button 'Look Up'
+              pause
               expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
               expect(page).to have_text(new_applicant.email)
 
               find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
               click_button 'Look Up'
+              pause
               expect(page).to have_text("Applicant #{full_name(new_applicant)} is already on the submission, #{draft_submission.title}")
             end
           end
@@ -523,11 +525,13 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
               expect(page).not_to have_text(new_applicant.email)
               find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
               click_button 'Look Up'
+              pause
               expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
               expect(page).to have_text(new_applicant.email)
 
               find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
               click_button 'Look Up'
+              pause
               expect(page).to have_text("Applicant #{full_name(new_applicant)} is already on the submission, #{draft_submission.title}")
             end
           end

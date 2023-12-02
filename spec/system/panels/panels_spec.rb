@@ -8,10 +8,10 @@ RSpec.describe 'Panels', type: :system, js: true do
   let(:reviewer)    { grant.reviewers.first }
   let(:submitter)   { grant.submitters.first }
   let(:button_text) { 'Update Panel Information' }
-  let(:review)      { create(:scored_review_with_scored_mandatory_criteria_review,
-                                submission: grant.submissions.first,
-                                assigner: admin,
-                                reviewer: reviewer)}
+  let(:submitted_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
+                                    submission: grant.submissions.first,
+                                    assigner: admin,
+                                    reviewer: reviewer)}
 
   let(:unreviewed_submission) { create(:submission_with_responses,
                                         grant: grant,
@@ -22,8 +22,19 @@ RSpec.describe 'Panels', type: :system, js: true do
                                         grant: grant,
                                         form: grant.form,
                                         user_updated_at: grant.submission_close_date - 1.minute) }
-  let(:reviewed_submission)   { create(:reviewed_submission,  grant: grant,
-                                                              form: grant.form) }
+  let(:reviewed_submission) { create(:reviewed_submission,
+                                        grant: grant,
+                                        form: grant.form) }
+  let(:reviewer2) { create(:grant_reviewer, 
+                              grant: grant,
+                              reviewer: admin) }
+  let(:unreviewed_submission) { create(:submission_with_responses_with_applicant,
+                                          grant: grant,
+                                          form: grant.form) }
+  let(:draft_review) { create(:draft_scored_review_with_scored_mandatory_criteria_review,
+                                submission: unreviewed_submission,
+                                assigner: admin,
+                                reviewer: reviewer2.reviewer) }
 
   describe 'Edit' do
     context 'user' do
@@ -177,7 +188,7 @@ RSpec.describe 'Panels', type: :system, js: true do
   describe 'Show' do
     context 'as editor' do
       before(:each) do
-        review.save
+        submitted_review.save
         login_user grant.editors.first
       end
 
@@ -257,10 +268,25 @@ RSpec.describe 'Panels', type: :system, js: true do
           expect(page).not_to have_content unreviewed_submission.title
         end
 
+        scenario 'does not include submission where there is only a draft review' do
+          draft_review.save
+          visit grant_panel_path(grant)
+          expect(page).not_to have_content draft_review.submission.title
+        end
+
+        scenario 'does not includes draft submission totals or calculations' do
+          draft_review.update(submission: submitted_review.submission)
+          visit grant_panel_path(grant)
+          expect(submitted_review.submission.reviews.count).to be 2
+          within("#grant_submission_submission_#{submitted_review.submission.id}") do
+            expect(page).to have_content 'Review (1)'
+          end
+        end
+
         scenario 'includes award form' do
           visit grant_panel_path(grant)
 
-          within "##{dom_id(review.submission)}" do
+          within "##{dom_id(submitted_review.submission)}" do
             expect(page).to have_selector('.awarded input[type="checkbox"]')
           end
         end
@@ -270,14 +296,14 @@ RSpec.describe 'Panels', type: :system, js: true do
     context 'as reviewer' do
       before(:each) do
         grant.panel.update(start_datetime: 1.minute.ago, end_datetime: 1.hour.from_now)
-        review.save
-        login_user review.reviewer
+        submitted_review.save
+        login_user submitted_review.reviewer
       end
 
       scenario 'excludes award form and reviewer warning notice' do
         visit grant_panel_path(grant)
 
-        within "##{dom_id(review.submission)}" do
+        within "##{dom_id(submitted_review.submission)}" do
           expect(page).not_to have_selector('.awarded input[type="checkbox"]')
         end
 
@@ -288,7 +314,7 @@ RSpec.describe 'Panels', type: :system, js: true do
 
   describe 'sorts' do
     before(:each) do
-      @high_scored_submission = review.submission
+      @high_scored_submission = submitted_review.submission
       @high_scored_submission.update(title: "AAA #{Faker::Lorem.sentence}")
       @high_scored_submission.submitter.update(last_name: 'AAA')
       @high_scored_submission.reviews.first.update(overall_impact_score: Review::MAXIMUM_ALLOWED_SCORE)
@@ -318,7 +344,7 @@ RSpec.describe 'Panels', type: :system, js: true do
       scenario 'reverse sorts on overall impact score' do
         visit grant_panel_path(grant)
         click_link 'Overall Impact'
-
+        pause
         within "##{dom_id(@high_scored_submission)}" do # do
           expect(page).to have_text @high_scored_submission.title
         end
@@ -328,6 +354,7 @@ RSpec.describe 'Panels', type: :system, js: true do
         end
 
         click_link 'Overall Impact'
+        pause
         within "##{dom_id(@low_scored_submission)}" do
         end
         within "##{dom_id(@high_scored_submission)}" do

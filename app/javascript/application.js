@@ -15,7 +15,6 @@ import "trix"
 import "@rails/actiontext"
 import "foundation-sites"
 import "foundation-datepicker"
-//import "./src/vendor/select2"
 import "@rails/request.js"
 
 import "./controllers"
@@ -33,5 +32,3 @@ require('./src/legacy/form_builder_standard_answer')
 require('./src/legacy/form_builder_survey')
 require('./src/legacy/form_builder_upload_setup')
 require('./src/legacy/foundation-datepicker')
-// require('./src/legacy/grant_permissions')
-require('./src/legacy/reviews')

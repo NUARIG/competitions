@@ -337,7 +337,18 @@ RSpec.describe Grant, type: :model do
           expect(grant.viewers.last.id).to eql new_user.id
         end
       end
-
     end
   end
+
+  describe '#scopes' do
+    let(:grant_with_unrequired_criterion) { create(:grant, :with_unrequired_commentable_criterion) }
+  
+    context 'criteria' do
+      it 'returns correct number of required_criteria' do
+        expect(grant_with_unrequired_criterion.criteria.count).to be 4
+        expect(grant_with_unrequired_criterion.required_criteria.count).to be 3
+      end
+    end
+  end
+
 end

@@ -116,6 +116,10 @@ end
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]
 REGISTERED_USER_LOGIN_BUTTON_TEXT = "Continue with your #{APPLICATION_NAME} account"
 
+SUBMITTED_TEXT  = I18n.t("activerecord.attributes.review.state.submitted")
+ASSIGNED_TEXT   = I18n.t("activerecord.attributes.review.state.assigned")
+DRAFT_TEXT      = I18n.t("activerecord.attributes.review.state.draft")
+
 def pause(time: 0.25)
   sleep(time)
 end

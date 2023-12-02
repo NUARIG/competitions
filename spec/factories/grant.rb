@@ -115,6 +115,12 @@ FactoryBot.define do
       to_create { |grant| grant.save(validate: false) }
     end
 
+    trait :with_unrequired_commentable_criterion do
+      after(:create) do |grant|
+        create(:criterion, grant: grant, show_comment_field: true)
+      end
+    end
+
     factory :new_grant,                                     traits: %i[new]
     factory :new_grant_with_users,                          traits: %i[new with_users]
     factory :draft_grant,                                   traits: %i[draft with_users_and_submission_form with_reviewer with_panel]

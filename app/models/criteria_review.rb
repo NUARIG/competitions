@@ -4,7 +4,8 @@ class CriteriaReview < ApplicationRecord
                   meta:     { review_id: :review_id }
 
   belongs_to :criterion
-  belongs_to :review, touch: true
+  belongs_to :review, touch: true,
+                      inverse_of: :criteria_reviews
 
   has_one :submission, through: :review
   has_one :grant,      through: :review
@@ -12,15 +13,13 @@ class CriteriaReview < ApplicationRecord
   validates_uniqueness_of   :criterion_id, scope: :review
 
   validates_numericality_of :score, only_integer: true,
-                                    unless: -> { score.blank? }
-  validates_numericality_of :score, greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
-                                    unless: -> { score.blank? }
-  validates_numericality_of :score, less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
+                                    greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
+                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                     unless: -> { score.blank? }
 
   validate :criteria_is_from_grant
 
-  validate :score_if_mandatory,   if: -> { criterion.is_mandatory? }
+  validate :score_if_mandatory,   if: -> { criterion.is_mandatory? && review.is_complete? }
 
   validate :comment_if_not_shown, unless: -> { criterion.show_comment_field? }
 
@@ -42,3 +41,5 @@ class CriteriaReview < ApplicationRecord
     errors.add(:base, :comment_not_shown, criterion: criterion.name) unless comment.blank?
   end
 end
+
+

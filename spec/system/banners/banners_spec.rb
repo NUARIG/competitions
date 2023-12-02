@@ -6,7 +6,7 @@ include UsersHelper
 RSpec.describe 'Banners', type: :system do
   describe 'Index', js: true do
     before(:each) do
-      @banner             = create(:banner)
+      @banner = create(:banner)
       visit root_path
     end
 
@@ -40,6 +40,7 @@ RSpec.describe 'Banners', type: :system do
 
           scenario 'displays the Banners link for admins' do
             page.find('#admin').hover
+            pause
             expect(page).to have_link 'Banners', href: banners_path
             click_link 'Banners'
             expect(current_path).to eq("/banners")
