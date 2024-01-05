@@ -86,8 +86,8 @@ group :development do
   gem 'listen',                 '~> 3.5.1'
   gem 'rspec-rails',            '~> 5.0.0'
   gem 'rubocop'
-  gem 'spring'
-  gem 'spring-watcher-listen',  '~> 2.0.0'
+  gem 'spring',                 '~> 4.0.0'
+  gem 'spring-watcher-listen',  '~> 2.1.0'
   gem 'web-console',            '>= 3.3.0'
 
   # Use Capistrano for deployment
