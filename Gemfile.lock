@@ -7,14 +7,6 @@ GIT
       activesupport (>= 6.0.4)
       i18n
 
-GIT
-  remote: https://github.com/stympy/faker.git
-  revision: b1f567bd8456dd720aa9c4bad32d4562f4a38a27
-  branch: master
-  specs:
-    faker (2.20.0)
-      i18n (>= 1.8.11, < 2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -81,8 +73,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.6)
+      public_suffix (>= 2.0.2, < 6.0)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     american_date (1.2.0)
@@ -111,7 +103,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
-    bcrypt (3.1.18)
+    bcrypt (3.1.20)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -119,7 +111,7 @@ GEM
     bindex (0.8.1)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.11.1)
+    bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
     bullet (7.0.1)
@@ -143,7 +135,7 @@ GEM
       sshkit (~> 1.2)
     capistrano-service (0.0.2)
       capistrano (>= 3.0.0.pre)
-    capybara (3.36.0)
+    capybara (3.39.2)
       addressable
       matrix
       mini_mime (>= 0.1.3)
@@ -161,14 +153,13 @@ GEM
     caxlsx_rails (0.6.3)
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
-    childprocess (4.1.0)
     cocoon (1.2.15)
     coderay (1.1.3)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.3)
     debug_inspector (1.1.0)
-    devise (4.8.1)
+    devise (4.9.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0)
@@ -194,11 +185,13 @@ GEM
       actionmailer (>= 5.2, < 8)
       activesupport (>= 5.2, < 8)
     execjs (2.8.1)
-    factory_bot (6.2.1)
+    factory_bot (6.4.5)
       activesupport (>= 5.0.0)
-    factory_bot_rails (6.2.0)
-      factory_bot (~> 6.2.0)
+    factory_bot_rails (6.4.3)
+      factory_bot (~> 6.4)
       railties (>= 5.0.0)
+    faker (3.2.2)
+      i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
     font-awesome-rails (4.7.0.8)
       railties (>= 3.2, < 8.0)
@@ -249,7 +242,7 @@ GEM
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.21.3)
+    loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -261,8 +254,8 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
-    minitest (5.19.0)
-    msgpack (1.5.1)
+    minitest (5.20.0)
+    msgpack (1.7.2)
     nested_form (0.3.2)
     net-imap (0.3.7)
       date
@@ -276,12 +269,12 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     net-ssh (6.1.0)
-    nio4r (2.5.9)
-    nokogiri (1.15.4-arm64-darwin)
+    nio4r (2.7.0)
+    nokogiri (1.16.0-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.4-x86_64-darwin)
+    nokogiri (1.16.0-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.4-x86_64-linux)
+    nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     pagy (4.10.2)
@@ -292,14 +285,17 @@ GEM
     parser (3.1.2.0)
       ast (~> 2.4.1)
     pg (1.3.5)
-    public_suffix (4.0.7)
-    puma (4.3.12)
+    public_suffix (5.0.4)
+    puma (5.6.8)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
-    pundit-matchers (1.6.0)
-      rspec-rails (>= 3.0.0)
-    racc (1.7.1)
+    pundit-matchers (3.1.2)
+      rspec-core (~> 3.12)
+      rspec-expectations (~> 3.12)
+      rspec-mocks (~> 3.12)
+      rspec-support (~> 3.12)
+    racc (1.7.3)
     rack (2.2.8)
     rack-test (2.1.0)
       rack (>= 1.3)
@@ -336,41 +332,41 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.1.0)
     rb-fsevent (0.11.1)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.6.0)
-    regexp_parser (2.3.0)
+    regexp_parser (2.9.0)
     request_store (1.5.1)
       rack (>= 1.4)
     requestjs-rails (0.0.10)
       rails (>= 6.0.0)
-    responders (3.0.1)
-      actionpack (>= 5.0)
-      railties (>= 5.0)
-    rexml (3.2.5)
-    rspec (3.11.0)
-      rspec-core (~> 3.11.0)
-      rspec-expectations (~> 3.11.0)
-      rspec-mocks (~> 3.11.0)
-    rspec-core (3.11.0)
-      rspec-support (~> 3.11.0)
-    rspec-expectations (3.11.0)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.11.0)
-    rspec-mocks (3.11.1)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.11.0)
-    rspec-rails (5.0.3)
+    responders (3.1.1)
       actionpack (>= 5.2)
-      activesupport (>= 5.2)
       railties (>= 5.2)
-      rspec-core (~> 3.10)
-      rspec-expectations (~> 3.10)
-      rspec-mocks (~> 3.10)
-      rspec-support (~> 3.10)
-    rspec-support (3.11.0)
+    rexml (3.2.6)
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
+    rspec-core (3.12.2)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.6)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-rails (6.1.0)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      railties (>= 6.1)
+      rspec-core (~> 3.12)
+      rspec-expectations (~> 3.12)
+      rspec-mocks (~> 3.12)
+      rspec-support (~> 3.12)
+    rspec-support (3.12.1)
     rubocop (1.27.0)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
@@ -405,12 +401,12 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (4.1.0)
-      childprocess (>= 0.5, < 5.0)
+    selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     sexp_processor (4.16.1)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
@@ -439,7 +435,7 @@ GEM
     temple (0.8.2)
     terser (1.1.11)
       execjs (>= 0.3.0, < 3)
-    thor (1.2.2)
+    thor (1.3.0)
     tilt (2.0.10)
     timeliness (0.4.4)
     timeout (0.4.0)
@@ -462,7 +458,8 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webrick (1.7.0)
+    webrick (1.8.1)
+    websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -471,7 +468,7 @@ GEM
     wkhtmltopdf-binary (0.12.6.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   arm64-darwin-22
@@ -486,7 +483,7 @@ DEPENDENCIES
   aws-sdk-s3
   better_errors
   binding_of_caller
-  bootsnap (>= 1.1.0)
+  bootsnap (>= 1.17.0)
   bullet
   byebug
   capistrano
@@ -494,18 +491,18 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rvm
   capistrano-service
-  capybara
+  capybara (~> 3.39.2)
   capybara-select-2
   caxlsx
   caxlsx_rails
   cocoon
-  devise (>= 4.8.1)
+  devise (= 4.9.3)
   devise_saml_authenticatable (~> 1.9.0)
   discard (~> 1.2)
   draper
   exception_notification
   factory_bot_rails
-  faker!
+  faker (~> 3.2.2)
   font-awesome-rails
   foundation-datepicker-rails
   foundation-rails (~> 6.5.3.0)
@@ -522,21 +519,21 @@ DEPENDENCIES
   pagy (~> 4.10.1)
   paper_trail (= 11.1)
   pg
-  puma (~> 4.3.12)
+  puma (~> 5.6.8)
   pundit
-  pundit-matchers (~> 1.6.0)
+  pundit-matchers (~> 3.1.2)
   rails (= 6.1.7.6)
   rails-controller-testing
   ransack!
   redis (~> 4.0)
   requestjs-rails
-  rspec
-  rspec-rails (~> 5.0.0)
+  rspec (= 3.12.0)
+  rspec-rails (= 6.1)
   rubocop
   rubyzip (~> 2.3.0)
   sass-rails (>= 5)
-  selenium-webdriver
-  simplecov
+  selenium-webdriver (~> 4.16.0)
+  simplecov (~> 0.22)
   spring (~> 4.0.0)
   spring-watcher-listen (~> 2.1.0)
   sprockets-es6
@@ -546,7 +543,7 @@ DEPENDENCIES
   tzinfo-data
   validates_timeliness (= 6.0.0.alpha1)
   web-console (>= 3.3.0)
-  webrick (= 1.7.0)
+  webrick (= 1.8.1)
   wicked_pdf
   wkhtmltopdf-binary
 

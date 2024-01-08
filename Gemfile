@@ -26,9 +26,9 @@ gem 'requestjs-rails'
 gem 'turbo-rails',                  '~> 1.4.0'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap',                     '>= 1.1.0', require: false
+gem 'bootsnap',                     '>= 1.17.0', require: false
 
-gem 'devise',                       '>= 4.8.1'
+gem 'devise',                       '4.9.3'
 gem 'devise_saml_authenticatable',  '~> 1.9.0'
 gem 'draper'
 gem 'pundit'
@@ -73,8 +73,9 @@ gem 'wkhtmltopdf-binary'
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
-  gem 'puma',         '~> 4.3.12'
-  gem 'webrick',      '1.7.0'
+  gem 'puma',         '~> 5.6.8'
+  gem 'rspec-rails',  '6.1'
+  gem 'webrick',      '1.8.1'
 end
 
 group :development do
@@ -84,7 +85,6 @@ group :development do
   gem 'bullet'
   gem 'i18n-debug'
   gem 'listen',                 '~> 3.5.1'
-  gem 'rspec-rails',            '~> 5.0.0'
   gem 'rubocop'
   gem 'spring',                 '~> 4.0.0'
   gem 'spring-watcher-listen',  '~> 2.1.0'
@@ -99,21 +99,15 @@ group :development do
 end
 
 group :test do
-  gem 'capybara'
+  gem 'capybara',                 '~> 3.39.2'
   gem 'capybara-select-2'
   gem 'factory_bot_rails'
-  gem 'faker',              git: 'https://github.com/stympy/faker.git', branch: 'master'
-  gem 'pundit-matchers',    '~> 1.6.0'
-  gem 'rspec'
+  gem 'faker',                    '~> 3.2.2'
+  gem 'pundit-matchers',          '~> 3.1.2'
+  gem 'rspec',                    '3.12.0'
   gem 'rails-controller-testing'
-  gem 'selenium-webdriver'
-  gem 'simplecov',          require: false
-
-  # gem 'rspec-rails',        git: 'https://github.com/rspec/rspec-rails', branch: 'main'
-  # gem 'rspec-core',         git: 'https://github.com/rspec/rspec-core', branch: 'main'
-  # gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations', branch: 'main'
-  # gem 'rspec-mocks',        git: 'https://github.com/rspec/rspec-mocks', branch: 'main'
-  # gem 'rspec-support',      git: 'https://github.com/rspec/rspec-support', branch: 'main'
+  gem 'selenium-webdriver',       '~> 4.16.0'
+  gem 'simplecov',                '~> 0.22', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
