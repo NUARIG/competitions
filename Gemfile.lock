@@ -53,10 +53,6 @@ GEM
       globalid (>= 0.3.6)
     activemodel (6.1.7.6)
       activesupport (= 6.1.7.6)
-    activemodel-serializers-xml (1.0.2)
-      activemodel (> 5.x)
-      activesupport (> 5.x)
-      builder (~> 3.1)
     activerecord (6.1.7.6)
       activemodel (= 6.1.7.6)
       activesupport (= 6.1.7.6)
@@ -172,13 +168,6 @@ GEM
     discard (1.2.1)
       activerecord (>= 4.2, < 8)
     docile (1.4.0)
-    draper (4.0.2)
-      actionpack (>= 5.0)
-      activemodel (>= 5.0)
-      activemodel-serializers-xml (>= 1.0)
-      activesupport (>= 5.0)
-      request_store (>= 1.0)
-      ruby2_keywords
     erubi (1.12.0)
     erubis (2.7.0)
     exception_notification (4.5.0)
@@ -382,7 +371,6 @@ GEM
     ruby-saml (1.14.0)
       nokogiri (>= 1.10.5)
       rexml
-    ruby2_keywords (0.0.5)
     ruby_parser (3.19.1)
       sexp_processor (~> 4.16)
     rubyzip (2.3.2)
@@ -499,7 +487,6 @@ DEPENDENCIES
   devise (= 4.9.3)
   devise_saml_authenticatable (~> 1.9.0)
   discard (~> 1.2)
-  draper
   exception_notification
   factory_bot_rails
   faker (~> 3.2.2)

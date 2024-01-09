@@ -30,7 +30,6 @@ gem 'bootsnap',                     '>= 1.17.0', require: false
 
 gem 'devise',                       '4.9.3'
 gem 'devise_saml_authenticatable',  '~> 1.9.0'
-gem 'draper'
 gem 'pundit'
 gem 'rubyzip',                      '~> 2.3.0'
 
