@@ -29,16 +29,16 @@ gem 'turbo-rails',                  '~> 1.4.0'
 gem 'bootsnap',                     '>= 1.17.0', require: false
 
 gem 'devise',                       '4.9.3'
-gem 'devise_saml_authenticatable',  '~> 1.9.0'
-gem 'pundit'
-gem 'rubyzip',                      '~> 2.3.0'
+gem 'devise_saml_authenticatable',  '~> 1.9.1'
+gem 'pundit',                       '~> 2.3.1'
+gem 'rubyzip',                      '~> 2.3.2'
 
 # frontend
 gem 'font-awesome-rails'
 gem 'foundation-rails', '~> 6.5.3.0'
 gem 'foundation-datepicker-rails'
-gem 'friendly_id',      '~> 5.4.0'
-gem 'haml-rails',       '~> 2.0.1'
+gem 'friendly_id',      '~> 5.5.0'
+gem 'haml-rails',       '~> 2.0'
 gem 'jquery-rails',     '>= 4.3.5'
 gem 'jquery-ui-rails'
 gem 'pagy',             '~> 4.10.1'
