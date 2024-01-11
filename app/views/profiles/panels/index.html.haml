@@ -26,11 +26,11 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :name, 'Grant', {}, { title: 'Sort on Grant Title' })
+          = sort_link(@q, :name, 'Grant', { title: 'Sort on Grant Title' })
         %th
-          = sort_link(@q, :review_close_date, {}, { title: 'Sort on Review Close' })
+          = sort_link(@q, :review_close_date, { title: 'Sort on Review Close' })
         %th
-          = sort_link(@q, 'panel_start_datetime', 'Panel Start',{}, { title: 'Sort on Panel Start' })
+          = sort_link(@q, 'panel_start_datetime', 'Panel Start', { title: 'Sort on Panel Start' })
     %tbody
       - @grants.each do |grant|
         %tr.panel

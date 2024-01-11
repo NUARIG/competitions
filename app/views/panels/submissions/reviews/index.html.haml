@@ -49,9 +49,9 @@
       %thead
         %tr
           %th
-            = sort_link(@q, :reviewer_last_name, 'Reviewer',{}, {title: 'Sort on Reviewer'})
+            = sort_link(@q, :reviewer_last_name, 'Reviewer', { title: 'Sort on Reviewer'})
           %th
-            = sort_link(@q, :overall_impact,{}, { title: 'Sort on Overall Impact Score'} )
+            = sort_link(@q, :overall_impact, { title: 'Sort on Overall Impact Score'} )
           %th
             Composite
           - @grant.criteria.each do |criterion|

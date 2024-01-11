@@ -10,6 +10,8 @@ module GrantSubmissions
         @grant = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:submitter).find(params[:submission_id])
+        
+        # START HERE
         @q              = Review.with_reviewer.with_criteria_reviews.by_submission(@submission).ransack(params[:q])
         @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')

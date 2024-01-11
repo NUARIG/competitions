@@ -25,13 +25,13 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :title, 'Project Title',{}, {title: 'Sort on Project Title'})
+          = sort_link(@q, :title, 'Project Title', { title: 'Sort on Project Title'})
         %th
-          = sort_link(@q, :grant_name, 'Grant',{}, {title: 'Sort on Grant Name'})
+          = sort_link(@q, :grant_name, 'Grant', { title: 'Sort on Grant Name'})
         %th
-          = sort_link(@q, :state, 'State',{}, {title: 'Sort on State'})
+          = sort_link(@q, :state, 'State', { title: 'Sort on State'})
         %th
-          = sort_link(@q, :updated_at, 'Last Updated',{}, {title: 'Sort on Updated'})
+          = sort_link(@q, :updated_at, 'Last Updated', { title: 'Sort on Updated'})
         %th
     %tbody
       - @submissions.each do |submission|

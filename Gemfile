@@ -42,7 +42,7 @@ gem 'haml-rails',       '~> 2.0'
 gem 'jquery-rails',     '~> 4.6.0'
 gem 'jquery-ui-rails'
 gem 'pagy',             '~> 6.2.0'
-gem 'ransack',          github: 'activerecord-hackery/ransack'
+gem 'ransack',          '~> 3.2.1'
 gem 'sprockets-es6'
 gem 'trix'
 

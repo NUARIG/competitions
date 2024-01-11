@@ -26,17 +26,17 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :overall_impact_score, 'Status', {}, { title: 'Sort on Status' })
+          = sort_link(@q, :overall_impact_score, 'Status', { title: 'Sort on Status' })
         %th
-          = sort_link(@q, :grant_name, 'Grant', {}, { title: 'Sort on Grant' })
+          = sort_link(@q, :grant_name, 'Grant', { title: 'Sort on Grant' })
         %th
-          = sort_link(@q, :applicants_last_name, 'Applicants', {}, { title: 'Sort on Applicants' })
+          = sort_link(@q, :applicants_last_name, 'Applicants', { title: 'Sort on Applicants' })
         %th
-          = sort_link(@q, :submission_title, 'Submission Title', {}, { title: 'Sort on Submission Title' })
+          = sort_link(@q, :submission_title, 'Submission Title', { title: 'Sort on Submission Title' })
         %th
-          = sort_link(@q, :created_at, 'Assigned On', {}, { title: 'Sort on Assigned Date' })
+          = sort_link(@q, :created_at, 'Assigned On', { title: 'Sort on Assigned Date' })
         %th
-          = sort_link(@q, :grant_review_close_date, 'Due by Date', {}, { title: 'Sort on Due Date' })
+          = sort_link(@q, :grant_review_close_date, 'Due by Date', { title: 'Sort on Due Date' })
 
     %tbody
       - @reviews.each do |review|
