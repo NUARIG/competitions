@@ -47,7 +47,7 @@ gem 'sprockets-es6'
 gem 'trix'
 
 # audits
-gem 'discard',          '~> 1.2'
+gem 'discard',          '~> 1.3'
 gem 'paper_trail',      '11.1'
 
 gem 'exception_notification'
