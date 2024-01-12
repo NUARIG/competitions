@@ -50,9 +50,9 @@
                 %th
                   = sort_link(@q, :reviewer_last_name, 'Reviewer', { title: 'Sort on Reviewer'})
                 %th.pdf-hide
-                  = sort_link(@q, :overall_impact, 'Review', { title: 'Sort on Overall Impact Score'})
+                  = sort_link(@q, :state, 'Review', { title: 'Sort on Status'})
                 %th
-                  = sort_link(@q, :overall_impact, { title: 'Sort on Overall Impact Score'})
+                  = sort_link(@q, :overall_impact_score, { title: 'Sort on Overall Impact Score', data: { turbo: false }})
                 %th
                   Composite
                 - @grant.criteria.each do |criterion|
