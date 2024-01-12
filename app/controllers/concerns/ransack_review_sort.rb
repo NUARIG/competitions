@@ -9,7 +9,7 @@ module RansackReviewSort
       @q        = Review.includes(:grant, :reviewer, :criteria_reviews, submission: [:applicants, :submitter]).by_submission(submission).order(state: :desc).order(overall_impact_score: overall_impact_sort_query_order).ransack()
       @q.sorts  = ['state desc', params[:q]['s']]
     else
-      @q        = Reviewincludes(:grant, :reviewer, :criteria_reviews, submission: [:applicants, :submitter]).by_submission(submission).ransack(params[:q])
+      @q        = Review.includes(:grant, :reviewer, :criteria_reviews, submission: [:applicants, :submitter]).by_submission(submission).ransack(params[:q])
       @q.sorts  = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
     end
   end
