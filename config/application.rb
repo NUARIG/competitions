@@ -31,6 +31,12 @@ module Competitions
     # Was not in Rails 6.0. Default in rails 6.1 is :lax, not :strict
     # This suppresses browser messages in console.
     config.action_dispatch.cookies_same_site_protection = :lax
+
+    # Added 1/16/24 
+    # Update paper_trail to v15.1, review after upgrading to rails 7
+    #   error `Psych::DisallowedClass, Tried to load unspecified class: Time`
+    #   Per Rails guide, default setting is [Symbol]
+    config.active_record.yaml_column_permitted_classes = [Symbol, Time]
   end
 end
 

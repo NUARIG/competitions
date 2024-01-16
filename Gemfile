@@ -35,20 +35,20 @@ gem 'rubyzip',                      '~> 2.3.2'
 
 # frontend
 gem 'font-awesome-rails'
-gem 'foundation-rails', '~> 6.5.3.0'
+gem 'foundation-rails',             '~> 6.5.3.0'
 gem 'foundation-datepicker-rails'
-gem 'friendly_id',      '~> 5.5.0'
-gem 'haml-rails',       '~> 2.0'
-gem 'jquery-rails',     '~> 4.6.0'
+gem 'friendly_id',                  '~> 5.5.0'
+gem 'haml-rails',                   '~> 2.0'
+gem 'jquery-rails',                 '~> 4.6.0'
 gem 'jquery-ui-rails'
-gem 'pagy',             '~> 6.2.0'
-gem 'ransack',          '~> 3.2.1'
+gem 'pagy',                         '~> 6.2.0'
+gem 'ransack',                      '~> 3.2.1'
 gem 'sprockets-es6'
 gem 'trix'
 
 # audits
-gem 'discard',          '~> 1.3'
-gem 'paper_trail',      '11.1'
+gem 'discard',                      '~> 1.3'
+gem 'paper_trail',                  '~> 15.1.0'
 
 gem 'exception_notification'
 
