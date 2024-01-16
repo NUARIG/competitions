@@ -52,8 +52,8 @@ gem 'paper_trail',                  '~> 15.1.0'
 
 gem 'exception_notification'
 
-gem 'american_date'
-gem 'validates_timeliness', '6.0.0.alpha1'
+gem 'american_date',                '~> 1.3'
+gem 'validates_timeliness',         '~> 6.0.1'
 
 # form_builder
 gem "cocoon"

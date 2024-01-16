@@ -64,7 +64,7 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
-    american_date (1.2.0)
+    american_date (1.3.0)
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
@@ -411,7 +411,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     thor (1.3.0)
     tilt (2.3.0)
-    timeliness (0.4.4)
+    timeliness (0.4.5)
     timeout (0.4.0)
     trix (0.10.1)
       rails
@@ -423,7 +423,8 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.1.0)
     uniform_notifier (1.16.0)
-    validates_timeliness (6.0.0.alpha1)
+    validates_timeliness (6.0.1)
+      activemodel (>= 6.0.0, < 7)
       timeliness (>= 0.3.10, < 1)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -451,7 +452,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  american_date
+  american_date (~> 1.3)
   annotate
   awesome_print
   aws-sdk-s3
@@ -514,7 +515,7 @@ DEPENDENCIES
   trix
   turbo-rails (~> 1.4.0)
   tzinfo-data
-  validates_timeliness (= 6.0.0.alpha1)
+  validates_timeliness (~> 6.0.1)
   web-console (>= 3.3.0)
   webrick (= 1.8.1)
   wicked_pdf
