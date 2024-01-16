@@ -64,10 +64,10 @@ gem "nested_form"
 gem "aws-sdk-s3", require: false
 
 # exports
-gem 'caxlsx'
+gem 'caxlsx',                       '~> 3.3'
 gem 'caxlsx_rails'
-gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+gem 'wicked_pdf',                   '~> 2.1.0'
+gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 
 group :development, :test do
   gem 'awesome_print'
