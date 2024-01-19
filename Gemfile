@@ -44,7 +44,6 @@ gem 'jquery-ui-rails'
 gem 'pagy',                         '~> 6.2.0'
 gem 'ransack',                      '~> 3.2.1'
 gem 'sprockets-es6'
-gem 'trix'
 
 # audits
 gem 'discard',                      '~> 1.3'

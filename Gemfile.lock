@@ -419,8 +419,6 @@ GEM
     tilt (2.3.0)
     timeliness (0.4.5)
     timeout (0.4.1)
-    trix (0.10.1)
-      rails
     turbo-rails (1.4.0)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -518,7 +516,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.1.0)
   sprockets-es6
   terser (~> 1.1)
-  trix
   turbo-rails (~> 1.4.0)
   tzinfo-data
   validates_timeliness (= 7.0.0.beta2)
