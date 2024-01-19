@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '6.1.7.6'
+gem 'rails', '~> 7.0.8'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 5'
@@ -53,7 +53,7 @@ gem 'paper_trail',                  '~> 15.1.0'
 gem 'exception_notification'
 
 gem 'american_date',                '~> 1.3'
-gem 'validates_timeliness',         '~> 6.0.1'
+gem 'validates_timeliness',         '7.0.0.beta2'
 
 # form_builder
 gem "cocoon"
