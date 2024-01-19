@@ -212,6 +212,11 @@ RSpec.describe Grant, type: :model do
                                           reviewer:   draft_grant.reviewers.first) }
       let(:panel)       { draft_grant.panel }
 
+      before(:each) do
+        review.touch
+        draft_grant.reload
+      end
+
       context 'discarding' do
         it 'is discardable' do
           expect(draft_grant.is_discardable?).to be true
