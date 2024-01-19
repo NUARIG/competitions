@@ -42,13 +42,11 @@ RSpec.describe 'Grants', type: :system, js: true do
       end
 
       scenario 'date fields edited with datepicker are properly formatted' do
-        tomorrow = (Date.current + 1.day).to_s
-
-        expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
-        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
+        tomorrow = (Date.current + 1.day)
+        expect(page).to have_field('grant_publish_date', with: @grant.publish_date&.to_fs)
+        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow.to_fs}'))")
         click_button 'Update'
-
-        expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
+        expect(@grant.reload.publish_date).to eql(tomorrow)
       end
 
       scenario 'versioning tracks whodunnit', versioning: true do
@@ -60,7 +58,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       end
 
       scenario 'invalid submission', versioning: true do
-        page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day)
+        page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day).to_fs
         click_button 'Update'
         expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       end
@@ -76,13 +74,12 @@ RSpec.describe 'Grants', type: :system, js: true do
       end
 
       scenario 'date fields edited with datepicker are properly formatted' do
-        tomorrow = (Date.current + 1.day).to_s
+        tomorrow = (Date.current + 1.day)
 
-        expect(page).to have_field('grant_publish_date', with: @grant.publish_date)
-        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow}'))")
+        expect(page).to have_field('grant_publish_date', with: @grant.publish_date.to_fs)
+        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow.to_fs}'))")
         click_button 'Update'
-
-        expect(@grant.reload.publish_date.to_s).to eql(tomorrow)
+        expect(@grant.reload.publish_date).to eql(tomorrow)
       end
 
       scenario 'versioning tracks whodunnit', versioning: true do
@@ -95,7 +92,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       end
 
       scenario 'invalid submission', versioning: true do
-        page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day)
+        page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day).to_fs
         click_button 'Update'
         expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       end
@@ -139,12 +136,12 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Name', with: @grant.name
       page.fill_in 'Short Name', with: @grant.slug
       fill_in_trix_editor('grant_rfa', with: Faker::Lorem.paragraph)
-      page.fill_in 'Submission Open Date', with: @grant.submission_open_date
-      page.fill_in 'Submission Close Date', with: @grant.submission_close_date
+      page.fill_in 'Submission Open Date', with: @grant.submission_open_date.to_fs
+      page.fill_in 'Submission Close Date', with: @grant.submission_close_date.to_fs
       page.fill_in 'Maximum Reviewers / Submission', with: @grant.max_reviewers_per_submission
       page.fill_in 'Maximum Submissions / Reviewer', with: @grant.max_submissions_per_reviewer
-      page.fill_in 'Review Open Date', with: @grant.review_open_date
-      page.fill_in 'Review Close Date', with: @grant.review_close_date
+      page.fill_in 'Review Open Date', with: @grant.review_open_date.to_fs
+      page.fill_in 'Review Close Date', with: @grant.review_close_date.to_fs
     end
 
     scenario 'default of today for publish date' do
@@ -154,7 +151,7 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
 
     scenario 'valid form submission creates permissions' do
-      page.fill_in 'Publish Date', with: @grant.publish_date
+      page.fill_in 'Publish Date', with: @grant.publish_date.to_fs
 
       click_button 'Save as Draft'
       grant = Grant.last
@@ -171,8 +168,8 @@ RSpec.describe 'Grants', type: :system, js: true do
     scenario 'invalid form submission does not create permissions' do
       grant_permission_count          = GrantPermission.all.count
 
-      page.fill_in 'Publish Date', with: @grant.publish_date
-      page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day)
+      page.fill_in 'Publish Date', with: @grant.publish_date.to_fs
+      page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day).to_fs
       click_button 'Save as Draft'
       expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       expect(GrantPermission.all.count).to eql(grant_permission_count)
@@ -229,9 +226,9 @@ RSpec.describe 'Grants', type: :system, js: true do
         it 'displays dates to reviewer' do
           visit grant_path(grant)
           expect(page).to have_content 'Panel Start'
-          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content grant.panel.start_datetime.to_fs
           expect(page).to have_content 'Panel End'
-          expect(page).to have_content grant.panel.end_datetime
+          expect(page).to have_content grant.panel.end_datetime.to_fs
         end
 
         it 'displays panel link' do
@@ -265,9 +262,9 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
 
           expect(page).to have_content 'Panel Start'
-          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content grant.panel.start_datetime.to_fs
           expect(page).to have_content 'Panel End'
-          expect(page).to have_content grant.panel.end_datetime
+          expect(page).to have_content grant.panel.end_datetime.to_fs
         end
 
         it 'displays panel link' do
@@ -301,9 +298,9 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
 
           expect(page).to have_content 'Panel Start'
-          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content grant.panel.start_datetime.to_fs
           expect(page).to have_content 'Panel End'
-          expect(page).to have_content grant.panel.end_datetime
+          expect(page).to have_content grant.panel.end_datetime.to_fs
         end
 
         it 'displays panel link' do
@@ -336,9 +333,9 @@ RSpec.describe 'Grants', type: :system, js: true do
 
         it 'displays dates' do
           expect(page).to have_content 'Panel Start'
-          expect(page).to have_content grant.panel.start_datetime
+          expect(page).to have_content grant.panel.start_datetime.to_fs
           expect(page).to have_content 'Panel End'
-          expect(page).to have_content grant.panel.end_datetime
+          expect(page).to have_content grant.panel.end_datetime.to_fs
         end
 
         it 'displays panel link' do
@@ -418,12 +415,18 @@ RSpec.describe 'Grants', type: :system, js: true do
       visit edit_grant_path(grant)
       click_link 'Delete'
       page.driver.browser.switch_to.alert.accept
+      pause
       expect(page).to have_content 'Published grant may not be deleted'
       expect(grant.reload.discarded?).to be false
     end
 
-    pending 'published grant without submissions cannot be discarded' do
-      fail '#TODO: grant.submissions.count.zero?'
+    scenario 'published grant without submissions cannot be discarded' do
+      visit edit_grant_path(grant)
+      click_link 'Delete'
+      page.driver.browser.switch_to.alert.accept
+      pause
+      expect(page).to have_content 'Published grant may not be deleted'
+      expect(grant.reload.discarded?).to be false
     end
 
     pending 'delete button hidden when not discardable' do

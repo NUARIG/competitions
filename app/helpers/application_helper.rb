@@ -42,7 +42,7 @@ module ApplicationHelper
 
   # Dates
   def date_mmddyyyy(date)
-    date.blank? ? '' : date.strftime('%m/%d/%Y')
+    date.blank? ? '' : date.to_fs
   end
 
   def date_time_separate_lines(date)

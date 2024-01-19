@@ -13,12 +13,12 @@
     .cell.small-12.medium-2.text-left
       = f.label :created_at, class: 'small'
     .cell.small-12.medium-3
-      = banner.created_at
+      = banner.created_at&.to_fs
   .grid-x.grid-padding-y
     .cell.small-12.medium-2
       = f.label :updated_at, class: 'small'
     .cell.small-12.medium-3
-      = banner.updated_at
+      = banner.updated_at&.to_fs
 .grid-x
   .actions
     - if banner.new_record?

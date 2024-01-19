@@ -2,9 +2,9 @@
   %td.email
     = invitation.email
   %td.created
-    = time_tag(invitation.created_at.to_date, invitation.created_at.to_date)
+    = time_tag(invitation.created_at.to_date, invitation.created_at.to_date.to_fs)
   %td.confirmation
-    = (invitation.confirmed_at.nil?) ? '-' : time_tag(invitation.confirmed_at, invitation.confirmed_at.to_formatted_s(:default))
+    = (invitation.confirmed_at.nil?) ? '-' : time_tag(invitation.confirmed_at, invitation.confirmed_at.to_fs)
   %td.inviter
     = full_name(invitation.inviter)
   %td.manage

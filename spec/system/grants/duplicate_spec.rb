@@ -28,11 +28,11 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
         page.fill_in 'Name', with: "Updated #{grant.name}"
         page.fill_in 'Short Name', with: "#{grant.slug}1"
-        page.fill_in 'Publish Date', with: grant.publish_date + 1.day
-        page.fill_in 'Submission Open Date', with: grant.submission_open_date + 1.day
-        page.fill_in 'Submission Close Date', with: grant.submission_close_date + 1.day
-        page.fill_in 'Review Open Date', with: grant.review_open_date + 1.day
-        page.fill_in 'Review Close Date', with: grant.review_close_date + 1.day
+        page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
+        page.fill_in 'Submission Open Date', with: (grant.submission_open_date + 1.day).to_fs
+        page.fill_in 'Submission Close Date', with: (grant.submission_close_date + 1.day).to_fs
+        page.fill_in 'Review Open Date', with: (grant.review_open_date + 1.day).to_fs
+        page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
 
         expect do
           click_button('Save as Draft')
@@ -92,11 +92,11 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           click_link('Duplicate', href: new_grant_duplicate_path(grant))
 
           page.fill_in 'Short Name', with: grant.slug
-          page.fill_in 'Publish Date', with: grant.publish_date + 1.day
-          page.fill_in 'Submission Open Date', with: grant.submission_open_date + 1.day
-          page.fill_in 'Submission Close Date', with: grant.submission_close_date + 1.day
-          page.fill_in 'Review Open Date', with: grant.review_open_date + 1.day
-          page.fill_in 'Review Close Date', with: grant.review_close_date + 1.day
+          page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
+          page.fill_in 'Submission Open Date', with: (grant.submission_open_date + 1.day).to_fs
+          page.fill_in 'Submission Close Date', with: (grant.submission_close_date + 1.day).to_fs
+          page.fill_in 'Review Open Date', with: (grant.review_open_date + 1.day).to_fs
+          page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
           expect do
             click_button('Save as Draft')
           end.not_to change{ Grant.count }
@@ -109,11 +109,11 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           pause
           page.fill_in 'Name', with: "Updated #{grant.name}"
           page.fill_in 'Short Name', with: "#{grant.slug}1"
-          page.fill_in 'Publish Date', with: grant.publish_date + 1.day
-          page.fill_in 'Submission Open Date', with: grant.submission_open_date + 1.day
-          page.fill_in 'Submission Close Date', with: grant.submission_close_date + 1.day
-          page.fill_in 'Review Open Date', with: grant.review_open_date + 1.day
-          page.fill_in 'Review Close Date', with: grant.review_close_date + 1.day
+          page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
+          page.fill_in 'Submission Open Date', with: (grant.submission_open_date + 1.day).to_fs
+          page.fill_in 'Submission Close Date', with: (grant.submission_close_date + 1.day).to_fs
+          page.fill_in 'Review Open Date', with: (grant.review_open_date + 1.day).to_fs
+          page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
           expect do
             click_button('Save as Draft')
           end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(grant.grant_permissions.count)
@@ -161,11 +161,11 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           pause
           page.fill_in 'Name', with: "Updated #{grant.name}"
           page.fill_in 'Short Name', with: "#{grant.slug}1"
-          page.fill_in 'Publish Date', with: grant.publish_date + 1.day
-          page.fill_in 'Submission Open Date', with: grant.submission_open_date + 1.day
-          page.fill_in 'Submission Close Date', with: grant.submission_close_date + 1.day
-          page.fill_in 'Review Open Date', with: grant.review_open_date + 1.day
-          page.fill_in 'Review Close Date', with: grant.review_close_date + 1.day
+          page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
+          page.fill_in 'Submission Open Date', with: (grant.submission_open_date + 1.day).to_fs
+          page.fill_in 'Submission Close Date', with: (grant.submission_close_date + 1.day).to_fs
+          page.fill_in 'Review Open Date', with: (grant.review_open_date + 1.day).to_fs
+          page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
           expect do
             click_button('Save as Draft')
             expect(1).to eql 1

@@ -29,29 +29,29 @@
   .cell.small-12.medium-3
     = f.label :publish_date, 'Publish Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :publish_date, value: date_mmddyyyy(grant.publish_date ||= Date.today), required: true, disabled: disable_fields, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
+    = f.text_field :publish_date, value: (grant.publish_date ||= Date.today).to_fs, required: true, disabled: disable_fields, class: 'small-12 medium-4', aria: { 'described-by': 'publishDateHelp' }
     %p.help-text#publishDateHelp
       When published, your grant will be publicly available on this date.
 .grid-x
   .cell.small-12.medium-3
     = f.label :submission_open_date, 'Submission Open Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :submission_open_date, value: grant.submission_open_date, placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
+    = f.text_field :submission_open_date, value: grant.submission_open_date&.to_fs, placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :submission_close_date, 'Submission Close Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :submission_close_date, value: grant.submission_close_date, placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
+    = f.text_field :submission_close_date, value: grant.submission_close_date&.to_fs, placeholder: 'mm/dd/YYYY', required: true, disabled: disable_fields, class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_open_date, 'Review Open Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :review_open_date, value: grant.review_open_date, disabled: disable_fields, class: 'small-12 medium-4'
+    = f.text_field :review_open_date, value: grant.review_open_date&.to_fs, disabled: disable_fields, class: 'small-12 medium-4'
 .grid-x
   .cell.small-12.medium-3
     = f.label :review_close_date, 'Review Close Date', class: 'middle'
   .cell.small-12.medium-9
-    = f.text_field :review_close_date, value: grant.review_close_date, disabled: disable_fields, class: 'small-12 medium-4'
+    = f.text_field :review_close_date, value: grant.review_close_date&.to_fs, disabled: disable_fields, class: 'small-12 medium-4'
 
 %h3
   Review Settings
