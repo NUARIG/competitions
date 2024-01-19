@@ -4,14 +4,19 @@ require_relative 'boot'
 
 require 'rails/all'
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
-
 module Competitions
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    # Update rails to v7.0.8
+    #   Deprecate passing a format to #to_s in favor of #to_fs
+    #   Fixed as needed. Added config before `Bundler.require` per deprection warning.
+    ENV['RAILS_DISABLE_DEPRECATED_TO_S_CONVERSION'] = "true"
+    
+    # Require the gems listed in Gemfile, including any gems
+    # you've limited to :test, :development, or :production.
+    Bundler.require(*Rails.groups)
+
+    # Initialize configuration defaults
+    config.load_defaults 7.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -32,8 +37,7 @@ module Competitions
     # This suppresses browser messages in console.
     config.action_dispatch.cookies_same_site_protection = :lax
 
-    # Added 1/16/24 
-    # Update paper_trail to v15.1, review after upgrading to rails 7
+    # Update paper_trail to v15.1
     #   error `Psych::DisallowedClass, Tried to load unspecified class: Time`
     #   Per Rails guide, default setting is [Symbol]
     config.active_record.yaml_column_permitted_classes = [Symbol, Time]
