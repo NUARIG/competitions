@@ -27,6 +27,6 @@
 
     = link_to 'Cancel', @grant, class: 'button secondary clear'
 :javascript
-  $(function () {
+  document.addEventListener('turbo:load', function() {
     Grant.FormBuilderUploadSetup();
   });
