@@ -4,7 +4,7 @@
   .callout.warning
     Review period is closed
 
-= form_for review, url: grant_submission_review_url(grant, submission, review), html: { novalidate: true, data: { abide: '' } }, local: true, data: { turbo: false } do |f|
+= form_for review, url: grant_submission_review_url(grant, submission, review), html: { novalidate: true }, local: true, data: { turbo: false } do |f|
   - if review.criteria_reviews.any?
     %h3
       Review Criteria
@@ -16,11 +16,7 @@
 
   = render partial: 'overall_impact', locals: { f: f, disabled: disabled }
 
-  .alert.callout{ style: 'display: none', data: { abide: { error: true } } }
-    %p
-      Please check the required scores.
-
   .actions
-    = f.button 'Save as Draft', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:draft], data: { confirm: "You are saving this review as a draft. Scores here will not count toward the submission until this review has been submitted. You may submit it until #{grant.review_close_date}.", disable_with: 'Please wait'}, class: 'secondary button'
-    = f.button 'Submit Your Review', type: 'submit', disabled: disabled, name: 'review[state]', value: Review::REVIEW_STATES[:submitted], data: { disable_with: "Please wait..." }, class: 'success button'
+    = f.button 'Save as Draft', name: 'review[state]', value: Review::REVIEW_STATES[:draft], type: 'submit', disabled: disabled, data: { confirm: "You are saving this review as a draft. Scores here will not count toward the submission until this review has been submitted. You may submit it until #{grant.review_close_date.to_fs}.", disable_with: 'Please wait'}, class: 'secondary button'
+    = f.button 'Submit Your Review', name: 'review[state]', value: Review::REVIEW_STATES[:submitted], type: 'submit', disabled: disabled, data: { disable_with: "Please wait..." }, class: 'success button'
     

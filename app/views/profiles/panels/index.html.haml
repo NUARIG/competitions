@@ -26,11 +26,11 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :name, 'Grant', {}, { title: 'Sort on Grant Title' })
+          = sort_link(@q, :name, 'Grant', { title: 'Sort on Grant Title' })
         %th
-          = sort_link(@q, :review_close_date, {}, { title: 'Sort on Review Close' })
+          = sort_link(@q, :review_close_date, { title: 'Sort on Review Close' })
         %th
-          = sort_link(@q, 'panel_start_datetime', 'Panel Start',{}, { title: 'Sort on Panel Start' })
+          = sort_link(@q, 'panel_start_datetime', 'Panel Start', { title: 'Sort on Panel Start' })
     %tbody
       - @grants.each do |grant|
         %tr.panel
@@ -39,6 +39,6 @@
           %td
             = time_tag(grant.review_close_date.end_of_day, grant.review_close_date.end_of_day.to_formatted_s(:date_only))
           %td
-            = grant.panel.start_datetime.present? ? time_tag(grant.panel.start_datetime, grant.panel.start_datetime.to_formatted_s(:default)) : 'Not Scheduled'
+            = grant.panel.start_datetime.present? ? time_tag(grant.panel.start_datetime, grant.panel.start_datetime.to_fs) : 'Not Scheduled'
 
   != pagy_foundation_nav(@pagy_a)

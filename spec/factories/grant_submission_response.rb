@@ -24,7 +24,7 @@ FactoryBot.define do
 
     trait :datetime do
       association :question, factory: :date_question
-      datetime_val { DateTime.now.to_s }
+      datetime_val { DateTime.now.to_fs }
     end
 
     trait :pick_one do

@@ -10,5 +10,4 @@
   - @grant.criteria.each do |criterion|
     %td
       - criterion_score = review.criteria_reviews.detect { |cr| cr.criterion_id == criterion.id }
-      =# (criterion_score.nil? || criterion_score.score.nil?)? '-' : criterion_score.score
-      = review.submitted? ? criterion_score.score : '-'
+      = review.submitted? && criterion_score.score.present? ? criterion_score.score : '-'

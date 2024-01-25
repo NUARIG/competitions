@@ -40,7 +40,7 @@ RSpec.describe 'Banners', type: :system do
 
           scenario 'displays the Banners link for admins' do
             page.find('#admin').hover
-            pause
+            pause(time: 0.30)
             expect(page).to have_link 'Banners', href: banners_path
             click_link 'Banners'
             expect(current_path).to eq("/banners")
