@@ -41,9 +41,6 @@
     %tbody
       - @reviews.each do |review|
         - review_data = display_review_data(review: review, user: current_user)
-
-        -# grant_published = review.grant.published?
-        -# review_complete = (review_data.status == 'submitted')
         - grant = review.grant
         - submission = review.submission
 
