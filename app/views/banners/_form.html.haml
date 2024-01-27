@@ -1,6 +1,5 @@
 .row.grid-x.grid-padding-y
   .cell
-    = f.label :body, 'Body'
     = f.hidden_field :body, id: :banner_body
     %trix-editor(input='banner_body')
 .row.grid-x.grid-padding-y
@@ -9,16 +8,22 @@
   .cell.small-12.medium-1
     = f.check_box :visible
 - unless banner.new_record?
-  .row.grid-x.grid-padding-y
-    .cell.small-12.medium-2.text-left
-      = f.label :created_at, class: 'small'
+  .row.grid-x
+    .cell.small-12.medium-1.text-left
+      %div
+        = f.label :created_at, class: 'small'
+      %div
+        = f.label :updated_at, class: 'small'    
     .cell.small-12.medium-3
-      = banner.created_at&.to_fs
+      %div
+        = display_datetime(banner.created_at)
+      %div
+        = display_datetime(banner.updated_at)
   .grid-x.grid-padding-y
     .cell.small-12.medium-2
-      = f.label :updated_at, class: 'small'
+      
     .cell.small-12.medium-3
-      = banner.updated_at&.to_fs
+      
 .grid-x
   .actions
     - if banner.new_record?

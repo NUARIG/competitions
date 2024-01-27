@@ -41,9 +41,6 @@
     %tbody
       - @reviews.each do |review|
         - review_data = display_review_data(review: review, user: current_user)
-
-        -# grant_published = review.grant.published?
-        -# review_complete = (review_data.status == 'submitted')
         - grant = review.grant
         - submission = review.submission
 
@@ -60,8 +57,8 @@
           %td
             = link_to_if grant.published?, truncate(submission.title), grant_submission_path(grant, submission)
           %td
-            = review_data.created_date #time_tag(review.created_at, review.created_at.to_formatted_s(:default))
+            = review_data.created_date
           %td
-            = review_data.due_date # time_tag(review.grant.review_close_date.end_of_day, review.grant.review_close_date.to_formatted_s(:default))
+            = review_data.due_date
 
   != pagy_foundation_nav(@pagy)

@@ -5,10 +5,9 @@ require 'rails/all'
 module Competitions
   class Application < Rails::Application
     # Update rails to v7.0.8
-    #   Deprecate passing a date to #to_s in favor of #to_fs
-    #   Updated in views as needed. 
     #   Added before `Bundler.require` per deprection warning.
-    #   Note: PaperTrail (v15.1) entries with date(s) still show the following deprecation 
+    #   Note: If commented, PaperTrail (v15.1) entries for Grants
+    #         will show the following deprecation due to dates in `object`: 
     #         `DEPRECATION WARNING: Using a :default format for Date#to_s is deprecated. 
     #          Please use Date#to_fs instead.`
     ENV['RAILS_DISABLE_DEPRECATED_TO_S_CONVERSION'] = "true"

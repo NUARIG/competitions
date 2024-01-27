@@ -17,6 +17,6 @@
   = render partial: 'overall_impact', locals: { f: f, disabled: disabled }
 
   .actions
-    = f.button 'Save as Draft', name: 'review[state]', value: Review::REVIEW_STATES[:draft], type: 'submit', disabled: disabled, data: { confirm: "You are saving this review as a draft. Scores here will not count toward the submission until this review has been submitted. You may submit it until #{grant.review_close_date.to_fs}.", disable_with: 'Please wait'}, class: 'secondary button'
+    = f.button 'Save as Draft', name: 'review[state]', value: Review::REVIEW_STATES[:draft], type: 'submit', disabled: disabled, data: { confirm: "You are saving this review as a draft. Scores here will not count toward the submission until this review has been submitted. You may submit it until #{date_mmddyyyy(grant.review_close_date)}.", disable_with: 'Please wait'}, class: 'secondary button'
     = f.button 'Submit Your Review', name: 'review[state]', value: Review::REVIEW_STATES[:submitted], type: 'submit', disabled: disabled, data: { disable_with: "Please wait..." }, class: 'success button'
     
