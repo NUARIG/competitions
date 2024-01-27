@@ -43,8 +43,8 @@ RSpec.describe 'Grants', type: :system, js: true do
 
       scenario 'date fields edited with datepicker are properly formatted' do
         tomorrow = (Date.current + 1.day)
-        expect(page).to have_field('grant_publish_date', with: @grant.publish_date&.to_fs)
-        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow.to_fs}'))")
+        expect(page).to have_field('grant_publish_date', with: I18n.l(@grant.publish_date, format: :mmddyyyy))
+        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{I18n.l(tomorrow)}'))")
         click_button 'Update'
         expect(@grant.reload.publish_date).to eql(tomorrow)
       end
@@ -333,9 +333,9 @@ RSpec.describe 'Grants', type: :system, js: true do
 
         it 'displays dates' do
           expect(page).to have_content 'Panel Start'
-          expect(page).to have_content grant.panel.start_datetime.to_fs
+          expect(page).to have_content I18n.l(grant.panel.start_datetime)
           expect(page).to have_content 'Panel End'
-          expect(page).to have_content grant.panel.end_datetime.to_fs
+          expect(page).to have_content I18n.l(grant.panel.end_datetime)
         end
 
         it 'displays panel link' do

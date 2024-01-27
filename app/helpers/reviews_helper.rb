@@ -18,8 +18,8 @@ module ReviewsHelper
                     link: link,
                     overall_impact_score: overall_impact_score,
                     composite_score: composite_score,
-                    created_date: time_tag(review.created_at, review.created_at.to_date.to_fs),
-                    due_date: time_tag(review.grant.review_close_date.end_of_day, review.grant.review_close_date.to_fs))
+                    created_date: time_tag(review.created_at, date_mmddyyyy(review.created_at.to_date)),
+                    due_date: time_tag(review.grant.review_close_date.end_of_day, date_mmddyyyy(grant.review_close_date)))
   end
 
   def find_review_by_submission_and_reviewer(submission, reviewer)

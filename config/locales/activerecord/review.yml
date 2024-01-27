@@ -17,7 +17,7 @@ en:
         review:
           attributes:
             base:
-              may_not_review_after_close_date: 'The timeframe for reviews ended on %{review_close_date.to_fs}'
+              may_not_review_after_close_date: 'The timeframe for reviews ended on %{review_close_date}'
             assigner:
               may_not_add_review: 'may not assign submissions reviews on this grant.'
             reviewer:
