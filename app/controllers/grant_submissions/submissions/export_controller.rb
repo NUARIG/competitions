@@ -3,10 +3,11 @@ module GrantSubmissions
     class ExportController < GrantSubmissions::SubmissionsController
 
       def index
-        @grant      = Grant.kept.friendly.with_administrators.find(params[:grant_id])
+        @grant = Grant.includes(form: [sections: :questions]).kept.friendly.with_administrators.find(params[:grant_id])
 
         if Pundit.policy(current_user, @grant).show?
-          @questions  = @grant.questions
+          # Get the questions in order of the submission form.
+          @questions   = @grant.sections.order(:display_order).flat_map{ |section| section.questions.order(:display_order) }
           @submissions = policy_scope(GrantSubmission::Submission.with_responses, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope)
         else
           skip_policy_scope
