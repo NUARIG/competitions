@@ -234,6 +234,14 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
             end
           end
+
+          context 'export' do
+            it 'unfound grant redirects to root' do
+              visit '/grants/invalidgrant/submissions/export.xlsx'
+              expect(current_path).to eq('/') 
+              expect(page).to have_text 'Grant not found.'
+            end
+          end
         end
       end
 

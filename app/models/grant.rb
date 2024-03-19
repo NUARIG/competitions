@@ -28,8 +28,11 @@ class Grant < ApplicationRecord
 
   has_one_attached :document
 
-  has_one    :form,                 class_name: 'GrantSubmission::Form',
-                                    foreign_key: :grant_id
+  has_one    :form, class_name: 'GrantSubmission::Form',
+                    foreign_key: :grant_id
+  has_many   :sections,  through: :form
+  has_many   :questions, through: :sections
+  
   has_one    :panel,                foreign_key: :grant_id
   has_many   :grant_reviewers
   has_many   :reviewers,            through: :grant_reviewers
@@ -39,8 +42,6 @@ class Grant < ApplicationRecord
   has_many   :contacts,             -> { with_user.contacts }, class_name: 'GrantPermission'
   has_many   :administrators,       through: :grant_permissions,
                                     source: :user
-
-  has_many   :questions,            through: :form
 
   has_many   :submissions,          class_name:   'GrantSubmission::Submission',
                                     foreign_key:  :grant_id,
