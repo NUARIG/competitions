@@ -75,7 +75,7 @@ wb.add_worksheet(name: sheet_name) do |sheet|
                             submitter.email,                                # D
                             submission.title,                               # E
                             submission.state,                               # F
-                            submission.updated_at.to_s(:long_ordinal),      # G
+                            submission.updated_at.to_fs(:ddmmyyyy),         # G
                             reviews_completed]                              # H
 
     base_submission_info << t("boolean.yes_no.#{submission.awarded}") if has_awarded_submissions # I
