@@ -16,9 +16,13 @@ module GrantSubmissions
         end
 
         respond_to do |format|
-          # trim grant name so the exported file name is max 205 chars
+          # truncate grant name so the exported file name is max 205 chars
           format.xlsx { response.headers['Content-Disposition'] = "attachment; filename=submissions-#{@grant.name.gsub(/\W/,'')[0,178]}-#{DateTime.now.strftime('%Y_%m%d')}.xlsx" }
         end
+      rescue ActiveRecord::RecordNotFound
+        skip_policy_scope
+        flash[:alert] = 'Grant not found.'
+        redirect_back fallback_location: root_path
       end
     end
   end
