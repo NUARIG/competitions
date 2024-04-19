@@ -1,7 +1,7 @@
 class Review < ApplicationRecord
   include WithScoring
   include Discard::Model
-
+  
   attr_accessor :user_submitted_state
   
   after_validation :set_state, on: :update,
@@ -42,7 +42,7 @@ class Review < ApplicationRecord
   validates_associated :criteria_reviews, on: :update, 
                                           if: -> { self.submitted? || self.user_submitted_state == REVIEW_STATES[:submitted] }
   
-  validates_presence_of     :reviewer
+  # validates_presence_of     :reviewer
   validates_presence_of     :overall_impact_score, if: -> { self.submitted? }
 
   validates_uniqueness_of   :reviewer, scope: :submission
@@ -131,15 +131,4 @@ class Review < ApplicationRecord
   def set_state
     self.state = user_submitted_state
   end
-
-  # TODO: use this for every review load?
-  # after_initialize :define_criteria_reviews
-
-  # def define_criteria_reviews
-  #   submission.grant.criteria.each do |criterion|
-  #     unless self.criteria_reviews.detect{ |cr| cr.criterion_id == criterion.id }.present?
-  #       self.criteria_reviews.build(criterion: criterion, review: self)
-  #     end
-  #   end
-  # end
 end

@@ -25,7 +25,6 @@ $(document).on('turbo:load', function() {
 });
 
 require('./src/legacy/app')
-// require('./src/legacy/cable')
 require('./src/legacy/dependency')
 require('./src/legacy/form_builder_standard_answer')
 require('./src/legacy/form_builder_survey')

@@ -1,5 +1,5 @@
 class BannersController < ApplicationController
-  before_action :set_banner,    except: %i[index new create]
+  before_action :set_banner, except: %i[index new create]
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index

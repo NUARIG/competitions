@@ -66,8 +66,8 @@ RSpec.describe GrantSubmission::Submission, type: :model do
                                                                                        assigner:   grant_admin,
                                                                                        reviewer:   grant.reviewers.first) }
     let(:incomplete_review) { create(:incomplete_review, submission: submission,
-                                                     assigner: grant_admin,
-                                                     reviewer: grant.reviewers.first) }
+                                                         assigner: grant_admin,
+                                                         reviewer: grant.reviewers.first) }
 
     context 'published grant' do
       describe '#destroy' do
