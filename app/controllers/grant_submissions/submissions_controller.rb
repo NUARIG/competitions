@@ -1,19 +1,19 @@
 module GrantSubmissions
   class SubmissionsController < GrantBaseController
     before_action :set_grant, except: %i[index new]
+    skip_after_action :verify_policy_scoped, only: %i[index]
 
     def index
       flash.keep
       @grant = Grant.kept.friendly.with_administrators.find(params[:grant_id])
-
-      if Pundit.policy(current_user, @grant).show?
-        @q       = policy_scope(GrantSubmission::Submission, policy_scope_class: GrantSubmission::SubmissionPolicy::Scope).ransack(params[:q])
+      set_user_grant_role
+      
+      if @user_grant_role.present?
+        @q       = GrantSubmission::Submission.kept.includes(:reviews, :applicants, :grant).where(grant_id: @grant.id).ransack(params[:q])
         @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
 
-        set_user_grant_role
         @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
       else
-        skip_policy_scope
         flash[:alert] = I18n.t('pundit.default')
         redirect_to root_path
       end
@@ -59,8 +59,7 @@ module GrantSubmissions
         submission_redirect(@grant, @submission)
       else
         @submission.state = 'draft'
-        flash.now[:alert] = result.messages
-        # flash.now[:alert] = @submission.errors.to_a
+        flash[:alert] = result.messages
         render 'new'
       end
     end
@@ -95,7 +94,7 @@ module GrantSubmissions
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
       else
-        flash[:error] = @submission.errors.to_a
+        flash.now[:error] = @submission.errors.to_a
         redirect_back fallback_location: grant_submissions_path(@grant)
       end
     end
