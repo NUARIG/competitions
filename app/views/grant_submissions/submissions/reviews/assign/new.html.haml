@@ -1,0 +1,43 @@
+- content_for(:page_title, "Assign Reviewers for #{truncate(@submission.title, length: 45)}")
+
+= render 'shared/grant_header', { grant: @grant, section_title: 'Assign Reviewers' }
+
+= turbo_frame_tag :modal do
+	#modal-container{ tabindex: '0', data: { controller: 'modals', 'modals-target': 'modal', action: 'keydown.esc->modals#close' } }
+		.modal-background{ for: 'modal-container' }
+		.content{ class: 'small-10 medium-5', 'aria-labelledby': 'title', role: 'dialog', data: {  } }
+			.close-button{ data: { action: 'click->modals#close' } }
+				&times;
+			%h4#title
+				= yield(:page_title)
+			= turbo_frame_tag :callout do
+				- if @review.errors.any?
+					.callout.alert
+						Review the following #{'error'.pluralize(@review.errors.count)}:
+						%ul
+							- @review.errors.each do |error|
+								%li
+									#{error.full_message}
+
+			- if @eligible_reviewers.length.zero?
+				%p
+					There are no available Reviewers for this Submission.
+					= succeed '.' do
+						= link_to 'Add or view current reviewers', grant_reviewers_path(@grant)
+				= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear', title: 'Close'
+
+			- else 
+				= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
+					
+					%p
+						This submission has 
+						= turbo_frame_tag :available_reviews do
+							#{@number_of_available_reviews} #{'review'.pluralize(@number_of_available_reviews)} 
+						to be assigned and 
+						= turbo_frame_tag :available_reviewers do
+							#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
+						available to review.
+					
+					= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, prompt: 'Choose a Reviewer'
+					= f.submit 'Assign to Review', class: 'button'
+					= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'

@@ -67,8 +67,10 @@ Rails.application.routes.draw do
         patch 'award',    to: 'grant_submissions/submissions/award#update'
       end
 
-      resources :reviews,         except: %i[new],  controller: 'grant_submissions/submissions/reviews' do
-        delete 'opt_out',         to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
+      resource 'assign_review', only: %i[new create], controller: 'grant_submissions/submissions/reviews/assign', on: :member
+
+      resources :reviews, except: %i[new], controller: 'grant_submissions/submissions/reviews' do
+        delete 'opt_out', to: 'grant_submissions/submissions/reviews/opt_out#destroy', on: :member
       end
     end
 

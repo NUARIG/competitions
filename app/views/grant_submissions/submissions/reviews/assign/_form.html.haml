@@ -1,0 +1,11 @@
+- if @review.errors.present?
+	.callout.alert
+		Review the following #{pluralize(@review.errors.count, 'error')}:
+		%ul
+		- @review.errors.each do |error|
+			%li= error.full_message
+= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
+		#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} available to review.
+		= f.hidden_field :submission_id, value: @submission.id
+		= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, class: 'small', include_blank: 'Choose a Reviewer'
+		= f.submit 'Assign to Review', class: 'button'
