@@ -328,3 +328,44 @@ h2#section {
     }
   }
 }
+
+#modal-container {
+  .modal-background {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    z-index: 998;
+  }
+  .content {
+    /* Note: responsive width is set in the content view */
+    background-color: #fff;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 1.5rem;
+    display: block;
+    height: calc(40vh);
+    z-index: 999;
+    overflow-y: auto;
+    .close-button {
+      font-size: 2rem;
+    }
+    .callout {
+      font-size: .85em;
+      &.alert {
+        font-weight: bold;
+      }
+      li {
+        margin-top: 0;
+      }
+    }
+  }
+}
