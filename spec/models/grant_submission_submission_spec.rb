@@ -115,6 +115,40 @@ RSpec.describe GrantSubmission::Submission, type: :model do
         end
       end
     end
+
+    context 'eligible_reviewers' do
+      before(:each) do
+        reviewer1 = create(:grant_reviewer, grant: grant, reviewer: grant_admin)
+        reviewer2 = grant.reviewers.first
+        grant.update(max_reviewers_per_submission: 2)
+      end
+
+      context 'submitted' do
+        context 'with no reviews' do
+          it 'returns all available reviewers' do
+            eligible_reviewers = submission.eligible_reviewers
+            expect(eligible_reviewers.length).to eql grant.reviewers.length
+          end
+        end
+
+        context 'with one reviews' do
+          it 'returns unassigned available reviewers' do
+            incomplete_review.touch
+            eligible_reviewers = submission.eligible_reviewers
+            expect(eligible_reviewers.length).to eql 1
+            expect(eligible_reviewers).not_to include incomplete_review.reviewer
+          end
+        end
+
+        context 'with maximum number of assigned reviews' do
+          it 'returns nil' do
+            incomplete_review.touch
+            incomplete_review2 = create(:incomplete_review, submission: submission, assigner: grant_admin, reviewer: grant.reviewers.last)
+            expect(submission.eligible_reviewers).to be nil
+          end
+        end
+      end
+    end
   end
 
   describe 'unsubmit' do
