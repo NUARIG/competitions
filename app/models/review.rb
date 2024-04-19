@@ -52,10 +52,10 @@ class Review < ApplicationRecord
                                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
                                                    if: -> { overall_impact_score.present? && !self.state != REVIEW_STATES[:assigned] }
 
-  validate :reviewer_is_a_grant_reviewer
+  validate :reviewer_is_a_grant_reviewer, if: -> { self.reviewer.present? }
   validate :assigner_is_a_grant_editor
   validate :reviewer_is_not_applicant
-  validate :reviewer_may_be_assigned,       if: :new_record?
+  validate :reviewer_may_be_assigned,       if: -> { self.new_record? && reviewer.present? } 
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
   validate :submission_is_not_draft
