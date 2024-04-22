@@ -132,6 +132,10 @@ class Review < ApplicationRecord
     self.state = user_submitted_state
   end
 
+  def set_state
+    self.state = user_submitted_state
+  end
+
   # TODO: use this for every review load?
   # after_initialize :define_criteria_reviews
 
