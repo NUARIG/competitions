@@ -1,36 +1,45 @@
-# frozen_string_literal: true
-
 require_relative 'boot'
 
 require 'rails/all'
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
-
 module Competitions
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    # Update rails to v7.0.8
+    #   Added before `Bundler.require` per deprection warning.
+    #   Note: If commented, PaperTrail (v15.1) entries for Grants
+    #         will show the following deprecation due to dates in `object`: 
+    #         `DEPRECATION WARNING: Using a :default format for Date#to_s is deprecated. 
+    #          Please use Date#to_fs instead.`
+    ENV['RAILS_DISABLE_DEPRECATED_TO_S_CONVERSION'] = "true"
 
-    # Settings in config/environments/* take precedence over those specified here.
+    
+    # Require the gems listed in Gemfile, including any gems
+    # you've limited to :test, :development, or :production.
+    Bundler.require(*Rails.groups)
+
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 7.0
+
+    # Configuration for the application, engines, and railties goes here.
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     # config.autoload_paths << Rails.root.join('lib')
-    config.eager_load_paths << "#{config.root}/lib"
+    config.eager_load_paths << Rails.root.join("lib")
 
 
     # Recursively load locale files
     # Allows for organized, model-specific translation files
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
-    # Specify cookies SameSite protection level: either :none, :lax, or :strict.
-    # This change is not backwards compatible with earlier Rails versions.
-    # It's best enabled when your entire app is migrated and stable on 6.1.
-    # Was not in Rails 6.0. Default in rails 6.1 is :lax, not :strict
-    # This suppresses browser messages in console.
-    config.action_dispatch.cookies_same_site_protection = :lax
+    # Update paper_trail to v15.1, Rails 7
+    #   error `Psych::DisallowedClass, Tried to load unspecified class: Time`
+    #   Per Rails guide, default setting is [Symbol]
+    config.active_record.yaml_column_permitted_classes = [Symbol, Time]
+  
+    config.active_support.disable_to_s_conversion = true
   end
 end
 

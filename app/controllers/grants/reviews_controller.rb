@@ -1,22 +1,23 @@
 module Grants
   class ReviewsController < ApplicationController
+    include RansackReviewSort
+
     skip_after_action :verify_policy_scoped, only: %i[index]
 
     def index
-
       if request.format.html?
-        @grant = Grant.kept.friendly.with_reviews.find(params[:grant_id])
+        @grant = Grant.kept.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
 
-        @q              = Review.by_grant(@grant).ransack(params[:q])
-        @q.sorts        = 'applicants_last_name asc' if @q.sorts.empty?
+        set_ransack_grant_reviews_sort_query_results(@grant)
+
         @pagy, @reviews = pagy_array(@q.result, i18n_key: 'activerecord.models.review')
       elsif request.format.xlsx?
         @grant          = Grant.with_criteria.kept.friendly.find(params[:grant_id])
         authorize       @grant, :grant_viewer_access?
 
         @criteria       = @grant.criteria
-        @reviews        = Review.with_grant_and_submitter_and_applicants.with_criteria_reviews.by_grant(@grant)
+        @reviews        = Review.with_grant_and_submitter_and_applicants.with_reviewer.with_criteria_reviews.by_grant(@grant)
       end
 
       respond_to do |format|

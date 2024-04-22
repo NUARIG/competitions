@@ -197,8 +197,8 @@ RSpec.describe Grant, type: :model do
       end
 
       context 'discard' do
-        it 'is not valid to discard' do
-          expect(published_not_yet_open.valid?(:discard)).to be false
+        it 'is not valid to be discarded' do
+          expect(published_not_yet_open.reload.valid?(:discard)).to be false
           expect(published_not_yet_open.errors.messages[:base]).to include 'Published grant may not be deleted.'
         end
       end
@@ -207,10 +207,15 @@ RSpec.describe Grant, type: :model do
     context 'draft grant' do
       let(:draft_grant) { create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer) }
       let(:submission)  { review.submission }
-      let!(:review)      { create(:review, submission: draft_grant.submissions.first,
+      let(:review)      { create(:review, submission: draft_grant.submissions.first,
                                           assigner:   draft_grant.admins.first,
                                           reviewer:   draft_grant.reviewers.first) }
-      let(:panel)        { draft_grant.panel }
+      let(:panel)       { draft_grant.panel }
+
+      before(:each) do
+        review.touch
+        draft_grant.reload
+      end
 
       context 'discarding' do
         it 'is discardable' do
@@ -225,27 +230,27 @@ RSpec.describe Grant, type: :model do
         it 'discards associated submission' do
           expect do
             draft_grant.discard
-          end.to change{submission.reload.discarded_at}
+          end.to change{ submission.reload.discarded_at }
         end
 
         it 'discards associated review' do
           expect do
             draft_grant.discard
-          end.to change{review.reload.discarded_at}
+          end.to change{ review.reload.discarded_at }
         end
 
         it 'discards associated panel' do
           expect do
             draft_grant.discard
-          end.to change{panel.reload.discarded_at}
+          end.to change{ panel.reload.discarded_at }
         end
       end
 
       context '#validations' do
         context ':discard' do
-          it 'is not valid' do
-            expect(draft_grant.valid?(:discard)).to be true
-            expect(draft_grant.errors.messages[:base]).to be_empty
+          it 'is valid to be discarded' do
+            expect(draft_grant.reload.valid?(:discard)).to be true
+            expect(draft_grant.errors).to be_empty
           end
         end
       end
@@ -259,21 +264,21 @@ RSpec.describe Grant, type: :model do
           expect do
             draft_grant.undiscard
           end.to change{submission.reload.discarded_at}.to(nil)
-             .and change{GrantSubmission::Submission.kept.count}.by 1
+             .and change{ GrantSubmission::Submission.kept.count }.by 1
         end
 
         it 'undiscards reviews' do
           expect do
             draft_grant.undiscard
           end.to change{review.reload.discarded_at}.to(nil)
-             .and change{Review.kept.count}.by 1
+             .and change{ Review.kept.count }.by 1
         end
 
         it 'undiscards panel' do
           expect do
             draft_grant.undiscard
           end.to change{panel.reload.discarded_at}.to(nil)
-             .and change{Panel.kept.count}.by 1
+             .and change{ Panel.kept.count }.by 1
         end
       end
     end
@@ -296,8 +301,8 @@ RSpec.describe Grant, type: :model do
 
       context '#validations' do
         context ':discard' do
-          it 'is not valid' do
-            expect(completed_grant.valid?(:discard)).to be false
+          it 'is not valid to be discarded' do
+            expect(completed_grant.reload.valid?(:discard)).to be false
             expect(completed_grant.errors.messages[:base]).to include 'Completed grant may not be deleted.'
           end
         end

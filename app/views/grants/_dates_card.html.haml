@@ -6,7 +6,7 @@
       %dt
         Publish Date:
       %dd
-        = time_tag(grant.publish_date, grant.publish_date)
+        = time_tag(grant.publish_date, date_mmddyyyy(grant.publish_date))
       %dt
         Submission Period:
       %dd
@@ -16,11 +16,11 @@
           %dt
             Panel Start:
           %dd
-            = time_tag(grant.panel.start_datetime, grant.panel.start_datetime.to_formatted_s(:default))
+            = time_tag(grant.panel.start_datetime, display_datetime(grant.panel.start_datetime))
           %dt
             Panel End:
           %dd
-            = time_tag(grant.panel.end_datetime, grant.panel.end_datetime.to_formatted_s(:default))
+            = time_tag(grant.panel.end_datetime, display_datetime(grant.panel.end_datetime))
           %hr
             .text-center
               = link_to 'View Panel', grant_panel_path(grant)

@@ -1,4 +1,4 @@
-- if response.datetime_val
+- if response.datetime_val.present?
   = date_mmddyyyy(response.datetime_val)
 - else
   .no-response

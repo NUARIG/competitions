@@ -2,15 +2,15 @@
   %thead
     %tr
       %th
-        = sort_link(q, :title, 'Grant Title', {}, { title: 'Sort on Grant Title' })
+        = sort_link(q, :name, 'Name', { title: 'Sort on Grant Name' })
       %th
-        = sort_link(q, :state, 'State', {}, { title: 'Sort on State' })
+        = sort_link(q, :state, 'State', { title: 'Sort on State' })
       %th
-        = sort_link(q, :publish_date, {}, { title: 'Sort on Publish Date' })
+        = sort_link(q, :publish_date, { title: 'Sort on Publish Date' })
       %th
-        = sort_link(q, :submission_open_date, {}, { title: 'Sort on Submission Open Date' })
+        = sort_link(q, :submission_open_date, { title: 'Sort on Submission Open Date' })
       %th
-        = sort_link(q, :submission_close_date, {}, { title: 'Sort on Submission Close Date' })
+        = sort_link(q, :submission_close_date, { title: 'Sort on Submission Close Date' })
       %th
 
   %tbody
@@ -21,11 +21,11 @@
         %td
           = grant.state.titleize
         %td
-          = time_tag(grant.publish_date.beginning_of_day, grant.publish_date.beginning_of_day.to_formatted_s(:date_only))
+          = time_tag(grant.publish_date.beginning_of_day, date_mmddyyyy(grant.publish_date.beginning_of_day))
         %td
-          = time_tag(grant.submission_open_date.beginning_of_day, grant.submission_open_date.beginning_of_day.to_formatted_s(:date_only))
+          = time_tag(grant.submission_open_date.beginning_of_day, date_mmddyyyy(grant.submission_open_date))
         %td
-          = time_tag(grant.submission_close_date.end_of_day, grant.submission_close_date.end_of_day.to_formatted_s(:date_only))
+          = time_tag(grant.submission_close_date.end_of_day, date_mmddyyyy(grant.submission_close_date))
         - if policy(grant).edit?
           = render 'grants/manage_links', { grant: grant}
         - else

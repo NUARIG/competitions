@@ -1,6 +1,8 @@
 module GrantSubmissions
   module Submissions
     class ReviewsController < ApplicationController
+      include RansackReviewSort
+
       before_action     :set_review_grant_and_submission, only: %i[show edit update destroy]
       skip_after_action :verify_policy_scoped, only: :index
 
@@ -10,8 +12,9 @@ module GrantSubmissions
         @grant = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:submitter).find(params[:submission_id])
-        @q              = Review.with_reviewer.with_criteria_reviews.by_submission(@submission).ransack(params[:q])
-        @q.sorts        = ['reviewer_last_name asc', 'overall_impact_score desc'] if @q.sorts.empty?
+        
+        set_ransack_submission_reviews_sort_query_results(@submission)
+
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
         respond_to do |format|
           format.html { render :index }

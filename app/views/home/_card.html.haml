@@ -9,7 +9,7 @@
       .date
         %strong
           Announced:
-        = time_tag(grant.publish_date.beginning_of_day, grant.publish_date.beginning_of_day.to_formatted_s(:date_only), class: 'publish-date')
+        = time_tag(grant.publish_date.beginning_of_day, date_mmddyyyy(grant.publish_date), class: 'publish-date')
       .date
         %strong
           Submission Period:

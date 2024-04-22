@@ -125,7 +125,11 @@ class Review < ApplicationRecord
   end
 
   def is_not_after_close_date
-    errors.add(:base, :may_not_review_after_close_date, review_close_date: grant.review_close_date) if review_period_closed?
+    errors.add(:base, :may_not_review_after_close_date, review_close_date: I18n.l(grant.review_close_date)) if review_period_closed?
+  end
+
+  def set_state
+    self.state = user_submitted_state
   end
 
   def set_state

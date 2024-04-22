@@ -42,11 +42,19 @@ module ApplicationHelper
 
   # Dates
   def date_mmddyyyy(date)
-    date.blank? ? '' : date.strftime('%m/%d/%Y')
+    date.present? ? I18n.l(date, format: :mmddyyyy) : ''
+  end
+
+  def display_datetime(datetime)
+    datetime.present? ? I18n.l(datetime, format: :default) : ""
+  end
+
+  def date_time_date_only(date)
+    date.present? ? I18n.l(date, format: :mmddyyyy) : ''
   end
 
   def date_time_separate_lines(date)
-    date.blank? ? '' : time_tag(date, date.strftime('%m/%d/%Y<br/>%l:%M%P').html_safe)
+    date.present? ? time_tag(date, I18n.l(date, format: :two_lines).html_safe) : ''
   end
 
   def time_ago_tag(datetime:)

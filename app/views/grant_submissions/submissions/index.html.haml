@@ -62,18 +62,24 @@
 
       .grid-x.grid-padding-x.align-bottom.header
         .cell.small-12.medium-1
-          = sort_link(@q, :user_updated_at, 'Updated', {}, { title: 'Sort on Updated'} )
+          = sort_link(@q, :user_updated_at, 'Updated', { title: 'Sort on Updated'} )
         .cell.small-12.medium-2
-          = sort_link(@q, :applicants_last_name, 'Applicants', {}, {title: 'Sort on Applicants'})
+          = sort_link(@q, :applicants_last_name, 'Applicants', { title: 'Sort on Applicants'})
         .cell.small-12{ class: submission_title_class }
-          = sort_link(@q, :title, 'Title', {}, { title: 'Sort on Title'} )
+          = sort_link(@q, :title, 'Title', { title: 'Sort on Title'} )
         .cell.small-12.medium-1
-          = sort_link(@q, :state, 'State', {}, { title: 'Sort on State'} )
+          = sort_link(@q, :state, 'State', { title: 'Sort on State'} )
         - if user_has_grant_permissions
           .cell.small-12.medium-1
             Reviews
           .cell.small-12.medium-1
             %span{ title: 'Average of scored reviews - scored first' }
+              = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact', { title: 'Sort on  Overal Impact Score'})
+          .cell.small-12.medium-1
+            %span{ title: 'Average of scored Criteria - scored first' }
+              = sort_link(@q, :composite_score_nulls_last, 'Composite', { title: 'Sort on Composite Score'} )
+          .cell.small-12.medium-1
+            = sort_link(@q, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
               = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact', {}, { title: 'Sort on  Overal Impact Score'})
           .cell.small-12.medium-1
             %span{ title: 'Average of scored Criteria - scored first' }

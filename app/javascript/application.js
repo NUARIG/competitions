@@ -11,7 +11,6 @@ import "motion-ui"
 import "./src/vendor/jquery-ui"
 import "jquery_nested_form"
 import "@nathanvda/cocoon"
-import "trix"
 import "@rails/actiontext"
 import "foundation-sites"
 import "foundation-datepicker"
@@ -32,3 +31,5 @@ require('./src/legacy/form_builder_standard_answer')
 require('./src/legacy/form_builder_survey')
 require('./src/legacy/form_builder_upload_setup')
 require('./src/legacy/foundation-datepicker')
+import "trix"
+import "@rails/actiontext"
