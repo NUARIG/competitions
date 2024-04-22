@@ -80,12 +80,6 @@
               = sort_link(@q, :composite_score_nulls_last, 'Composite', { title: 'Sort on Composite Score'} )
           .cell.small-12.medium-1
             = sort_link(@q, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
-              = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact', {}, { title: 'Sort on  Overal Impact Score'})
-          .cell.small-12.medium-1
-            %span{ title: 'Average of scored Criteria - scored first' }
-              = sort_link(@q, :composite_score_nulls_last, 'Composite', {}, { title: 'Sort on Composite Score'} )
-          .cell.small-12.medium-1
-            = sort_link(@q, :awarded, 'Awarded', { default_order: :desc }, { title: 'Sort on Awarded' })
 
       .rows{ data: { controller: 'checkbox-submit' } }
         - @submissions.each do |submission|
