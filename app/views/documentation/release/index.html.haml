@@ -6,6 +6,18 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item.is-active{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.20 (April 19, 2024)
+    .accordion-content{"data-tab-content" => ""}
+      %ul
+        %li
+          Display submission responses in display order in download.
+          #{github_issue_link(issue: 1038)}
+        %li
+          Update Rails version to 7.0.8.1.
+        %li
+          Bug fixes, minor improvements.
+
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.19 (November 15, 2023)
     .accordion-content{"data-tab-content" => ""}
       %ul
