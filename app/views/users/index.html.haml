@@ -26,15 +26,15 @@
     %thead
       %tr
         %th
-          = sort_link(@q, :last_name, 'Name', {}, {title: 'Sort on Name'})
+          = sort_link(@q, :last_name, 'Name', { title: 'Sort on Name'})
         %th
-          = sort_link(@q, :email, {}, { title: 'Sort on Email' })
+          = sort_link(@q, :email, { title: 'Sort on Email' })
         %th
-          = sort_link(@q, :type_nulls_last, t('helpers.label.user.type'), {}, { title: 'Sort on User Type' })
+          = sort_link(@q, :type_nulls_last, t('helpers.label.user.type'), { title: 'Sort on User Type' })
         %th
-          = sort_link(@q, :created_at, t('helpers.label.user.created_at'), {}, { title: 'Sort on Join Date' })
+          = sort_link(@q, :created_at, t('helpers.label.user.created_at'), { title: 'Sort on Join Date' })
         %th
-          = sort_link(@q, :current_sign_in_at_nulls_last, I18n.t('helpers.label.user.current_sign_in_at'), {}, { title: 'Sort on Last Access' })
+          = sort_link(@q, :current_sign_in_at_nulls_last, I18n.t('helpers.label.user.current_sign_in_at'), { title: 'Sort on Last Access' })
         %th
 
     - @users.each do |user|

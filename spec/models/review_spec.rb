@@ -77,7 +77,7 @@ RSpec.describe Review, type: :model do
       it 'prevents a review from being submitted after grant review close date' do
         grant.update(publish_date: 6.days.ago, submission_open_date: 5.days.ago, submission_close_date: 4.days.ago, review_open_date: 3.days.ago, review_close_date: 2.days.ago)
         expect(review).not_to be_valid
-        expect(review.errors.messages[:base]).to include I18n.t('activerecord.errors.models.review.attributes.base.may_not_review_after_close_date', review_close_date: grant.review_close_date)
+        expect(review.errors.messages[:base]).to include I18n.t('activerecord.errors.models.review.attributes.base.may_not_review_after_close_date', review_close_date: I18n.l(grant.review_close_date))
       end
     end
 
@@ -125,7 +125,7 @@ RSpec.describe Review, type: :model do
           review.update(overall_impact_score: rand(Review::MINIMUM_ALLOWED_SCORE..Review::MAXIMUM_ALLOWED_SCORE))
           review.reload
           expect(review).not_to be_valid
-          expect(review.errors.messages[:base]).to include I18n.t('activerecord.errors.models.review.attributes.base.may_not_review_after_close_date', review_close_date: grant.review_close_date)
+          expect(review.errors.messages[:base]).to include I18n.t('activerecord.errors.models.review.attributes.base.may_not_review_after_close_date', review_close_date: I18n.l(grant.review_close_date))
         end
       end
     end

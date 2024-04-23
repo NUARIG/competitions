@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_29_200356) do
-
+ActiveRecord::Schema[7.0].define(version: 2024_01_23_171240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,8 +19,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.text "body"
     t.string "record_type", null: false
     t.bigint "record_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
@@ -30,7 +29,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -41,8 +40,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -59,8 +58,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "action", null: false
     t.string "browser"
     t.string "params"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["controller", "action"], name: "index_audit_actions_on_controller_and_action"
     t.index ["user_id", "action"], name: "index_audit_actions_on_user_id_and_action"
     t.index ["user_id", "controller"], name: "index_audit_actions_on_user_id_and_controller"
@@ -72,7 +71,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["item_id"], name: "index_banner_versions_on_item_id"
     t.index ["whodunnit"], name: "index_banner_versions_on_whodunnit"
   end
@@ -80,8 +79,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
   create_table "banners", force: :cascade do |t|
     t.text "body"
     t.boolean "visible", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "criteria", force: :cascade do |t|
@@ -90,8 +89,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.text "description"
     t.boolean "is_mandatory", default: true, null: false
     t.boolean "show_comment_field", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_criteria_on_grant_id"
   end
 
@@ -102,7 +101,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["item_id"], name: "index_criteria_review_versions_on_item_id"
     t.index ["review_id"], name: "index_criteria_review_versions_on_review_id"
     t.index ["whodunnit"], name: "index_criteria_review_versions_on_whodunnit"
@@ -113,8 +112,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "review_id"
     t.integer "score"
     t.text "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["criterion_id"], name: "index_criteria_reviews_on_criterion_id"
     t.index ["review_id"], name: "index_criteria_reviews_on_review_id"
   end
@@ -126,7 +125,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_criterion_versions_on_grant_id"
     t.index ["item_id"], name: "index_criterion_versions_on_item_id"
     t.index ["whodunnit"], name: "index_criterion_versions_on_whodunnit"
@@ -139,7 +138,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["item_id"], name: "index_grant_creator_request_versions_on_item_id"
     t.index ["requester_id"], name: "index_grant_creator_request_versions_on_requester_id"
     t.index ["whodunnit"], name: "index_grant_creator_request_versions_on_whodunnit"
@@ -151,8 +150,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "status", default: "pending", null: false
     t.bigint "reviewer_id"
     t.text "review_comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["status"], name: "index_grant_creator_requests_on_status"
   end
 
@@ -164,7 +163,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_grant_permission_versions_on_grant_id"
     t.index ["item_id"], name: "index_grant_permission_versions_on_item_id"
     t.index ["user_id"], name: "index_grant_permission_versions_on_user_id"
@@ -175,8 +174,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "grant_id"
     t.bigint "user_id"
     t.string "role"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "submission_notification", default: false, null: false
     t.boolean "contact", default: false, null: false
     t.index ["grant_id"], name: "index_grant_permissions_on_grant_id"
@@ -191,7 +190,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["email"], name: "index_grant_reviewer_invitation_versions_on_email"
     t.index ["grant_id"], name: "index_grant_reviewer_invitation_versions_on_grant_id"
     t.index ["item_id"], name: "index_grant_reviewer_invitation_versions_on_item_id"
@@ -203,11 +202,11 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "invited_by_id", null: false
     t.bigint "invitee_id"
     t.string "email", null: false
-    t.datetime "confirmed_at"
-    t.datetime "reminded_at"
-    t.datetime "opted_out_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "reminded_at", precision: nil
+    t.datetime "opted_out_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_grant_reviewer_invitations_on_email"
     t.index ["grant_id", "email"], name: "index_grant_reviewer_invitations_on_grant_id_and_email", unique: true
     t.index ["grant_id", "invited_by_id"], name: "index_grant_reviewer_invitations_on_grant_id_and_invited_by_id"
@@ -222,7 +221,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_grant_reviewer_versions_on_grant_id"
     t.index ["item_id"], name: "index_grant_reviewer_versions_on_item_id"
     t.index ["reviewer_id"], name: "index_grant_reviewer_versions_on_reviewer_id"
@@ -243,7 +242,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_grant_submission_form_versions_on_grant_id"
     t.index ["item_id"], name: "index_grant_submission_form_versions_on_item_id"
     t.index ["whodunnit"], name: "index_grant_submission_form_versions_on_whodunnit"
@@ -254,8 +253,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "submission_instructions", limit: 3000
     t.bigint "created_id"
     t.bigint "updated_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_grant_submission_forms_on_grant_id", unique: true
   end
 
@@ -266,7 +265,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_submission_question_id"], name: "i_gsmcov_on_question_id"
     t.index ["item_id"], name: "i_gsmcov_on_item_id"
     t.index ["whodunnit"], name: "i_gsmcov_on_whodunnit"
@@ -276,8 +275,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "grant_submission_question_id", null: false
     t.string "text", null: false
     t.integer "display_order", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["display_order", "grant_submission_question_id"], name: "i_smco_on_display_order_and_submission_question_id", unique: true
     t.index ["grant_submission_question_id"], name: "i_gsmco_on_submission_question_id"
     t.index ["text", "grant_submission_question_id"], name: "i_smco_on_text_and_submission_question_id", unique: true
@@ -290,7 +289,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_submission_section_id"], name: "index_gsqv_on_section_id"
     t.index ["item_id"], name: "index_gsqv_on_item_id"
     t.index ["whodunnit"], name: "index_gsqv_on_whodunnit"
@@ -304,8 +303,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "export_code"
     t.boolean "is_mandatory"
     t.string "response_type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["display_order", "grant_submission_section_id"], name: "i_sqs_on_display_order_and_submission_section_id", unique: true
     t.index ["grant_submission_section_id"], name: "index_grant_submission_questions_on_grant_submission_section_id"
     t.index ["text", "grant_submission_section_id"], name: "i_gsq_on_text_and_grant_submission_section_id", unique: true
@@ -318,7 +317,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_submission_question_id"], name: "index_gsrv_on_question_id"
     t.index ["item_id"], name: "index_gsrv_on_item_id"
     t.index ["whodunnit"], name: "index_gsrv_on_whodunnit"
@@ -331,10 +330,10 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "string_val"
     t.text "text_val"
     t.decimal "decimal_val"
-    t.datetime "datetime_val"
+    t.datetime "datetime_val", precision: nil
     t.boolean "boolean_val"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["grant_submission_multiple_choice_option_id"], name: "i_gsr_on_submission_multiple_choice_option_id"
     t.index ["grant_submission_question_id", "grant_submission_submission_id"], name: "i_gsr_on_submissisubmission_id", unique: true
     t.index ["grant_submission_question_id"], name: "i_gsr_on_grant_submission_question_id"
@@ -348,7 +347,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_submission_form_id"], name: "index_gssv_on_form_id"
     t.index ["item_id"], name: "index_gssv_on_item_id"
     t.index ["whodunnit"], name: "index_gssv_on_whodunnit"
@@ -358,8 +357,8 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "grant_submission_form_id", null: false
     t.string "title"
     t.integer "display_order", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["display_order", "grant_submission_form_id"], name: "i_submission_sections_on_display_order_and_submission_form_id", unique: true
     t.index ["grant_submission_form_id"], name: "index_grant_submission_sections_on_grant_submission_form_id"
   end
@@ -372,7 +371,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["applicant_id"], name: "index_gs_submission_applicant_v_on_applicant_id"
     t.index ["grant_submission_submission_id"], name: "index_gs_submission_applicant_v_on_submission_id"
     t.index ["item_id"], name: "index_gs_submission_applicant_v_on_item_id"
@@ -382,9 +381,9 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
   create_table "grant_submission_submission_applicants", force: :cascade do |t|
     t.bigint "grant_submission_submission_id", null: false
     t.bigint "applicant_id", null: false
-    t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["applicant_id"], name: "index_grant_submission_submission_applicants_on_applicant_id"
     t.index ["grant_submission_submission_id"], name: "i_gssa_on_grant_submission_submission_id"
   end
@@ -397,7 +396,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id", "submitter_id"], name: "index_gs_submission_v_on_grant_id_submitter_id"
     t.index ["grant_id"], name: "index_gs_submission_v_on_grant_id"
     t.index ["item_id"], name: "index_gs_submission_v_on_item_id"
@@ -409,12 +408,12 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "grant_submission_form_id", null: false
     t.bigint "created_id", null: false
     t.string "title", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "reviews_count", default: 0
     t.string "state", null: false
-    t.datetime "user_updated_at"
-    t.datetime "discarded_at"
+    t.datetime "user_updated_at", precision: nil
+    t.datetime "discarded_at", precision: nil
     t.decimal "average_overall_impact_score", precision: 5, scale: 2
     t.decimal "composite_score", precision: 5, scale: 2
     t.boolean "awarded", default: false, null: false
@@ -432,7 +431,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["item_type", "item_id"], name: "index_grant_versions_on_item_type_and_item_id"
     t.index ["whodunnit"], name: "index_grant_versions_on_whodunnit"
   end
@@ -451,9 +450,9 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.integer "max_submissions_per_reviewer"
     t.date "review_open_date"
     t.date "review_close_date"
-    t.datetime "discarded_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["discarded_at"], name: "index_grants_on_discarded_at"
     t.index ["slug"], name: "index_grants_on_slug"
   end
@@ -465,7 +464,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_panel_versions_on_grant_id"
     t.index ["item_id"], name: "index_panel_versions_on_item_id"
     t.index ["whodunnit"], name: "index_panel_versions_on_whodunnit"
@@ -473,14 +472,14 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
 
   create_table "panels", force: :cascade do |t|
     t.bigint "grant_id", null: false
-    t.datetime "start_datetime"
-    t.datetime "end_datetime"
+    t.datetime "start_datetime", precision: nil
+    t.datetime "end_datetime", precision: nil
     t.text "instructions"
     t.string "meeting_link"
     t.text "meeting_location"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "discarded_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "discarded_at", precision: nil
     t.boolean "show_review_comments", default: false, null: false
     t.index ["discarded_at"], name: "index_panels_on_discarded_at"
     t.index ["grant_id"], name: "index_panels_on_grant_id"
@@ -494,7 +493,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["grant_id"], name: "index_review_versions_on_grant_id"
     t.index ["item_id"], name: "index_review_versions_on_item_id"
     t.index ["whodunnit"], name: "index_review_versions_on_whodunnit"
@@ -506,10 +505,10 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.bigint "reviewer_id", null: false
     t.integer "overall_impact_score"
     t.text "overall_impact_comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "discarded_at"
-    t.datetime "reminded_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "discarded_at", precision: nil
+    t.datetime "reminded_at", precision: nil
     t.string "state", default: "assigned", null: false
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["grant_submission_submission_id", "reviewer_id"], name: "index_review_reviewer_on_grant_submission_id_and_assigner_id", unique: true
@@ -524,7 +523,7 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["item_id"], name: "index_user_versions_on_item_id"
     t.index ["whodunnit"], name: "index_user_versions_on_whodunnit"
   end
@@ -534,11 +533,11 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "first_name"
     t.string "last_name"
     t.string "era_commons"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.boolean "system_admin", default: false, null: false
@@ -547,10 +546,10 @@ ActiveRecord::Schema.define(version: 2023_09_29_200356) do
     t.string "type"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.datetime "reset_password_sent_at", precision: nil
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

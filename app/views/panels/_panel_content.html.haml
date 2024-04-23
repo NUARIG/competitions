@@ -15,9 +15,9 @@
     .turbo-table
       .grid-x.grid-padding-x.align-bottom.header
         .cell.small-12.medium-2
-          = sort_link(query, :applicants_last_name, 'Applicants', {}, { title: 'Sort on Applicants' })
+          = sort_link(query, :applicants_last_name, 'Applicants', { title: 'Sort on Applicants' })
         .cell.small-12.medium-4
-          = sort_link(query, :title, 'Submission', {}, { title: 'Sort on Submission Title'} )
+          = sort_link(query, :title, 'Submission', { title: 'Sort on Submission Title'} )
         .cell.small-12.medium-1
           Reviews
         .cell.small-12.medium-2
@@ -28,7 +28,7 @@
             = sort_link(query, :composite_score, 'Composite Score')
         - if user_has_grant_permissions
           .cell.small-12.medium-1
-            = sort_link(query, :awarded, 'Awarded', { default_order: :desc }, { title: 'Sort on Awarded' })
+            = sort_link(query, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
 
       .rows{ data: { controller: 'checkbox-submit' } }
         - @submissions.each do |submission|

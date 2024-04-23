@@ -6,6 +6,15 @@ en:
     on_off:
       'true': 'On'
       'false': 'Off'
+  date:
+    formats:
+      default: "%m/%d/%Y"
+      mmddyyyy: "%m/%d/%Y"
+  time:
+    formats:
+      default: "%m/%d/%Y %l:%M%P"
+      mmddyyyy: "%m/%d/%Y"
+      two_lines: "%m/%d/%Y<br/>%l:%M%P"
   activerecord:
     errors:
       messages:

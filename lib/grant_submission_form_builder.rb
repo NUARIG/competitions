@@ -34,7 +34,7 @@ class GrantSubmissionFormBuilder < ActionView::Helpers::FormBuilder
   def date_opt_time_field(datetime_comp, has_time_component, options = {})
     dt_input = @object.class.date_optional_time_attribute(datetime_comp)
     value = if @object.date_optional_time_errors?(datetime_comp)
-              @object.get_date_opt_time(datetime_comp, has_time_component).to_s
+              @object.get_date_opt_time(datetime_comp, has_time_component)&.to_fs
             else
               @object.send(dt_input)
             end

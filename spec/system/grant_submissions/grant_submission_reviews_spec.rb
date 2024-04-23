@@ -23,17 +23,17 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   let(:reviewer3)             { create(:grant_reviewer, grant: grant).reviewer }
 
   let(:assigned_review)       { create(:review, 
-                                          submission: submission,
-                                          assigner: grant_admin,
-                                          reviewer: reviewer) }
+                                        submission: submission,
+                                        assigner: grant_admin,
+                                        reviewer: reviewer) }
   let(:draft_scored_review)   { create(:draft_scored_review_with_scored_mandatory_criteria_review,
+                                        submission: submission,
+                                        assigner: grant_admin,
+                                        reviewer: reviewer2) }
+  let(:submitted_scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
                                           submission: submission,
                                           assigner: grant_admin,
-                                          reviewer: reviewer2) }
-  let(:submitted_scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
-                                            submission: submission,
-                                            assigner: grant_admin,
-                                            reviewer: reviewer3) }
+                                          reviewer: reviewer3) }
   let(:unscored_criterion_id) { submitted_scored_review.criteria_reviews.last.criterion.id }
 
   def random_score

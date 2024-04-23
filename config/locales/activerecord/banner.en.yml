@@ -16,8 +16,8 @@ en:
         id: ID
         body: Body
         visible: Visible
-        created_at: Created At
-        updated_at: Last Updated At
+        created_at: Created
+        updated_at: Updated
     errors:
       models:
         banner:
