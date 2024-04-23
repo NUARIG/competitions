@@ -27,7 +27,7 @@ module GrantSubmissions
 						if @review.save
 							ReviewerMailer.assignment(review: @review).deliver_now
 							@number_of_available_reviews = @grant.max_reviewers_per_submission - @submission.reviews.length
-							@eligible_reviewers = @submission.eligible_reviewers
+							@eligible_reviewers = @submission.reload.eligible_reviewers
 
 							flash.now[:success] = "Submission assigned for review. A notification email was sent to #{helpers.full_name(@review.reviewer)}."
 							format.turbo_stream

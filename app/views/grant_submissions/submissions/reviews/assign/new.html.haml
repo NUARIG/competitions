@@ -26,18 +26,19 @@
 						= link_to 'Add or view current reviewers', grant_reviewers_path(@grant)
 				= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear', title: 'Close'
 
-			- else 
-				= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
-					
-					%p
-						This submission has 
-						= turbo_frame_tag :available_reviews do
-							#{@number_of_available_reviews} #{'review'.pluralize(@number_of_available_reviews)} 
-						to be assigned and 
-						= turbo_frame_tag :available_reviewers do
-							#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
-						available to review.
-					
-					= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, prompt: 'Choose a Reviewer'
-					= f.submit 'Assign to Review', class: 'button'
-					= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'
+			- else
+				= turbo_frame_tag :assign_form do
+					= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
+						
+						%p
+							This submission has 
+							= turbo_frame_tag :available_reviews do
+								#{@number_of_available_reviews} #{'review'.pluralize(@number_of_available_reviews)} 
+							to be assigned and 
+							= turbo_frame_tag :available_reviewers do
+								#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
+							available to review.
+						
+						= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, prompt: 'Choose a Reviewer'
+						= f.submit 'Assign to Review', class: 'button'
+						= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'
