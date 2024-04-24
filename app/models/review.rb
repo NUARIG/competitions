@@ -131,4 +131,22 @@ class Review < ApplicationRecord
   def set_state
     self.state = user_submitted_state
   end
+<<<<<<< HEAD
+=======
+
+  def set_state
+    self.state = user_submitted_state
+  end
+
+  # TODO: use this for every review load?
+  # after_initialize :define_criteria_reviews
+
+  # def define_criteria_reviews
+  #   submission.grant.criteria.each do |criterion|
+  #     unless self.criteria_reviews.detect{ |cr| cr.criterion_id == criterion.id }.present?
+  #       self.criteria_reviews.build(criterion: criterion, review: self)
+  #     end
+  #   end
+  # end
+>>>>>>> develop
 end

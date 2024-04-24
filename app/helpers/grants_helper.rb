@@ -47,4 +47,17 @@ module GrantsHelper
       nil
     end
   end
+
+  def grant_name_class(grant:)
+    name_length = grant.name.length
+
+    case
+    when name_length > 85
+      'long'
+    when name_length > 50
+      'medium'
+    else
+      nil
+    end
+  end
 end
