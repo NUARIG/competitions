@@ -42,7 +42,6 @@ class Review < ApplicationRecord
   validates_associated :criteria_reviews, on: :update, 
                                           if: -> { self.submitted? || self.user_submitted_state == REVIEW_STATES[:submitted] }
   
-  # validates_presence_of     :reviewer
   validates_presence_of     :overall_impact_score, if: -> { self.submitted? }
 
   validates_uniqueness_of   :reviewer, scope: :submission

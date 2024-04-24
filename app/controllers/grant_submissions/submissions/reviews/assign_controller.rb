@@ -8,8 +8,8 @@ module GrantSubmissions
 
 				def new
 					if @grant == @submission.grant
-						@number_of_available_reviews = @grant.max_reviewers_per_submission - @submission.reviews.length
-						@eligible_reviewers = @submission.eligible_reviewers #set_eligible_reviewers
+						set_number_of_available_reviews
+						@eligible_reviewers = @submission.eligible_reviewers
 						@review = Review.new(submission: @submission)
 					else
 						flash[:alert] = 'Submission is not valid or could not be located'
@@ -26,13 +26,15 @@ module GrantSubmissions
 					respond_to do |format|
 						if @review.save
 							ReviewerMailer.assignment(review: @review).deliver_now
-							@number_of_available_reviews = @grant.max_reviewers_per_submission - @submission.reviews.length
+							set_number_of_available_reviews
 							@eligible_reviewers = @submission.reload.eligible_reviewers
 
 							flash.now[:success] = "Submission assigned for review. A notification email was sent to #{helpers.full_name(@review.reviewer)}."
 							format.turbo_stream
 						else
-							@number_of_available_reviews = @grant.max_reviewers_per_submission - @submission.reviews.reload.length
+							@submission.reviews.reload
+
+							set_number_of_available_reviews
 							@eligible_reviewers = @submission.eligible_reviewers
 							format.html { render :new, status: :unprocessable_entity }
 				      format.json { render json: @review.errors, status: :unprocessable_entity }
@@ -61,6 +63,10 @@ module GrantSubmissions
 				def set_eligible_reviewers
 					return nil if grant.reviewers.none? || @number_of_available_reviews == 0
 					@submission.eligible_reviewers
+				end
+
+				def set_number_of_available_reviews
+					@number_of_available_reviews = @grant.max_reviewers_per_submission - @submission.reviews.length
 				end
 			end
 		end

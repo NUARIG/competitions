@@ -1,5 +1,6 @@
 require 'rails_helper'
 include UsersHelper
+include Turbo::FramesHelper
 
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
@@ -63,7 +64,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
   def not_authorized_text
     t("pundit.default")
-    # 'You are not authorized to perform this action.'
   end
 
   def successfully_saved_submission_message
@@ -307,6 +307,61 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, admin_submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+          end
+        end
+
+        context 'assign reviews' do
+          before(:each) do
+            unreviewed_submission.touch
+            visit grant_submissions_path(grant)
+          end 
+
+          scenario 'can open modal to assign review to an unreviewed submission' do
+            number_of_reviewers = grant.reviewers.length
+            max_reviewers = grant.max_reviewers_per_submission
+
+            within("##{dom_id(unreviewed_submission)}") do
+              click_link('Assign')
+            end
+            within('#modal') do
+              expect(page).to have_text "Assign Reviewers for #{unreviewed_submission.title.truncate(45)}"
+              expect(page).to have_text "This submission has #{max_reviewers} #{'review'.pluralize(max_reviewers)} to be assigned and #{number_of_reviewers} #{'reviewer'.pluralize(number_of_reviewers)} available to review."
+            end
+          end
+
+          scenario 'can assign a review to an unreviewed submission' do
+            reviewer_name = full_name(grant.reviewers.first)
+            within("##{dom_id(unreviewed_submission)}") do
+              click_link('Assign')
+            end
+            within('#modal') do
+              select(reviewer_name, from: 'review[reviewer_id]')
+              click_button('Assign to Review')
+              expect(page).to have_text "Submission assigned for review. A notification email was sent to #{reviewer_name}."
+              expect(page).to have_text "This submission has reached the limit for assigned reviews."
+            end
+          end
+
+          scenario 'can assign multiple reviews' do
+            reviewer_name = full_name(grant.reviewers.first)
+            reviewer2_name = full_name(new_reviewer.reviewer)
+            grant.update(max_reviewers_per_submission: 2, max_submissions_per_reviewer: 2)
+
+            within("##{dom_id(unreviewed_submission)}") do
+              click_link('Assign')
+            end
+            within('#modal') do
+              expect(page).to have_text "This submission has 2 reviews to be assigned and 2 reviewers available to review."
+              select(reviewer_name, from: 'review[reviewer_id]')
+              click_button('Assign to Review')
+              expect(page).to have_text "This submission has 1 review to be assigned and 1 reviewer available to review."
+              select(reviewer2_name, from: 'review[reviewer_id]')
+
+              click_button('Assign to Review')
+              wait_for_turbo
+              expect(page).to have_text "Submission assigned for review. A notification email was sent to #{reviewer2_name}."
+              expect(page).to have_text "This submission has reached the limit for assigned reviews."
+            end
           end
         end
       end
