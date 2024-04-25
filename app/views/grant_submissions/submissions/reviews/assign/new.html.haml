@@ -3,9 +3,9 @@
 = render 'shared/grant_header', { grant: @grant, section_title: 'Assign Reviewers' }
 
 = turbo_frame_tag :modal do
-	#modal-container{ tabindex: '0', data: { controller: 'modals', 'modals-target': 'modal', action: 'keydown.esc->modals#close' } }
-		.modal-background{ for: 'modal-container' }
-		.content{ class: 'small-10 medium-5', 'aria-labelledby': 'title', role: 'dialog', data: {  } }
+	#modal-container{ data: { controller: 'modals', 'modals-target': 'modal' }  }
+		.modal-background{ for: 'modal-container', data: { action: 'click->modals#close' } }
+		.content{ class: 'small-10 medium-5', 'aria-labelledby': 'title', role: 'dialog' }
 			.close-button{ data: { action: 'click->modals#close' } }
 				&times;
 			%h4#title
@@ -42,3 +42,8 @@
 						= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, prompt: 'Choose a Reviewer'
 						= f.submit 'Assign to Review', class: 'button'
 						= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'
+
+
+.small-12
+	%p
+		= link_to 'Back to submissions', grant_submissions_path(@grant)
