@@ -1,0 +1,25 @@
+- if @review.persisted?
+	= turbo_stream.update :callout do
+		.callout.success
+			Submission assigned for review. A notification email was sent to #{full_name(@review.reviewer)}.
+
+- if @number_of_available_reviews == 0 || @eligible_reviewers.length == 0
+	= turbo_stream.replace :assign_form do
+		%p
+			- if @number_of_available_reviews == 0
+				This submission has reached the limit for assigned reviews.
+			- else
+				There are no reviewers available to be assigned to review this submission.
+		%p
+			= link_to 'Close this window', '#', data: { action: 'click->modals#close'}
+
+
+- else
+	= turbo_stream.update :available_reviews do
+		#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)} 
+	= turbo_stream.update :available_reviewers do
+		#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
+	= turbo_stream.update :review_reviewer_id do
+		= options_for_select [['Choose a Reviewer', '']].concat(@eligible_reviewers.collect{ |reviewer| [ full_name(reviewer), reviewer.id ] })		
+
+= turbo_stream.replace dom_id(@submission), partial: 'grant_submissions/submissions/submission', locals: { grant: @grant, submission: @submission, user_grant_role: @user_grant_role, review_data: review_data(@submission) }

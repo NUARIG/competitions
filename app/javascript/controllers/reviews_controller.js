@@ -6,10 +6,10 @@ export default class extends Controller {
 	clear_score(event) {
 		event.preventDefault();
 
-		let scored_button = this.scoreTarget.querySelector('input:checked');
+		let scoredButton = this.scoreTarget.querySelector('input:checked');
 		
-		if (scored_button) {
-			scored_button.checked = false
+		if (scoredButton) {
+			scoredButton.checked = false
 		}
 	}
 

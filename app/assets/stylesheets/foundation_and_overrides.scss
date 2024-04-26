@@ -70,6 +70,9 @@
 .help-text {
   color: $dark-gray;
   padding-left: 0.15em;
+  a { 
+    opacity: 0.8;
+  }
 }
 
 label {

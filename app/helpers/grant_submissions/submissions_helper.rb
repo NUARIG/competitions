@@ -16,7 +16,20 @@ module GrantSubmissions
     end
 
     def applicant_label(applicants)
-      'Applicant'.pluralize(applicants.length) + ':'
+      "#{'Applicant'.pluralize(applicants.length)}:"
+    end
+
+    def display_assign_review_content(grant:, submission:, user_grant_role:)
+      return if user_grant_role == 'viewer' || !submission.available_for_review_assignment?
+      submission.submitted? ? display_assign_reviews_link(grant: grant, submission: submission) : display_may_not_be_reviewed_span
+    end
+
+    def display_may_not_be_reviewed_span
+      content_tag(:span, '-', class: 'not-allowed', title:  'Draft submissions may not be assigned for review')
+    end
+
+    def display_assign_reviews_link(grant:, submission:)
+      link_to('Assign', new_grant_submission_assign_review_path(grant, submission), data: { turbo_frame: :modal }).html_safe
     end
   end
 end

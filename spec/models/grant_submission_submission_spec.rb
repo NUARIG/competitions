@@ -61,13 +61,14 @@ RSpec.describe GrantSubmission::Submission, type: :model do
   describe '#methods' do
     let!(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
     let!(:submission)   { grant.submissions.first }
+    let(:draft_submission) { create(:draft_submission) }
     let(:grant_admin)   { grant.grant_permissions.role_admin.first.user }
     let(:submitted_scored_review) { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: submission,
                                                                                        assigner:   grant_admin,
                                                                                        reviewer:   grant.reviewers.first) }
     let(:incomplete_review) { create(:incomplete_review, submission: submission,
-                                                     assigner: grant_admin,
-                                                     reviewer: grant.reviewers.first) }
+                                                         assigner: grant_admin,
+                                                         reviewer: grant.reviewers.first) }
 
     context 'published grant' do
       describe '#destroy' do
@@ -111,6 +112,61 @@ RSpec.describe GrantSubmission::Submission, type: :model do
                 submission.destroy
               end.to change{GrantSubmission::Submission.count}.by(-1).and change{Review.count}.by(-1)
             end
+          end
+        end
+      end
+    end
+
+    context 'eligible_reviewers' do
+      before(:each) do
+        reviewer1 = create(:grant_reviewer, grant: grant, reviewer: grant_admin)
+        reviewer2 = grant.reviewers.first
+        grant.update(max_reviewers_per_submission: 2)
+      end
+
+      context 'draft' do
+        it 'returns nil' do
+          expect(draft_submission.grant.reviewers).not_to be nil
+          expect(draft_submission.eligible_reviewers).to be nil
+        end
+
+        it 'submitting changes the result' do
+          expect do
+            draft_submission.update(state: 'submitted')
+          end.to change{ draft_submission.reload.eligible_reviewers }
+        end
+      end
+
+      context 'submitted' do
+        it 'does not return submitter as an eligible reviewer' do
+          reviewer_applicant = grant.reviewers.first
+          expect do
+            GrantSubmission::SubmissionApplicant.create!(submission: submission, applicant: reviewer_applicant)
+          end.to change { submission.reload.eligible_reviewers.length }.by -1
+          expect(submission.eligible_reviewers).not_to include reviewer_applicant
+        end
+
+        context 'with no reviews' do
+          it 'returns all available reviewers' do
+            eligible_reviewers = submission.eligible_reviewers
+            expect(eligible_reviewers.length).to eql grant.reviewers.length
+          end
+        end
+
+        context 'with one review' do
+          it 'returns unassigned available reviewers' do
+            incomplete_review.touch
+            eligible_reviewers = submission.eligible_reviewers
+            expect(eligible_reviewers.length).to eql 1
+            expect(eligible_reviewers).not_to include incomplete_review.reviewer
+          end
+        end
+
+        context 'with maximum number of assigned reviews' do
+          it 'returns nil' do
+            incomplete_review.touch
+            incomplete_review2 = create(:incomplete_review, submission: submission, assigner: grant_admin, reviewer: grant.reviewers.last)
+            expect(submission.eligible_reviewers).to be nil
           end
         end
       end

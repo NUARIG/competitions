@@ -101,9 +101,33 @@ module GrantSubmission
       self.update(composite_score: calculate_average_score(get_submitted_criteria_reviews.flat_map(&:score)))
     end
 
+    def available_for_review_assignment?
+      self.reviews.length < grant.max_reviewers_per_submission
+    end
+
     # USERS
     def has_applicant?(user)
       applicants.include?(user)
+    end
+
+    def eligible_reviewers
+      return nil if reviews.length >= grant.max_reviewers_per_submission || self.draft?
+      
+      review_count_limit = grant.max_submissions_per_reviewer 
+      submission_review_count_limit = grant.max_reviewers_per_submission 
+
+      # Get all submissions and their reviews, 
+      #  tally's each reviewer's count of assigned reviews
+      #  filters out reviewers with review_count_limit number of 
+      already_maxed_out_reviewers = GrantSubmission::Submission
+                                      .with_reviewers
+                                      .by_grant(grant)
+                                      .flat_map(&:reviewers)
+                                      .tally
+                                      .filter{ |reviewer, review_count| review_count == review_count_limit }
+                                      .keys
+
+      return (grant.grant_reviewers.map(&:reviewer) - (already_maxed_out_reviewers + self.applicants + self.reviewers).uniq)
     end
 
     private
