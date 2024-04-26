@@ -325,7 +325,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             end
             within('#modal') do
               expect(page).to have_text "Assign Reviewers for #{unreviewed_submission.title.truncate(45)}"
-              expect(page).to have_text "This submission has #{max_reviewers} #{'review'.pluralize(max_reviewers)} to be assigned and #{number_of_reviewers} #{'reviewer'.pluralize(number_of_reviewers)} available to review."
+              expect(page).to have_text "This submission can be assigned to #{max_reviewers} #{'reviewer'.pluralize(max_reviewers)} and has #{number_of_reviewers} #{'reviewer'.pluralize(number_of_reviewers)} available to review it."
             end
           end
 
@@ -351,10 +351,11 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               click_link('Assign')
             end
             within('#modal') do
-              expect(page).to have_text "This submission has 2 reviews to be assigned and 2 reviewers available to review."
+              "This submission can be assigned to 2"
+              expect(page).to have_text "This submission can be assigned to 2 reviewers and has 2 reviewers available to review it."
               select(reviewer_name, from: 'review[reviewer_id]')
               click_button('Assign to Review')
-              expect(page).to have_text "This submission has 1 review to be assigned and 1 reviewer available to review."
+              expect(page).to have_text "This submission can be assigned to 1 reviewer and has 1 reviewer available to review it."
               select(reviewer2_name, from: 'review[reviewer_id]')
 
               click_button('Assign to Review')

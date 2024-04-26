@@ -9,14 +9,14 @@
 			- if @number_of_available_reviews == 0
 				This submission has reached the limit for assigned reviews.
 			- else
-				There are no reviewers eligible to be assigned to review this submission.
+				There are no reviewers available to be assigned to review this submission.
 		%p
 			= link_to 'Close this window', '#', data: { action: 'click->modals#close'}
 
 
 - else
 	= turbo_stream.update :available_reviews do
-		#{@number_of_available_reviews} #{'review'.pluralize(@number_of_available_reviews)} 
+		#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)} 
 	= turbo_stream.update :available_reviewers do
 		#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
 	= turbo_stream.update :review_reviewer_id do

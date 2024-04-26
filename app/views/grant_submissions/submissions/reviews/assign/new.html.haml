@@ -31,15 +31,20 @@
 					= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
 						
 						%p
-							This submission has 
+							This submission can be assigned to 
 							= turbo_frame_tag :available_reviews do
-								#{@number_of_available_reviews} #{'review'.pluralize(@number_of_available_reviews)} 
-							to be assigned and 
+								#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)} 
+							and has
 							= turbo_frame_tag :available_reviewers do
 								#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
-							available to review.
+							available to review it.
 						
-						= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, prompt: 'Choose a Reviewer'
+						= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, {prompt: 'Choose a Reviewer', aria: { 'described-by': 'eligibleReviewerHelp' } }
+						%p.help-text#eligibleReviewerHelp
+							Reviewers are available until they have the reached the
+							= link_to 'Maximum Submissions per Reviewer', edit_grant_path(@grant), anchor: 'reviewers'
+							limit. Reviewers can't be assigned to review their own submissions.
+
 						= f.submit 'Assign to Review', class: 'button'
 						= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'
 
