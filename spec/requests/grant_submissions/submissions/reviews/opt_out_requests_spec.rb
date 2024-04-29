@@ -13,7 +13,7 @@ RSpec.describe 'grant_submission review opt_out requests', type: :request do
                                   assigner: @assigner,
                                   reviewer: @reviewer)
 
-      login_as @reviewer
+      sign_in @reviewer
     end
 
     it 'mails the assigner' do
@@ -36,6 +36,15 @@ RSpec.describe 'grant_submission review opt_out requests', type: :request do
       email = (ActionMailer::Base.deliveries).first
       expect(email.to).to eq([@admin.email])
       expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Reviewer Opt Out Notification")
+    end
+
+    it 'redirects to the grant page' do
+      delete(opt_out_grant_submission_review_path(id: @review.id,
+                                                  grant_id: @grant.id,
+                                                  submission_id: @grant.submissions.first.id))
+      follow_redirect!
+      expect(request.fullpath).to eq(grant_path(@grant))
+      expect(response.body).to include(@grant.name)
     end
   end
 end
