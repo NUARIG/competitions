@@ -1,54 +1,45 @@
-- content_for(:page_title, "Assign Reviewers for #{truncate(@submission.title, length: 45)}")
+- content_for(:page_title, "Assign Reviewers for #{truncate(@submission.title, length: 125)}")
 
 = render 'shared/grant_header', { grant: @grant, section_title: 'Assign Reviewers' }
 
-= turbo_frame_tag :modal do
-	#modal-container{ data: { controller: 'modals', 'modals-target': 'modal' }  }
-		.modal-background{ for: 'modal-container', data: { action: 'click->modals#close' } }
-		.content{ class: 'small-10 medium-5', 'aria-labelledby': 'title', role: 'dialog' }
-			.close-button{ data: { action: 'click->modals#close' } }
-				&times;
-			%h4#title
-				= yield(:page_title)
-			= turbo_frame_tag :callout do
-				- if @review.errors.any?
-					.callout.alert
-						Review the following #{'error'.pluralize(@review.errors.count)}:
-						%ul
-							- @review.errors.each do |error|
-								%li
-									#{error.full_message}
+= render layout: 'layouts/modal' do
+	= turbo_frame_tag :callout do
+		- if @review.errors.any?
+			.callout.alert
+				Review the following #{'error'.pluralize(@review.errors.count)}:
+				%ul
+					- @review.errors.each do |error|
+						%li
+							#{error.full_message}
 
-			- if @eligible_reviewers.length.zero?
+	- if @eligible_reviewers.length.zero?
+		%p
+			There are no available Reviewers for this Submission.
+			= succeed '.' do
+				= link_to 'Add or view current reviewers', grant_reviewers_path(@grant)
+		= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear', title: 'Close'
+	- else
+		= turbo_frame_tag :assign_form do
+			= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
+				
 				%p
-					There are no available Reviewers for this Submission.
-					= succeed '.' do
-						= link_to 'Add or view current reviewers', grant_reviewers_path(@grant)
-				= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear', title: 'Close'
+					This submission can be assigned to 
+					= turbo_frame_tag :available_reviews do
+						#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)} 
+					and has
+					= turbo_frame_tag :available_reviewers do
+						#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
+					available to review it.
+			
+				= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, {prompt: 'Choose a Reviewer', aria: { 'described-by': 'eligibleReviewerHelp' } }
+				%p.help-text#eligibleReviewerHelp
+					Reviewers are available until they have the reached the
+					= link_to 'Maximum Submissions per Reviewer', edit_grant_path(@grant), anchor: 'reviewers'
+					limit. Reviewers can't be assigned to review their own submissions.
 
-			- else
-				= turbo_frame_tag :assign_form do
-					= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
-						
-						%p
-							This submission can be assigned to 
-							= turbo_frame_tag :available_reviews do
-								#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)} 
-							and has
-							= turbo_frame_tag :available_reviewers do
-								#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
-							available to review it.
-						
-						= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, {prompt: 'Choose a Reviewer', aria: { 'described-by': 'eligibleReviewerHelp' } }
-						%p.help-text#eligibleReviewerHelp
-							Reviewers are available until they have the reached the
-							= link_to 'Maximum Submissions per Reviewer', edit_grant_path(@grant), anchor: 'reviewers'
-							limit. Reviewers can't be assigned to review their own submissions.
+				= f.submit 'Assign to Review', class: 'button'
+				= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'
 
-						= f.submit 'Assign to Review', class: 'button'
-						= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear'
-
-
-.small-12
-	%p
-		= link_to 'Back to submissions', grant_submissions_path(@grant)
+	.small-12
+		%p
+			= link_to 'Back to submissions', grant_submissions_path(@grant)
