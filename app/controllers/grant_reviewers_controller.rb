@@ -1,29 +1,31 @@
 # frozen_string_literal: true
 
 class GrantReviewersController < ApplicationController
-  before_action     :set_grant
-
+  before_action :set_grant
+  before_action :authorize_grant_editor, only: %i[create destroy]
   skip_after_action :verify_policy_scoped, only: %i[index]
 
   def index
     flash.keep
+
+    @reviewers = @grant.reviewers
+    @reviews = @grant.reviews
     authorize @grant, :grant_editor_access?
 
-    @grant_reviewers        = @grant.grant_reviewers.includes(:reviewer).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
-    @unassigned_submissions = @grant.submissions.submitted.to_be_assigned(@grant.max_reviewers_per_submission).includes(:submitter).order("#{User.table_name}.last_name, #{User.table_name}.first_name")
+    @grant_reviewers = @grant.grant_reviewers.includes(:reviewer).order("#{User.table_name}.last_name,
+                                                                         #{User.table_name}.first_name")
   end
 
   def create
-    authorize @grant, :edit?
-
     email    = grant_reviewer_params[:reviewer_email].downcase.strip
     reviewer = User.find_by(email: email)
 
-    # TODO: catch this any other way
     if email.blank?
       flash[:alert] = 'Please enter a valid email address.'
     elsif reviewer.nil?
-      flash[:alert] = "Could not find a user with the email: #{email}. #{helpers.link_to 'Invite them to be a reviewer', invite_grant_reviewers_path(@grant, email: email), method: :post, data: { turbo: false, confirm: "An email will be sent to #{email}. You will be notified when they accept or opt out." }, turbo: false }"
+      flash[:alert] =
+        "Could not find a user with the email: #{email}. #{helpers.link_to 'Invite them to be a reviewer',
+                                                                           invite_grant_reviewers_path(@grant, email: email), method: :post, data: { turbo: false, confirm: "An email will be sent to #{email}. You will be notified when they accept or opt out." }, turbo: false}"
     else
       grant_reviewer = GrantReviewer.create(grant: @grant, reviewer: reviewer)
 
@@ -38,28 +40,26 @@ class GrantReviewersController < ApplicationController
   end
 
   def destroy
-    authorize @grant, :edit?
+    @grant_reviewer = GrantReviewer.find_by_id(params[:id])
+    @result = GrantReviewerServices::DeleteReviewer.call(grant_reviewer: @grant_reviewer)
 
-    grant_reviewer = GrantReviewer.find(params[:id])
-
-    if grant_reviewer.nil?
-      flash[:alert] = 'Reviewer could not be found.'
-    else
-      result = GrantReviewerServices::DeleteReviewer.call(grant_reviewer: grant_reviewer)
-      if result.success?
-        flash[:success] = result.messages
+    respond_to do |format|
+      if @result.success?
+        format.turbo_stream { flash.now[:notice] = @result.messages }
       else
-        flash[:alert] = result.messages
+        format.turbo_stream { flash.now[:alert] = @result.messages }
       end
     end
-
-    redirect_to grant_reviewers_path(@grant)
   end
 
   private
 
   def set_grant
-    @grant = Grant.kept.friendly.find(params[:grant_id])
+    @grant = @grant = Grant.kept.friendly.includes(:reviews, :reviewers).find(params[:grant_id])
+  end
+
+  def authorize_grant_editor
+    authorize @grant, :edit?
   end
 
   def grant_reviewer_params

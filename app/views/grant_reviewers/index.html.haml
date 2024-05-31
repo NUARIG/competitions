@@ -25,7 +25,7 @@
         %li
           Add Reviewer by Email Address
           %div{ style: 'display: inline-block' }
-            = form_for :grant_reviewer, url: grant_reviewers_path(@grant), local: true, data: { turbo: false } do |f|
+            = form_for :grant_reviewer, url: grant_reviewers_path(@grant) do |f|
               .input-group
                 = f.email_field :reviewer_email, placeholder: 'Email', class: 'input-group-field', required: true
                 .input-group-button
@@ -35,109 +35,40 @@
 
   %hr
 
-  .grid-x
-    .cell.small-5
-      %h4
-        Unassigned Submissions
-      %p
-        Drag the unassigned submissions below to the box under the desired reviewer on the left.
+  .grid-x.grid-margin-x
+    %aside.small-12.medium-3.cell
+      = render partial: 'grants/dates_card', locals: { grant: @grant }
+    .small-12.medium-9.cell
       %p
         Each submission may be assessed by up to
         = succeed '.' do
           = link_to "#{@grant.max_reviewers_per_submission} #{'reviewer'.pluralize(@grant.max_reviewers_per_submission)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
-      %p
-        Note: Draft submissions are not reviewable.
 
-    .cell.small-5.small-offset-2
-      %h4
-        Reviewers and Submissions
-      %p
-        To remove an assignment, drag the submission from the reviewer's box back to the unassigned submissions box on the right.
       %p
         Each reviewer may assess up to
         = succeed '.' do
           = link_to "#{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
 
-  .grid-x
-    .gridx.small-5(data-sticky-container)
-      #unassigned_submissions.sticky(data-sticky data-top-anchor="assigned-reviewers")
-        .unassigned_submission_list
-          - if @unassigned_submissions.none?
-            There are no completed submissions that need to be assigned.
-          - else
-            = render partial: 'unassigned_submissions', locals: { grant: @grant, unassigned_submissions: @unassigned_submissions }
+      %p
+        Note: Draft submissions are not reviewable.
 
-    #assigned-reviewers.cell.small-5.small-offset-2
-      - if @grant_reviewers.none?
-        There are no reviewers. Use the form above to define reviewers by their email address.
-      - else
-        = render partial: 'reviewers', locals: { grant: @grant, grant_reviewers: @grant_reviewers }
+      .turbo-table
+        = turbo_frame_tag :reviewers do
+          .header.grid-x.grid-padding-x.align-bottom
+            .cell.small-3
+              Reviewer
+            .cell.small-3.text-center
+              Available
+            .cell.small-3.text-center
+              Assigned / Complete
+            .cell.small-3
+              Assign / View
+            .cell.small-2
 
-:javascript
-  function downloadJSAtOnload() {
-    $.ajaxSetup({
-      beforeSend: function(xhr)
-      {
-        xhr.setRequestHeader('X-CSRF-Token', '#{form_authenticity_token}')
-      }
-    });
-
-    $(function() {
-      current_location = '/grants/#{@grant.to_param}/reviewers';
-
-      $('.review').draggable({
-        revert: 'invalid'
-      });
-
-      $('.review_list').droppable({
-        hoverClass: 'hover',
-        drop: function(event, ui) {
-          if ($(ui.draggable).attr('id').split('_').length == 2) {
-            reviewer_id = $(this).parent().attr('id').split('_').splice(-1)[0];
-
-            $.ajax({
-              type: "POST",
-              url: $(ui.draggable).data("destinationUrl"),
-              data: { "reviewer_id": reviewer_id },
-              success: function(data) {
-                window.location.href = current_location;
-              },
-
-              error: function() {
-                window.location.href = current_location;
-              }
-            });
-          }
-        }
-      });
-
-      $('.unassigned_submission').draggable({
-        revert: "invalid"
-      });
-
-      $('.unassigned_submission_list').droppable({
-        hoverClass: "hover",
-        drop: function(event, ui) {
-          $.ajax({
-            type: "DELETE",
-            url: $(ui.draggable).data("destinationUrl"),
-            success: function(data) {
-              window.location.href = current_location;
-            },
-            error: function() {
-              window.location.href = current_location;
-            }
-          });
-        }
-      });
-
-    });
-  }
-
-  if (window.addEventListener) {
-    window.addEventListener("turbo:load", downloadJSAtOnload, false);
-  } else if (window.attachEvent) {
-    window.attachEvent("onload", downloadJSAtOnload);
-  } else {
-    window.onload = downloadJSAtOnload;
-  }
+          .rows
+            - @grant_reviewers.each do |grant_reviewer|
+              - reviewer = grant_reviewer.reviewer
+              = render partial: 'grant_reviewers/reviewer', locals: { grant: @grant,
+                                                                      reviewer: reviewer,
+                                                                      grant_reviewer: grant_reviewer,
+                                                                      reflow: 'false' }

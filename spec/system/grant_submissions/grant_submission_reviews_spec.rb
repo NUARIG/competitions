@@ -1,5 +1,7 @@
 require 'rails_helper'
 include UsersHelper
+include ActionView::Helpers::TextHelper
+include GrantSubmissions::SubmissionsHelper
 
 RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer, 
@@ -423,7 +425,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         scenario 'displays applicant where available' do
           submission_applicant.save
           submission.submission_applicants.first.delete
-          visit grant_reviewers_path(grant)
+          visit grant_submissions_path(grant)
 
           expect(page).to have_text sortable_full_name(applicant)
           expect(page).not_to have_text sortable_full_name(submission.submitter)
@@ -435,7 +437,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           submission_applicant.save
           submission.submission_applicants.first.delete
           review.save
-          visit grant_reviewers_path(grant)
+          visit grant_submissions_path(grant)
 
           expect(page).to have_text sortable_full_name(applicant)
           expect(page).not_to have_text sortable_full_name(submission.submitter)
@@ -455,6 +457,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
     context 'success' do
       before(:each) do
+        
         review
         new_grant_reviewer.reviewer
 
@@ -463,16 +466,23 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       end
 
       scenario 'creates an assigned review' do
-        submission_to_assign = find_by_id("submission_#{submission.id}")
-        unassigned_reviewer  = find("#reviews_#{new_grant_reviewer.reviewer.id} ul.review_list")
-
+        dropdown_menu_id = "#manage_#{dom_id(new_grant_reviewer)}"
         expect do
-          submission_to_assign.drag_to unassigned_reviewer
+          find(dropdown_menu_id).hover
           wait_for_ajax
+          find("#{dropdown_menu_id} li ul li", text: 'Assign Review').click
+          pause
+          within('#modal') do
+            select_text = truncate("#{full_name(grant.submissions.first.submitter)} - #{grant.submissions.first.title}", length: 80)
+            select("#{select_text}", 
+                   from: 'review[submission_id]')
+            click_button('Assign Submission to Reviewer')
+            pause
+          end
         end.to change{grant.reviews.count}.by 1
         expect(grant.reviews.last.assigned?).to be true
 
-        expect(page).to have_text "Notification email was sent to #{full_name(new_grant_reviewer.reviewer)}"
+        expect(page).to have_text "Review assigned. A notifcation email was sent to #{full_name(new_grant_reviewer.reviewer)}"
       end
     end
 
@@ -488,28 +498,16 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         visit grant_reviewers_path(grant)
       end
 
-      scenario 'does not add review when reviewer is submitter' do
-        submission_to_assign = find_by_id("submission_#{submission.id}")
-        submitter_reviews    = find("#reviews_#{submitter_reviewer.reviewer.id} ul.review_list")
-
-        expect do
-          submission_to_assign.drag_to submitter_reviews
-          wait_for_ajax
-        end.not_to change{grant.reviews.count}
-
-        expect(page).to have_text 'Reviewer may not review their own submission.'
-      end
-
-      scenario 'does not add review when reviewer has been assigned' do
-        submission_to_assign = find_by_id("submission_#{submission.id}")
-        reviewer_reviews    = find("#reviews_#{reviewer.id} ul.review_list")
-
-        expect do
-          submission_to_assign.drag_to reviewer_reviews
-          wait_for_ajax
-        end.not_to change{grant.reviews.count}
-
-        expect(page).to have_text 'Reviewer has already been assigned this submission.'
+      scenario 'does not include submission when reviewer is submitter' do
+        dropdown_menu_id = "#manage_#{dom_id(submitter_reviewer)}"
+        find(dropdown_menu_id).hover
+        wait_for_ajax
+        find("#{dropdown_menu_id} li ul li", text: 'Assign Review').click
+        pause
+        within('#modal') do
+          expect(page).to have_text 'There are no submissions available to be assigned to this reviewer.'
+          assert_no_selector('review[submission_id]')
+        end
       end
     end
   end

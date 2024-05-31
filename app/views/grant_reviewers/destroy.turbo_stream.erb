@@ -1,0 +1,14 @@
+<% if @result.success? %>
+  <%= turbo_stream.update :flash do %>
+    <div class="callout success">
+      <%= @result.messages %>
+    </div>
+  <% end %>
+  <%= turbo_stream.remove @grant_reviewer %>
+<% else %>
+  <%= turbo_stream.update :flash do %>
+    <div class="callout warning">
+      <%= @result.messages %>
+    </div>
+  <% end %>
+<% end %>

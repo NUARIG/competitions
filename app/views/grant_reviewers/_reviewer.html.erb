@@ -1,0 +1,32 @@
+<% assigned_reviews = @reviews.filter{ |review| review.reviewer == reviewer } %>
+<% available_reviews_count = grant.max_submissions_per_reviewer - assigned_reviews.length %>
+<% grant_reviewer ||= grant_reviewers.find{ |gr| gr.reviewer == reviewer } %>
+
+<%= turbo_frame_tag dom_id(grant_reviewer), class: 'item' do %>
+  <div class="row grid-x grid-padding-x grid-padding-y">
+    <div class="cell small-3">
+      <%= sortable_full_name(reviewer) %>
+    </div>
+    <div class="cell small-3 text-center">
+      <%= available_reviews_count %>
+    </div>
+    <div class="cell small-3 text-center">
+      <%= assigned_reviews.length %>
+       /
+      <%= assigned_reviews.count(&:submitted?) %>
+    </div>
+    <div class="cell small-2 manage">
+      <ul id="manage_<%= dom_id(grant_reviewer) %>" class="dropdown menu" data-dropdown-menu <%= reflow == 'true' ? "data-controller=reflow" : {} %>>
+        <li>
+          <a>Manage</a>
+          <%= render partial: 'grant_reviewers/reviews/manage_reviewer_links',
+                     locals: { available_reviews_count: available_reviews_count,
+                               grant: grant,
+                               reviewer: reviewer,
+                               assigned_reviews: assigned_reviews,
+                               grant_reviewer: grant_reviewer } %>
+        </li>
+      </ul>
+    </div>
+  </div>
+<% end %>

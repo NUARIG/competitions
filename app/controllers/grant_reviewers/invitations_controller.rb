@@ -7,18 +7,24 @@ module GrantReviewers
     def index
       flash.keep
       @invitations          = GrantReviewer::Invitation.with_inviter.by_grant(@grant)
-      @has_open_invitations = @invitations.any?{ |invite| invite.confirmed_at.nil? && invite.opted_out_at.nil? }
+      @has_open_invitations = @invitations.any? { |invite| invite.confirmed_at.nil? && invite.opted_out_at.nil? }
+      render :index
     end
 
-    def update;end
+    def update; end
 
     def create
+      flash.clear
       invitation = GrantReviewer::Invitation.new(grant: @grant, inviter: current_user, email: params[:email])
 
       respond_to do |format|
         if invitation.save
           GrantReviewerInvitationMailer.invite(invitation: invitation, grant: @grant, inviter: current_user).deliver_now
-          format.html { redirect_to grant_reviewers_url(@grant), notice: "Invitation to #{invitation.email} has been sent. #{helpers.link_to 'View all invitations', grant_invitations_path(@grant)}" }
+          format.html do
+            redirect_to grant_reviewers_url(@grant),
+                        notice: "Invitation to #{invitation.email} has been sent. #{helpers.link_to 'View all invitations',
+                                                                                                    grant_invitations_path(@grant)}"
+          end
         else
           format.html { redirect_to grant_reviewers_url(@grant), warning: invitation.errors.full_messages }
         end
@@ -26,13 +32,18 @@ module GrantReviewers
     end
 
     def destroy
+      flash.clear
       invitation = GrantReviewer::Invitation.find(params[:id])
 
       respond_to do |format|
         if invitation.invitee.nil? && invitation.destroy
-          format.html { redirect_to grant_invitations_url(@grant), notice: "The invitation to #{invitation.email} has been deleted." }
+          format.html do
+            redirect_to grant_invitations_url(@grant), notice: "The invitation to #{invitation.email} has been deleted."
+          end
         else
-          format.html { redirect_to grant_reviewers_url(@grant), warning: "Could not delete the invitation to #{invitation.email}." }
+          format.html do
+            redirect_to grant_reviewers_url(@grant), warning: "Could not delete the invitation to #{invitation.email}."
+          end
         end
       end
     end
