@@ -10,11 +10,11 @@
     </div>
   <% end %>
 <% else %>
-  <%= turbo_stream.update @grant_reviewer do %>
+  <%= turbo_stream.replace @grant_reviewer do %>
     <%= render partial: 'grant_reviewers/reviewer', locals: { grant: @grant,
                                                               reviewer: @reviewer,
                                                               grant_reviewer: @grant_reviewer,
-                                                              reflow: 'true' }%>
+                                                              reflow: 'true' } %>
   <% end %>
 
   <%= turbo_stream.remove @review %>
