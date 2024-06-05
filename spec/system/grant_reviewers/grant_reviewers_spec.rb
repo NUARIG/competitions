@@ -1,4 +1,5 @@
 require 'rails_helper'
+include ApplicationHelper
 include UsersHelper
 
 RSpec.describe 'GrantReviewers', type: :system do
@@ -8,6 +9,7 @@ RSpec.describe 'GrantReviewers', type: :system do
              max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
              max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
     end
+
     let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
     let(:user)         { create(:saml_user) }
@@ -86,11 +88,14 @@ RSpec.describe 'GrantReviewers', type: :system do
     before(:each) do
       review
       login_as(grant_admin, scope: :saml_user)
-      visit grant_reviewers_path(grant)
+      # visit grant_reviewers_path(grant)
     end
 
-    context 'success' do
+    context 'success', js: true do
       before(:each) do
+        review
+        login_as(grant_admin, scope: :saml_user)
+        visit grant_reviewers_path(grant)
         dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
       end
       scenario 'reviewer can be deleted' do
@@ -138,8 +143,12 @@ RSpec.describe 'GrantReviewers', type: :system do
       end
     end
 
-    context 'failed' do
-      before do
+    context 'failed', js: true do
+      before(:each) do
+        review
+        login_as(grant_admin, scope: :saml_user)
+        visit grant_reviewers_path(grant)
+        # dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
         expect(GrantReviewerServices::DeleteReviewer).to receive(:call).and_return(OpenStruct.new(success?: false,
                                                                                                   messages: 'Unable to delete this reviewer\'s reviews.'))
       end
@@ -189,7 +198,56 @@ RSpec.describe 'GrantReviewers', type: :system do
       end
     end
 
+    context 'closed grant', js: true do
+      before(:each) do
+        grant.review_close_date = Date.yesterday
+        grant.save(validate: false)
+        visit grant_reviewers_path(grant)
+      end
+
+      scenario 'shows proper text' do
+        expect(page).not_to have_text 'Each submission may be assessed by up to'
+        expect(page).not_to have_text 'Each reviewer may assess up to'
+        expect(page).to have_text "This grant's review period closed on #{grant.review_close_date.strftime('%B %-d, %Y')}"
+      end
+
+      scenario 'reviewer cannot be deleted' do
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+        expect do
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            pause
+            expect(page).not_to have_link('Delete Reviewer')
+          end
+        end
+      end
+
+      scenario 'reviews cannot be deleted' do
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+
+        expect do
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            find_link('View Assigned').click
+            pause
+          end
+          pause
+          within('#modal') do
+            expect(page).not_to have_button 'Unassign'
+            expect(page).to have_content grant.submissions.first.title
+          end
+        end
+      end
+    end
+
     context 'paper_trail', versioning: true do
+      before(:each) do
+        review
+        login_as(grant_admin, scope: :saml_user)
+        visit grant_reviewers_path(grant)
+        # dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+      end
+
       scenario 'it tracks whodunnit' do
         grant_reviewer = GrantReviewer.find_by(grant: grant, reviewer: reviewer)
         dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"

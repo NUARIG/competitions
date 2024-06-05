@@ -13,9 +13,9 @@
         = submission_period(grant: grant)
       - if current_user.present? && (current_user&.get_role_by_grant(grant: grant).present? || grant.reviewers.include?(current_user))
         %dt
-          Review Period Closes:
+          Review Period #{grant.accepting_reviews? ? 'Closes' : 'Closed'}:
         %dd
-          = time_tag(grant.review_close_date)
+          = time_tag(grant.review_close_date, date_mmddyyyy(grant.review_close_date))
         - if grant.panel.start_datetime?
           %dt
             Panel Start:

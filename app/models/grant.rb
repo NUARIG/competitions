@@ -32,8 +32,8 @@ class Grant < ApplicationRecord
                     foreign_key: :grant_id
   has_many   :sections,  through: :form
   has_many   :questions, through: :sections
-  
-  has_one    :panel,                foreign_key: :grant_id
+
+  has_one    :panel, foreign_key: :grant_id
   has_many   :grant_reviewers
   has_many   :reviewers,            through: :grant_reviewers
   has_many   :reviewer_invitations, class_name: 'GrantReviewer::Invitation'
@@ -43,12 +43,12 @@ class Grant < ApplicationRecord
   has_many   :administrators,       through: :grant_permissions,
                                     source: :user
 
-  has_many   :submissions,          class_name:   'GrantSubmission::Submission',
-                                    foreign_key:  :grant_id,
-                                    inverse_of:   :grant,
-                                    dependent:    :destroy
+  has_many   :submissions,          class_name: 'GrantSubmission::Submission',
+                                    foreign_key: :grant_id,
+                                    inverse_of: :grant,
+                                    dependent: :destroy
   has_many   :awarded_submissions,  -> { where(awarded: true) },
-                                    class_name:   'GrantSubmission::Submission'
+             class_name: 'GrantSubmission::Submission'
 
   has_many   :reviews,              through: :submissions
 
@@ -56,24 +56,22 @@ class Grant < ApplicationRecord
 
   has_many   :applicants,           class_name: 'User',
                                     inverse_of: :applied_grants,
-                                    through:    :submissions
-
+                                    through: :submissions
 
   has_many   :criteria,          inverse_of: :grant
   has_many   :required_criteria, -> { where(is_mandatory: true) },
-                                 class_name: 'Criterion'
+             class_name: 'Criterion'
 
   accepts_nested_attributes_for :criteria, allow_destroy: true
 
   SLUG_MIN_LENGTH = 3
   SLUG_MAX_LENGTH = 15
 
-  GRANT_STATES    = { demo:      'demo',      # TODO: define specifics of each
-                      draft:     'draft',
-                      published: 'published', # e.g. can be opened and may be in process
-                      completed: 'completed'  # e.g. awarded and closed
+  GRANT_STATES = { demo: 'demo', # TODO: define specifics of each
+                   draft: 'draft',
+                   published: 'published', # e.g. can be opened and may be in process
+                   completed: 'completed'  # e.g. awarded and closed
                      }.freeze
-
 
   SOFT_DELETABLE_STATES = %w[demo draft]
 
@@ -98,7 +96,6 @@ class Grant < ApplicationRecord
 
   validates_inclusion_of :state, in: GRANT_STATES.values,
                                  message: 'is not a valid state.'
-
 
   validates_length_of :slug, in: Grant::SLUG_MIN_LENGTH..Grant::SLUG_MAX_LENGTH
 
@@ -132,24 +129,28 @@ class Grant < ApplicationRecord
                  after_message: 'must be after the review opening date.'
 
   validate      :requires_one_criteria,      on: :update,
-                                             if: -> () { criteria.all?(&:marked_for_destruction?) || criteria.empty? }
+                                             if: -> { criteria.all?(&:marked_for_destruction?) || criteria.empty? }
 
   validate      :has_at_least_one_question?, on: :update,
-                                             if: -> () { will_save_change_to_attribute?('state', to: 'published') }
+                                             if: -> { will_save_change_to_attribute?('state', to: 'published') }
 
   validate      :is_discardable?,            on: :discard
 
-  scope :public_grants,      -> { undiscarded.
-                                    published.
-                                    where(':date BETWEEN
+  scope :public_grants, lambda {
+                          undiscarded
+                            .published
+                            .where(':date BETWEEN
                                                    publish_date
                                                  AND
                                                    submission_close_date',
-                                          date: Date.current).
-                                    by_publish_date }
+                                   date: Date.current)
+                            .by_publish_date
+                        }
   scope :by_publish_date,     -> { order(publish_date: :asc) }
   scope :with_criteria,       -> { includes(:criteria) }
-  scope :unassigned_submissions, lambda { |*args| where('submission_reviews_count < :max_reviewers', { :max_reviewers => args.first || 2 }) }
+  scope :unassigned_submissions, lambda { |*args|
+                                   where('submission_reviews_count < :max_reviewers', { max_reviewers: args.first || 2 })
+                                 }
   scope :with_reviewers,      -> { includes(:reviewers) }
   scope :with_reviews,        -> { includes(:reviews) }
   scope :with_panel,          -> { includes(:panel) }
@@ -168,14 +169,18 @@ class Grant < ApplicationRecord
     published? && is_open?
   end
 
+  def accepting_reviews?
+    DateTime.now.before?(review_close_date.end_of_day)
+  end
+
   def requires_one_criteria
     criteria.each { |c| c.reload if c.marked_for_destruction? }
     errors.add(:base, 'Must have at least one review criteria.')
   end
 
   # def admins, def editors, def viewers
-  GrantPermission::ROLES.each do |_,role|
-    define_method "#{role.pluralize}".to_sym do
+  GrantPermission::ROLES.each do |_, role|
+    define_method role.pluralize.to_s.to_sym do
       grant_permissions.send("role_#{role}").to_a.map(&:user)
     end
   end
@@ -191,19 +196,19 @@ class Grant < ApplicationRecord
   end
 
   def deletable?
-    raise SoftDeleteException.new('Grants must be discarded.')
+    raise SoftDeleteException, 'Grants must be discarded.'
   end
 
   def published_discardable?
     # TODO: e.g. submissions.count.zero?
     errors.add(:base, 'Published grant may not be deleted.')
-    return false
+    false
   end
 
   def completed_discardable?
     # TODO: this state is not active
     errors.add(:base, 'Completed grant may not be deleted.')
-    return false
+    false
   end
 
   def has_at_least_one_question?

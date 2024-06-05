@@ -39,18 +39,7 @@
     %aside.small-12.medium-3.cell
       = render partial: 'grants/dates_card', locals: { grant: @grant }
     .small-12.medium-9.cell
-      %p
-        Each submission may be assessed by up to
-        = succeed '.' do
-          = link_to "#{@grant.max_reviewers_per_submission} #{'reviewer'.pluralize(@grant.max_reviewers_per_submission)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
-
-      %p
-        Each reviewer may assess up to
-        = succeed '.' do
-          = link_to "#{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting'
-
-      %p
-        Note: Draft submissions are not reviewable.
+      = render partial: 'review_period_text', locals: { grant: @grant }
 
       .turbo-table
         = turbo_frame_tag :reviewers do
@@ -62,7 +51,7 @@
             .cell.small-3.text-center
               Assigned / Complete
             .cell.small-3
-              Assign / View
+
             .cell.small-2
 
           .rows

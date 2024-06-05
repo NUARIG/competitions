@@ -1,13 +1,15 @@
 <ul class="menu">
-  <% if available_reviews_count.positive? %>
+  <% if available_reviews_count.positive? && grant.accepting_reviews? %>
     <li><%= link_to 'Assign Review', new_grant_reviewer_review_path(grant, reviewer), data: { turbo_frame: :modal } %></li>
   <% end %>
   <% if assigned_reviews.any? %>
-    <li><%= link_to 'View Assigned', grant_reviewer_reviews_path(grant, reviewer), data: { turbo_frame: :modal } %>
-  <% end %><li>
-  <li>
-    <%= link_to 'Delete Reviewer', grant_reviewer_path(grant, grant_reviewer),
-                                  data: { turbo_method: :delete,
-                                          turbo_confirm: "Remove #{full_name(reviewer)} as a reviewer and delete their reviews for this grant?" }  %>
-  </li>
+    <li><%= link_to 'View Assigned', grant_reviewer_reviews_path(grant, reviewer), data: { turbo_frame: :modal } %></li>
+  <% end %>
+  <% if grant.accepting_reviews? %>
+    <li>
+      <%= link_to 'Delete Reviewer', grant_reviewer_path(grant, grant_reviewer),
+                                    data: { turbo_method: :delete,
+                                            turbo_confirm: "Remove #{full_name(reviewer)} as a reviewer and delete their reviews for this grant?" }  %>
+    </li>
+  <% end %>
 </ul>

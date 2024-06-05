@@ -16,17 +16,19 @@
       <%= assigned_reviews.count(&:submitted?) %>
     </div>
     <div class="cell small-2 manage">
-      <ul id="manage_<%= dom_id(grant_reviewer) %>" class="dropdown menu" data-dropdown-menu <%= reflow == 'true' ? "data-controller=reflow" : {} %>>
-        <li>
-          <a>Manage</a>
-          <%= render partial: 'grant_reviewers/reviews/manage_reviewer_links',
-                     locals: { available_reviews_count: available_reviews_count,
-                               grant: grant,
-                               reviewer: reviewer,
-                               assigned_reviews: assigned_reviews,
-                               grant_reviewer: grant_reviewer } %>
-        </li>
-      </ul>
+      <% if grant.accepting_reviews? || assigned_reviews.present? %>
+        <ul id="manage_<%= dom_id(grant_reviewer) %>" class="dropdown menu" data-dropdown-menu <%= reflow == 'true' ? "data-controller=reflow" : {} %>>
+          <li>
+            <a>Manage</a>
+            <%= render partial: 'grant_reviewers/reviews/manage_reviewer_links',
+                      locals: { available_reviews_count: available_reviews_count,
+                                grant: grant,
+                                reviewer: reviewer,
+                                assigned_reviews: assigned_reviews,
+                                grant_reviewer: grant_reviewer } %>
+          </li>
+        </ul>
+      <% end %>
     </div>
   </div>
 <% end %>
