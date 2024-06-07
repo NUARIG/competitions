@@ -98,6 +98,7 @@ RSpec.describe 'GrantReviewers', type: :system do
         visit grant_reviewers_path(grant)
         dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
       end
+
       scenario 'reviewer can be deleted' do
         dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
         expect do
@@ -206,8 +207,8 @@ RSpec.describe 'GrantReviewers', type: :system do
       end
 
       scenario 'shows proper text' do
-        expect(page).not_to have_text 'Each submission may be assessed by up to'
-        expect(page).not_to have_text 'Each reviewer may assess up to'
+        expect(page).not_to have_text "Each submission may be assessed by up to #{grant.max_reviewers_per_submission}"
+        expect(page).not_to have_text "Each reviewer may assess up to #{grant.max_submissions_per_reviewer}"
         expect(page).to have_text "This grant's review period closed on #{grant.review_close_date.strftime('%B %-d, %Y')}"
       end
 
@@ -222,7 +223,7 @@ RSpec.describe 'GrantReviewers', type: :system do
         end
       end
 
-      scenario 'reviews cannot be deleted' do
+      scenario 'review list does not include unassign button' do
         dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
 
         expect do
