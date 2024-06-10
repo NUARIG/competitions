@@ -52,7 +52,7 @@
           Role
         .cell.small-12.medium-2
 
-      .rows
+      #grant-permissions.rows
         - @grant_permissions.each_with_index do |grant_permission, i|
           = render partial: 'grant_permission', locals: { grant: @grant, grant_permission: grant_permission, i: i }
 

@@ -194,6 +194,26 @@ td,
   ul.menu a {
     padding-top: 0.25em;
   }
+  .manage {
+    padding-left: 0rem;
+    padding-top: 0.15rem;
+
+    ul.dropdown {
+      li.text {
+        a {
+          background: none;
+        }
+
+        ul {
+          min-width: 150px;
+
+          a {
+            padding: 0.25rem .5rem;
+          }
+        }
+      }
+    }
+  }
 }
 
 // submission labels contain paragraphs

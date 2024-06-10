@@ -1,7 +1,7 @@
 = turbo_frame_tag :modal do
 	#modal-container{ data: { controller: 'modals', 'modals-target': 'modal' }  }
 		.modal-background{ for: 'modal-container', data: { action: 'click->modals#close' } }
-		.content{ class: 'small-10 medium-5', 'aria-labelledby': 'title', role: 'dialog' }
+		.content{ class: 'small-10 medium-7', 'aria-labelledby': 'title', role: 'dialog' }
 			.close-button{ data: { action: 'click->modals#close' } }
 				&times;
 			%h4#title

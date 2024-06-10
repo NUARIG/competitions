@@ -1,7 +1,7 @@
 class GrantPermissionsController < ApplicationController
   before_action :set_grant, except: :index
   before_action :set_grant_permission, only: %i[edit update destroy]
-  before_action :authorize_grant_editor, except: %[index]
+  before_action :authorize_grant_editor, except: %i[index]
 
   skip_after_action :verify_policy_scoped, only: %i[index]
 
@@ -9,7 +9,7 @@ class GrantPermissionsController < ApplicationController
     @grant = Grant.kept.friendly.find(params[:grant_id])
     authorize_grant_viewer
 
-    @grant_permissions  = GrantPermission.joins(:user).where(grant: @grant).merge(User.order(last_name: :asc))
+    @grant_permissions = GrantPermission.joins(:user).where(grant: @grant).merge(User.order(last_name: :asc))
     set_pagination
   end
 
@@ -99,7 +99,8 @@ class GrantPermissionsController < ApplicationController
   end
 
   def set_pagination
-    @pagy, @grant_permissions = pagy((@grant_permissions || @grant.grant_permissions), i18n_key: 'activerecord.models.grant_permission')
+    @pagy, @grant_permissions = pagy((@grant_permissions || @grant.grant_permissions),
+                                     i18n_key: 'activerecord.models.grant_permission')
   end
 
   def user_flash_display

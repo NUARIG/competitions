@@ -1,10 +1,15 @@
 require 'rails_helper'
+include ApplicationHelper
+include UsersHelper
 
 RSpec.describe 'GrantReviewers', type: :system do
   describe '#index', js: true do
-    let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                           max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
-                           max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
+    let(:grant) do
+      create(:open_grant_with_users_and_form_and_submission_and_reviewer,
+             max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
+             max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
+    end
+
     let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
     let(:user)         { create(:saml_user) }
@@ -20,14 +25,19 @@ RSpec.describe 'GrantReviewers', type: :system do
     end
 
     scenario 'displays reviewer name and number of available reviews' do
-      expect(page).to have_content("#{reviewer.first_name} #{reviewer.last_name} ( #{grant.max_submissions_per_reviewer} )")
+      within("##{dom_id(grant.grant_reviewers.first)}") do
+        expect(page).to have_content(sortable_full_name(reviewer).to_s)
+        expect(page).to have_content('0 / 0')
+      end
     end
   end
 
   describe '#create', js: true do
-    let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                                 max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
-                                 max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
+    let(:grant) do
+      create(:open_grant_with_users_and_form_and_submission_and_reviewer,
+             max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
+             max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
+    end
     let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
     let(:user)         { create(:saml_user) }
@@ -60,86 +70,197 @@ RSpec.describe 'GrantReviewers', type: :system do
   end
 
   describe '#destroy', js: true do
-    let(:grant)        { create(:open_grant_with_users_and_form_and_submission_and_reviewer,
-                                  max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
-                                  max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10)) }
+    let(:grant)        do
+      create(:open_grant_with_users_and_form_and_submission_and_reviewer,
+             max_submissions_per_reviewer: Faker::Number.between(from: 1, to: 10),
+             max_reviewers_per_submission: Faker::Number.between(from: 1, to: 10))
+    end
     let(:grant_admin)  { grant.administrators.first }
     let(:reviewer)     { grant.reviewers.first }
-    let(:review)       { create(:review, assigner: grant_admin,
-                                         reviewer: reviewer,
-                                         submission: grant.submissions.first) }
+    let(:review)       do
+      create(:review, assigner: grant_admin,
+                      reviewer: reviewer,
+                      submission: grant.submissions.first)
+    end
     let(:user)         { create(:saml_user) }
     let(:unknown_user) { build(:saml_user) }
 
     before(:each) do
       review
       login_as(grant_admin, scope: :saml_user)
-      visit grant_reviewers_path(grant)
+      # visit grant_reviewers_path(grant)
     end
 
-    context 'success' do
+    context 'success', js: true do
+      before(:each) do
+        review
+        login_as(grant_admin, scope: :saml_user)
+        visit grant_reviewers_path(grant)
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+      end
+
       scenario 'reviewer can be deleted' do
-        accept_alert do
-          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+        expect do
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            accept_alert do
+              find_link('Delete Reviewer').click
+            end
+            pause
+          end
           pause
-        end
-        expect(page).to have_content "Reviewer and their reviews have been deleted for this grant."
+        end.to change { grant.reviewers.reload.length }.by(-1)
+
+        expect(page).to have_text 'Reviewer and their reviews have been deleted for this grant.'
       end
 
       scenario 'reviewer and their reviews can be deleted' do
-        expect(reviewer.reviews.by_grant(grant).count).to eq(1)
-        accept_alert do
-          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
-        end
-        expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
-        expect(reviewer.reviews.by_grant(Grant.last).count).to eq(0)
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+        expect do
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            accept_alert do
+              find_link('Delete Reviewer').click
+            end
+            pause
+          end
+          pause
+        end.to change { grant.reviews.reload.length }.by(-1)
       end
 
       scenario 'displays error when reviewer is not found' do
-        allow_any_instance_of(GrantReviewer).to receive(:nil?).and_return(true)
-        accept_alert do
-          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+        grant.grant_reviewers.first.destroy!
+        within('#reviewers') do
+          find(dropdown_menu_id).hover
+          accept_alert do
+            find_link('Delete Reviewer').click
+          end
+          pause
         end
-        expect(page).to have_content('Reviewer could not be found.')
+        pause
+        expect(page).to have_content('Reviewer could not be found or deleted.')
       end
     end
 
-    context 'failed' do
-      before do
-        expect(GrantReviewerServices::DeleteReviewer).to receive(:call).and_return(OpenStruct.new(success?: false, messages: 'Unable to delete this reviewer\'s reviews.' ))
+    context 'failed', js: true do
+      before(:each) do
+        review
+        login_as(grant_admin, scope: :saml_user)
+        visit grant_reviewers_path(grant)
+        # dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+        expect(GrantReviewerServices::DeleteReviewer).to receive(:call).and_return(OpenStruct.new(success?: false,
+                                                                                                  messages: 'Unable to delete this reviewer\'s reviews.'))
       end
 
       scenario 'displays error messages on failure' do
-        accept_alert do
-          click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+
+        within('#reviewers') do
+          find(dropdown_menu_id).hover
+          accept_alert do
+            find_link('Delete Reviewer').click
+          end
+          pause
         end
-        expect(page).to have_content('Unable to delete this reviewer\'s reviews.')
+        wait_for_ajax
+        expect(page).to have_content("Unable to delete this reviewer's reviews.")
       end
 
       scenario 'does not change the number of reviewers' do
         expect do
-          accept_alert do
-            click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+          dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            accept_alert do
+              find_link('Delete Reviewer').click
+            end
+            pause
           end
-        end.to_not change{grant.grant_reviewers.count}
+          wait_for_ajax
+        end.to_not change { grant.grant_reviewers.count }
       end
 
       scenario 'does not change the number of reviews' do
         expect do
-          accept_alert do
-            click_link('Remove', href: grant_reviewer_path(grant, grant.grant_reviewers.first))
+          dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            accept_alert do
+              find_link('Delete Reviewer').click
+            end
+            pause
           end
-        end.to_not change{grant.reviews.count}
+          wait_for_ajax
+        end.to_not change { grant.reviews.count }
+      end
+    end
+
+    context 'closed grant', js: true do
+      before(:each) do
+        grant.review_close_date = Date.yesterday
+        grant.save(validate: false)
+        visit grant_reviewers_path(grant)
+      end
+
+      scenario 'shows proper text' do
+        expect(page).not_to have_text "Each submission may be assessed by up to #{grant.max_reviewers_per_submission}"
+        expect(page).not_to have_text "Each reviewer may assess up to #{grant.max_submissions_per_reviewer}"
+        expect(page).to have_text "This grant's review period closed on #{grant.review_close_date.strftime('%B %-d, %Y')}"
+      end
+
+      scenario 'reviewer cannot be deleted' do
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+        expect do
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            pause
+            expect(page).not_to have_link('Delete Reviewer')
+          end
+        end
+      end
+
+      scenario 'review list does not include unassign button' do
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+
+        expect do
+          within('#reviewers') do
+            find(dropdown_menu_id).hover
+            find_link('View Assigned').click
+            pause
+          end
+          pause
+          within('#modal') do
+            expect(page).not_to have_button 'Unassign'
+            expect(page).to have_content grant.submissions.first.title
+          end
+        end
       end
     end
 
     context 'paper_trail', versioning: true do
+      before(:each) do
+        review
+        login_as(grant_admin, scope: :saml_user)
+        visit grant_reviewers_path(grant)
+        # dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+      end
+
       scenario 'it tracks whodunnit' do
         grant_reviewer = GrantReviewer.find_by(grant: grant, reviewer: reviewer)
-        accept_alert do
-          click_link('Remove', href: grant_reviewer_path(grant, grant_reviewer))
+        dropdown_menu_id = "#manage_#{dom_id(grant.grant_reviewers.first)}"
+
+        within('#reviewers') do
+          find(dropdown_menu_id).hover
+          accept_alert do
+            find_link('Delete Reviewer').click
+          end
           pause
         end
+        wait_for_ajax
         expect(page).to have_content 'Reviewer and their reviews have been deleted for this grant.'
         expect(grant_reviewer.versions.last.whodunnit).to be grant_admin.id
       end

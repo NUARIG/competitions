@@ -12,7 +12,7 @@
 						%li
 							#{error.full_message}
 
-	- if @eligible_reviewers.length.zero?
+	- if @eligible_reviewers.nil?
 		%p
 			There are no available Reviewers for this Submission.
 			= succeed '.' do
@@ -21,16 +21,16 @@
 	- else
 		= turbo_frame_tag :assign_form do
 			= form_with model: [@submission, @review], url: grant_submission_assign_review_path(@grant, @submission), method: :post, id: 'assign-review' do |f|
-				
+
 				%p
-					This submission can be assigned to 
+					This submission can be assigned to
 					= turbo_frame_tag :available_reviews do
-						#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)} 
+						#{@number_of_available_reviews} #{'reviewer'.pluralize(@number_of_available_reviews)}
 					and has
 					= turbo_frame_tag :available_reviewers do
-						#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)} 
+						#{@eligible_reviewers.length} #{'reviewer'.pluralize(@eligible_reviewers.length)}
 					available to review it.
-			
+
 				= f.select :reviewer_id, @eligible_reviewers.collect { |reviewer| [ full_name(reviewer), reviewer.id ] }, {prompt: 'Choose a Reviewer', aria: { 'described-by': 'eligibleReviewerHelp' } }
 				%p.help-text#eligibleReviewerHelp
 					Reviewers are available until they have the reached the

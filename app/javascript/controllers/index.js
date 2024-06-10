@@ -18,3 +18,6 @@ application.register('reviews', ReviewsController)
 
 import ModalsController from "./modals_controller.js"
 application.register('modals', ModalsController)
+
+import ReflowController from "./reflow_controller.js"
+application.register('reflow', ReflowController)

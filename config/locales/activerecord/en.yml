@@ -10,6 +10,7 @@ en:
     formats:
       default: "%m/%d/%Y"
       mmddyyyy: "%m/%d/%Y"
+      readable: "%B %-d, %Y"
   time:
     formats:
       default: "%m/%d/%Y %l:%M%P"
