@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module GrantReviewers
-  # Assign/Remove reviews to a reviewer
   class ReviewsController < GrantReviewersController
     before_action :set_grant
     before_action :authorize_grant_editor
@@ -25,7 +24,6 @@ module GrantReviewers
       @review = Review.new(assigner: current_user, reviewer: @reviewer, submission: @submission)
       respond_to do |format|
         if @review.save
-          # @grant_reviewer = GrantReviewer.find_by(grant: @grant, reviewer: @reviewer)
           ReviewerMailer.assignment(review: @review).deliver_now
           reload_reviewer_data
           @reviews = @grant.reviews
@@ -49,7 +47,6 @@ module GrantReviewers
       else
         reload_reviewer_data
         @reviews = @grant.reviews
-        # @grant_reviewer = GrantReviewer.find_by(grant: @grant, reviewer: @reviewer)
 
         respond_to do |format|
           format.html { redirect_to grant_reviewer_reviews_path(@grant), notice: notice }
@@ -111,8 +108,10 @@ module GrantReviewers
       @eligible_submissions = reviewer_may_add_reviews? ? eligible_submissions : nil
     end
 
+    # Find submissions where:
+    #  the reviewer is not an applicant; and
+    #  the review count < grant maximum reviews per submission
     def eligible_submissions
-      # Submissions where reviewer is not and applicant and review count < grant maximum
       available_submissions = GrantSubmission::Submission.by_grant(@grant)
                                                          .submitted
                                                          .includes(:applicants, :reviews)
