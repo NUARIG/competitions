@@ -4,9 +4,7 @@
     <li class="text">
       <%= link_to 'Manage', '#' %>
       <ul class="menu">
-        <% if policy(grant).edit? %>
-          <li><%= link_to 'Edit', edit_grant_path(grant) %></li>
-        <% end %>
+        <li><%= link_to 'Edit', edit_grant_path(grant) %></li>
         <li><%= link_to 'Duplicate', new_grant_duplicate_path(grant) if policy(grant).duplicate? %></li>
         <li><%= link_to 'Submission Form', edit_grant_form_path(grant, grant.form) %></li>
         <li><%= link_to 'Review Criteria', criteria_grant_path(grant) %></li>
