@@ -31,22 +31,52 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
   end
 
+  describe 'Draft Grant' do
+    let(:draft_grant) { create(:draft_grant) }
+    
+    context 'draft banner' do
+      before(:each) do
+        login_as draft_grant.admins.first
+      end
+
+      scenario 'it shows the draft banner warning' do
+        visit grant_path(draft_grant)
+        expect(page).to have_content 'You must publish this grant to make it available to the public.'
+      end
+
+      scenario 'it removes the draft banner warning on publish' do
+        visit edit_grant_path(draft_grant)
+        click_link 'Publish this Grant'
+        visit grant_path(draft_grant)
+        expect(page).not_to have_content 'You must publish this grant to make it available to the public.'
+      end
+    end
+  end
+
   describe 'Edit' do
     context 'admin' do
-      before(:each) do
-        @grant          = create(:grant_with_users)
-        @admin_user     = @grant.grant_permissions.role_admin.first.user
+      let(:grant) { create(:grant_with_users) }
+      let(:admin_user) { grant.admins.first }
 
-        login_user @admin_user
-        visit edit_grant_path(@grant)
+      before(:each) do
+        login_user admin_user
+        visit edit_grant_path(grant)
       end
 
       scenario 'date fields edited with datepicker are properly formatted' do
         tomorrow = (Date.current + 1.day)
-        expect(page).to have_field('grant_publish_date', with: I18n.l(@grant.publish_date, format: :mmddyyyy))
+        expect(page).to have_field('grant_publish_date', with: I18n.l(grant.publish_date, format: :mmddyyyy))
         page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{I18n.l(tomorrow)}'))")
         click_button 'Update'
-        expect(@grant.reload.publish_date).to eql(tomorrow)
+        expect(grant.reload.publish_date).to eql(tomorrow)
+      end
+
+      scenario 'changing slug redirects to correct path' do
+        page.fill_in 'Short Name', with: 'newslug'
+        click_button 'Update'
+        expect(page).to have_content 'Grant was successfully updated.'
+        expect(current_path).not_to eql edit_grant_path(grant)
+        expect(current_path).to eql '/grants/newslug/edit'
       end
 
       scenario 'versioning tracks whodunnit', versioning: true do
@@ -54,11 +84,11 @@ RSpec.describe 'Grants', type: :system, js: true do
         fill_in 'grant_name', with: 'New_Name'
         click_button 'Update'
         expect(page).to have_content 'Grant was successfully updated.'
-        expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
+        expect(grant.versions.last.whodunnit).to eql(admin_user.id)
       end
 
       scenario 'invalid submission', versioning: true do
-        page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day).to_fs
+        page.fill_in 'Submission Close Date', with: (grant.submission_open_date - 1.day).to_fs
         click_button 'Update'
         expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       end
@@ -66,8 +96,8 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'editor' do
       before(:each) do
-        @grant          = create(:grant_with_users)
-        @editor_user     = @grant.grant_permissions.role_editor.first.user
+        @grant = create(:grant_with_users)
+        @editor_user = @grant.grant_permissions.role_editor.first.user
 
         login_user @editor_user
         visit edit_grant_path(@grant)
@@ -100,8 +130,8 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'viewer' do
       before(:each) do
-        @grant          = create(:grant_with_users)
-        @viewer_user     = @grant.grant_permissions.role_viewer.first.user
+        @grant = create(:grant_with_users)
+        @viewer_user = @grant.grant_permissions.role_viewer.first.user
 
         login_user @viewer_user
         visit edit_grant_path(@grant)
@@ -208,7 +238,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
           expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
           click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
-          expect(current_path).to eq("/registered_users/sign_in")
+          expect(current_path).to eq('/registered_users/sign_in')
 
           fill_in 'Email address', with: registered_submitter.email
           fill_in 'Password', with: registered_submitter.password
@@ -377,7 +407,7 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           within('div#grant-contacts') do
             expect(page).to have_text 'Contact'
-            expect(page).to have_content "#{full_name(contact.user)}"
+            expect(page).to have_content full_name(contact.user).to_s
             expect(page).to have_link contact.user.email
           end
         end
@@ -393,9 +423,9 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           within('div#grant-contacts') do
             expect(page).to have_text 'Contacts'
-            expect(page).to have_content "#{full_name(contact.user)}"
+            expect(page).to have_content full_name(contact.user).to_s
             expect(page).to have_link contact.user.email
-            expect(page).to have_content "#{full_name(contact2.user)}"
+            expect(page).to have_content full_name(contact2.user).to_s
             expect(page).to have_link contact2.user.email
           end
         end
@@ -429,10 +459,6 @@ RSpec.describe 'Grants', type: :system, js: true do
       expect(grant.reload.discarded?).to be false
     end
 
-    pending 'delete button hidden when not discardable' do
-      fail '#TODO: logic to display the delete button?'
-    end
-
     scenario 'draft grant can be soft deleted' do
       grant.update!(state: 'draft')
       visit edit_grant_path(grant)
@@ -462,7 +488,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       @grant_reviewer = @grant.reviewers.first
       @system_admin = create(:system_admin_saml_user)
 
-      @grant_permission   = @grant.grant_permissions.role_editor.first
+      @grant_permission = @grant.grant_permissions.role_editor.first
     end
 
     context 'anoymous user' do
@@ -492,7 +518,6 @@ RSpec.describe 'Grants', type: :system, js: true do
         visit grant_path(@grant)
         expect(page).to have_content authorization_error_text
       end
-
     end
 
     context 'system admin' do

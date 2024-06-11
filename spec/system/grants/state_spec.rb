@@ -92,7 +92,6 @@ RSpec.describe 'Grants', type: :system do
 
       scenario 'current status and change status button are shown' do
         expect(page).to have_selector '#grant-state .current', text: 'Draft'
-        # expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_link 'Publish this Grant'
       end
 
@@ -100,7 +99,6 @@ RSpec.describe 'Grants', type: :system do
         @draft_grant.questions.each { |q| q.destroy! }
         click_link 'Publish this Grant'
         expect(page).to have_selector '#grant-state .current', text: 'Draft'
-        # expect(page).to have_content 'Current Publish Status: Draft'
         expect(page).to have_content 'Status change failed.'
       end
 
