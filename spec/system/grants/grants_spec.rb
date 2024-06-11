@@ -31,6 +31,28 @@ RSpec.describe 'Grants', type: :system, js: true do
     end
   end
 
+  describe 'Draft Grant' do
+    let(:draft_grant) { create(:draft_grant) }
+    
+    context 'draft banner' do
+      before(:each) do
+        login_as draft_grant.admins.first
+      end
+
+      scenario 'it shows the draft banner warning' do
+        visit grant_path(draft_grant)
+        expect(page).to have_content 'You must publish this grant to make it available to the public.'
+      end
+
+      scenario 'it removes the draft banner warning on publish' do
+        visit edit_grant_path(draft_grant)
+        click_link 'Publish this Grant'
+        visit grant_path(draft_grant)
+        expect(page).not_to have_content 'You must publish this grant to make it available to the public.'
+      end
+    end
+  end
+
   describe 'Edit' do
     context 'admin' do
       let(:grant) { create(:grant_with_users) }
