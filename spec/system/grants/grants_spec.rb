@@ -74,8 +74,8 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'editor' do
       before(:each) do
-        @grant          = create(:grant_with_users)
-        @editor_user     = @grant.grant_permissions.role_editor.first.user
+        @grant = create(:grant_with_users)
+        @editor_user = @grant.grant_permissions.role_editor.first.user
 
         login_user @editor_user
         visit edit_grant_path(@grant)
@@ -108,8 +108,8 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     context 'viewer' do
       before(:each) do
-        @grant          = create(:grant_with_users)
-        @viewer_user     = @grant.grant_permissions.role_viewer.first.user
+        @grant = create(:grant_with_users)
+        @viewer_user = @grant.grant_permissions.role_viewer.first.user
 
         login_user @viewer_user
         visit edit_grant_path(@grant)
@@ -216,7 +216,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
           expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
           click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
-          expect(current_path).to eq("/registered_users/sign_in")
+          expect(current_path).to eq('/registered_users/sign_in')
 
           fill_in 'Email address', with: registered_submitter.email
           fill_in 'Password', with: registered_submitter.password
@@ -385,7 +385,7 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           within('div#grant-contacts') do
             expect(page).to have_text 'Contact'
-            expect(page).to have_content "#{full_name(contact.user)}"
+            expect(page).to have_content full_name(contact.user).to_s
             expect(page).to have_link contact.user.email
           end
         end
@@ -401,9 +401,9 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           within('div#grant-contacts') do
             expect(page).to have_text 'Contacts'
-            expect(page).to have_content "#{full_name(contact.user)}"
+            expect(page).to have_content full_name(contact.user).to_s
             expect(page).to have_link contact.user.email
-            expect(page).to have_content "#{full_name(contact2.user)}"
+            expect(page).to have_content full_name(contact2.user).to_s
             expect(page).to have_link contact2.user.email
           end
         end
@@ -437,10 +437,6 @@ RSpec.describe 'Grants', type: :system, js: true do
       expect(grant.reload.discarded?).to be false
     end
 
-    pending 'delete button hidden when not discardable' do
-      fail '#TODO: logic to display the delete button?'
-    end
-
     scenario 'draft grant can be soft deleted' do
       grant.update!(state: 'draft')
       visit edit_grant_path(grant)
@@ -470,7 +466,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       @grant_reviewer = @grant.reviewers.first
       @system_admin = create(:system_admin_saml_user)
 
-      @grant_permission   = @grant.grant_permissions.role_editor.first
+      @grant_permission = @grant.grant_permissions.role_editor.first
     end
 
     context 'anoymous user' do
@@ -500,7 +496,6 @@ RSpec.describe 'Grants', type: :system, js: true do
         visit grant_path(@grant)
         expect(page).to have_content authorization_error_text
       end
-
     end
 
     context 'system admin' do
