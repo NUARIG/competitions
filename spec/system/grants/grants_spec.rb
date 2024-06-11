@@ -33,20 +33,28 @@ RSpec.describe 'Grants', type: :system, js: true do
 
   describe 'Edit' do
     context 'admin' do
-      before(:each) do
-        @grant          = create(:grant_with_users)
-        @admin_user     = @grant.grant_permissions.role_admin.first.user
+      let(:grant) { create(:grant_with_users) }
+      let(:admin_user) { grant.admins.first }
 
-        login_user @admin_user
-        visit edit_grant_path(@grant)
+      before(:each) do
+        login_user admin_user
+        visit edit_grant_path(grant)
       end
 
       scenario 'date fields edited with datepicker are properly formatted' do
         tomorrow = (Date.current + 1.day)
-        expect(page).to have_field('grant_publish_date', with: I18n.l(@grant.publish_date, format: :mmddyyyy))
+        expect(page).to have_field('grant_publish_date', with: I18n.l(grant.publish_date, format: :mmddyyyy))
         page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{I18n.l(tomorrow)}'))")
         click_button 'Update'
-        expect(@grant.reload.publish_date).to eql(tomorrow)
+        expect(grant.reload.publish_date).to eql(tomorrow)
+      end
+
+      scenario 'changing slug redirects to correct path' do
+        page.fill_in 'Short Name', with: 'newslug'
+        click_button 'Update'
+        expect(page).to have_content 'Grant was successfully updated.'
+        expect(current_path).not_to eql edit_grant_path(grant)
+        expect(current_path).to eql '/grants/newslug/edit'
       end
 
       scenario 'versioning tracks whodunnit', versioning: true do
@@ -54,11 +62,11 @@ RSpec.describe 'Grants', type: :system, js: true do
         fill_in 'grant_name', with: 'New_Name'
         click_button 'Update'
         expect(page).to have_content 'Grant was successfully updated.'
-        expect(@grant.versions.last.whodunnit).to eql(@admin_user.id)
+        expect(grant.versions.last.whodunnit).to eql(admin_user.id)
       end
 
       scenario 'invalid submission', versioning: true do
-        page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day).to_fs
+        page.fill_in 'Submission Close Date', with: (grant.submission_open_date - 1.day).to_fs
         click_button 'Update'
         expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       end
