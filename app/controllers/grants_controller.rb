@@ -20,9 +20,7 @@ class GrantsController < ApplicationController
     flash.keep
     @grant = Grant.includes(:contacts).kept.friendly.find(params[:id])
 
-    if authorize @grant
-      draft_banner
-    end
+    draft_banner if authorize @grant
   end
 
   # GET /grants/new
@@ -102,13 +100,14 @@ class GrantsController < ApplicationController
       :max_submissions_per_reviewer,
       :panel_date,
       :panel_location,
-      criteria_attributes: [
-        :id,
-        :name,
-        :description,
-        :is_mandatory,
-        :show_comment_field,
-        :_destroy]
+      criteria_attributes: %i[
+        id
+        name  
+        description
+        is_mandatory
+        show_comment_field
+        _destroy
+      ]
     )
   end
 
