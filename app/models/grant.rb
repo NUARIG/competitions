@@ -148,9 +148,6 @@ class Grant < ApplicationRecord
                         }
   scope :by_publish_date,     -> { order(publish_date: :asc) }
   scope :with_criteria,       -> { includes(:criteria) }
-  scope :unassigned_submissions, lambda { |*args|
-                                   where('submission_reviews_count < :max_reviewers', { max_reviewers: args.first || 2 })
-                                 }
   scope :with_reviewers,      -> { includes(:reviewers) }
   scope :with_reviews,        -> { includes(:reviews) }
   scope :with_panel,          -> { includes(:panel) }
