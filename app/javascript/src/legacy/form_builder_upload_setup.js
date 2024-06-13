@@ -8,7 +8,8 @@ Grant.FormBuilderUploadSetup = function(){
     if(file_link.length != 0){
       file_input.hide();
     }
-    clear_link.on( "click", function(){
+    clear_link.on( "click", function(e){
+      e.preventDefault();
       Grant.ClearUpload(file_input);
       file_link.hide();
       file_input.show();
