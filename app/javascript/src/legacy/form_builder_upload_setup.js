@@ -14,6 +14,7 @@ Grant.FormBuilderUploadSetup = function(){
       file_link.hide();
       file_input.show();
       remove_file_input.val('1');
+      clear_link.hide();
     });
     //handle adding a file to the input
     file_input.on("change", function(){
