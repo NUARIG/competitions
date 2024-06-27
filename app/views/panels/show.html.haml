@@ -1,5 +1,5 @@
 - content_for(:page_title, "Panel - #{@grant.name}")
-- user_has_grant_viewer_access = policy(@panel).grant_viewer_access?
+- user_has_grant_viewer_access = @user_grant_role
 
 %h1#grant-name
   = link_to @grant.name, grant_path(@grant)

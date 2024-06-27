@@ -4,11 +4,8 @@ class PanelsController < ApplicationController
 
   def show
     authorize @panel
-    @user_grant_role = current_user.get_role_by_grant(grant: @grant)
-
-    @q                  = @grant.submissions.kept.reviewed.with_applicants.ransack(params[:q])
-    @q.sorts            = 'average_overall_impact_score asc' if @q.sorts.empty?
-    @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.grant_submission_submission')
+    @user_grant_role = current_user_grant_role
+    set_submissions
     render :show
   end
 
@@ -32,6 +29,9 @@ class PanelsController < ApplicationController
 
   def set_grant
     @grant = Grant.kept.friendly.with_panel.find(params[:grant_id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = 'Grant could not be found. Check your link.'
+    redirect_back fallback_location: root_path
   end
 
   def set_panel
@@ -45,5 +45,15 @@ class PanelsController < ApplicationController
                                   :meeting_link,
                                   :meeting_location,
                                   :show_review_comments)
+  end
+
+  def set_submissions
+    @q = GrantSubmission::Submission.includes(:submitter, :applicants, :reviews).kept.reviewed.where(grant: @grant).ransack(params[:q])
+    @q.sorts = 'average_overall_impact_score asc' if @q.sorts.empty?
+    @pagy, @submissions = pagy_array(@q.result, i18n_key: 'activerecord.models.grant_submission_submission')
+  end
+
+  def current_user_grant_role
+    (current_user&.grant_permission_role.present? ? current_user.grant_permission_role[@grant] : nil)
   end
 end
