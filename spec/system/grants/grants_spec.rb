@@ -75,8 +75,15 @@ RSpec.describe 'Grants', type: :system, js: true do
         page.fill_in 'Short Name', with: 'newslug'
         click_button 'Update'
         expect(page).to have_content 'Grant was successfully updated.'
-        expect(current_path).not_to eql edit_grant_path(grant)
         expect(current_path).to eql '/grants/newslug/edit'
+      end
+
+      scenario 'prevents disallowed characters', js: true do
+        orig_slug = grant.slug
+        find_field('grant_slug').send_keys('newslug!#0')
+        click_button 'Update'
+        expect(page).to have_content 'Grant was successfully updated.'
+        expect(current_path).to eql "/grants/#{orig_slug}newslug0/edit"
       end
 
       scenario 'versioning tracks whodunnit', versioning: true do

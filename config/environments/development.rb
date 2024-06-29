@@ -51,12 +51,6 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # 1/23/24 - commented config as part of upgrade 6.1 -> 7.0
-  #   Debug mode disables concatenation and preprocessing of assets.
-  #   This option may cause significant delays in view rendering with a large
-  #   number of complex assets.
-  # config.assets.debug = true
-
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
@@ -98,4 +92,8 @@ Rails.application.configure do
     Bullet.console = true
     Bullet.add_footer = true
   end
+
+  # 6/28/24 - restore default. 
+  #           previously prevented addition of stimulus controllers
+  config.assets.digest = false
 end
