@@ -19,11 +19,10 @@ module GrantSubmissions::SubmissionsHelper
   end
 
   def display_assign_review_content(grant:, submission:, user_grant_role:)
-    return if user_grant_role == 'viewer' || !submission.available_for_review_assignment?
+    return if !grant.accepting_reviews? || user_grant_role == 'viewer' || !submission.available_for_review_assignment?
 
     if submission.submitted?
-      display_assign_reviews_link(grant: grant,
-                                  submission: submission)
+      display_assign_reviews_link(grant: grant, submission: submission)
     else
       display_may_not_be_reviewed_span
     end

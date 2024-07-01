@@ -39,7 +39,9 @@
               = f.submit 'Search', class: 'button'
           .reset
             = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
-
+  - if !@grant.accepting_reviews?
+    %p
+      Note: This grant's review period closed on #{readable_date(@grant.review_close_date)}. No changes may be made to reviews.
 
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
@@ -64,7 +66,7 @@
             .cell.small-4.overall-impact{ title: 'Average of scored reviews - scored first' }
               = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact', { title: 'Sort on  Overal Impact Score'})
             .cell.small-3.divider
-              | 
+              |
             .cell.small-5.composite{ title: 'Average of scored Criteria - scored first' }
               = sort_link(@q, :composite_score_nulls_last, 'Composite', { title: 'Sort on Composite Score'} )
         .cell.small-12.medium-1
