@@ -2,16 +2,26 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'Profile Panels', type: :system, js: :true do
-  let(:user)             { create(:user)}
-  let!(:editor_grant)    { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "AAA Editor #{Faker::Lorem.sentence}") }
-  let!(:reviewer_grant)  { create(:closed_grant_with_users_and_form_and_submission_and_reviewer, name: "ZZZ Reviewer #{Faker::Lorem.sentence}") }
-  let!(:submitted_grant) { create(:closed_grant_with_users_and_form_and_submission_and_reviewer, name: "YYY Submitter #{Faker::Lorem.sentence}") }
-  let!(:draft_grant)     { create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer, name: "BBB Draft #{Faker::Lorem.sentence}") }
+  let(:user)             { create(:user) }
+  let!(:editor_grant)    do
+    create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "AAA Editor #{Faker::Lorem.sentence}")
+  end
+  let!(:reviewer_grant) do
+    create(:closed_grant_with_users_and_form_and_submission_and_reviewer, name: "ZZZ Reviewer #{Faker::Lorem.sentence}")
+  end
+  let!(:submitted_grant) do
+    create(:closed_grant_with_users_and_form_and_submission_and_reviewer,
+           name: "YYY Submitter #{Faker::Lorem.sentence}")
+  end
+  let!(:draft_grant) do
+    create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer,
+           name: "BBB Draft #{Faker::Lorem.sentence}")
+  end
 
   let!(:editor_permission)            { create(:grant_permission, grant: editor_grant, user: user, role: 'editor') }
   let!(:reviewer_role)                { create(:grant_reviewer, grant: reviewer_grant, reviewer: user) }
   let!(:draft_permission)             { create(:grant_permission, grant: draft_grant, user: user, role: 'admin') }
-  let!(:grant_submission_submission)  { create(:submission_with_responses, grant: submitted_grant, submitter: user ) }
+  let!(:grant_submission_submission)  { create(:submission_with_responses, grant: submitted_grant, submitter: user) }
 
   context 'user without panels' do
     context 'header text' do
@@ -126,6 +136,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
 
           within 'th:nth-child(1)' do
             click_link 'Grant'
+            pause
           end
           within 'tr.panel:nth-child(1)' do
             expect(page).to have_text editor_grant.name
@@ -190,4 +201,3 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
     end
   end
 end
-

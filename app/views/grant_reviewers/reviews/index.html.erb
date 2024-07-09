@@ -1,0 +1,51 @@
+<% content_for(:page_title, "Submissions assigned for Review to #{full_name(@reviewer)}") %>
+<% grant_accepting_reviews = @grant.accepting_reviews? %>
+<%= render 'shared/grant_header', { grant: @grant, section_title: 'Assign Reviewers' } %>
+
+<%= render layout: 'layouts/modal' do %>
+  <%= turbo_frame_tag :callout do %><% end %>
+
+  <%= render partial: 'grant_reviewers/review_period_text', locals: { grant: @grant } %>
+
+  <% if @current_reviewer_reviews.blank? %>
+    <p>This reviewer has not yet been assigned submissions to review.</p>
+  <% else %>
+    <div id="assigned_submissions">
+      <div class="turbo-table">
+        <%= turbo_frame_tag :reviewer_reviews do %>
+          <div class="grid-x grid-padding-x align-bottom header">
+            <% if grant_accepting_reviews %><div class="cell small-2">Unassign</div><% end %>
+            <div class="cell small-2">Status</div>
+            <div class="cell auto submission-information">Submission</div>
+          </div>
+          <%- @current_reviewer_reviews.each do |review| %>
+            <%= turbo_frame_tag dom_id(review), class: 'item' do %>
+              <% submission = review.submission %>
+              <div class="grid-x grid-padding-x grid-padding-y row">
+                <% if grant_accepting_reviews %>
+                  <div class="cell small-2 unassign align-center align-self-middle">
+                    <%= button_to "Unassign", grant_reviewer_review_url(@grant, @reviewer, review),
+                                              method: :delete,
+                                              class: 'button tiny hollow alert remove',
+                                              data: { confirm: "Are you sure you want to unassign #{full_name(@reviewer)} from reviewing this submission?" } %>
+                  </div>
+                <% end %>
+                <div class="cell small-2"><%= link_to display_review_state(review.state),
+                                                      grant_submission_review_path(@grant, submission, review) %></div>
+                <div class="cell auto">
+                  <div class="submitter-name"><%= full_name(review.submission.submitter) %></div>
+                  <div class="submission"><%= truncate(review.submission.title, length: 60) %></div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+  <% end %>
+<% end %>
+
+<div class="small-12">
+  <p><%= link_to 'Back to Reviewers', grant_reviewers_path(@grant) %>
+</div>

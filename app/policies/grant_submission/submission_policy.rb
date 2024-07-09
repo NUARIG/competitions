@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class GrantSubmission::SubmissionPolicy < ApplicationPolicy
   include GrantRoleAccess
   include GrantSubmission::SubmissionRoleAccess
@@ -8,25 +6,6 @@ class GrantSubmission::SubmissionPolicy < ApplicationPolicy
     @user   = context.user
     @grant  = context.grant
     @record = record
-  end
-
-  class Scope < Scope
-
-    attr_reader :user, :grant, :scope
-
-    def initialize(context, scope)
-      @user   = context.user
-      @grant  = context.grant
-      @scope  = scope
-    end
-
-    def resolve
-      if user.in?(@grant.administrators) || user.system_admin?
-        GrantSubmission::Submission.kept.includes(:reviews, :applicants).where(grant_id: @grant.id)
-      else
-        GrantSubmission::Submission.kept.includes(:applicants).where(users: { id: user.id })
-      end
-    end
   end
 
   def show?

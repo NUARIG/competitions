@@ -1,17 +1,24 @@
 main.submissions {
   #grant-submissions {
-    thead tr {
-      &:first-of-type {
-        th {
-          padding-bottom: 0;
-          padding-top: 0;
-        }
+    .turbo-table {
+      .header {
+        vertical-align: bottom;
       }
-    }
-    td {
-      vertical-align: top;
-      ul {
-        padding: 0;
+      .overall-impact {
+        text-align: right;
+      }
+      .scores {
+        .reviews {
+          margin-left: 1em;
+        }
+        .divider {
+          font-size: 1.25em;
+          padding: 0 .5em;
+          text-align: center;
+        }
+        .composite {
+          text-align: left;
+        }
       }
     }
   }

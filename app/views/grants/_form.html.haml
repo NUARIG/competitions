@@ -13,10 +13,12 @@
     .cell.small-12{ class: "medium-#{(grants_url.length/10).floor}" }
       %label.middle{ style: 'font-size: .85em' }
         = "#{grants_url}/"
-    .cell.small-12.medium-6
-      = f.text_field :slug, required: true, maxlength: Grant::SLUG_MAX_LENGTH, disabled: disable_fields, class: 'small-12 medium-6', aria: { 'described-by': 'slug-help' }
+    .cell.small-12.medium-6{ data: { controller: 'slug-input' } }
+      = f.text_field :slug, required: true, maxlength: Grant::SLUG_MAX_LENGTH, disabled: disable_fields, class: 'small-12 medium-6', data: { action: "keyup->slug-input#filter" }
       %p.help-text#slug-help
         Creates a unique short URL to use when advertising or linking to this grant (3-15 characters).
+        %br
+        Alphanumeric, dash, or underscore only.
 .grid-x.grid-padding-y
   .cell
     = f.label :rfa, 'RFA'

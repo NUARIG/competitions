@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 class GrantReviewer < ApplicationRecord
   has_paper_trail versions: { class_name: 'PaperTrail::GrantReviewerVersion' },
-                  meta:     { grant_id: :grant_id , reviewer_id: :reviewer_id }
+                  meta: { grant_id: :grant_id, reviewer_id: :reviewer_id }
 
   attr_accessor :reviewer_email
 

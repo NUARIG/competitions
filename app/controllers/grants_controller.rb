@@ -5,8 +5,6 @@ class GrantsController < ApplicationController
   before_action :store_user_location!, only: :show, unless: :user_signed_in?
   before_action :set_grant, except: %i[index show new create]
 
-  # GET /grants
-  # GET /grants.json
   def index
     flash.keep
     @q = policy_scope(Grant).ransack(params[:q])
@@ -20,9 +18,7 @@ class GrantsController < ApplicationController
     flash.keep
     @grant = Grant.includes(:contacts).kept.friendly.find(params[:id])
 
-    if authorize @grant
-      draft_banner
-    end
+    draft_banner if authorize @grant
   end
 
   # GET /grants/new
@@ -31,7 +27,6 @@ class GrantsController < ApplicationController
     authorize @grant
   end
 
-  # GET /grants/1/edit
   def edit
     if authorize @grant
       draft_banner
@@ -39,14 +34,11 @@ class GrantsController < ApplicationController
     end
   end
 
-  # POST /grants
-  # POST /grants.json
   def create
     authorize Grant, :create?
     @grant = Grant.new(grant_params)
     result = GrantServices::New.call(grant: @grant, user: current_user)
     if result.success?
-      # TODO: Confirm messages the user should see
       flash[:notice]  = 'Grant saved.'
       flash[:warning] = 'Review the information below then click "Publish this Grant" to finalize.'
       redirect_to grant_grant_permissions_url(@grant)
@@ -56,21 +48,18 @@ class GrantsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /grants/1
-  # PATCH/PUT /grants/1.json
   def update
     authorize @grant
     if @grant.update(grant_params)
       flash[:notice] = 'Grant was successfully updated.'
-      redirect_back(fallback_location: grant_path(@grant))
+
+      redirect_to edit_grant_path(@grant.reload)
     else
       flash.now[:alert] = @grant.errors.full_messages
       render :edit
     end
   end
 
-  # DELETE /grants/1
-  # DELETE /grants/1.json
   def destroy
     authorize @grant
     respond_to do |format|
@@ -101,13 +90,14 @@ class GrantsController < ApplicationController
       :max_submissions_per_reviewer,
       :panel_date,
       :panel_location,
-      criteria_attributes: [
-        :id,
-        :name,
-        :description,
-        :is_mandatory,
-        :show_comment_field,
-        :_destroy]
+      criteria_attributes: %i[
+        id
+        name
+        description
+        is_mandatory
+        show_comment_field
+        _destroy
+      ]
     )
   end
 
@@ -116,6 +106,9 @@ class GrantsController < ApplicationController
   end
 
   def draft_banner
-    flash.now[:warning] = '<strong>Draft Mode</strong> You must publish this grant to make it available to the public.'.html_safe if @grant.draft?
+    if @grant.draft?
+      flash.now[:warning] =
+        '<strong>Draft Mode</strong> You must publish this grant to make it available to the public.'.html_safe
+    end
   end
 end

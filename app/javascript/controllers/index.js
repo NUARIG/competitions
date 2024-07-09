@@ -4,14 +4,23 @@
 
 import { application } from "./application"
 
-import CheckboxSubmitController from "./checkbox_submit_controller.js"
+import CheckboxSubmitController from "./checkbox_submit_controller"
 application.register("checkbox-submit", CheckboxSubmitController)
 
-import FiltersController from "./filters_controller.js"
+import FiltersController from "./filters_controller"
 application.register("filters", FiltersController)
 
-import Ts__SearchController from "./ts/search_controller.js"
-application.register("ts--search", Ts__SearchController)
+import ModalsController from "./modals_controller"
+application.register("modals", ModalsController)
 
-import ReviewsController from "./reviews_controller.js"
-application.register('reviews', ReviewsController)
+import ReflowController from "./reflow_controller"
+application.register("reflow", ReflowController)
+
+import ReviewsController from "./reviews_controller"
+application.register("reviews", ReviewsController)
+
+import SlugInputController from "./slug_input_controller"
+application.register("slug-input", SlugInputController)
+
+import Ts__SearchController from "./ts/search_controller"
+application.register("ts--search", Ts__SearchController)

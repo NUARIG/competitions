@@ -41,13 +41,14 @@
                 = link_to submission.title, grant_panel_submission_path(grant, submission)
               .cell.small-12.medium-1
                 = link_to 'Review'.pluralize(review_data.completed_review_count), grant_panel_submission_reviews_path(grant, submission)
-                = surround '(', ')' do
-                  #{review_data.completed_review_count}
+                %span{ title: 'Number of Completed Reviews' }
+                  = surround '(', ')' do
+                    #{review_data.completed_review_count}
               .cell.small-12.medium-2
-                %abbr{ title: 'Sort on Average from Scored Reviews' }
+                %abbr{ title: 'Average of Overall Impact Scores' }
                   = review_data.overall_impact_average
               .cell.small-12.medium-2
-                %abbr{ title: 'Sort on Average of all Scored Criteria' }
+                %abbr{ title: 'Average of all Scored Criteria' }
                   = review_data.composite_score
               - if user_has_grant_permissions
                 .cell.small-12.medium-1.awarded

@@ -1,0 +1,33 @@
+<% if @review.errors.present? %>
+  <% turbo_stream.update :callout do %>
+    <div class="callout warning">
+      Review could not be unassigned. See the following <%= 'error'.pluralize(@review.errors.count) %>.
+      <ul>
+        <% @review.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace @grant_reviewer do %>
+    <%= render partial: 'grant_reviewers/reviewer', locals: { grant: @grant,
+                                                              reviewer: @reviewer,
+                                                              grant_reviewer: @grant_reviewer,
+                                                              reflow: 'true' } %>
+  <% end %>
+
+  <%= turbo_stream.remove @review %>
+
+  <% if @current_reviewer_submissions.length.zero? %>
+    <%= turbo_stream.replace :assigned_submissions do %>
+      <p>This reviewer has no more assigned reviews.</p>
+    <% end %>
+  <% end %>
+
+  <%= turbo_stream.update :callout do %>
+    <div class="callout success">
+      Review unassigned. A notifcation email was sent to <%= full_name(@reviewer) %>.
+    </div>
+  <% end %>
+<% end %>

@@ -11,6 +11,9 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
                                              submission: grant.submissions.first,
                                              reviewer: grant.reviewers.first,
                                              assigner: admin) }
+  let(:submission) { grant.submissions.first }
+  let(:reviewer) { review.reviewer }
+
 
   context '#index' do
     describe 'submenu links' do
@@ -133,6 +136,21 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
           expect(page).to have_selector '#excel-export'
           expect(page.find(:xpath, "//a[@href='#{grant_reviews_path(grant, {format: 'xlsx'})}']")).not_to be nil
         end
+      end
+    end
+
+    describe 'opt-out' do
+      scenario 'it opts the reviewer out of reviewing' do
+        login_as reviewer, scope: reviewer.type.underscore.downcase.to_sym
+
+        expect do
+          visit grant_submission_path(grant, submission) 
+          accept_alert do
+            click_link 'Opt Out of Review'
+          end
+          expect(page).to have_content 'You have opted out of the review. Assigner or grant administrators have been notified.'
+          expect(current_path).to eql grant_path(grant)
+        end.to change{ submission.reviews.reload.length }.by -1
       end
     end
   end

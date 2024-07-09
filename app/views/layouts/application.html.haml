@@ -20,6 +20,8 @@
 
     #content.grid-x.grid-margin-x.grid-margin-y
       %main.cell{ class: controller_name }
+        = turbo_frame_tag :modal
+          
         = render partial: 'layouts/flash', locals: { user_is_signed_in: user_is_signed_in }
 
         = render 'banners/public_banner' if visible_banners.any?

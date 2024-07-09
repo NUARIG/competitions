@@ -1,0 +1,21 @@
+<%= turbo_frame_tag :assign_form do %>
+  <%= form_with model: [reviewer, review],
+                url: grant_reviewer_reviews_path(grant, reviewer),
+                method: :post,
+                id: 'assign-review' do |f| %>
+    <p>
+      <%= available_to_review_text(available_review_count: @number_of_available_reviews,
+                                   available_submissions_count: @eligible_submissions.length) %>
+    </p>
+    <%= f.select :submission_id, truncated_submission_select_options(submissions: eligible_submissions),
+                                 { prompt: 'Choose a Submission' },
+                                 required: false %>
+    <p class="help-text" id="eligibleReviewerHelp">
+      Submissions are available until they have the reached the
+      <%= link_to 'Maximum Reviewers per Submission', edit_grant_path(@grant), anchor: 'reviewers' %>
+      limit. Reviewers can't be assigned to review their own submissions.
+    </p>
+    <%= f.submit 'Assign Submission to Reviewer', class: 'button' %>
+    <%= button_tag 'Cancel', data: { action: 'click->modals#close' }, class: 'button alert clear' %>
+  <% end %>
+<% end %>

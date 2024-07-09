@@ -1,0 +1,45 @@
+<% if @review.persisted? %>
+  <%= turbo_stream.update :callout do %>
+    <div class="callout success">
+      Review assigned. A notifcation email was sent to <%= full_name(@reviewer) %>.
+    </div>
+  <% end %>
+
+  <%= turbo_stream.replace @grant_reviewer do %>
+    <%= render partial: 'grant_reviewers/reviewer', locals: { grant: @grant,
+                                                              reviewer: @reviewer,
+                                                              grant_reviewer: @grant_reviewer,
+                                                              reflow: 'true' } %>
+  <% end %>
+<% elsif @review.errors.present? %>
+  <%= turbo_stream.update :callout do %>
+    <div style="callout alert">
+      Review the following <%= 'error'.pluralize(@review.errors.count) %>:
+      <ul>
+        <% @review.errors.each do |error| %>
+          <li><% error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+
+<% if @number_of_available_reviews.positive? && @eligible_submissions.present? %>
+  <%= turbo_stream.update :assign_form do %>
+    <%= render partial: 'form', locals: { grant: @grant,
+                                          reviewer: @reviewer,
+                                          review: @review,
+                                          eligible_submissions: @eligible_submissions,
+                                          number_of_available_reviews: @number_of_available_reviews } %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace :assign_form do %>
+    <% if @number_of_available_reviews == 0 %>
+      <p>This reviewer has reached the limit for assigned reviews.</p>
+      <p><%= link_to 'Close this window', '#', data: { action: 'click->modals#close'} %>
+    <% else %>
+      <p>This reviewer has no reviewable submissions.</p>
+      <%= render partial: 'grant_reviewers/reviews/submission_assignment_help_text' %>
+    <% end %>
+  <% end %>
+<% end %>

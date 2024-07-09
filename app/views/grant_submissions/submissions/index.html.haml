@@ -1,9 +1,4 @@
-- user_has_grant_permissions = @user_grant_role.present?
--# if user_has_grant_permissions to see reviews, two review columns are displayed.
--#  otherwise the title column should be adjusted to fill the table
-- submission_title_class = user_has_grant_permissions ? 'medium-3' : 'medium-6'
-
-- title_text = user_has_grant_permissions ? 'Submissions' : 'Your Submissions'
+- title_text = 'Submissions'
 - content_for(:page_title, "#{title_text} - #{@grant.name}")
 
 = render 'shared/grant_header', { grant: @grant, section_title: title_text }
@@ -14,9 +9,8 @@
       = link_to 'Home', root_path
     %li
       = link_to 'Grant Home', grant_path(@grant)
-    - if user_has_grant_permissions
-      %li
-        = link_to 'Edit', edit_grant_path(@grant)
+    %li
+      = link_to 'Edit', edit_grant_path(@grant)
     %li
       Submissions
 
@@ -26,63 +20,60 @@
   #submenu.top-bar
     - if @submissions.none?
       %p
-        - if user_has_grant_permissions
-          There are no submissions to this grant.
-        - else
-          You have no submissions to this grant.
+        There are no submissions to this grant.
     - else
-      - if user_has_grant_permissions
-        .top-bar-left
+      .top-bar-left
+        %ul.menu
+          %li.menu-text
+            Actions:
+          - unless @grant.submissions.none?
+            %li
+              = link_to "Export All Submissions #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, export_grant_submissions_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
+
+      = search_form_for @q, url: grant_submissions_path(@grant), class: 'top-bar-right' do |f|
+        .text-right
           %ul.menu
-            %li.menu-text
-              Actions:
-            - unless @grant.submissions.none?
-              %li
-                = link_to "Export All Submissions #{image_tag 'XLSX_24.png', class: 'icon' }".html_safe, export_grant_submissions_path(@grant, {format: 'xlsx'}), title: 'Download as Excel', id: 'excel-export', class: 'icon-24px'
-
-        = search_form_for @q, url: grant_submissions_path(@grant), class: 'top-bar-right' do |f|
-          .text-right
-            %ul.menu
-              %li.search
-                = f.search_field :applicants_first_name_or_applicants_last_name_or_title_cont_all, placeholder: 'Applicant or Project'
-              %li.search
-                = f.submit 'Search', class: 'button'
-            .reset
-              = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
-
+            %li.search
+              = f.search_field :applicants_first_name_or_applicants_last_name_or_title_cont_all, placeholder: 'Applicant or Project'
+            %li.search
+              = f.submit 'Search', class: 'button'
+          .reset
+            = link_to 'Reset', grant_submissions_path(@grant), class: 'button clear secondary'
+  - if !@grant.accepting_reviews?
+    %p
+      Note: This grant's review period closed on #{readable_date(@grant.review_close_date)}. No changes may be made to reviews.
 
   = render partial: 'shared/pagy_header', locals: { pagy: @pagy }
 
-  #grant-submissions
+  #grant-submissions{ data: { controller: 'modals' } }
     .turbo-table
-      - if user_has_grant_permissions
-        .grid-x.grid-padding-x.header
-          .align-right.cell.small-12.medium-offset-8.medium-2
-            Scores
-
-      .grid-x.grid-padding-x.align-bottom.header
+      .header.grid-x.grid-margin-x.grid-padding-x.align-bottom.row
         .cell.small-12.medium-1
           = sort_link(@q, :user_updated_at, 'Updated', { title: 'Sort on Updated'} )
         .cell.small-12.medium-2
           = sort_link(@q, :applicants_last_name, 'Applicants', { title: 'Sort on Applicants'})
-        .cell.small-12{ class: submission_title_class }
+        .cell.small-12.medium-3
           = sort_link(@q, :title, 'Title', { title: 'Sort on Title'} )
         .cell.small-12.medium-1
           = sort_link(@q, :state, 'State', { title: 'Sort on State'} )
-        - if user_has_grant_permissions
-          .cell.small-12.medium-1
-            Reviews
-          .cell.small-12.medium-1
-            %span{ title: 'Average of scored reviews - scored first' }
+        .cell.small-12.medium-1.reviews
+          Reviews
+        .cell.small-12.medium-2.scores
+          .grid-x.row{ style: 'text-align: center' }
+            .cell.small-12
+              Reviewed Scores
+          .grid-x.row
+            .cell.small-4.overall-impact{ title: 'Average of scored reviews - scored first' }
               = sort_link(@q, :average_overall_impact_score_nulls_last, 'Overall Impact', { title: 'Sort on  Overal Impact Score'})
-          .cell.small-12.medium-1
-            %span{ title: 'Average of scored Criteria - scored first' }
+            .cell.small-3.divider
+              |
+            .cell.small-5.composite{ title: 'Average of scored Criteria - scored first' }
               = sort_link(@q, :composite_score_nulls_last, 'Composite', { title: 'Sort on Composite Score'} )
-          .cell.small-12.medium-1
-            = sort_link(@q, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
+        .cell.small-12.medium-1
+          = sort_link(@q, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
 
       .rows{ data: { controller: 'checkbox-submit' } }
         - @submissions.each do |submission|
-          = render partial: 'grant_submissions/submissions/submission', locals: { submission: submission, grant: @grant, user_grant_role: @user_grant_role, submission_title_class: submission_title_class, user_has_grant_permissions: user_has_grant_permissions, review_data: review_data(submission) }
+          = render partial: 'grant_submissions/submissions/submission', locals: { submission: submission, grant: @grant, user_grant_role: @user_grant_role, review_data: review_data(submission) }
 
   != pagy_foundation_nav(@pagy)

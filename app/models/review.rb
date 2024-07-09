@@ -3,9 +3,9 @@ class Review < ApplicationRecord
   include Discard::Model
 
   attr_accessor :user_submitted_state
-  
+
   after_validation :set_state, on: :update,
-                               if: -> { user_submitted_state.present?  }
+                               if: -> { user_submitted_state.present? }
 
   REVIEW_STATES = { assigned: 'assigned',
                     draft: 'draft',
@@ -17,7 +17,7 @@ class Review < ApplicationRecord
   after_touch      :update_submission_averages
 
   has_paper_trail versions: { class_name: 'PaperTrail::ReviewVersion' },
-                  meta:     { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
+                  meta: { grant_id: proc { |review| review.grant.id }, reviewer_id: :reviewer_id }
 
   belongs_to :assigner,       class_name: 'User',
                               foreign_key: 'assigner_id'
@@ -33,43 +33,48 @@ class Review < ApplicationRecord
                               source: :criteria
   has_many :applicants,       through: :submission
 
-  has_many :criteria_reviews, -> { order("criteria_reviews.created_at") },
-                              dependent: :destroy,
-                              inverse_of: :review
+  has_many :criteria_reviews, -> { order('criteria_reviews.created_at') },
+           dependent: :destroy,
+           inverse_of: :review
   has_many :criteria,         through: :criteria_reviews
 
   accepts_nested_attributes_for :criteria_reviews
-  validates_associated :criteria_reviews, on: :update, 
-                                          if: -> { self.submitted? || self.user_submitted_state == REVIEW_STATES[:submitted] }
-  
-  validates_presence_of     :reviewer
-  validates_presence_of     :overall_impact_score, if: -> { self.submitted? }
+  validates_associated :criteria_reviews, on: :update,
+                                          if: lambda {
+                                                submitted? || user_submitted_state == REVIEW_STATES[:submitted]
+                                              }
+
+  validates_presence_of     :overall_impact_score, if: -> { submitted? }
 
   validates_uniqueness_of   :reviewer, scope: :submission
 
   validates_numericality_of :overall_impact_score, only_integer: true,
                                                    greater_than_or_equal_to: MINIMUM_ALLOWED_SCORE,
                                                    less_than_or_equal_to: MAXIMUM_ALLOWED_SCORE,
-                                                   if: -> { overall_impact_score.present? && !self.state != REVIEW_STATES[:assigned] }
+                                                   if: lambda {
+                                                         overall_impact_score.present? && !state != REVIEW_STATES[:assigned]
+                                                       }
 
-  validate :reviewer_is_a_grant_reviewer
+  validate :reviewer_is_a_grant_reviewer, if: -> { submission.present? && reviewer.present? }
   validate :assigner_is_a_grant_editor
-  validate :reviewer_is_not_applicant
-  validate :reviewer_may_be_assigned,       if: :new_record?
+  validate :reviewer_is_not_applicant, if: -> { submission.present? && reviewer.present? }
+  validate :reviewer_may_be_assigned, if: -> { new_record? && reviewer.present? }
   validate :reviewer_may_not_be_reassigned, on: :update,
                                             if: :reviewer_id_changed?
-  validate :submission_is_not_draft
-  validate :is_not_after_close_date
-  
+  validate :submission_is_not_draft, if: -> { submission.present? }
+  validate :not_after_close_date?
+
   scope :with_criteria_reviews,                   -> { includes(:criteria_reviews) }
   scope :with_reviewer,                           -> { includes(:reviewer) }
   scope :with_grant,                              -> { includes(submission: :grant) }
-  scope :with_grant_and_submitter_and_applicants, -> { includes(submission: [:grant, :submitter, :applicants]) }
-  scope :by_grant,                                -> (grant) { with_grant.where(grants: { id: grant.id}) }
+  scope :with_grant_and_submitter_and_applicants, -> { includes(submission: %i[grant submitter applicants]) }
+  scope :by_grant,                                ->(grant) { with_grant.where(grants: { id: grant.id }) }
 
   scope :order_by_created_at,                     -> { order(created_at: :desc) }
-  scope :by_reviewer,                             -> (reviewer)   { where(reviewer_id: reviewer.id) }
-  scope :by_submission,                           -> (submission) { where(grant_submission_submission_id: submission.id) }
+  scope :by_reviewer,                             ->(reviewer) { where(reviewer_id: reviewer.id) }
+  scope :by_submission,                           lambda { |submission|
+                                                    where(grant_submission_submission_id: submission.id)
+                                                  }
   # legacy methods
   scope :completed,                               -> { submitted }
   scope :incomplete,                              -> { where(state: %w[draft assigned]) }
@@ -77,7 +82,7 @@ class Review < ApplicationRecord
   # scope :may_be_reminded,          -> { incomplete.where("reminded_at IS NULL OR reminded_at < ?", 1.week.ago) }
 
   def is_complete?
-    submitted? || self.user_submitted_state == REVIEW_STATES[:submitted]
+    submitted? || user_submitted_state == REVIEW_STATES[:submitted]
   end
 
   def scored_criteria_scores
@@ -101,19 +106,31 @@ class Review < ApplicationRecord
   private
 
   def reviewer_is_a_grant_reviewer
-    errors.add(:reviewer, :is_not_a_reviewer) unless grant.reviewers.include?(reviewer)
+    return if grant.blank?
+
+    errors.add(:reviewer, :is_not_a_reviewer) unless grant.reviewers&.include?(reviewer)
   end
 
   def assigner_is_a_grant_editor
-    errors.add(:assigner, :may_not_add_review) unless Pundit.policy(assigner, grant).grant_editor_access?
+    return if grant.blank?
+
+    errors.add(:assigner, :may_not_add_review) unless Pundit.policy(assigner,
+                                                                    grant).grant_editor_access?
   end
 
   def reviewer_is_not_applicant
+    return if submission.blank?
+
     errors.add(:reviewer, :may_not_review_own_submission) if submission.has_applicant?(reviewer)
   end
 
   def reviewer_may_be_assigned
-    errors.add(:reviewer, :has_reached_review_limit) unless reviewer.reviewable_submissions.by_grant(grant).count < grant.max_submissions_per_reviewer
+    return if grant.blank?
+
+    unless reviewer.reviewable_submissions.by_grant(grant).length < grant.max_submissions_per_reviewer
+      errors.add(:reviewer,
+                 :has_reached_review_limit)
+    end
   end
 
   def reviewer_may_not_be_reassigned
@@ -121,29 +138,21 @@ class Review < ApplicationRecord
   end
 
   def submission_is_not_draft
+    return if submission.blank?
+
     errors.add(:submission, :may_not_be_draft) if submission.draft?
   end
 
-  def is_not_after_close_date
-    errors.add(:base, :may_not_review_after_close_date, review_close_date: I18n.l(grant.review_close_date)) if review_period_closed?
+  def not_after_close_date?
+    return if grant.blank?
+
+    if review_period_closed?
+      errors.add(:base, :may_not_review_after_close_date,
+                 review_close_date: I18n.l(grant.review_close_date))
+    end
   end
 
   def set_state
     self.state = user_submitted_state
   end
-
-  def set_state
-    self.state = user_submitted_state
-  end
-
-  # TODO: use this for every review load?
-  # after_initialize :define_criteria_reviews
-
-  # def define_criteria_reviews
-  #   submission.grant.criteria.each do |criterion|
-  #     unless self.criteria_reviews.detect{ |cr| cr.criterion_id == criterion.id }.present?
-  #       self.criteria_reviews.build(criterion: criterion, review: self)
-  #     end
-  #   end
-  # end
 end

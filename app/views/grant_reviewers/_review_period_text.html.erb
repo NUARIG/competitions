@@ -1,0 +1,9 @@
+<% if grant.accepting_reviews? %>
+  <p>Changes to reviews and reviewers can be made until <%= readable_date(grant.review_close_date) %>,
+  when this grant's review period ends.</p>
+  <p>Each submission may be assessed by up to <%= link_to "#{@grant.max_reviewers_per_submission} #{'reviewer'.pluralize(@grant.max_reviewers_per_submission)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting' %>.</p>
+  <p>Each reviewer may assess up to <%= link_to "#{@grant.max_submissions_per_reviewer} #{'submission'.pluralize(@grant.max_submissions_per_reviewer)}", edit_grant_path(@grant, anchor: 'reviewers'), title: 'Change this setting' %>.</p>
+  <p>Note: Draft submissions are not reviewable.</p>
+<% else %>
+  <p><strong>This grant's review period closed on <%= readable_date(grant.review_close_date) %>. No changes may be made to reviews or reviewers.</strong></p>
+<% end %>

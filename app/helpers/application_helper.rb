@@ -9,17 +9,15 @@ module ApplicationHelper
   end
 
   def format_flash_messages(flash_content)
-    begin
-      case flash_content.class.name
-      when 'Array'
-        messages = '<p>Please review the following ' + 'error'.pluralize(flash_content.count) + ':</p>'
-        messages << simple_format((array_to_html_list flash_content), {}, wrapper_tag: 'ul')
-      else
-        flash_content
-      end.html_safe
-    rescue
-      'An error occurred.'
-    end
+    case flash_content.class.name
+    when 'Array'
+      messages = '<p>Please review the following ' + 'error'.pluralize(flash_content.count) + ':</p>'
+      messages << simple_format((array_to_html_list flash_content), {}, wrapper_tag: 'ul')
+    else
+      flash_content
+    end.html_safe
+  rescue StandardError
+    'An error occurred.'
   end
 
   def array_to_html_list(array)
@@ -28,7 +26,7 @@ module ApplicationHelper
 
   def inline_error_notifications(object:, type: 'alert')
     if object.errors.any?
-      tag.div class: "callout #{type} small"  do
+      tag.div class: "callout #{type} small" do
         "#{object.errors.full_messages.to_sentence}."
       end
     end
@@ -46,7 +44,7 @@ module ApplicationHelper
   end
 
   def display_datetime(datetime)
-    datetime.present? ? I18n.l(datetime, format: :default) : ""
+    datetime.present? ? I18n.l(datetime, format: :default) : ''
   end
 
   def date_time_date_only(date)
@@ -61,23 +59,27 @@ module ApplicationHelper
     time_tag(datetime, time_ago_in_words(datetime))
   end
 
+  def readable_date(date)
+    date.present? ? time_tag(date, I18n.l(date, format: :readable)) : ''
+  end
+
   # Exports
   def prepare_excel_worksheet_name(sheet_name:)
-    sheet_name.gsub(/\\/, '').gsub(/[\/*\[\]:?]/, '').truncate(31, omission: '')
+    sheet_name.gsub(/\\/, '').gsub(%r{[/*\[\]:?]}, '').truncate(31, omission: '')
   end
 
   # BEGIN FormBuilder
   def view_or_edit(form)
-    form.available? ? "Edit" : "View"
+    form.available? ? 'Edit' : 'View'
   end
 
   def view_or_edit_class(form)
-    form.available? ? "warning" : "secondary"
+    form.available? ? 'warning' : 'secondary'
   end
 
   # see https://github.com/ryanb/nested_form/wiki/How-To:-Custom-nested-form-builders
   def grant_form_for(*args, &block)
-    options = args.extract_options!.reverse_merge(:builder => GrantSubmissionFormBuilder)
+    options = args.extract_options!.reverse_merge(builder: GrantSubmissionFormBuilder)
 
     form_for(*(args << options)) do |f|
       f.read_only = true if user_form_read_only?
@@ -92,7 +94,7 @@ module ApplicationHelper
   end
 
   def form_table_row(f, attr, &field)
-    render(partial: "form_table_row", locals: {f: f, attr: attr, field: field})
+    render(partial: 'form_table_row', locals: { f: f, attr: attr, field: field })
   end
   # /END FORM BUILDER
 end

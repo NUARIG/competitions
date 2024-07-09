@@ -1,0 +1,20 @@
+<% user_may_update = policy(grant).update? %>
+<td class="manage" data-grant-id="<%= grant.id %>">
+  <ul class="dropdown menu small" data-dropdown-menu>
+    <li class="text">
+      <%= link_to 'Manage', '#' %>
+      <ul class="menu">
+        <li><%= link_to 'Edit', edit_grant_path(grant) %></li>
+        <li><%= link_to 'Duplicate', new_grant_duplicate_path(grant) if policy(grant).duplicate? %></li>
+        <li><%= link_to 'Submission Form', edit_grant_form_path(grant, grant.form) %></li>
+        <li><%= link_to 'Review Criteria', criteria_grant_path(grant) %></li>
+        <li><%= link_to 'Submissions', grant_submissions_path(grant) %></li>
+        <li><%= link_to 'Reviewers', grant_reviewers_path(grant) %></li>
+        <li><%= link_to 'Reviews', grant_reviews_path(grant) %></li>
+        <li><%= link_to 'Permissions', grant_grant_permissions_path(grant) if user_may_update %></li>
+        <li><%= link_to 'Panel', (user_may_update ? edit_grant_panel_path(grant) : grant_panel_path(grant) )%></li>
+        <li><%= link_to 'Delete', grant, method: :delete, data: { confirm: 'Are you sure you want to delete this grant entirely?' } if policy(grant).destroy? && grant_can_be_deleted?(grant) %></li>
+      </ul>
+    </li>
+  </ul>
+</td>

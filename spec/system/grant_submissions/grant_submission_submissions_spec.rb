@@ -1,5 +1,6 @@
 require 'rails_helper'
 include UsersHelper
+include Turbo::FramesHelper
 
 RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
   let(:grant)                 { create(:open_grant_with_users_and_form_and_submission_and_reviewer) }
@@ -63,7 +64,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
   def not_authorized_text
     t("pundit.default")
-    # 'You are not authorized to perform this action.'
   end
 
   def successfully_saved_submission_message
@@ -100,7 +100,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               scenario 'can view the submissions admin links' do
                 within "##{dom_id(submission)}" do
                   expect(page).to have_content submission.title
-                  expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+                  expect(page).to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
                   expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
                   expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
                   expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -199,23 +199,33 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             end
 
             scenario 'default sort by submission user_updated_at desc' do
-              expect(page.find(".average", match: :first)).to have_text '-'
+              within('.submission', match: :first) do
+                expect(page.find('.overall-impact', match: :first)).to have_text '-'
+              end
             end
 
             scenario 'sorts overall_impact by scored submissions to top' do
               click_link('Overall Impact')
-              expect(page.find(".average", match: :first)).to have_text submission.average_overall_impact_score
+              within('.submission', match: :first) do
+                expect(page.find('.overall-impact', match: :first)).to have_text submission.average_overall_impact_score
+              end
 
               click_link('Overall Impact')
-              expect(page.find(".average", match: :first)).to have_text submission.average_overall_impact_score
+              within('.submission', match: :first) do
+                expect(page.find('.overall-impact', match: :first)).to have_text submission.average_overall_impact_score
+              end
             end
 
             scenario 'sorts composite_score by scored submissions to top' do
               click_link('Composite')
-              expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+              within('.submission', match: :first) do
+                expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+              end
 
               click_link('Composite')
-              expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+              within('.submission', match: :first) do
+                expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+              end
             end
           end
 
@@ -261,7 +271,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           within "##{dom_id(submission)}" do
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
           end
@@ -299,6 +309,62 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
           end
         end
+
+        context 'assign reviews' do
+          before(:each) do
+            unreviewed_submission.touch
+            visit grant_submissions_path(grant)
+          end 
+
+          scenario 'can open modal to assign review to an unreviewed submission' do
+            number_of_reviewers = grant.reviewers.length
+            max_reviewers = grant.max_reviewers_per_submission
+
+            within("##{dom_id(unreviewed_submission)}") do
+              click_link('Assign')
+            end
+            within('#modal') do
+              expect(page).to have_text "Assign Reviewers for #{unreviewed_submission.title.truncate(45)}"
+              expect(page).to have_text "This submission can be assigned to #{max_reviewers} #{'reviewer'.pluralize(max_reviewers)} and has #{number_of_reviewers} #{'reviewer'.pluralize(number_of_reviewers)} available to review it."
+            end
+          end
+
+          scenario 'can assign a review to an unreviewed submission' do
+            reviewer_name = full_name(grant.reviewers.first)
+            within("##{dom_id(unreviewed_submission)}") do
+              click_link('Assign')
+            end
+            within('#modal') do
+              select(reviewer_name, from: 'review[reviewer_id]')
+              click_button('Assign to Review')
+              expect(page).to have_text "Submission assigned for review. A notification email was sent to #{reviewer_name}."
+              expect(page).to have_text "This submission has reached the limit for assigned reviews."
+            end
+          end
+
+          scenario 'can assign multiple reviews' do
+            reviewer_name = full_name(grant.reviewers.first)
+            reviewer2_name = full_name(new_reviewer.reviewer)
+            grant.update(max_reviewers_per_submission: 2, max_submissions_per_reviewer: 2)
+
+            within("##{dom_id(unreviewed_submission)}") do
+              click_link('Assign')
+            end
+            within('#modal') do
+              "This submission can be assigned to 2"
+              expect(page).to have_text "This submission can be assigned to 2 reviewers and has 2 reviewers available to review it."
+              select(reviewer_name, from: 'review[reviewer_id]')
+              click_button('Assign to Review')
+              expect(page).to have_text "This submission can be assigned to 1 reviewer and has 1 reviewer available to review it."
+              select(reviewer2_name, from: 'review[reviewer_id]')
+
+              click_button('Assign to Review')
+              wait_for_turbo
+              expect(page).to have_text "Submission assigned for review. A notification email was sent to #{reviewer2_name}."
+              expect(page).to have_text "This submission has reached the limit for assigned reviews."
+            end
+          end
+        end
       end
 
       context 'editor' do
@@ -317,7 +383,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           within "##{dom_id(submission)}" do
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -362,7 +428,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
           within "##{dom_id(submission)}" do
             expect(page).to have_content submission.title
-            expect(page).not_to have_link 'Assign Reviews', href: grant_submission_reviews_path(grant, submission)
+            expect(page).not_to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -412,50 +478,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           visit grant_submissions_path(grant)
         end
 
-        context 'submitted submission' do
-          scenario 'includes link to own submission' do
-            expect(page).to have_content submission.title
-          end
-
-          scenario 'does not have admin links' do
-            within "##{dom_id(submission)}" do
-              expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-              expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
-              expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-              expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-              expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
-              expect(page).not_to have_link 'Save all Submissions', href: grant_submissions_path(grant)
-              expect(page).not_to have_selector('.awarded')
-            end
-          end
-
-          scenario 'does not include other submitter submission' do
-            expect(page).not_to have_content other_submission.title
-          end
-
-          scenario 'does not include score columns' do
-            expect(page).not_to have_content 'Reviews'
-            expect(page).not_to have_content 'Overall Impact'
-            expect(page).not_to have_content 'Composite'
-          end
-        end
-
-        context 'draft submission' do
-          before(:each) do
-            submission.update(state: 'draft')
-            visit grant_submissions_path(grant)
-          end
-
-          scenario 'includes edit links' do
-            expect(page).to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
-          end
-
-          scenario 'does not have admin links' do
-            expect(page).not_to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
-            expect(page).not_to have_link 'Reviews', href: grant_submission_reviews_path(grant, submission)
-            expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
-            expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
-          end
+        scenario "redirects to the user's MySubmissions page" do
+          expect(page).to have_text not_authorized_text
+          expect(current_path).to eq(root_path)
         end
       end
     end
@@ -475,7 +500,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit grant_submissions_path(grant)
 
             expect(page).to have_content submission.title
-            expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+            expect(page).to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
             expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
             expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -518,7 +543,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           visit grant_submissions_path(grant)
 
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+          expect(page).to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -560,7 +585,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+          expect(page).to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)
@@ -588,7 +613,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
         scenario 'can visit the submissions index page' do
           visit grant_submissions_path(grant)
           expect(page).to have_content submission.title
-          expect(page).to have_link 'Assign Reviews', href: grant_reviewers_path(grant, submission)
+          expect(page).not_to have_link 'Assign', href: new_grant_submission_assign_review_path(grant, submission)
           expect(page).not_to have_link 'Edit', href: edit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Switch to Draft', href: unsubmit_grant_submission_path(grant, submission)
           expect(page).not_to have_link 'Delete', href: grant_submission_path(grant, submission)

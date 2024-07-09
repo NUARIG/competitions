@@ -1,0 +1,24 @@
+<% content_for(:page_title, "Assign Submissions to #{full_name(@reviewer)}") %>
+
+<%= render 'shared/grant_header', { grant: @grant, section_title: 'Assign Reviewers' } %>
+
+<%= render layout: 'layouts/modal' do %>
+  <%= turbo_frame_tag :callout do %><% end %>
+
+  <% if @eligible_submissions.blank? %>
+    <p>There are no submissions available to be assigned to this reviewer.</p>
+    <%= render partial: 'submission_assignment_help_text' %>
+  <% else %>
+    <%= turbo_frame_tag :assign_form do %>
+      <%= render partial: 'form', locals: { grant: @grant,
+                                            reviewer: @reviewer,
+                                            review: @review,
+                                            eligible_submissions: @eligible_submissions,
+                                            number_of_available_reviews: @number_of_available_reviews } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="small-12">
+  <p><%= link_to 'Back to Reviewers', grant_reviewers_path(@grant) %>
+</div>
