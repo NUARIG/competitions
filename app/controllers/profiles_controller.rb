@@ -3,17 +3,15 @@
 class ProfilesController < ApplicationController
   before_action :set_and_authorize_user
 
-  def show
-  end
+  def show; end
 
   def update
     if @user.update(user_params)
       flash[:success] = 'Your profile has been updated.'
-      render :show
     else
       flash.now[:alert] = @user.errors.full_messages
-      render :show
     end
+    render :show
   end
 
   private
@@ -31,7 +29,7 @@ class ProfilesController < ApplicationController
     when 'SamlUser'
       params.require(:user).permit(user_params)
     when 'RegisteredUser'
-      params.require(:user).permit(user_params + [:first_name, :last_name, :email])
+      params.require(:user).permit(user_params + %i[first_name last_name email])
     end
   end
 end

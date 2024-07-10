@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GrantSubmissions
   module Submissions
     class SubmissionApplicantsController < GrantBaseController
@@ -14,7 +15,7 @@ module GrantSubmissions
       def create
         authorize @submission, :edit?
 
-        email   = submission_applicant_params[:applicant_email].downcase.strip
+        email = submission_applicant_params[:applicant_email].downcase.strip
         user = User.find_by(email: email)
 
         if user.nil?
@@ -42,13 +43,13 @@ module GrantSubmissions
           flash[:alert] = 'Applicant could not be found.'
         else
           if submission_applicant.destroy
-            ApplicantMailer.unassignment(submission_applicant: submission_applicant, current_user: current_user).deliver_now
+            ApplicantMailer.unassignment(submission_applicant: submission_applicant,
+                                         current_user: current_user).deliver_now
             flash[:notice] = "#{helpers.full_name(applicant)} is no longer an applicant on #{@submission.title}."
-            redirect_to grant_submission_applicants_path(@grant, @submission)
           else
             flash[:error] = submission_applicant.errors.to_a
-            redirect_to grant_submission_applicants_path(@grant, @submission)
           end
+          redirect_to grant_submission_applicants_path(@grant, @submission)
         end
       end
 

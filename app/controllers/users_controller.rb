@@ -4,8 +4,6 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update]
   skip_after_action :verify_policy_scoped, only: %i[index]
 
-  # GET /users
-  # GET /users.json
   def index
     authorize User, :index?
     @q = User.all.ransack(params[:q])
@@ -13,15 +11,10 @@ class UsersController < ApplicationController
     @pagy, @users = pagy(@q.result, i18n_key: 'activerecord.models.user')
   end
 
-  # GET /users/1
-  # GET /users/1.json
   def show; end
 
-  # GET /users/1/edit
   def edit; end
 
-  # PATCH/PUT /users/1
-  # PATCH/PUT /users/1.json
   def update
     respond_to do |format|
       if @user.update(user_params)
@@ -50,7 +43,7 @@ class UsersController < ApplicationController
     when 'SamlUser'
       params.require(:user).permit(user_params)
     when 'RegisteredUser'
-      params.require(:user).permit(user_params + [:first_name, :last_name, :email])
+      params.require(:user).permit(user_params + %i[first_name last_name email])
     end
   end
 end
