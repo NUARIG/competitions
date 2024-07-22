@@ -133,8 +133,10 @@ end
 
 def tom_select_input(label_dom_id:, value:, select_option: true)
   find(label_dom_id).click
+
   send_keys(value)
-  pause(time: 0.35) # The lowest viable time
+  pause(time: 0.75) # The lowest viable time
+
   if select_option == true
     send_keys(:tab)
     pause
