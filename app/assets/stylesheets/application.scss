@@ -13,11 +13,13 @@
  *= require jquery-ui
  *= require_tree .
  *= require_self
- *= require select2
  */
-@import "tom-select/dist/scss/tom-select.default.scss";
-@import "app";
-@import "foundation_and_overrides";
+
 @import "foundation-datepicker";
 @import "font-awesome";
-@import "./jquery-ui.css";
+
+@function max($value, $value2) {
+  @return unquote('max(#{$value}, #{$value2})');
+}
+
+@import "tom-select/dist/scss/tom-select.default.scss";
