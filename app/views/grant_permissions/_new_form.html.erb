@@ -1,0 +1,25 @@
+<% if @grant_permission.errors.any? %>
+  <%= @grant_permission.errors.full_messages.to_sentence %>
+<% end %>
+
+<div class="grid-x grid-padding-x">
+  <div class="cell small-12 medium-4">
+    <%= f.label :user_id, 'Add a Permission by Email Address' %>
+    <%= f.select :user_id, [], { prompt: 'Type an email address' }, data: { controller: 'ts--search', ts__search_url_value: users_query_grant_grant_permissions_path(grant_id: @grant.id), 'ts__search_max-options_value': '3', ts__search_placeholder_value: 'Enter 3 characters to search' } %>
+  </div>
+  <div class="cell small-12 medium-6">
+    <%= f.label :role, 'Grant Role' %>
+    <%= f.select :role, grant_permission_role_select_options, include_blank: 'Please select a role' %>
+  </div>
+</div>
+
+<%= render partial: 'grant_permissions/checkboxes', locals: { f: f } %>
+
+<div class="grid-x">
+  <div class="actions">
+    <%= f.hidden_field :grant_id, value: grant.id %>
+    <%= f.submit 'Save', class: 'button' %>
+    <%= link_to 'Cancel', grant_grant_permissions_path, class: 'button secondary' %>
+  </div>
+</div>
+
