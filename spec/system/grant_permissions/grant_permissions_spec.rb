@@ -32,7 +32,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       end
 
       scenario 'includes appropriate edit and delete links' do
-        expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
+        expect(page).to have_link 'Edit', href: edit_grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).not_to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_admin_role)
         expect(page).to have_link 'Edit',   href: edit_grant_grant_permission_path(@grant, @grant_editor_role)
         expect(page).to have_link 'Delete', href: grant_grant_permission_path(@grant, @grant_editor_role)
@@ -77,7 +77,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       end
 
       scenario 'last grant_permission_admin cannot be assigned a different role' do
-        visit grant_grant_permissions_path(@grant) #, @grant_admin_role)
+        visit grant_grant_permissions_path(@grant)
         role_dom_id = "##{dom_id(@grant_admin_role)}"
         within(role_dom_id) do
           click_link 'Edit'
@@ -94,7 +94,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         scenario 'can change notification level for submissions' do
           visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
           expect(@grant_admin_role.submission_notification).to eql false
-          find(:css, "#grant_permission_submission_notification").set(true)
+          find(:css, '#grant_permission_submission_notification').set(true)
           click_button 'Update'
           visit edit_grant_grant_permission_path(@grant, @grant_admin_role)
           @grant_admin_role.reload
@@ -109,13 +109,9 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         click_link 'Grant access to another user'
       end
 
-      # scenario 'assigned grant_permission does not appear in select' do
-      #   expect(page.all('select#grant_permission_user_id option').map(&:value)).not_to include(@grant_admin.id.to_s)
-      # end
-
       scenario 'requires a selected user' do
         within '#new_permission' do
-          select('Editor', from:'grant_permission[role]')
+          select('Editor', from: 'grant_permission[role]')
           click_button 'Save'
           wait_for_turbo
           expect(page).to have_content('User must exist and User must be selected.')
@@ -132,8 +128,9 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
       scenario 'unassigned user can be granted a role' do
         within '#new_permission' do
+          @unassigned_user.touch
           tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.chop)
-          select('Editor', from:'grant_permission[role]')
+          select('Editor', from: 'grant_permission[role]')
           click_button 'Save'
         end
         expect(page).to have_content "#{full_name(@unassigned_user)} was granted 'Editor'"
@@ -142,7 +139,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       scenario 'new grant permission defaults to false for submission notification' do
         within '#new_permission' do
           tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email)
-          select('Editor', from:'grant_permission[role]')
+          select('Editor', from: 'grant_permission[role]')
           click_button 'Save'
         end
         expect(GrantPermission.last.submission_notification).to eql false
@@ -151,8 +148,8 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
       scenario 'new grant permission can be set to true for submission notification' do
         within '#new_permission' do
           tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.chop)
-          select('Editor', from:'grant_permission[role]')
-          find(:css, "#grant_permission_submission_notification").set(true)
+          select('Editor', from: 'grant_permission[role]')
+          find(:css, '#grant_permission_submission_notification').set(true)
           click_button 'Save'
         end
         wait_for_turbo
@@ -161,7 +158,8 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
 
       context 'tom-select search' do
         scenario 'displays search email, if exists' do
-          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.first(6), select_option: false)
+          tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: @unassigned_user.email.first(6),
+                           select_option: false)
           expect(page).to have_content(@unassigned_user.email)
         end
 
@@ -173,7 +171,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
         scenario 'limits dropdown options based on input' do
           tom_select_input(label_dom_id: '#grant_permission_user_id-ts-label', value: 'zzzzzzz', select_option: false)
           expect(page).to have_content('No results found')
-          expect(page).to have_select('grant_permission_user_id', :with_options => [])
+          expect(page).to have_select('grant_permission_user_id', with_options: [])
         end
       end
     end
@@ -219,7 +217,7 @@ RSpec.describe 'GrantPermissions', type: :system, js: true do
           page.driver.browser.switch_to.alert.accept
           wait_for_turbo
           expect(page).to have_content("#{full_name(@grant_viewer)}'s role on this grant was removed.")
-        end.to change{@grant.grant_permissions.count}.by (-1)
+        end.to change { @grant.grant_permissions.count }.by(-1)
       end
     end
   end

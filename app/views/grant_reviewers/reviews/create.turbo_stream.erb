@@ -36,7 +36,7 @@
   <%= turbo_stream.replace :assign_form do %>
     <% if @number_of_available_reviews == 0 %>
       <p>This reviewer has reached the limit for assigned reviews.</p>
-      <p><%= link_to 'Close this window', '#', data: { action: 'click->modals#close'} %>
+      <p><%= link_to 'Close this window', '#', data: { action: 'click->modals#close' } %>
     <% else %>
       <p>This reviewer has no reviewable submissions.</p>
       <%= render partial: 'grant_reviewers/reviews/submission_assignment_help_text' %>

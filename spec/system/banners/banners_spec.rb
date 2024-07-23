@@ -12,14 +12,14 @@ RSpec.describe 'Banners', type: :system do
 
     describe 'user should not have access' do
       before(:each) do
-        @user  = create(:saml_user)
+        @user = create(:saml_user)
         login_as(@user, scope: :saml_user)
       end
 
       context '#index' do
         scenario 'displays proper error message for non-admin user' do
           visit banners_path
-          expect(current_path).to eq("/")
+          expect(current_path).to eq('/')
           expect(page).to have_content('You are not authorized to perform this action.')
         end
       end
@@ -27,7 +27,7 @@ RSpec.describe 'Banners', type: :system do
 
     describe 'admin user' do
       before(:each) do
-        @system_admin_user  = create(:system_admin_saml_user)
+        @system_admin_user = create(:system_admin_saml_user)
         login_as(@system_admin_user, scope: :saml_user)
         visit root_path
       end
@@ -40,10 +40,10 @@ RSpec.describe 'Banners', type: :system do
 
           scenario 'displays the Banners link for admins' do
             page.find('#admin').hover
-            pause(time: 0.30)
+            pause(time: 0.5)
             expect(page).to have_link 'Banners', href: banners_path
             click_link 'Banners'
-            expect(current_path).to eq("/banners")
+            expect(current_path).to eq('/banners')
           end
         end
       end
@@ -57,13 +57,12 @@ RSpec.describe 'Banners', type: :system do
           scenario 'banner index page' do
             expect(page).to have_content 'Banners'
           end
-
         end
 
         context '#create' do
           scenario 'Shows error for empty body' do
             click_link 'Create New Banner'
-            expect(current_path).to eq("/banners/new")
+            expect(current_path).to eq('/banners/new')
             click_button 'Save'
             expect(page).to have_content('Body is required.')
           end
@@ -74,10 +73,10 @@ RSpec.describe 'Banners', type: :system do
               truncated_body = body.truncate_words(2, omission: '')
 
               click_link 'Create New Banner'
-              expect(current_path).to eq("/banners/new")
+              expect(current_path).to eq('/banners/new')
               fill_in_trix_editor('banner_body', with: body)
               click_button 'Save'
-              expect(current_path).to eq("/banners")
+              expect(current_path).to eq('/banners')
               expect(page).to have_content I18n.t('banners.create.visible_success')
               expect(page).to have_content(truncated_body)
 
@@ -92,11 +91,11 @@ RSpec.describe 'Banners', type: :system do
               truncated_body = @body.truncate_words(2, omission: '')
 
               click_link 'Create New Banner'
-              expect(current_path).to eq("/banners/new")
+              expect(current_path).to eq('/banners/new')
               uncheck 'Visible'
               fill_in_trix_editor('banner_body', with: @body)
               click_button 'Save'
-              expect(current_path).to eq("/banners")
+              expect(current_path).to eq('/banners')
               expect(page).to have_content I18n.t('banners.create.not_visible_success')
               expect(page).to have_content(truncated_body)
 
@@ -129,7 +128,7 @@ RSpec.describe 'Banners', type: :system do
               fill_in_trix_editor('banner_body', with: @new_body)
               click_button 'Update'
               expect(page).to have_content I18n.t('banners.update.visible_success')
-              expect(current_path).to eq("/banners")
+              expect(current_path).to eq('/banners')
               expect(page).to have_content(@truncated_body)
             end
           end
@@ -139,7 +138,7 @@ RSpec.describe 'Banners', type: :system do
               uncheck 'Visible'
               click_button 'Update'
               expect(page).to have_content I18n.t('banners.update.not_visible_success')
-              expect(current_path).to eq("/banners")
+              expect(current_path).to eq('/banners')
             end
           end
 
@@ -158,7 +157,6 @@ RSpec.describe 'Banners', type: :system do
     end
 
     describe 'banner display on home page' do
-
       before(:each) do
         visit root_path
       end
@@ -170,7 +168,6 @@ RSpec.describe 'Banners', type: :system do
       scenario 'does include banner text' do
         expect(page).to have_content @banner.body
       end
-
     end
 
     describe 'banner displays on other pages' do

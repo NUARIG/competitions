@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'review requests', type: :request do
-
   let(:grant_creator_request) { create(:grant_creator_request) }
   let(:grant_creator)         { create(:grant_creator_saml_user) }
   let(:system_admin_user)     { create(:system_admin_saml_user) }
@@ -91,7 +90,7 @@ RSpec.describe 'review requests', type: :request do
       context '#show' do
         it 'can be viewed' do
           get(grant_creator_request_review_path(grant_creator_request_id: grant_creator_request.id),
-                                                  params: { id: grant_creator_request.id } )
+              params: { id: grant_creator_request.id })
           expect(response).to have_http_status :success
         end
       end
@@ -100,10 +99,12 @@ RSpec.describe 'review requests', type: :request do
         context 'pending status' do
           it 'does not send an email if the request is pending' do
             patch(grant_creator_request_review_path(grant_creator_request_id: grant_creator_request.id),
-                                                    params: {
-                                                      id: grant_creator_request.id,
-                                                      grant_creator_request: {
-                                                        status: 'pending' } } )
+                  params: {
+                    id: grant_creator_request.id,
+                    grant_creator_request: {
+                      status: 'pending'
+                    }
+                  })
             expect(ActionMailer::Base.deliveries.size).to eq(0)
           end
         end
@@ -111,9 +112,10 @@ RSpec.describe 'review requests', type: :request do
         context 'approved status' do
           it 'sends approved GrantCreatorRequestReviewMailer email when approved' do
             patch(grant_creator_request_review_path(grant_creator_request_id: grant_creator_request.id),
-                                                    params: { id: grant_creator_request.id, grant_creator_request: { status: 'approved' } })
+                  params: { id: grant_creator_request.id,
+                            grant_creator_request: { status: 'approved' } })
             expect(ActionMailer::Base.deliveries.size).to eq(1)
-            email = (ActionMailer::Base.deliveries).first
+            email = ActionMailer::Base.deliveries.first
             expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Approved Grant Creator Request")
           end
         end
@@ -121,9 +123,10 @@ RSpec.describe 'review requests', type: :request do
         context 'rejected status' do
           it 'sends rejected GrantCreatorRequestReviewMailer email when the request is rejected' do
             patch(grant_creator_request_review_path(grant_creator_request_id: grant_creator_request.id),
-                                                    params: { id: grant_creator_request.id, grant_creator_request: { status: 'rejected' } })
+                  params: { id: grant_creator_request.id,
+                            grant_creator_request: { status: 'rejected' } })
             expect(ActionMailer::Base.deliveries.size).to eq(1)
-            email = (ActionMailer::Base.deliveries).first
+            email = ActionMailer::Base.deliveries.first
             expect(email.subject).to eq("#{COMPETITIONS_CONFIG[:application_name]}: Rejected Grant Creator Request")
           end
         end
@@ -132,7 +135,8 @@ RSpec.describe 'review requests', type: :request do
           it 'does not send an email' do
             allow_any_instance_of(GrantCreatorRequest).to receive(:update).and_return(false)
             put(grant_creator_request_review_path(grant_creator_request_id: grant_creator_request.id),
-                                                    params: { id: grant_creator_request.id, grant_creator_request: { status: 'invalid_status' } })
+                params: { id: grant_creator_request.id,
+                          grant_creator_request: { status: 'invalid_status' } })
             expect(ActionMailer::Base.deliveries.size).to eq(0)
           end
         end
