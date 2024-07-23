@@ -17,9 +17,4 @@
 
 @import "foundation-datepicker";
 @import "font-awesome";
-
-@function max($value, $value2) {
-  @return unquote('max(#{$value}, #{$value2})');
-}
-
 @import "tom-select/dist/scss/tom-select.default.scss";
