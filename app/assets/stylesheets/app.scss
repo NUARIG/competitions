@@ -390,3 +390,15 @@ h2#section {
     }
   }
 }
+
+.ts-wrapper {
+  > .ts-dropdown {
+    border-radius: 0 !important;
+  }
+  > .ts-control {
+  background: none !important;
+  }
+  + .help-text {
+    padding-top: 1em;
+  }
+}

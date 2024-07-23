@@ -9,7 +9,10 @@
     </p>
     <%= f.select :submission_id, truncated_submission_select_options(submissions: eligible_submissions),
                                  { prompt: 'Choose a Submission' },
-                                 required: false %>
+                                 required: false,
+                                 data: { controller: 'ts--search',
+                                         ts__search_placeholder_value: 'Search by submission title or submitter name',
+                                         action: 'focus->ts--search#toggleInput' } %>
     <p class="help-text" id="eligibleReviewerHelp">
       Submissions are available until they have the reached the
       <%= link_to 'Maximum Reviewers per Submission', edit_grant_path(@grant), anchor: 'reviewers' %>

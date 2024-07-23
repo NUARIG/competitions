@@ -8,7 +8,7 @@ SimpleCov.start 'rails'
 require_relative '../config/environment'
 
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'active_support'
@@ -115,9 +115,9 @@ end
 APPLICATION_NAME = COMPETITIONS_CONFIG[:application_name]
 REGISTERED_USER_LOGIN_BUTTON_TEXT = "Continue with your #{APPLICATION_NAME} account"
 
-SUBMITTED_TEXT  = I18n.t("activerecord.attributes.review.state.submitted")
-ASSIGNED_TEXT   = I18n.t("activerecord.attributes.review.state.assigned")
-DRAFT_TEXT      = I18n.t("activerecord.attributes.review.state.draft")
+SUBMITTED_TEXT  = I18n.t('activerecord.attributes.review.state.submitted')
+ASSIGNED_TEXT   = I18n.t('activerecord.attributes.review.state.assigned')
+DRAFT_TEXT      = I18n.t('activerecord.attributes.review.state.draft')
 
 def pause(time: 0.25)
   sleep(time)
@@ -133,8 +133,10 @@ end
 
 def tom_select_input(label_dom_id:, value:, select_option: true)
   find(label_dom_id).click
+
   send_keys(value)
-  pause(time: 0.35) # The lowest viable time
+  pause(time: 0.75) # The lowest viable time
+
   if select_option == true
     send_keys(:tab)
     pause

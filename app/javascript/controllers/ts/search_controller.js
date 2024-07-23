@@ -4,28 +4,35 @@ import { get }        from "@rails/request.js"
 
 // Connects to data-controller="ts--search"
 export default class extends Controller {
-  static values = { url: String }
+  static values = { url: String, maxOptions: String, placeholder: String }
 
   connect() {
-
     var config = {
       plugins: ['dropdown_input'],
       maxItems: 1,
-      maxOptions: 3,
+      maxOptions: (parseInt(this.maxOptionsValue) || null),
       selectOnTab: true,
       closeAfterSelect: true,
       hidePlaceholder: false,
-      placeholder: 'Enter 3 characters to search',
+      placeholder: (this.placeholderValue || ''),
       create: false,
       openOnFocus: true,
-      highlight: true,
-      load: (q, callback) => this.search(q, callback)
+      highlight: true
+    }
+
+    if (this.urlValue !== '') {
+      config.load = ((q, callback) => this.search(q, callback))
     }
 
     new TomSelect(this.element, config)
+    this.element.querySelector("select").style.display = "none"
   }
 
   async search(q, callback) {
+    if (this.urlValue === undefined) {
+      callback()
+    }
+
     const response = await get(this.urlValue, {
       query: { q: q },
       responseKind: 'json'
@@ -35,7 +42,6 @@ export default class extends Controller {
       const list = await response.json
       callback(list)
     } else {
-      console.log(response)
       callback()
     }
   }

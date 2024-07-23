@@ -7,7 +7,7 @@ gem 'pg'
 gem 'rails', '~> 7.0.8'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '>= 5'
+gem 'dartsass-sprockets'
 # Use Terser as compressor for JavaScript assets
 gem 'terser', '~> 1.1'
 
@@ -21,9 +21,9 @@ gem 'redis', '~> 4.0'
 # gem 'bcrypt', '~> 3.1.7'
 
 gem 'hotwire-rails'
-gem 'jsbundling-rails'
+gem 'jsbundling-rails', '~> 1.3'
 gem 'requestjs-rails'
-gem 'turbo-rails',                  '~> 2.0.2'
+gem 'turbo-rails', '~> 2.0.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.17.0', require: false
@@ -35,8 +35,8 @@ gem 'rubyzip',                      '~> 2.3.2'
 
 # frontend
 gem 'font-awesome-rails'
-gem 'foundation-rails',             '~> 6.5.3.0'
 gem 'foundation-datepicker-rails'
+gem 'foundation-rails',             '~> 6.5.3.0'
 gem 'friendly_id',                  '~> 5.5.0'
 gem 'haml-rails',                   '~> 2.0'
 gem 'jquery-rails',                 '~> 4.6.0'
@@ -55,15 +55,15 @@ gem 'american_date',                '~> 1.3'
 gem 'validates_timeliness',         '7.0.0.beta2'
 
 # form_builder
-gem "cocoon"
-gem "nested_form"
+gem 'cocoon'
+gem 'nested_form'
 # gem "select2-rails"
 
 # s3
-gem "aws-sdk-s3", require: false
+gem 'aws-sdk-s3', require: false
 
 # exports
-gem 'caxlsx',                       '~> 3.3'
+gem 'caxlsx', '~> 3.3'
 gem 'caxlsx_rails'
 gem 'wicked_pdf',                   '~> 2.1.0'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
@@ -72,7 +72,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
   gem 'puma',         '~> 5.6.8'
-  gem 'rspec-rails',  '6.1'
+  gem 'rspec-rails',  '~> 6.1.3'
   gem 'webrick',      '1.8.1'
 end
 
@@ -82,28 +82,28 @@ group :development do
   gem 'binding_of_caller'
   gem 'bullet'
   gem 'i18n-debug'
-  gem 'listen',                 '~> 3.5.1'
+  gem 'listen', '~> 3.5.1'
   gem 'rubocop'
   gem 'spring',                 '~> 4.0.0'
   gem 'spring-watcher-listen',  '~> 2.1.0'
   gem 'web-console',            '>= 3.3.0'
 
   # Use Capistrano for deployment
-  gem "capistrano",       require: false
-  gem "capistrano-rails", require: false
-  gem 'capistrano-rvm'
+  gem 'capistrano',       require: false
   gem 'capistrano-passenger'
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rvm'
   gem 'capistrano-service'
 end
 
 group :test do
-  gem 'capybara',                 '~> 3.39.2'
+  gem 'capybara', '~> 3.39.2'
   gem 'capybara-select-2'
   gem 'factory_bot_rails'
   gem 'faker',                    '~> 3.2.2'
   gem 'pundit-matchers',          '~> 3.1.2'
-  gem 'rspec',                    '3.12.0'
   gem 'rails-controller-testing'
+  gem 'rspec',                    '3.13.0'
   gem 'selenium-webdriver',       '~> 4.16.0'
   gem 'simplecov',                '~> 0.22', require: false
 end
