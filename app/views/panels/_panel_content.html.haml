@@ -1,57 +1,34 @@
-- user_has_grant_permissions = @user_grant_role.present?
+#reviews
+  %h4
+    Reviewed Submissions
 
-%h4
-  Reviewed Submissions
+  - if submissions.none?
+    %p
+      There are no reviewed submissions for this grant.
+  - else
 
-- if submissions.none?
-  %p
-    There are no reviewed submissions for this grant.
-- else
+    %p
+      Below is a list of reviewed, completed submissions.
 
-  %p
-    Below is a list of reviewed, completed submissions.
-
-  #grant-submissions
-    .turbo-table
-      .grid-x.grid-padding-x.align-bottom.header
-        .cell.small-12.medium-2
-          = sort_link(query, :applicants_last_name, 'Applicants', { title: 'Sort on Applicants' })
-        .cell.small-12.medium-4
-          = sort_link(query, :title, 'Submission', { title: 'Sort on Submission Title'} )
-        .cell.small-12.medium-1
-          Reviews
-        .cell.small-12.medium-2
-          %abbr{ title: 'Sort on Average from Scored Reviews' }
-            = sort_link(query, :average_overall_impact_score, 'Overall Impact Score')
-        .cell.small-12.medium-2
-          %abbr{ title: 'Sort on Average of all Scored Criteria' }
-            = sort_link(query, :composite_score, 'Composite Score')
-        - if user_has_grant_permissions
+    #grant-submissions
+      .turbo-table
+        .grid-x.grid-padding-x.align-bottom.header
+          .cell.small-12.medium-2
+            = sort_link(query, :applicants_last_name, 'Applicants', { title: 'Sort on Applicants' })
+          .cell.small-12.medium-4
+            = sort_link(query, :title, 'Submission', { title: 'Sort on Submission Title'} )
           .cell.small-12.medium-1
-            = sort_link(query, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
+            Reviews
+          .cell.small-12.medium-2
+            %abbr{ title: 'Sort on Average from Scored Reviews' }
+              = sort_link(query, :average_overall_impact_score, 'Overall Impact Score')
+          .cell.small-12.medium-2.auto
+            %abbr{ title: 'Sort on Average of all Scored Criteria' }
+              = sort_link(query, :composite_score, 'Composite Score')
+          - if @user_grant_role.present?
+            .cell.small-12.medium-1
+              = sort_link(query, :awarded, 'Awarded', { default_order: :desc, title: 'Sort on Awarded' })
 
-      .rows{ data: { controller: 'checkbox-submit' } }
-        - @submissions.each do |submission|
-          - review_data = review_data(submission)
-          = turbo_frame_tag dom_id(submission) do
-            .grid-x.grid-padding-x.grid-padding-y.row
-              .cell.small-12.medium-2.applicants
-                = link_to submission.applicants.map{ |app| "#{sortable_full_name(app)}"}.join('<br/>').html_safe, grant_panel_submission_path(grant, submission)
-              .cell.small-12.medium-4
-                = link_to submission.title, grant_panel_submission_path(grant, submission)
-              .cell.small-12.medium-1
-                = link_to 'Review'.pluralize(review_data.completed_review_count), grant_panel_submission_reviews_path(grant, submission)
-                %span{ title: 'Number of Completed Reviews' }
-                  = surround '(', ')' do
-                    #{review_data.completed_review_count}
-              .cell.small-12.medium-2
-                %abbr{ title: 'Average of Overall Impact Scores' }
-                  = review_data.overall_impact_average
-              .cell.small-12.medium-2
-                %abbr{ title: 'Average of all Scored Criteria' }
-                  = review_data.composite_score
-              - if user_has_grant_permissions
-                .cell.small-12.medium-1.awarded
-                  = turbo_frame_tag "award_#{submission.id}" do
-                    = render partial: 'grant_submissions/submissions/award/award_form', locals: { grant: grant, submission: submission, user_grant_role: @user_grant_role }
-
+        .rows{ data: { controller: 'checkbox-submit' } }
+          - @submissions.each do |submission|
+            = render partial: 'submission', locals: { grant: @grant, submission: submission, role: @user_grant_role }
