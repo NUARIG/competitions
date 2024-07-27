@@ -1,0 +1,5 @@
+<div id="metadata" class="grid-x">
+  <%= render partial: 'instructions', locals: { panel: panel } if panel.instructions.present? %>
+  <%= render partial: 'location', locals: { panel: panel } if panel.meeting_location.present? %>
+  <%= render partial: 'link', locals: { panel: panel } if panel.meeting_link.present? %>
+</div>

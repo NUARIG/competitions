@@ -1,0 +1,7 @@
+<div class="callout warning">
+  <%- flash_content.each_value do |content| %>
+    <%= content %>
+  <% end %>
+
+  <%= content_tag(:p, 'Reviewers will not see Awarded information.') unless admin.nil? %>
+</div>
