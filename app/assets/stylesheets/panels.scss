@@ -1,14 +1,13 @@
 main.panels {
   #metadata {
-    #instructions,
-    #meeting {
+    margin-bottom: 1rem;
+    #instructions {
       padding-bottom: 1.5rem
     }
-    #meeting {
-      font-size: .95rem;
-    }
   }
-  input#panel_show_review_comments { margin-top: 0.75em; }
+  input#panel_show_review_comments {
+    margin-top: 0.75em;
+  }
   table {
     caption {
       text-align: left;
