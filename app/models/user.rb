@@ -7,14 +7,14 @@ class User < ApplicationRecord
                                                     prepend: true
   after_create      :process_pending_reviewer_invitations, unless: -> { pending_reviewer_invitations.empty? }
 
-  USER_TYPES                = ["SamlUser", "RegisteredUser"]
+  USER_TYPES                = %w[SamlUser RegisteredUser]
   SAML_DOMAINS              = COMPETITIONS_CONFIG[:devise][:registerable][:saml_domains] || []
   RESTRICTED_EMAIL_DOMAINS  = COMPETITIONS_CONFIG[:devise][:registerable][:restricted_domains] || []
 
   devise :trackable, :timeoutable
 
   has_paper_trail versions: { class_name: 'PaperTrail::UserVersion' },
-                  meta:     { user_id: :id } # added for convenience
+                  meta: { user_id: :id } # added for convenience
 
   has_many   :grant_permissions
   has_many   :editable_grants,        through: :grant_permissions,
@@ -27,7 +27,6 @@ class User < ApplicationRecord
   has_many   :applied_grants,         class_name: 'Grant',
                                       inverse_of: :applicants,
                                       through: :submissions
-
 
   has_many   :submission_applicants,  class_name: 'GrantSubmission::SubmissionApplicant',
                                       foreign_key: :applicant_id,
@@ -52,18 +51,21 @@ class User < ApplicationRecord
   validates_uniqueness_of :era_commons, unless: -> { era_commons.blank? }
 
   scope :order_by_last_name,                          -> { order(last_name: :asc) }
-  scope :sort_by_type_nulls_last_asc,                 -> { order(Arel.sql('type ASC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END')) }
-  scope :sort_by_type_nulls_last_desc,                -> { order(Arel.sql('type DESC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END')) }
+  scope :sort_by_type_nulls_last_asc,                 lambda {
+                                                        order(Arel.sql('type ASC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END'))
+                                                      }
+  scope :sort_by_type_nulls_last_desc,                lambda {
+                                                        order(Arel.sql('type DESC, CASE WHEN current_sign_in_at IS NULL THEN 2 ELSE 1 END'))
+                                                      }
   scope :sort_by_current_sign_in_at_nulls_last_asc,   -> { order('current_sign_in_at ASC NULLS LAST') }
   scope :sort_by_current_sign_in_at_nulls_last_desc,  -> { order('current_sign_in_at DESC NULLS LAST') }
 
-
   def saml_user?
-    self.type === 'SamlUser'
+    type === 'SamlUser'
   end
 
   def registered_user?
-    self.type === 'RegisteredUser'
+    type === 'RegisteredUser'
   end
 
   def get_role_by_grant(grant:)
@@ -78,9 +80,7 @@ class User < ApplicationRecord
   def process_pending_reviewer_invitations
     pending_reviewer_invitations.each do |invitation|
       reviewer_assignment = GrantReviewer.new(grant: invitation.grant, reviewer: self)
-      if reviewer_assignment.save
-        invitation.update(confirmed_at: DateTime.now)
-      end
+      invitation.update(confirmed_at: DateTime.now) if reviewer_assignment.save
     end
   end
 
