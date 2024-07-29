@@ -4,7 +4,7 @@ class PanelsController < ApplicationController
 
   def show
     authorize @panel
-    @user_grant_role = current_user_grant_role
+    @user_grant_role = current_user.get_role_by_grant(grant: @grant)
     set_submissions
     render :show
   end
@@ -48,12 +48,9 @@ class PanelsController < ApplicationController
   end
 
   def set_submissions
-    @q = GrantSubmission::Submission.includes(:submitter, :applicants, :reviews).kept.reviewed.where(grant: @grant).ransack(params[:q])
+    @q = GrantSubmission::Submission.includes(:submitter, :applicants,
+                                              :reviews).kept.reviewed.where(grant: @grant).ransack(params[:q])
     @q.sorts = 'average_overall_impact_score asc' if @q.sorts.empty?
     @pagy, @submissions = pagy_array(@q.result, i18n_key: 'activerecord.models.grant_submission_submission')
-  end
-
-  def current_user_grant_role
-    (current_user&.grant_permission_role.present? ? current_user.grant_permission_role[@grant] : nil)
   end
 end

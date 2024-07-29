@@ -20,21 +20,19 @@
     %li
       Reviews
 
-%h3
-  Submission Reviews
-
 .grid-x.grid-margin-x
   .cell.small-12.medium-9
+    %h3
+      Submission Reviews
     %h4
       = @submission.title
     %h5
-      Submitter:
-      = full_name(@submission.submitter)
+      Submitted by #{full_name(@submission.submitter)}
 
   .cell.small-12.medium-3
-    
     = render partial: 'panels/submissions/card', locals: { submission: @submission, section: 'reviews', grant: @grant }
 
+.grid-x.grid-margin-x
   .small-12.cell
     %h4
       Summary of Reviews

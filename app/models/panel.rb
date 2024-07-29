@@ -2,7 +2,7 @@ class Panel < ApplicationRecord
   include Discard::Model
 
   has_paper_trail versions: { class_name: 'PaperTrail::PanelVersion' },
-                  meta:     { grant_id: :grant_id }
+                  meta: { grant_id: :grant_id }
 
   belongs_to :grant
 
@@ -17,13 +17,14 @@ class Panel < ApplicationRecord
 
   validates_uniqueness_of :grant
   validates :meeting_link,  if: -> { meeting_link? },
-                            format: { with:     /\A(https:\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$)\z/ix,
+                            format: { with: %r{\A(https://[a-z0-9]+([\-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$)\z}ix,
                                       message: 'is not a valid secure URL.' }
 
   validate :start_is_after_submission_deadline, if: :start_datetime?
 
   def is_open?
     return false if !start_datetime? || !end_datetime?
+
     DateTime.now.between?(start_datetime, end_datetime)
   end
 

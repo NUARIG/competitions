@@ -3,13 +3,15 @@
     Average Scores
   .card-section
     %dl
-      %dt{ title: 'Average of all scored criterion' }
-        Composite:
-      %dd{ title: 'Average of all scored criterion' }
+      %dt
+        %abbr{ title: 'Average of all scored criterion' }
+          Composite:
+      %dd
         = submission.composite_score
-      %dt{ title: 'Average of all Overall Impact Scores' }
-        Average Overall Impact:
-      %dd{ title: 'Average of all Overall Impact Scores' }
+      %dt
+        %abbr{ title: 'Average of all Overall Impact Scores' }
+          Average Overall Impact:
+      %dd
         = submission.average_overall_impact_score
     %hr
     %h5.text-center

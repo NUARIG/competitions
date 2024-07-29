@@ -1,0 +1,36 @@
+<% review_data = review_data(submission) %>
+
+<%= turbo_frame_tag dom_id(submission) do %>
+  <div class="grid-x grid-padding-x grid-padding-y row">
+    <div class="cell small-12 medium-2 applicants">
+      <%= link_to submission.applicants.map { |app| "#{sortable_full_name(app)}"}.join('<br/>').html_safe, grant_panel_submission_path(grant, submission) %>
+    </div>
+    <div class="cell small-12 medium-4">
+      <%= link_to submission.title, grant_panel_submission_path(grant, submission) %>
+    </div>
+    <div class="cell small-12 medium-1">
+      <%= link_to 'Review'.pluralize(review_data.completed_review_count), grant_panel_submission_reviews_path(grant, submission) %>
+      <span title='Number of Completed Reviews'>
+        (<%= review_data.completed_review_count %>)
+      </span>
+    </div>
+    <div class="cell small-12 medium-2">
+      <abbr title='Average of Overall Impact Scores'>
+        <%= review_data.overall_impact_average %>
+      </abbr>
+    </div>
+    <div class="cell small-12 medium-2">
+      <abbr title='Average of all Scored Criteria'>
+        <%= review_data.composite_score %>
+      </abbr>
+    </div>
+    <% if role.present? %>
+      <div class="cell small-12 medium-1 awarded">
+        <%= turbo_frame_tag "award_#{submission.id}" do %>
+          <%= render partial: 'grant_submissions/submissions/award/award_form', locals: { grant: grant, submission: submission, user_grant_role: @user_grant_role } %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+<% end %>

@@ -18,7 +18,7 @@
     %li
       Panel
 
-= render partial: 'panel_schedule_info', locals: { panel: @panel, user_has_grant_viewer_access: user_has_grant_viewer_access }
+= render partial: 'panel_schedule_info', locals: { panel: @panel, admin: user_has_grant_viewer_access, flash_content: panel_flash_message_content(panel: @panel) }
 
 = render partial: 'panel_metadata', locals: { panel: @panel }
 
