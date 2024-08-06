@@ -7,9 +7,10 @@ module GrantSubmissions
       flash.keep
       @grant = Grant.kept.friendly.with_administrators.find(params[:grant_id])
       set_user_grant_role
-      
+
       if @user_grant_role.present?
-        @q       = GrantSubmission::Submission.kept.includes(:reviews, :applicants, :grant).where(grant_id: @grant.id).ransack(params[:q])
+        @q       = GrantSubmission::Submission.kept.includes(:reviews, :applicants,
+                                                             :grant).where(grant_id: @grant.id).ransack(params[:q])
         @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
 
         @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
@@ -28,7 +29,7 @@ module GrantSubmissions
     def new
       @grant = Grant.kept
                     .friendly
-                    .includes( :contacts, form: { sections: { questions: :multiple_choice_options} } )
+                    .includes(:contacts, form: { sections: { questions: :multiple_choice_options } })
                     .with_reviewers.with_panel
                     .find(params[:grant_id])
       set_submission
@@ -54,7 +55,8 @@ module GrantSubmissions
           send_notifications
           flash[:notice] = 'You successfully applied.'
         else
-          flash[:warning] = 'Draft submission was saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
+          flash[:warning] =
+            'Draft submission was saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
         end
         submission_redirect(@grant, @submission)
       else
@@ -76,7 +78,8 @@ module GrantSubmissions
           send_notifications
           flash[:notice] = 'You successfully applied.'
         else
-          flash[:warning] = 'Draft submission was successfully updated and saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
+          flash[:warning] =
+            'Draft submission was successfully updated and saved. <strong>It can not be reviewed until it has been submitted</strong>.'.html_safe
         end
         @submission.update(user_updated_at: Time.now)
         submission_redirect(@grant, @submission)
@@ -118,7 +121,7 @@ module GrantSubmissions
     def set_submission
       @submission ||= case action_name
                       when 'new'
-                        form   = @grant.form
+                        form = @grant.form
                         @grant.submissions.build(form: form)
                       when 'edit', 'update'
                         GrantSubmission::Submission.kept.with_applicants.find(params[:id])
@@ -142,7 +145,7 @@ module GrantSubmissions
 
     def send_grant_admin_notifications
       GrantPermissionMailers::SubmissionMailer
-        .submitted_notification(grant:      @grant,
+        .submitted_notification(grant: @grant,
                                 recipients: @admin_notification_emails,
                                 submission: @submission)
         .deliver_now
@@ -154,29 +157,31 @@ module GrantSubmissions
 
     def submission_params
       params.require(:grant_submission_submission).permit(
-                       :id,
-                       :title,
-                       :grant_submission_form_id,
-                       :parent_id,
-                       :grant_submission_section_id,
-                       responses_attributes: [
-                         :id,
-                         :grant_submission_submission_id,
-                         :grant_submission_question_id,
-                         :grant_submission_multiple_choice_option_id,
-                         :datetime_val_date_optional_time_magik,
-                         :string_val,
-                         :text_val,
-                         :decimal_val,
-                         :datetime_val,
-                         :document,
-                         :remove_document,
-                         :_destroy],
-                       submission_applicants_attributes: [
-                         :id,
-                         :grant_submission_submission_id,
-                         :applicant_id]
-                       )
+        :id,
+        :title,
+        :grant_submission_form_id,
+        :parent_id,
+        :grant_submission_section_id,
+        responses_attributes: %i[
+          id
+          grant_submission_submission_id
+          grant_submission_question_id
+          grant_submission_multiple_choice_option_id
+          datetime_val_date_optional_time_magik
+          string_val
+          text_val
+          decimal_val
+          datetime_val
+          document
+          remove_document
+          _destroy
+        ],
+        submission_applicants_attributes: %i[
+          id
+          grant_submission_submission_id
+          applicant_id
+        ]
+      )
     end
   end
 end
