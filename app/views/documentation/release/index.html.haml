@@ -2,12 +2,20 @@
   Release Notes
 %p
   The code and further documentation about #{COMPETITIONS_CONFIG[:application_name]} can be found in the
-  #{link_to "GitHub repository", "https://github.com/NUARIG/competitions"}.
+  #{link_to 'GitHub repository', 'https://github.com/NUARIG/competitions'}.
 
-%ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
-  %li.accordion-item.is-active{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.21 (July 3, 2024)
-    .accordion-content{"data-tab-content" => ""}
+%ul.accordion{ 'data-accordion' => '', 'data-allow-all-closed' => 'true', 'data-multi-expand' => 'false' }
+  %li.accordion-item.is-active{'data-accordion-item' => ''}
+    %a.accordion-title{:href => '#'} 1.21.1 (August 6, 2024)
+    .accordion-content{ 'data-tab-content' => '' }
+      %ul
+        %li
+          Type to select Submission.
+        %li
+          Fix grant submissions export.
+  %li.accordion-item{'data-accordion-item' => ''}
+    %a.accordion-title{:href => '#'} 1.21 (July 3, 2024)
+    .accordion-content{ 'data-tab-content' => '' }
       %ul
         %li
           Redesign reviewer tab and review assignment process.
@@ -16,9 +24,9 @@
           Assign reviews from the submissions index page.
         %li
           Bug fixes, minor improvements.
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.20 (April 19, 2024)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.20 (April 19, 2024)
+    .accordion-content{ 'data-tab-content' => '' }
       %ul
         %li
           Display submission responses in display order in download.
@@ -28,9 +36,9 @@
         %li
           Bug fixes, minor improvements.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.19 (November 15, 2023)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.19 (November 15, 2023)
+    .accordion-content{ 'data-tab-content' => '' }
       %ul
         %li
           Ability to save reviews in draft form.
@@ -47,9 +55,9 @@
           Update rails version to 6.1.7
 
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.18 (May 8, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.18 (May 8, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %ul
         %li
           Award tracking for grant administrators.
@@ -63,18 +71,18 @@
         %li
           Minor bug fixes and UI improvements.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.17.1 (September 1, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.17.1 (September 1, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
             Fix javascript load on reviewers page.
             #{github_issue_link(issue: 975)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.17 (August 8, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.17 (August 8, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -134,9 +142,9 @@
             bump rails-html-sanitizer to 1.4.3 #952
             #{github_issue_link(issue: 922)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.16.1 (April 11, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.16.1 (April 11, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -152,9 +160,9 @@
             Update Nokogiri version.
             #{github_issue_link(issue: 927)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.16 (February 22, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.16 (February 22, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -194,27 +202,27 @@
             Update Nokogiri version.
             #{github_issue_link(issue: 912)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.15.2 (February 4, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.15.2 (February 4, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
             Add nil checks for error messaging.
             #{github_issue_link(issue: 891)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.15.1 (February 4, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.15.1 (February 4, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
             Add a check for existence of registered user.
             #{github_issue_link(issue: 891)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.15 (January 26, 2022)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.15 (January 26, 2022)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -224,9 +232,9 @@
             Clarify the login page with better error messages and links.
             #{github_issue_link(issue: 885)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.14 (October 21, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.14 (October 21, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -240,9 +248,9 @@
             Add bulk reminder email to reviewer invitation page.
             #{github_issue_link(issue: 846)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.13 (August 4, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.13 (August 4, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -270,9 +278,9 @@
             Add notification emails when adding or removing applicants.
             #{github_issue_link(issue: 848)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.12 (August 1, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.12 (August 1, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -291,9 +299,9 @@
             Move Review Guidance from grant overview to review criteria tab.
             #{github_issue_link(issue: 817)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.11 (June 23, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.11 (June 23, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -311,9 +319,9 @@
             %br
             = link_to "https://github.com/NUARIG/competitions/wiki/Installation-and-configuration-of-test-saml-idp"
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.10 (April 22, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.10 (April 22, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -326,18 +334,18 @@
             Add change password page.
             #{github_issue_link(issue: 575)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.9.1 (March 17, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.9.1 (March 17, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
             Update pagination settings to include all submissions on xlsx exports.
             #{github_issue_link(issue: 795)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.9 (February 22, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.9 (February 22, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -353,9 +361,9 @@
             Add exception notification for system admins.
             #{github_issue_link(issue: 755)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.8 (February 17, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.8 (February 17, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -381,17 +389,17 @@
             Update nokogiri gem.
             #{github_issue_link(issue: 748)}
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.7 (January 29, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.7 (January 29, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
             Adds submission exports to excel.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.6 (January 13, 2021)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.6 (January 13, 2021)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -401,9 +409,9 @@
           %li
             Fix grant permission form layout.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.5 (December 17, 2020)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.5 (December 17, 2020)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -419,9 +427,9 @@
           %li
             Fix javascript confirmation dialogues on delete.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.4 (December 3, 2020)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.4 (December 3, 2020)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -433,9 +441,9 @@
           %li
             Fix update method in saml_sessions controller.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.3 (November 16, 2020)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.3 (November 16, 2020)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -457,9 +465,9 @@
           %li
             Pin footer to window bottom.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.2 (October 22, 2020)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.2 (October 22, 2020)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -469,9 +477,9 @@
           %li
             Increase configurable elements.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.1 (October 6, 2020)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.1 (October 6, 2020)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
@@ -501,9 +509,9 @@
           %li
             Add hover text to table headings.
 
-  %li.accordion-item{"data-accordion-item" => ""}
-    %a.accordion-title{:href => "#"} 1.0 (September 15, 2020)
-    .accordion-content{"data-tab-content" => ""}
+  %li.accordion-item{ 'data-accordion-item' => '' }
+    %a.accordion-title{:href => '#'} 1.0 (September 15, 2020)
+    .accordion-content{ 'data-tab-content' => '' }
       %p
         %ul
           %li
