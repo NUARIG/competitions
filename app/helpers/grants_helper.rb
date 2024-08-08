@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+\# frozen_string_literal: true
 
 module GrantsHelper
   def grant_can_be_deleted?(grant)
@@ -37,7 +37,6 @@ module GrantsHelper
 
   def grant_name_class(grant:)
     name_length = grant.name.length
-
     case
     when name_length > 85
       'long'
