@@ -1,4 +1,4 @@
-\# frozen_string_literal: true
+# frozen_string_literal: true
 
 module GrantsHelper
   def grant_can_be_deleted?(grant)
