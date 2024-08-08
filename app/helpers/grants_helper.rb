@@ -26,26 +26,13 @@ module GrantsHelper
         'Reviews'         => grant_reviews_path(grant),
         'Permissions'     => grant_grant_permissions_path(grant) }
     else
-      { 'View'        => grant_path(grant),
-        'Apply'       => grant_apply_path(grant, grant.form) }
+      { 'View'  => grant_path(grant),
+        'Apply' => grant_apply_path(grant, grant.form) }
     end
   end
 
   def submission_period(grant:)
     "#{time_tag(grant.submission_open_date.beginning_of_day, date_mmddyyyy(grant.submission_open_date), class: 'open')} &mdash; #{time_tag(grant.submission_close_date.end_of_day, date_mmddyyyy(grant.submission_close_date), class: 'close')}".html_safe
-  end
-
-  def grant_name_class(grant:)
-    name_length = grant.name.length
-
-    case
-    when name_length > 85
-      'long'
-    when name_length > 50
-      'medium'
-    else
-      nil
-    end
   end
 
   def grant_name_class(grant:)
