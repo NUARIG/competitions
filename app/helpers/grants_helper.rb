@@ -37,7 +37,6 @@ module GrantsHelper
 
   def grant_name_class(grant:)
     name_length = grant.name.length
-
     case
     when name_length > 85
       'long'
