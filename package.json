@@ -25,7 +25,7 @@
     "motion-ui": "^2.0.3",
     "select2": "^4.1.0-rc.0",
     "tom-select": "^2.2.2",
-    "trix": "^2.0.8"
+    "trix": "^2.1.4"
   },
   "scripts": {
     "build": "esbuild app/javascript/*.* --bundle --outdir=app/assets/builds"
