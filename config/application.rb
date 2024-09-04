@@ -40,6 +40,12 @@ module Competitions
     config.active_record.yaml_column_permitted_classes = [Symbol, Time]
   
     config.active_support.disable_to_s_conversion = true
+
+    # Fixes #1076 - Fix SAML logout
+    #               https://github.com/heartcombo/devise/pull/5462
+    #               https://github.com/apokalipto/devise_saml_authenticatable/issues/237
+    # Review this setting in future rails upgrades
+    config.action_controller.raise_on_open_redirects = false
   end
 end
 

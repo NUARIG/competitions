@@ -71,15 +71,21 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       end
     end
 
-    describe 'sign in saml user' do
-      scenario 'user sign in' do
+    context 'devise' do
+      before(:each) do
         login_as(user, scope: :saml_user)
         visit(root_path)
+      end
+
+      scenario 'user signed in' do
         expect(page).to have_content("#{user.first_name} #{user.last_name}")
       end
 
-      pending 'user sign out' do
-        fail '#TODO: test whether saml user can signout'
+      scenario 'user sign out' do
+        # note: requires local SAML IDP
+        page.find('#logged-in').hover
+        click_button('Log Out')
+        expect(page).to have_content('Log In')
       end
     end
   end
