@@ -82,6 +82,7 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       end
 
       scenario 'user sign out' do
+        # note: requires local SAML IDP
         page.find('#logged-in').hover
         click_button('Log Out')
         expect(page).to have_content('Log In')
