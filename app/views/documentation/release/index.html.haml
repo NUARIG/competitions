@@ -6,6 +6,17 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item.is-active{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.21.2 (September 4, 2024)
+    .accordion-content{"data-tab-content" => ""}
+      %ul
+        %li
+          Fix SAML log out.
+          #{github_issue_link(issue: 1076)}
+        %li
+          Update rexml ruby gem.
+        %li
+          Upgrade trix yarn package.
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.21.1 (August 7, 2024)
     .accordion-content{"data-tab-content" => ""}
       %ul
