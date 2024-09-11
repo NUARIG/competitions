@@ -9,7 +9,7 @@ module Grants
         flash[:notice] = "Publish status was changed to #{@grant.state}."
         redirect_to grant_path(@grant)
       else
-        @grant.errors.add(:base, "Status change failed. This grant is still in #{@grant.reload.state} mode.")
+        @grant.errors.add(:base, :state_change_failed, state: @grant.reload.state)
         flash[:alert] = @grant.errors.full_messages
         redirect_to edit_grant_path(@grant)
       end
@@ -20,7 +20,7 @@ module Grants
         flash[:notice] = "Publish status was changed to #{@grant.state}."
         redirect_to edit_grant_path(@grant)
       else
-        @grant.errors.add(:base, "Status change failed. This grant is still in #{@grant.reload.state} mode.")
+        @grant.errors.add(:base, :state_change_failed, state: @grant.reload.state)
         flash[:alert] = @grant.errors.full_messages
         redirect_to edit_grant_path(@grant)
       end

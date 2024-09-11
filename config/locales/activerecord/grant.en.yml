@@ -14,6 +14,8 @@ en:
         grant:
           attributes:
             <<: *grant
+            base:
+              state_change_failed: Status change failed. This grant is still in %{state} mode.
           invalid_date: is not valid.
     models:
       grant:
