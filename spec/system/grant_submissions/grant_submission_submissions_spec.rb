@@ -243,6 +243,23 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               expect(page).to have_link 'Delete', href: grant_submission_path(grant, editor_submission)
               expect(page).to have_link 'Delete', href: grant_submission_path(grant, viewer_submission)
             end
+
+            scenario 'administrator submissions can be deleted' do
+              accept_alert do
+                click_link 'Delete', href: grant_submission_path(grant, admin_submission)
+              end
+              expect(page).to have_text 'Submission was deleted'
+              
+              accept_alert do
+                click_link 'Delete', href: grant_submission_path(grant, editor_submission)
+              end
+              expect(page).to have_text 'Submission was deleted'
+              
+              accept_alert do
+                click_link 'Delete', href: grant_submission_path(grant, viewer_submission)
+              end
+              expect(page).to have_text 'Submission was deleted'
+            end
           end
 
           context 'export' do

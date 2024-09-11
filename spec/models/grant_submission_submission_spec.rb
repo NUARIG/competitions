@@ -72,18 +72,40 @@ RSpec.describe GrantSubmission::Submission, type: :model do
 
     context 'published grant' do
       describe '#destroy' do
-        it 'may not be destroyed' do
-          expect do
-            submission.destroy
-          end.not_to change{ GrantSubmission::Submission.count }
-          expect(submission.errors[:base]).to include I18n.t('activerecord.errors.models.grant_submission/submission.attributes.base.may_not_delete_from_published_grant')
+        context 'user submitted submission' do
+          it 'may not be destroyed' do
+            expect do
+              submission.destroy
+            end.not_to change { GrantSubmission::Submission.count }
+            expect(submission.errors[:base]).to include I18n.t('activerecord.errors.models.grant_submission/submission.attributes.base.may_not_delete_from_published_grant')
+          end
+
+          it 'does not destroy reviews' do
+            incomplete_review.save
+            expect do
+              submission.destroy
+            end.not_to change { Review.count }
+          end
         end
 
-        it 'does not destroy reviews' do
-          incomplete_review.save
-          expect do
-            submission.destroy
-          end.not_to change{ Review.count }
+        context 'admin submitted submission' do
+          before(:each) do
+            submission.update(submitter: grant_admin)
+          end
+
+          it 'may be destroyed' do
+            expect do
+              submission.destroy
+            end.to change { GrantSubmission::Submission.count }
+            expect(submission.errors).to be_empty
+          end
+
+          it 'destroys reviews' do
+            incomplete_review.save
+            expect do
+              submission.destroy
+            end.to change { Review.count }
+          end
         end
       end
     end
@@ -112,6 +134,26 @@ RSpec.describe GrantSubmission::Submission, type: :model do
                 submission.destroy
               end.to change{GrantSubmission::Submission.count}.by(-1).and change{Review.count}.by(-1)
             end
+          end
+        end
+
+        context 'admin submitted submission' do
+          before(:each) do
+            submission.update(submitter: grant_admin)
+          end
+
+          it 'may be destroyed' do
+            expect do
+              submission.destroy
+            end.to change { GrantSubmission::Submission.count }
+            expect(submission.errors).to be_empty
+          end
+
+          it 'destroys reviews' do
+            incomplete_review.save
+            expect do
+              submission.destroy
+            end.to change { Review.count }
           end
         end
       end

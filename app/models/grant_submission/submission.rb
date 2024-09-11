@@ -84,11 +84,11 @@ module GrantSubmission
 
     # CALLBACKS
     def abort_or_prepare_destroy
-      if self.grant.published?
+      if may_be_deleted?
+        prepare_submission_destroy
+      else
         prevent_delete_from_published_grant
         throw(:abort)
-      else
-        prepare_submission_destroy
       end
     end
 
@@ -161,6 +161,10 @@ module GrantSubmission
 
     def get_submitted_criteria_reviews
       self.reviews.submitted.flat_map(&:criteria_reviews)
+    end
+
+    def may_be_deleted?
+      grant.draft? || submitter.in?(grant.admins)
     end
   end
 end
