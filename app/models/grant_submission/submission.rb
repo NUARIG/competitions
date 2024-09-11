@@ -4,7 +4,8 @@ module GrantSubmission
     include Discard::Model
 
     attr_accessor :user_submitted_state
-    after_validation :set_state, on: [:create, :update],
+
+    after_validation :set_state, on: %i[create update],
                                  if: -> { user_submitted_state.present? && errors.none? }
     before_destroy :abort_or_prepare_destroy, prepend: true
 
@@ -38,12 +39,11 @@ module GrantSubmission
     has_many :criteria_reviews,       through: :reviews,
                                       inverse_of: :submission
 
-
     accepts_nested_attributes_for :responses, allow_destroy: true
     accepts_nested_attributes_for :submission_applicants, allow_destroy: true
 
-    SUBMISSION_STATES     = { draft:     'draft',
-                              submitted: 'submitted'}.freeze
+    SUBMISSION_STATES = { draft: 'draft',
+                          submitted: 'submitted' }.freeze
 
     enum state: SUBMISSION_STATES
 

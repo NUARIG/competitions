@@ -63,7 +63,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
                                           created_at: grant.submission_close_date - 1.hour) }
 
   def not_authorized_text
-    t("pundit.default")
+    t('pundit.default')
   end
 
   def successfully_saved_submission_message
@@ -219,12 +219,12 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             scenario 'sorts composite_score by scored submissions to top' do
               click_link('Composite')
               within('.submission', match: :first) do
-                expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+                expect(page.find('.composite', match: :first)).to have_text submission.composite_score
               end
 
               click_link('Composite')
               within('.submission', match: :first) do
-                expect(page.find(".composite", match: :first)).to have_text submission.composite_score
+                expect(page.find('.composite', match: :first)).to have_text submission.composite_score
               end
             end
           end
@@ -355,7 +355,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               select(reviewer_name, from: 'review[reviewer_id]')
               click_button('Assign to Review')
               expect(page).to have_text "Submission assigned for review. A notification email was sent to #{reviewer_name}."
-              expect(page).to have_text "This submission has reached the limit for assigned reviews."
+              expect(page).to have_text 'This submission has reached the limit for assigned reviews.'
             end
           end
 
@@ -368,17 +368,16 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               click_link('Assign')
             end
             within('#modal') do
-              "This submission can be assigned to 2"
-              expect(page).to have_text "This submission can be assigned to 2 reviewers and has 2 reviewers available to review it."
+              expect(page).to have_text 'This submission can be assigned to 2 reviewers and has 2 reviewers available to review it.'
               select(reviewer_name, from: 'review[reviewer_id]')
               click_button('Assign to Review')
-              expect(page).to have_text "This submission can be assigned to 1 reviewer and has 1 reviewer available to review it."
+              expect(page).to have_text 'This submission can be assigned to 1 reviewer and has 1 reviewer available to review it.'
               select(reviewer2_name, from: 'review[reviewer_id]')
 
               click_button('Assign to Review')
               wait_for_turbo
               expect(page).to have_text "Submission assigned for review. A notification email was sent to #{reviewer2_name}."
-              expect(page).to have_text "This submission has reached the limit for assigned reviews."
+              expect(page).to have_text 'This submission has reached the limit for assigned reviews.'
             end
           end
         end
@@ -553,7 +552,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
       context 'grant_admin' do
         before(:each) do
-         login_user grant_admin
+          login_user grant_admin
         end
 
         scenario 'can visit the submissions index page' do
@@ -665,7 +664,6 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           expect(page).to have_text not_authorized_text
         end
       end
-
     end
 
     context 'search' do
@@ -708,9 +706,9 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
         scenario 'can submit a valid submission' do
           find_field('Your Project\'s Title', with: '').set(Faker::Lorem.sentence)
-          find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
-          find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-          find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+          find_field('Short Text Question', with: '').set(Faker::Lorem.sentence)
+          find_field('Number Question', with: '').set(Faker::Number.number(digits: 10))
+          find_field('Long Text Question', with: '').set(Faker::Lorem.paragraph_by_chars(number: 1000))
           click_button 'Submit'
           expect(page).to have_content 'You successfully applied'
         end
@@ -719,8 +717,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           short_text_question = grant.questions.where(response_type: 'short_text').first
           short_text_question.update(is_mandatory: true)
 
-          find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
-          find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
+          find_field('Number Question', with: '').set(Faker::Number.number(digits: 10))
+          find_field('Long Text Question', with: '').set(Faker::Lorem.paragraph_by_chars(number: 1000))
           click_button 'Submit'
           expect(page).not_to have_content 'You successfully applied'
         end
@@ -907,8 +905,8 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
     visit grant_submissions_path(grant)
 
     within "##{dom_id(submission)}" do
-    expect(page).to have_checked_field('grant_submission_submission[awarded]')
-    find_field('grant_submission_submission[awarded]').uncheck
+      expect(page).to have_checked_field('grant_submission_submission[awarded]')
+      find_field('grant_submission_submission[awarded]').uncheck
     end
     expect(page).to have_text 'has been unawarded'
     expect(submission.reload.awarded).to be false

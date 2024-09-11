@@ -66,7 +66,6 @@ RSpec.describe 'Panels', type: :system, js: true do
             cannot_vist_edit_page(user: submitter)
           end
         end
-
       end
     end
   end
@@ -136,9 +135,9 @@ RSpec.describe 'Panels', type: :system, js: true do
           invalid_start = (grant.submission_close_date - 1.day).at_noon
           expect do
             page.fill_in 'Start Date/Time', with: ''
-            page.fill_in 'Start Date/Time', with: invalid_start.strftime("%m/%d/%Y %H:%M%P")
+            page.fill_in 'Start Date/Time', with: invalid_start.strftime('%m/%d/%Y %H:%M%P')
             click_button button_text
-          end.not_to change{grant.panel.reload.start_datetime}
+          end.not_to change { grant.panel.reload.start_datetime }
           expect(page).to have_content I18n.t('activerecord.errors.models.panel.attributes.start_datetime.before_submission_deadline')
         end
 
@@ -147,11 +146,11 @@ RSpec.describe 'Panels', type: :system, js: true do
           invalid_end   = Date.today.at_noon
           expect do
             page.fill_in 'Start Date/Time', with: ''
-            page.fill_in 'Start Date/Time', with: invalid_start.strftime("%m/%d/%Y %H:%M%P")
+            page.fill_in 'Start Date/Time', with: invalid_start.strftime('%m/%d/%Y %H:%M%P')
             page.fill_in 'End Date/Time',   with: ''
-            page.fill_in 'End Date/Time',   with: invalid_end.strftime("%m/%d/%Y %H:%M%P")
+            page.fill_in 'End Date/Time',   with: invalid_end.strftime('%m/%d/%Y %H:%M%P')
             click_button button_text
-          end.not_to change{grant.panel.reload.start_datetime}
+          end.not_to change { grant.panel.reload.start_datetime }
           expect(page).to have_content 'must be before End Date/Time'
         end
       end
@@ -370,20 +369,20 @@ RSpec.describe 'Panels', type: :system, js: true do
         # ascending first
         click_link 'Composite'
         pause
-        within  "##{dom_id(@low_scored_submission)}" do
+        within "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within  "##{dom_id(@high_scored_submission)}" do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
 
         # descending
         click_link 'Composite'
         pause
-        within  "##{dom_id(@high_scored_submission)}" do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
-        within  "##{dom_id(@low_scored_submission)}" do # 'tr.submission:nth-child(2)' do
+        within "##{dom_id(@low_scored_submission)}" do # 'tr.submission:nth-child(2)' do
           expect(page).to have_text @low_scored_submission.title
         end
       end
@@ -403,10 +402,10 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # descending
         click_link 'Applicants'
-        within  "##{dom_id(@low_scored_submission)}" do
+        within "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within  "##{dom_id(@high_scored_submission)}" do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
       end
@@ -418,19 +417,19 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # ascending first
         click_link 'Submission'
-        within  "##{dom_id(@high_scored_submission)}" do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
-        within  "##{dom_id(@low_scored_submission)}" do
+        within "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
 
         # descending
         click_link 'Submission'
-        within  "##{dom_id(@low_scored_submission)}" do
+        within "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
-        within  "##{dom_id(@high_scored_submission)}" do
+        within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
       end

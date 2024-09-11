@@ -48,13 +48,13 @@ RSpec.describe GrantSubmission::Submission, type: :model do
       submission.state = 'draft'
       submission.awarded = true
       expect(submission).not_to be_valid
-      expect(submission.errors.messages[:base]).to eq ["A submission cannot be awarded when it is in draft mode."]
+      expect(submission.errors.messages[:base]).to eq ['A submission cannot be awarded when it is in draft mode.']
     end
 
     it 'cannot be awarded without being reviewed' do
       submission.awarded = true
       expect(submission).not_to be_valid
-      expect(submission.errors.messages[:base]).to eq ["A submission must have at least one review before being awarded."]
+      expect(submission.errors.messages[:base]).to eq ['A submission must have at least one review before being awarded.']
     end
   end
 
