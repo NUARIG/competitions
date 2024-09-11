@@ -9,11 +9,7 @@ module GrantSubmissions
       set_user_grant_role
 
       if @user_grant_role.present?
-        @q       = GrantSubmission::Submission.kept.includes(:reviews, :applicants,
-                                                             :grant).where(grant_id: @grant.id).ransack(params[:q])
-        @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
-
-        @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
+        set_grant_submissions
       else
         flash[:alert] = I18n.t('pundit.default')
         redirect_to root_path
@@ -97,15 +93,33 @@ module GrantSubmissions
         flash[:notice] = 'Submission was deleted.'
         redirect_to grant_submissions_path(@grant)
       else
-        flash.now[:error] = @submission.errors.to_a
-        redirect_back fallback_location: grant_submissions_path(@grant)
+        set_grant_submissions
+
+        flash[:alert] = @submission.errors.to_a
+        render :index
       end
     end
 
     private
 
     def set_grant
-      @grant = Grant.includes(:contacts).kept.friendly.with_reviewers.with_panel.find(params[:grant_id])
+      @grant = Grant.includes(:contacts)
+                    .kept
+                    .friendly
+                    .with_administrators
+                    .with_reviewers
+                    .with_panel
+                    .find(params[:grant_id])
+    end
+
+    def set_grant_submissions
+      @q = GrantSubmission::Submission.kept
+                                      .includes(:reviews, :applicants, :grant)
+                                      .where(grant_id: @grant.id)
+                                      .ransack(params[:q])
+      @q.sorts = 'user_updated_at desc' if @q.sorts.empty?
+
+      @pagy, @submissions = pagy_array(@q.result.to_a.uniq, i18n_key: 'activerecord.models.submission')
     end
 
     def submission_redirect(grant, submission)
