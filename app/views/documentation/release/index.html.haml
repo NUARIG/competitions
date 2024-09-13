@@ -6,6 +6,15 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item.is-active{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.21.3 (September 13, 2024)
+    .accordion-content{"data-tab-content" => ""}
+      %ul
+        %li
+          Submissions by grant administrators can be deleted at any time.
+          #{github_issue_link(issue: 1081)}
+        %li
+          Update ruby-saml ruby gem.
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.21.2 (September 4, 2024)
     .accordion-content{"data-tab-content" => ""}
       %ul
