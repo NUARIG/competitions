@@ -18,7 +18,7 @@ module PanelsHelper
       { text: content_tag(:p,
                           "This section will be available to reviewers until #{will_close_at_string(panel: panel)}.") }
     elsif panel.start_datetime > DateTime.now
-      { header: content_tag(:strong, 'Panel has not yet started.'),
+      { header: content_tag(:strong, 'Panel has not started yet.'),
         text: content_tag(:p, "This section will be available to reviewers at #{will_open_at_string(panel: panel)}.") }
     else
       { header: content_tag(:strong, 'Panel has ended.'),

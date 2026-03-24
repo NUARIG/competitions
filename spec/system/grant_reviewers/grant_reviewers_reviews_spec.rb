@@ -26,6 +26,7 @@ RSpec.describe 'GrantReviewers::Reviews', type: :system do
       grant.grant_reviewers.first.destroy!
       within('#reviewers') do
         find(dropdown_menu_id).hover
+        pause
         find_link('View Assigned').click
         pause
       end

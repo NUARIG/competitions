@@ -147,6 +147,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
 
           within 'th:nth-child(1)' do
             click_link 'Grant'
+            pause
           end
           within 'tr.panel:nth-child(1)' do
             expect(page).to have_text reviewer_grant.name
@@ -160,6 +161,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
           visit profile_panels_path
 
           click_link 'Review Close Date'
+          pause
           within 'tr.panel:nth-child(1)' do
             expect(page).to have_text editor_grant.name
           end
@@ -168,6 +170,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
           end
 
           click_link 'Review Close Date'
+          pause
           within 'tr.panel:nth-child(1)' do
             expect(page).to have_text reviewer_grant.name
           end
@@ -186,7 +189,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
         scenario 'limits results by search' do
           fill_in 'q_name_cont', with: 'AAA'
           click_button 'Search'
-
+          pause
           expect(page).to have_link editor_grant.name, href: grant_panel_path(editor_grant)
           expect(page).not_to have_content reviewer_grant.name
         end

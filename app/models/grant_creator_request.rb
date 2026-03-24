@@ -7,7 +7,7 @@ class GrantCreatorRequest < ApplicationRecord
                 approved: 'Approved',
                 rejected: 'Rejected'}.freeze
 
-  enum status: STATUSES, _prefix: true
+  enum :status, STATUSES, prefix: true
 
   belongs_to :requester, class_name:  'User',
                          foreign_key: 'requester_id'

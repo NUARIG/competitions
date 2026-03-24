@@ -24,7 +24,8 @@ RSpec.describe 'GrantSubmission::Sections', type: :system do
       click_link 'Add a Section'
       find_field('Title', with: '').set(@form.sections.first.title)
       click_button 'Save'
-      expect(page).not_to have_text 'Submission Form successfully update'
+      # pause
+      expect(page).not_to have_text('Submission Form successfully update', wait: 2)
       expect(page).to have_text 'Section Title must be unique to this competition.'
     end
 
@@ -32,6 +33,7 @@ RSpec.describe 'GrantSubmission::Sections', type: :system do
       scenario 'it tracks whodunnit' do
         find_field('Title', with: @section.title).set('Updated')
         click_button 'Save'
+        pause
         expect(@section.versions.last.whodunnit).to be @admin.id
       end
     end

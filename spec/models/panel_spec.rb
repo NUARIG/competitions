@@ -125,5 +125,4 @@ RSpec.describe Panel, type: :model do
     expect(panel).not_to be_valid
     expect(panel.errors.full_messages).to include 'Meeting Link is not a valid secure URL.'
   end
-
 end

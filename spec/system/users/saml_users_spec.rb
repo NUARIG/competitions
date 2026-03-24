@@ -21,7 +21,8 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
           new_era_commons = Faker::Lorem.characters(number: 10)
           page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
-          expect(page).to have_content "#{full_name(user)}'s profile has been updated."
+          pause
+          expect(page).to have_content("#{full_name(user)}'s profile has been updated.", wait: 2)
         end
       end
 
@@ -32,7 +33,8 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
           visit(edit_user_path(user))
           page.fill_in 'eRA Commons', with: user2_era_commons
           click_button 'Update'
-          expect(page).to have_content 'eRA Commons has already been taken'
+          pause
+          expect(page).to have_content('eRA Commons has already been taken', wait: 2)
         end
       end
     end
@@ -49,13 +51,14 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
           new_era_commons = Faker::Lorem.characters(number: 10)
           page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
+          pause
           expect(user.reload.era_commons).to eql new_era_commons
-          expect(page).to have_content 'Your profile has been updated.'
+          expect(page).to have_content('Your profile has been updated.', wait: 2)
         end
 
         scenario 'cannot edit another user profile' do
           visit(edit_user_path(user2))
-          expect(page).to have_content 'You are not authorized to perform this action.'
+          expect(page).to have_content('You are not authorized to perform this action.', wait: 2)
         end
       end
 
@@ -66,7 +69,8 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
           visit(profile_path)
           page.fill_in 'eRA Commons', with: user2_era_commons
           click_button 'Update'
-          expect(page).to have_content 'eRA Commons has already been taken'
+          pause
+          expect(page).to have_content('eRA Commons has already been taken', wait: 2)
         end
       end
     end
@@ -82,7 +86,7 @@ RSpec.describe 'SamlUsers', type: :system, js: true  do
       end
 
       scenario 'user sign out' do
-        # note: requires local SAML IDP
+        pending 'requires local SAML IDP to test'
         page.find('#logged-in').hover
         click_button('Log Out')
         expect(page).to have_content('Log In')

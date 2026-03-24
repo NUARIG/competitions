@@ -151,7 +151,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
 
         scenario 'displays comment when commented' do
-          expect(find_by_id("criterion-#{unscored_criterion_id}-comment")).to have_text 'Commented criterion.'
+          expect(find_by_id("criterion-#{unscored_criterion_id}-comment")).to have_text('Commented criterion.', wait: 2)
         end
 
         scenario 'does not have comment selector if no comment' do
@@ -252,10 +252,11 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           expect(review.is_complete?).to be false
           grant.criteria.each do |criterion|
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
+            pause
           end
           find("label[for='overall-#{random_score}']").click
           click_button 'Submit Your Review'
-          expect(page).to have_text 'Review was successfully updated.'
+          expect(page).to have_text('Review was successfully updated.', wait: 3)
           expect(review.reload.is_complete?).to be true
           expect(review.submitted?).to be true
         end
@@ -266,7 +267,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           end
           find("label[for='overall-#{random_score}']").click
           click_button 'Submit Your Review'
-          expect(page).to have_text 'Review was successfully updated.'
+          expect(page).to have_text('Review was successfully updated.', wait: 2)
           expect(page.current_path).to eql(grant_reviews_path(grant))
         end
       end
@@ -285,6 +286,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
         find("label[for='overall-#{random_score}']").click
         click_button 'Submit Your Review'
+        pause
         expect(review.reload.submitted?).to be true
       end
 
@@ -294,7 +296,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         end
         find("label[for='overall-#{random_score}']").click
         click_button 'Submit Your Review'
-        expect(page).to have_text 'Review was successfully updated.'
+        expect(page).to have_text('Review was successfully updated.', wait: 2)
         expect(page.current_path).to eql(profile_reviews_path)
       end
 
@@ -302,11 +304,11 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
         scenario 'provides feedback when a required criterion score is not scored' do
           # login_as reviewer
           click_button 'Submit Your Review'
-
-          expect(page).not_to have_text 'Review was successfully updated.'
+          pause
+          expect(page).not_to have_text('Review was successfully updated.', wait: 2)
 
           grant.required_criteria.each do |criterion|
-            expect(page).to have_text "\'#{criterion.name}\' must be scored"
+            expect(page).to have_text("'#{criterion.name}' must be scored", wait: 2)
           end
 
           expect(review.reload.is_complete?).to be false
@@ -314,6 +316,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
         scenario 'does not provide feedback when an unrequired criterion is not scored' do
           click_button 'Submit Your Review'
+          pause
           expect(page).not_to have_text 'Review was successfully updated.'
           expect(page).not_to have_text "\'#{grant.criteria.last.name}\' must be scored"
         end
@@ -323,6 +326,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
             find("label[for='#{criterion_id_selector(criterion)}-#{random_score}']").click
           end
           click_button 'Submit Your Review'
+          pause
           expect(page).not_to have_text 'Review was successfully updated.'
           expect(page).to have_text 'Overall Impact Score must be scored.'
           expect(review.reload.is_complete?).to be false
@@ -343,10 +347,10 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
             within("##{criteria.first}-button-group") do
               click_button('Clear')
             end
-
+            pause
             click_button 'Submit Your Review'
-
-            expect(page).to have_text "\'#{grant_criteria.first.name}\' must be scored"
+            pause
+            expect(page).to have_text "'#{grant_criteria.first.name}' must be scored"
           end
 
           scenario 'criterion clear button removes unrequired criterion score' do
@@ -362,8 +366,10 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
 
             within("##{unrequired_criterion_label}-button-group") do
               click_button('Clear')
+              pause
             end
             click_button 'Submit Your Review'
+            pause
             expect(page).to have_text SUBMITTED_TEXT
 
             within("##{dom_id(review)}") do
@@ -387,19 +393,21 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
       context 'criterion clear button' do
         scenario 'criterion cleared score changes it to nil when saved' do
           criterion_to_clear = grant.criteria.first
-          expect do
-            within("##{criterion_id_selector(criterion_to_clear)}-button-group") do
-              click_button('Clear')
-              pause(time: 0.5)
-            end
+          original_score = draft_scored_review.criteria_reviews.first.score
 
-            accept_alert do
-              click_button 'Save as Draft'
-            end
-            pause
-          end.to change { draft_scored_review.reload.criteria_reviews.first.score }
+          within("##{criterion_id_selector(criterion_to_clear)}-button-group") do
+            click_button('Clear')
+          end
+          pause(time: 0.35)
+          accept_alert do
+            click_button 'Save as Draft'
 
-          expect(draft_scored_review.criteria_reviews.first.score).to be nil
+          end
+          pause(time: 0.35)
+          unscored_score = draft_scored_review.criteria_reviews.first.score
+
+          expect(unscored_score).to be nil
+          expect(unscored_score).not_to eql original_score
         end
       end
     end

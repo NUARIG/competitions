@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "RegisteredUsers", type: :request do
+  REGISTERED_USER_RANDOM_PASSWORD = Faker::Lorem.characters(number: 10)
   context 'reviewer invitation' do
     before(:example) do
       ActionMailer::Base.deliveries.clear
@@ -12,8 +13,8 @@ RSpec.describe "RegisteredUsers", type: :request do
                                                             email: 'test@gmailyahoo.com',
                                                             first_name: 'First',
                                                             last_name: 'Last',
-                                                            password: 'password',
-                                                            password_confirmation: 'password' } } ))
+                                                            password: REGISTERED_USER_RANDOM_PASSWORD,
+                                                            password_confirmation: REGISTERED_USER_RANDOM_PASSWORD } } ))
         new_user = User.last
         expect(new_user.first_name).to eql 'First'
         expect(new_user.confirmed_at).to be nil
@@ -29,8 +30,8 @@ RSpec.describe "RegisteredUsers", type: :request do
                                                             email: reviewer_invitation.email,
                                                             first_name: 'First',
                                                             last_name: 'Last',
-                                                            password: 'password',
-                                                            password_confirmation: 'password' } } ))
+                                                            password: REGISTERED_USER_RANDOM_PASSWORD,
+                                                            password_confirmation: REGISTERED_USER_RANDOM_PASSWORD } } ))
         new_user = User.last
         expect(new_user.first_name).to eql 'First'
         expect(new_user.confirmed_at).not_to be nil

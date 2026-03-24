@@ -513,9 +513,9 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
             scenario 'can remove an applicant' do
               expect(page).to have_text(draft_applicant_02.last_name)
               accept_alert do
-                find('tr', id: "row_applicant_" + draft_sa_applicant_02.id.to_s).click_button("Remove")
+                find('tr', id: "row_applicant_" + draft_sa_applicant_02.id.to_s, wait: 2).click_button("Remove")
               end
-              expect(page).to have_text("#{draft_applicant_02.first_name} #{draft_applicant_02.last_name} is no longer an applicant on #{draft_submission.title}.")
+              expect(page).to have_text("#{draft_applicant_02.first_name} #{draft_applicant_02.last_name} is no longer an applicant on #{draft_submission.title}.", wait: 2)
               expect(page).not_to have_text(draft_applicant_02.email)
             end
 
@@ -668,6 +668,7 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
             scenario 'add or remove link directs to the submission applicants index' do
               expect(page).to have_link('Add or Remove Applicants', href: grant_submission_applicants_path(open_grant, draft_submission))
               click_link 'Add or Remove Applicants'
+              pause
               expect(current_path).to eq(grant_submission_applicants_path(open_grant, draft_submission))
             end
 
@@ -691,11 +692,13 @@ RSpec.describe 'GrantSubmission::Submission SubmissionApplicants', type: :system
                 expect(page).not_to have_text(new_applicant.email)
                 find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
                 click_button 'Look Up'
+                pause
                 expect(page).to have_text("#{new_applicant.first_name} #{new_applicant.last_name} was added as applicant on #{draft_submission.title}.")
                 expect(page).to have_text(new_applicant.email)
 
                 find_field(id: 'grant_submission_submission_applicant_applicant_email').set(new_applicant.email)
                 click_button 'Look Up'
+                pause
                 expect(page).to have_text("Applicant #{full_name(new_applicant)} is already on the submission, #{draft_submission.title}")
               end
             end

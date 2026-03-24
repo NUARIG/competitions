@@ -1,24 +1,28 @@
 require_relative 'boot'
 
 require 'rails/all'
+require 'nested_form/builder_mixin'
 
 module Competitions
   class Application < Rails::Application
+    config.secrets          = config_for(:secrets) # loads from config/secrets.yml
+    config.secret_key_base  = config.secrets[:secret_key_base]
+
     # Update rails to v7.0.8
     #   Added before `Bundler.require` per deprection warning.
     #   Note: If commented, PaperTrail (v15.1) entries for Grants
-    #         will show the following deprecation due to dates in `object`: 
-    #         `DEPRECATION WARNING: Using a :default format for Date#to_s is deprecated. 
+    #         will show the following deprecation due to dates in `object`:
+    #         `DEPRECATION WARNING: Using a :default format for Date#to_s is deprecated.
     #          Please use Date#to_fs instead.`
     ENV['RAILS_DISABLE_DEPRECATED_TO_S_CONVERSION'] = "true"
 
-    
+
     # Require the gems listed in Gemfile, including any gems
     # you've limited to :test, :development, or :production.
     Bundler.require(*Rails.groups)
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.2
 
     # Configuration for the application, engines, and railties goes here.
     # These settings can be overridden in specific environments using the files
@@ -38,7 +42,7 @@ module Competitions
     #   error `Psych::DisallowedClass, Tried to load unspecified class: Time`
     #   Per Rails guide, default setting is [Symbol]
     config.active_record.yaml_column_permitted_classes = [Symbol, Time]
-  
+
     config.active_support.disable_to_s_conversion = true
 
     # Fixes #1076 - Fix SAML logout
@@ -46,12 +50,16 @@ module Competitions
     #               https://github.com/apokalipto/devise_saml_authenticatable/issues/237
     # Review this setting in future rails upgrades
     config.action_controller.raise_on_open_redirects = false
+
+    def secrets
+      config.secrets
+    end
   end
 end
 
 competitions_config = File.join(Rails.root, 'config', 'competitions_config.yml')
 
-if File.exists?(competitions_config)
+if File.exist?(competitions_config)
   COMPETITIONS_CONFIG = ActiveSupport::HashWithIndifferentAccess.new(YAML.load(File.open(competitions_config)))[Rails.env.to_sym]
 else
   Rails.logger.error("Warning: Competitions config file is missing. (#{competitions_config})")

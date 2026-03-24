@@ -85,6 +85,18 @@
   resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.4.tgz#093d5341595a02089ed309dec40f3c37da7b1b10"
   integrity sha512-O3lEzL5DYbxppMdsFSw36e4BHIlfz/xusynwXGv3l2lhSlvah41qviRpsoAlKXxl37nZAqK+UUF5cnGGK45Mfw==
 
+"@types/trusted-types@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.7.tgz#baccb07a970b91707df3a3e8ba6896c57ead2d11"
+  integrity sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==
+
+dompurify@^3.2.5:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.3.3.tgz#680cae8af3e61320ddf3666a3bc843f7b291b2b6"
+  integrity sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==
+  optionalDependencies:
+    "@types/trusted-types" "^2.0.7"
+
 esbuild-android-arm64@0.13.14:
   version "0.13.14"
   resolved "https://registry.yarnpkg.com/esbuild-android-arm64/-/esbuild-android-arm64-0.13.14.tgz#c85083ece26be3d67e6c720e088968a98409e023"
@@ -236,7 +248,9 @@ tom-select@^2.2.2:
     "@orchidjs/sifter" "^1.0.3"
     "@orchidjs/unicode-variants" "^1.0.4"
 
-trix@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/trix/-/trix-2.1.5.tgz#512bc811172bea196de4a92fa8308c0914f263f9"
-  integrity sha512-5pC4olCp7BwxTC8Joy1Kv33kDvSOApi9Tqf6c8wygqCgeCx9xPP5cxkZEhvKpMV+kjd9gszingd5fZo834+ktw==
+trix@^2.1.9:
+  version "2.1.17"
+  resolved "https://registry.yarnpkg.com/trix/-/trix-2.1.17.tgz#a47c4ee1925a7abb26aee5c094ec7ef9fe49575a"
+  integrity sha512-nkHg7VgIItGVx1CFA645dDlAoCgah+9gv80Yc+97aS8jkZmO5K4MxkSqmU9t/C8upqZB8uhfJs90epoDfYz/6Q==
+  dependencies:
+    dompurify "^3.2.5"

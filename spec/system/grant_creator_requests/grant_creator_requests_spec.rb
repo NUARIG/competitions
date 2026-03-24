@@ -31,7 +31,8 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
         system_admin
         page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: Faker::Lorem.sentence
         click_button 'Request Grant Creation Access'
-        expect(page).to have_content 'Your request has been sent. You will be notified after review.'
+        pause
+        expect(page).to have_content('Your request has been sent. You will be notified after review.', wait: 2)
         expect(current_path).to eq(profile_path)
       end
     end
@@ -40,7 +41,8 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
       it 'rejects an incomplete request' do
         expect do
           click_button 'Request Grant Creation Access'
-          expect(page).to have_content 'Comment is required'
+          pause
+          expect(page).to have_content('Comment is required', wait: 2)
         end.to_not change{GrantCreatorRequest.count}
       end
     end
@@ -56,6 +58,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
       it 'accepts a valid request' do
         page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: "Updated #{Faker::Lorem.sentence}"
         click_button 'Re-submit This Grant Creation Access Request'
+        pause
         expect(page).to have_content 'Your request has been updated. You will be notified after review.'
         expect(current_path).to eq(profile_path)
       end
@@ -65,6 +68,7 @@ RSpec.describe 'GrantCreatorRequests', type: :system, js: true do
       it 'rejects an incomplete request' do
         page.fill_in "How Do You Plan to Use #{COMPETITIONS_CONFIG[:application_name]}?", with: ''
         click_button 'Re-submit This Grant Creation Access Request'
+        pause
         expect(page).to have_content 'Comment is required'
       end
     end

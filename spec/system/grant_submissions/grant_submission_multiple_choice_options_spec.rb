@@ -41,6 +41,7 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
         end
         find('.add-option', match: :first).click
         click_button 'Save'
+        pause
         expect(page).to have_text 'Multiple Choice Option text cannot be empty'
       end
 
@@ -48,6 +49,7 @@ RSpec.describe 'GrantSubmission::MultipleChoiceOptions', type: :system do
         scenario 'it tracks whodunnit' do
           find_field(with: @option.text).set('Updated')
           click_button 'Save'
+          pause
           expect(@option.versions.last.whodunnit).to be @admin.id
         end
       end

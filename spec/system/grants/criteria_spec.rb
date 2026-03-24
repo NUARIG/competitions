@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Criteria', type: :system, js: true do
   let(:grant)   { create(:draft_grant) }
   let(:admin)   { grant.administrators.first }
-  
+
   let(:grant_with_submission) { create(:open_grant_with_users_and_form_and_submission_and_reviewer, review_open_date: Date.current) }
   let(:admin2)  { grant_with_submission.administrators.first }
   let(:review)  { create(:submitted_scored_review_with_scored_mandatory_criteria_review, submission: grant_with_submission.submissions.first,
@@ -29,7 +29,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
       visit criteria_grant_path(grant)
     end
 
-    context '#criterion' do 
+    context '#criterion' do
       scenario 'it deletes a criterion' do
         expect do
           find('.remove', match: :first).click
@@ -50,6 +50,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
         click_link 'Add a New Review Criterion'
         find_field('Criterion Name', with: '').set(new_criteria_name)
         click_button 'Save'
+        pause
         expect(page).to have_field('Criterion Name', with: new_criteria_name)
       end
 
@@ -57,6 +58,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
         expect do
           click_link 'Add a New Review Criterion'
           click_button 'Save'
+          pause
         end.not_to change{grant.criteria.count}
       end
 
@@ -107,7 +109,7 @@ RSpec.describe 'Criteria', type: :system, js: true do
 
       find_field('Criterion Name', with: grant.criteria.last.name).set(Faker::Lorem.sentence)
       click_button 'Save'
-
+      pause
       expect(grant.criteria.last.versions.last.whodunnit).to be admin.id
     end
   end

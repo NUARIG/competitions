@@ -4,6 +4,8 @@ require 'rails_helper'
 include UsersHelper
 
 RSpec.describe 'RegisteredUsers', type: :system, js: true  do
+  RANDOM_PASSWORD = Faker::Lorem.characters(number: 10)
+
   describe 'update' do
     let(:user)          { create(:registered_user, current_sign_in_at: Time.now) }
     let(:system_admin)  { create(:system_admin_registered_user) }
@@ -21,6 +23,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
           new_era_commons = Faker::Lorem.characters(number: 10)
           page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
+          pause
           expect(user.reload.era_commons).to eql new_era_commons
           expect(page).to have_content "#{full_name(user)}'s profile has been updated."
         end
@@ -50,6 +53,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
           new_era_commons = Faker::Lorem.characters(number: 10)
           page.fill_in 'eRA Commons', with: new_era_commons
           click_button 'Update'
+          pause
           expect(user.reload.era_commons).to eql new_era_commons
           expect(page).to have_content 'Your profile has been updated.'
         end
@@ -67,6 +71,7 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
           visit(profile_path)
           page.fill_in 'eRA Commons', with: other_user_era_commons
           click_button 'Update'
+          pause
           expect(page).to have_content 'eRA Commons has already been taken'
         end
       end
@@ -92,17 +97,19 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
 
   describe 'sign in registered user' do
     scenario 'user sign in' do
-      @user3 = create(:registered_user, email: 'user3@example.com', password: 'password')
+      @user3 = create(:registered_user, email: 'user3@example.com', password: RANDOM_PASSWORD, password_confirmation: RANDOM_PASSWORD)
       visit login_index_path
 
       expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
       click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
+      pause
       expect(current_path).to eq("/registered_users/sign_in")
 
       page.fill_in('registered_user_uid', with: @user3.email)
-      page.fill_in('registered_user_password', with: 'password')
+      page.fill_in('registered_user_password', with: RANDOM_PASSWORD)
 
       find('#registered-user-login-button').click
+      pause
       expect(page).to have_content("#{@user3.first_name} #{@user3.last_name}")
     end
   end
@@ -111,8 +118,9 @@ RSpec.describe 'RegisteredUsers', type: :system, js: true  do
     page.fill_in 'First Name', with: 'FirstName'
     page.fill_in 'Last Name', with: 'LastName'
     page.fill_in 'Email', with: 'email@example.com'
-    page.fill_in 'Password', with: 'password'
-    page.fill_in 'Password confirmation', with: 'password'
+    page.fill_in 'Password', with: RANDOM_PASSWORD
+    page.fill_in 'Password confirmation', with: RANDOM_PASSWORD
     click_button 'Create My Account'
+    pause
   end
 end

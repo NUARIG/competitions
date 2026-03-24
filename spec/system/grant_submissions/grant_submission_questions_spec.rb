@@ -28,9 +28,11 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
       expect do
         new_question_text = Faker::Lorem.sentence
         click_link add_question_text
+        wait_for_ajax
         find_field('Question Text', with: '').set(new_question_text)
         find_field('Question Type', with: '').select('Number')
         click_button 'Save'
+        pause
       end.to (change{@grant.questions.count}).by 1
       expect(page).to have_text 'Submission Form successfully updated'
     end
@@ -38,8 +40,8 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
     scenario 'it requires questions in a section to have unique text' do
       find_field('Question Text', with: "#{@grant.questions.second.text}").set("#{@grant.questions.first.text}")
       click_button 'Save'
+      expect(page).to have_text I18n.t('activerecord.errors.models.grant_submission/question.attributes.text.taken', wait: 2)
       expect(page).not_to have_text 'Submission Form successfully updated'
-      expect(page).to have_text I18n.t('activerecord.errors.models.grant_submission/question.attributes.text.taken')
     end
 
     scenario 'it allows duplicate question text between sections' do
@@ -47,10 +49,12 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
       find_field('Title', with: '').set('New Section')
       within all("fieldset").last do
         click_link(add_question_text)
+        wait_for_ajax
         find_field('Question Text', with: '').set(@grant.questions.first.text)
         find_field('Question Type').select('Number')
       end
       click_button 'Save'
+      pause
       expect(page).to have_text 'Submission Form successfully updated'
     end
 
@@ -58,7 +62,8 @@ RSpec.describe 'GrantSubmission::Questions', type: :system do
       scenario 'it tracks whodunnit' do
         find_field('Question Text', with: @grant.questions.first.text).set('Updated')
         click_button 'Save'
-        expect(@grant.questions.first.versions.last.whodunnit).to be @admin.id
+        pause(time: 0.35)
+        expect(@grant.reload.questions.first.versions.last.whodunnit).to be @admin.id
       end
     end
   end

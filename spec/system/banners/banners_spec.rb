@@ -40,9 +40,10 @@ RSpec.describe 'Banners', type: :system do
 
           scenario 'displays the Banners link for admins' do
             page.find('#admin').hover
-            pause(time: 0.5)
-            expect(page).to have_link 'Banners', href: banners_path
+            pause
+            expect(page).to have_link('Banners', href: banners_path)
             click_link 'Banners'
+            pause
             expect(current_path).to eq('/banners')
           end
         end
@@ -76,6 +77,7 @@ RSpec.describe 'Banners', type: :system do
               expect(current_path).to eq('/banners/new')
               fill_in_trix_editor('banner_body', with: body)
               click_button 'Save'
+              pause(time: 0.35)
               expect(current_path).to eq('/banners')
               expect(page).to have_content I18n.t('banners.create.visible_success')
               expect(page).to have_content(truncated_body)
@@ -95,6 +97,7 @@ RSpec.describe 'Banners', type: :system do
               uncheck 'Visible'
               fill_in_trix_editor('banner_body', with: @body)
               click_button 'Save'
+              sleep 0.25
               expect(current_path).to eq('/banners')
               expect(page).to have_content I18n.t('banners.create.not_visible_success')
               expect(page).to have_content(truncated_body)
@@ -111,6 +114,7 @@ RSpec.describe 'Banners', type: :system do
             expect(page).to have_content(truncated_body)
             click_link 'Delete', href: banner_path(@banner)
             page.driver.browser.switch_to.alert.accept
+            pause
             expect(page).not_to have_content(truncated_body)
           end
         end
@@ -137,6 +141,7 @@ RSpec.describe 'Banners', type: :system do
             scenario 'edit a banner' do
               uncheck 'Visible'
               click_button 'Update'
+              pause
               expect(page).to have_content I18n.t('banners.update.not_visible_success')
               expect(current_path).to eq('/banners')
             end

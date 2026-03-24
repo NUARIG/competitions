@@ -85,6 +85,14 @@ class User < ApplicationRecord
     end
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[confirmation_sent_at confirmed_at created_at current_sign_in_at email first_name grant_creator last_name last_sign_in_at type uid updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[applied_grants editable_grants grant_creator_requests grant_permissions grant_reviewers reviewable_grants reviewable_submissions reviews submission_applicants submissions]
+  end
+
   class << self
     def is_saml_email_address?(email:)
       SAML_DOMAINS.any? { |domain| email&.match? domain }
