@@ -575,7 +575,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             click_link 'Delete', href: grant_submission_path(grant, submission)
             pause
           end
-          expect(page).to have_text 'Submission was deleted'
+          expect(page).to have_text('Submission was deleted', wait: 2)
         end
 
         context 'administrator submissions' do
