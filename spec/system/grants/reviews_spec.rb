@@ -144,13 +144,15 @@ RSpec.describe 'GrantReviews', type: :system, js: true do
         login_as reviewer, scope: reviewer.type.underscore.downcase.to_sym
 
         expect do
-          visit grant_submission_path(grant, submission) 
+          visit grant_submission_path(grant, submission)
           accept_alert do
             click_link 'Opt Out of Review'
+            pause
           end
-          expect(page).to have_content 'You have opted out of the review. Assigner or grant administrators have been notified.'
-          expect(current_path).to eql grant_path(grant)
+          pause
         end.to change{ submission.reviews.reload.length }.by -1
+        expect(page).to have_content('You have opted out of the review. Assigner or grant administrators have been notified.')
+        expect(current_path).to eql grant_path(grant)
       end
     end
   end

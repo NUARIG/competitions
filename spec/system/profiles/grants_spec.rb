@@ -116,7 +116,8 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
       scenario 'it can be filtered on grant name' do
         find_field('Search Grant Name', with: '').set('First')
         click_button 'Search'
-
+        pause
+        expect(page).to have_text(grant1.name, wait: 2)
         expect(page).to have_link(grant1.name, href: grant_path(grant1))
         expect(page).not_to have_link(grant2.name, href: grant_path(grant2))
         expect(page).not_to have_link(grant3.name, href: grant_path(grant3))
@@ -129,6 +130,7 @@ RSpec.describe 'Profile Grants', type: :system, js: true do
         visit profile_grants_path
 
         find("td.manage[data-grant-id='#{grant1.id}']").hover
+        pause
         expect(page).to have_link 'Edit',         href: edit_grant_path(grant1)
         expect(page).to have_link 'Submissions',  href: grant_submissions_path(grant1)
         expect(page).to have_link 'Reviews',      href: grant_reviews_path(grant1)

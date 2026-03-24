@@ -1,6 +1,7 @@
 - user            = grant_permission.user
 - permission      = grant_permission.role&.capitalize
 - user_full_name  = full_name(user)
+- not_editable    = grant_permission.user == current_user && grant_permission.role == 'viewer'
 
 = turbo_frame_tag(dom_id(grant_permission), class: 'item') do
   .grid-x.grid-padding-x.grid-padding-y.row
@@ -17,6 +18,7 @@
       .span.right{ title: "#{GrantPermissionsHelper::ROLE_DESCRIPTIONS[permission&.to_sym]}"  }
         = permission
     .cell.small-12.medium-3
-      = link_to 'Edit', edit_grant_grant_permission_path(grant, grant_permission ), class: 'button'
-      - if role_can_be_deleted?(user_permission: grant_permission, grant_admins: grant.admins)
-        = link_to 'Delete', grant_grant_permission_path(grant, grant_permission), data: { turbo_method: :delete, turbo_confirm: "Delete #{user_full_name}'s permission for this grant?" }, class: 'button alert clear'
+      - if policy(grant).grant_editor_access? && !not_editable
+        = link_to 'Edit', edit_grant_grant_permission_path(grant, grant_permission ), class: 'button'
+        - if role_can_be_deleted?(user_permission: grant_permission, grant_admins: grant.admins)
+          = link_to 'Delete', grant_grant_permission_path(grant, grant_permission), data: { turbo_method: :delete, turbo_confirm: "Delete #{user_full_name}'s permission for this grant?" }, class: 'button alert clear'

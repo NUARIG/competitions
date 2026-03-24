@@ -80,12 +80,12 @@ RSpec.describe GrantReviewer::Invitation, type: :system do
       it 'can be deleted' do
         invite_dom_id = "manage-#{dom_id(registered_reviewer_invitation)}"
         page.find("##{invite_dom_id}").hover
-
+        pause
         accept_alert do
           click_link('Delete')
         end
 
-        expect(page).to have_content "#{registered_reviewer_invitation.email} has been deleted"
+        expect(page).to have_content("#{registered_reviewer_invitation.email} has been deleted", wait: 2)
       end
 
       it 'displays a reminder email confirmation message' do

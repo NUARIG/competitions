@@ -34,6 +34,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Password').set(saml_user.email)
         find_field('Password confirmation').set(valid_password)
         click_button signup_button_text
+        pause
         expect(page).to have_content 'Email has already been taken'
       end
 
@@ -44,6 +45,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Password').set(valid_password)
         find_field('Password confirmation').set(valid_password)
         click_button signup_button_text
+        pause
         expect(page).to have_content 'Email has already been taken'
       end
 
@@ -73,6 +75,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Password confirmation').set(short_password)
 
         click_button signup_button_text
+        pause
         expect(page).to have_content 'Password is too short'
       end
 
@@ -83,6 +86,7 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         find_field('Password confirmation').set(long_password)
 
         click_button signup_button_text
+        pause
         expect(page).to have_content 'Password is too long'
       end
     end
@@ -94,8 +98,8 @@ RSpec.describe 'RegisteredUsers::Registrations', type: :system, js: true  do
         saml_user = create(:saml_user)
         login_as(saml_user, scope: :saml_user)
         visit new_registered_user_confirmation_path
+        expect(page).to have_content('You are already logged in.', wait: 2)
         expect(page).to have_current_path(root_path)
-        expect(page).to have_content 'You are already logged in.'
       end
     end
   end
