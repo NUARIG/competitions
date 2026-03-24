@@ -2,9 +2,6 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov'
-SimpleCov.start 'rails'
-
 require_relative '../config/environment'
 
 # Prevent database truncation if the environment is production

@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.2.3'
 
 # Use SCSS for stylesheets
 gem 'dartsass-sprockets'
@@ -42,12 +42,12 @@ gem 'haml-rails',                   '~> 2.0'
 gem 'jquery-rails',                 '~> 4.6.0'
 gem 'jquery-ui-rails',              '~> 7.0.0'
 gem 'pagy',                         '~> 6.2.0'
-gem 'ransack',                      '~> 3.2.1'
+gem 'ransack',                      '~> 4.4'
 gem 'sprockets-es6'
 
 # audits
 gem 'discard',                      '~> 1.3'
-gem 'paper_trail',                  '~> 15.1.0'
+gem 'paper_trail',                  '~> 17.0'
 
 gem 'exception_notification'
 
@@ -65,22 +65,22 @@ gem 'aws-sdk-s3', require: false
 # exports
 gem 'caxlsx', '~> 3.3'
 gem 'caxlsx_rails'
-gem 'wicked_pdf',                   '~> 2.1.0'
+gem 'wicked_pdf',                   '~> 2.8.2'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
-  gem 'puma',         '~> 5.6.8'
+  gem 'puma',         '~> 5.6.9'
   gem 'rspec-rails',  '~> 6.1.3'
-  gem 'webrick',      '1.8.1'
+  gem 'webrick',      '1.8.2'
 end
 
 group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet'
+  gem 'bullet',                 '~> 8.0.0'
   gem 'i18n-debug'
   gem 'listen', '~> 3.5.1'
   gem 'rubocop'

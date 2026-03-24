@@ -45,7 +45,7 @@ module GrantSubmission
     SUBMISSION_STATES = { draft: 'draft',
                           submitted: 'submitted' }.freeze
 
-    enum state: SUBMISSION_STATES
+    enum :state, SUBMISSION_STATES
 
     validates :title, presence: true
     validates :form, presence: true
@@ -112,13 +112,12 @@ module GrantSubmission
 
     def eligible_reviewers
       return nil if reviews.length >= grant.max_reviewers_per_submission || self.draft?
-      
-      review_count_limit = grant.max_submissions_per_reviewer 
-      submission_review_count_limit = grant.max_reviewers_per_submission 
 
-      # Get all submissions and their reviews, 
-      #  tally's each reviewer's count of assigned reviews
-      #  filters out reviewers with review_count_limit number of 
+      review_count_limit = grant.max_submissions_per_reviewer
+      submission_review_count_limit = grant.max_reviewers_per_submission
+
+      # Get all submissions and their reviewers then tally each reviewer's count of assigned reviews.
+      # Then filter reviewers where their review_count == review_count_limit
       already_maxed_out_reviewers = GrantSubmission::Submission
                                       .with_reviewers
                                       .by_grant(grant)
@@ -126,8 +125,16 @@ module GrantSubmission
                                       .tally
                                       .filter{ |reviewer, review_count| review_count == review_count_limit }
                                       .keys
-
+      # Exclude reviewers who have already been assigned to this submission, as well as the submitter and applicants.
       return (grant.grant_reviewers.map(&:reviewer) - (already_maxed_out_reviewers + self.applicants + self.reviewers).uniq)
+    end
+
+    def self.ransackable_attributes(auth_object = nil)
+      %w[average_overall_impact_score awarded composite_score created_at created_id grant_id grant_submission_form_id reviews_count state title updated_at user_updated_at]
+    end
+
+    def self.ransackable_associations(auth_object = nil)
+      %w[applicants criteria_reviews form grant responses reviewers reviews sections submission_applicants submitter versions]
     end
 
     private
