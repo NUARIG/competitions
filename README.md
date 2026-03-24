@@ -20,8 +20,8 @@ The following are required to install competitions:
 
 # Compatibility
 
-  * Ruby:   3.0.2
-  * Rails:  6.1.7
+  * Ruby:   3.3.6
+  * Rails:  7.2.3
 
 
 # Shibboleth IDP
@@ -58,7 +58,7 @@ The application's configuration has been consolidated into this file. Here you w
 Also see further information regarding [devise_saml_authenticatable gem](https://github.com/apokalipto/devise_saml_authenticatable) configurations.
 
 ### config/database.yml
-You will need to configure your database connection. For more details please see [the rails docs](https://guides.rubyonrails.org/v6.1.7.6/configuring.html#configuring-a-database).
+You will need to configure your database connection. For more details please see [the rails docs](https://guides.rubyonrails.org/v7.2.3/configuring.html#configuring-a-database).
 ```
 development:
   adapter: # postgresql
