@@ -3,7 +3,7 @@
 module GrantPermissionsHelper
   ROLE_DESCRIPTIONS = { 'Admin': 'Delete or edit this grant and its submissions and reviews.',
                         'Editor': 'Edit this grant and its submissions and reviews.',
-                        'Viewer': 'View this grant\'s submissions and reviews.' }.freeze
+                        'Viewer': "View this grant's submissions and reviews." }.freeze
 
   def grant_permission_role_select_options
     GrantPermission::ROLES.values.map do |role|
