@@ -206,11 +206,13 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'sorts overall_impact by scored submissions to top' do
               click_link('Overall Impact')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.overall-impact', match: :first)).to have_text submission.average_overall_impact_score
               end
 
               click_link('Overall Impact')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.overall-impact', match: :first)).to have_text submission.average_overall_impact_score
               end

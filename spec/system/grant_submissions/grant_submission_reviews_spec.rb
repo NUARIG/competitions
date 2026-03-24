@@ -347,7 +347,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
             within("##{criteria.first}-button-group") do
               click_button('Clear')
             end
-
+            pause
             click_button 'Submit Your Review'
             pause
             expect(page).to have_text "'#{grant_criteria.first.name}' must be scored"
