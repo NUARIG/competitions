@@ -7,7 +7,7 @@ set :application, DEPLOY_CONFIG['application']
 set :repo_url,    DEPLOY_CONFIG['repository']
 
 set :rvm_type, :system
-set :rvm_ruby_version, 'ruby-3.0.2'
+set :rvm_ruby_version, 'ruby-3.3.6'
 
 set :passenger_restart_with_touch, true
 
