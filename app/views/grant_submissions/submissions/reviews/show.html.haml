@@ -1,7 +1,7 @@
 - content_for(:page_title, "Review of #{@submission.title} by #{full_name(@review.reviewer)}")
 - current_user_can_edit = policy(@review).edit?
 
-%h1= @grant.name
+%h1#grant-name= @grant.name
 
 %h3 Submission Review
 
