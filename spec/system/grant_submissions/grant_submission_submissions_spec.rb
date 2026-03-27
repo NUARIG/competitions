@@ -220,11 +220,13 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'sorts composite_score by scored submissions to top' do
               click_link('Composite')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.composite', match: :first)).to have_text submission.composite_score
               end
 
               click_link('Composite')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.composite', match: :first)).to have_text submission.composite_score
               end
@@ -250,16 +252,19 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               accept_alert do
                 click_link 'Delete', href: grant_submission_path(grant, admin_submission)
               end
+              pause
               expect(page).to have_text 'Submission was deleted'
 
               accept_alert do
                 click_link 'Delete', href: grant_submission_path(grant, editor_submission)
               end
+              pause
               expect(page).to have_text 'Submission was deleted'
 
               accept_alert do
                 click_link 'Delete', href: grant_submission_path(grant, viewer_submission)
               end
+              pause
               expect(page).to have_text 'Submission was deleted'
             end
           end

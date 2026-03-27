@@ -17,6 +17,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
         login_user system_admin
         visit grants_path
         find("td.manage[data-grant-id='#{grant.id}']").hover
+        pause
       end
 
       scenario 'sees the Duplicate link' do
@@ -64,6 +65,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           admin_user.update(grant_creator: true)
           visit profile_grants_path
           find("td.manage[data-grant-id='#{grant.id}']").hover
+          pause
         end
 
         scenario 'sees the Duplicate link' do

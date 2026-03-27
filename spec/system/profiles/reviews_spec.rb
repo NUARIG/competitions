@@ -4,22 +4,22 @@ include UsersHelper
 RSpec.describe 'Profile Reviews', type: :system, js: true do
   let(:grant1)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "First #{Faker::Lorem.sentence(word_count: 3)}") }
   let(:reviewer)           { grant1.reviewers.first }
-  let(:grant1_review)      { create(:review, 
+  let(:grant1_review)      { create(:review,
                                       submission: grant1.submissions.first,
                                       assigner: grant1.grant_permissions.role_admin.first.user,
                                       reviewer: reviewer) }
   let(:grant2)             { create(:open_grant_with_users_and_form_and_submission_and_reviewer, name: "Second #{Faker::Lorem.sentence(word_count: 3)}") }
-  let(:grant2_reviewer)    { create(:grant_reviewer, 
+  let(:grant2_reviewer)    { create(:grant_reviewer,
                                       grant: grant2,
                                       reviewer: reviewer) }
-  let(:grant2_review)      { create(:submitted_scored_review_with_scored_mandatory_criteria_review, 
+  let(:grant2_review)      { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
                                       submission: grant2.submissions.first,
                                       assigner: grant2.grant_permissions.role_admin.first.user,
                                       reviewer: grant2_reviewer.reviewer)}
   let(:draft_grant)           { create(:draft_open_grant_with_users_and_form_and_submission_and_reviewer, name: "Second #{Faker::Lorem.sentence(word_count: 3)}") }
   let(:draft_grant_reviewer)  { create(:grant_reviewer, grant: draft_grant,
                                           reviewer: reviewer) }
-  let(:draft_grant_review)    { create(:submitted_scored_review_with_scored_mandatory_criteria_review, 
+  let(:draft_grant_review)    { create(:submitted_scored_review_with_scored_mandatory_criteria_review,
                                           submission: draft_grant.submissions.first,
                                           assigner: draft_grant.grant_permissions.role_admin.first.user,
                                           reviewer: draft_grant_reviewer.reviewer)}
@@ -81,7 +81,7 @@ RSpec.describe 'Profile Reviews', type: :system, js: true do
       scenario 'it can be filtered on grant name' do
         find_field('Search by Grant Name', with: '').set('First')
         click_button 'Search'
-
+        pause
         expect(page).to have_text grant1.name
         expect(page).to have_link(href: edit_grant_submission_review_path(grant1, grant1.submissions.first, grant1_review))
         expect(page).not_to have_text grant2.name

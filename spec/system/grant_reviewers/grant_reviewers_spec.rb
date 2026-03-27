@@ -52,12 +52,14 @@ RSpec.describe 'GrantReviewers', type: :system do
       expect(page).not_to have_content("#{user.first_name} #{user.last_name}")
       page.fill_in 'Email', with: user.email
       click_button 'Look Up'
+      pause
       expect(page).to have_content("#{user.first_name} #{user.last_name}")
     end
 
     scenario 'unknown users may not be added as reviewers' do
       page.fill_in 'Email', with: unknown_user.email
       click_button 'Look Up'
+      pause
       expect(page).to have_content("Could not find a user with the email: #{unknown_user.email}")
       expect(page).not_to have_content("#{unknown_user.first_name} #{unknown_user.last_name}")
     end
@@ -159,6 +161,7 @@ RSpec.describe 'GrantReviewers', type: :system do
 
         within('#reviewers') do
           find(dropdown_menu_id).hover
+          pause
           accept_alert do
             find_link('Delete Reviewer').click
           end

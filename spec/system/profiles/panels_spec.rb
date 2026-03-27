@@ -115,6 +115,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
           visit profile_panels_path
 
           click_link 'Panel Start'
+          pause
           within 'tr.panel:nth-child(1)' do
             expect(page).to have_text editor_grant.name
           end
@@ -123,6 +124,7 @@ RSpec.describe 'Profile Panels', type: :system, js: :true do
           end
 
           click_link 'Panel Start'
+          pause
           within 'tr.panel:nth-child(1)' do
             expect(page).to have_text reviewer_grant.name
           end
