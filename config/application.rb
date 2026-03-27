@@ -1,7 +1,24 @@
-require_relative 'boot'
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
 require 'nested_form/builder_mixin'
+
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(*Rails.groups)
+
+# Continue using secrets rather than credentials
+SECRETS_DATA = begin
+  yaml_path = File.expand_path("../secrets.yml", __FILE__)
+  if File.exist?(yaml_path)
+    # Rails.env might fail if Rails isn't fully booted, fallback to ENV['RAILS_ENV']
+    env = ENV["RAILS_ENV"] || "development"
+    data = YAML.load(ERB.new(File.read(yaml_path)).result)[env] || {}
+    data.deep_symbolize_keys
+  else
+    {}
+  end
+end
 
 module Competitions
   class Application < Rails::Application
@@ -22,34 +39,29 @@ module Competitions
     Bundler.require(*Rails.groups)
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.1
 
-    # Configuration for the application, engines, and railties goes here.
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
-    # config.autoload_paths << Rails.root.join('lib')
-    config.eager_load_paths << Rails.root.join("lib")
+    # # Configuration for the application, engines, and railties goes here.
+    # # These settings can be overridden in specific environments using the files
+    # # in config/environments, which are processed later.
+    # # Application configuration can go into files in config/initializers
+    # # -- all .rb files in that directory are automatically loaded after loading
+    # # the framework and any gems in your application.
+    # config.eager_load_paths << Rails.root.join("lib")
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks])
 
 
     # Recursively load locale files
     # Allows for organized, model-specific translation files
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
-    # Update paper_trail to v15.1, Rails 7
-    #   error `Psych::DisallowedClass, Tried to load unspecified class: Time`
-    #   Per Rails guide, default setting is [Symbol]
-    config.active_record.yaml_column_permitted_classes = [Symbol, Time]
-
-    config.active_support.disable_to_s_conversion = true
-
-    # Fixes #1076 - Fix SAML logout
-    #               https://github.com/heartcombo/devise/pull/5462
-    #               https://github.com/apokalipto/devise_saml_authenticatable/issues/237
-    # Review this setting in future rails upgrades
-    config.action_controller.raise_on_open_redirects = false
+    # 03/27/26 - Rails 8 upgrade
+    #            Addresses missing :index action in Devise controllers
+    config.action_controller.raise_on_missing_callback_actions = false
 
     def secrets
       config.secrets

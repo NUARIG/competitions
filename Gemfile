@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '~> 7.2.3.1'
+gem 'rails', '~> 8.1'
 
 # Use SCSS for stylesheets
 gem 'dartsass-sprockets'
@@ -28,8 +28,8 @@ gem 'turbo-rails', '~> 2.0.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.17.0', require: false
 
-gem 'devise',                       '4.9.3'
-gem 'devise_saml_authenticatable',  '~> 1.9.1'
+gem 'devise',                       '~> 5.0.3'
+gem 'devise_saml_authenticatable',  '~> 2.0'
 gem 'pundit',                       '~> 2.3.1'
 gem 'rubyzip',                      '~> 2.3.2'
 
@@ -52,12 +52,11 @@ gem 'paper_trail',                  '~> 17.0'
 gem 'exception_notification'
 
 gem 'american_date',                '~> 1.3'
-gem 'validates_timeliness',         '7.0.0.beta2'
+gem 'validates_timeliness',         '8.0.0'
 
 # form_builder
 gem 'cocoon'
 gem 'nested_form'
-# gem "select2-rails"
 
 # s3
 gem 'aws-sdk-s3', require: false
@@ -80,7 +79,7 @@ group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet',                 '~> 8.0.0'
+  gem 'bullet',                 '~> 8.1.0'
   gem 'i18n-debug'
   gem 'listen', '~> 3.5.1'
   gem 'rubocop'
@@ -97,8 +96,8 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '~> 3.39.2'
-  gem 'capybara-select-2'
+  gem 'capybara', '~> 3.40'
+  # gem 'capybara-select-2' # Select2 is Part of FormBuilder, but not used here
   gem 'factory_bot_rails'
   gem 'faker',                    '~> 3.2.2'
   gem 'pundit-matchers',          '~> 3.1.2'

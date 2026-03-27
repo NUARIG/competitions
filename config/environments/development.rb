@@ -3,10 +3,8 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # In the development environment your application's code is reloaded any time
-  # it changes. This slows down response time but is perfect for development
-  # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+  # Make code changes take effect immediately without server restart.
+  config.enable_reloading = true
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -14,36 +12,36 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
-  # Enable server timing
+  # Enable server timing.
   config.server_timing = true
 
-  # Enable/disable caching. By default caching is disabled.
-  # Run rails dev:cache to toggle caching.
-    if Rails.root.join("tmp/caching-dev.txt").exist?
+  # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
+  # Run rails dev:cache to toggle Action Controller caching.
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
-    
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}"
-    }
+    config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
   end
+
+  # Change to :memory_store for caching.
+  config.cache_store = :null_store
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  # Don't care if the mailer can't send.
+  config.action_mailer.raise_delivery_errors = false
+
+  # Make template changes take effect immediately.
+  config.action_mailer.perform_caching = false
+
+  # Set localhost to be used by links generated in mailer templates.
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
-
-  # Raise exceptions for disallowed deprecations.
-  config.active_support.disallowed_deprecation = :raise
-
-  # Tell Active Support which deprecation messages to disallow.
-  config.active_support.disallowed_deprecation_warnings = []
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
@@ -51,39 +49,23 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  # Append comments with runtime information tags to SQL queries in logs.
+  config.active_record.query_log_tags_enabled = true
+
+  # Highlight code that enqueued background job in logs.
+  config.active_job.verbose_enqueue_logs = true
+
+  # Highlight code that triggered redirect in logs.
+  config.action_dispatch.verbose_redirect_logs = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
-  # config.action_view.annotate_rendered_view_with_filenames = true
+  config.action_view.annotate_rendered_view_with_filenames = true
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-
-  # 1/23/24 - commented config as part of upgrade 6.1 -> 7.0
-  # # Use an evented file watcher to asynchronously detect changes in source code,
-  # # routes, locales, etc. This feature depends on the listen gem.
-  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-  # config.reload_classes_only_on_change = true
-
-  # Time zone
-  config.time_zone = 'Central Time (US & Canada)'
-  config.active_record.default_timezone = :local
-
-  config.action_mailer.perform_caching = false
-
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  config.action_mailer.raise_delivery_errors = COMPETITIONS_CONFIG[:mailer][:raise_delivery_errors]
-
-  # Mailcatcher - download at https://mailcatcher.me/
-  config.action_mailer.default_url_options = { host: COMPETITIONS_CONFIG[:default_url_options][:host],
-                                               port: COMPETITIONS_CONFIG[:default_url_options][:port] }
-  config.action_mailer.delivery_method = COMPETITIONS_CONFIG[:mailer][:delivery_method].to_sym
-  config.action_mailer.smtp_settings = Rails.application.secrets[:smtp_settings]
 
   # Bullet
   config.after_initialize do
@@ -93,7 +75,6 @@ Rails.application.configure do
     Bullet.add_footer = true
   end
 
-  # 6/28/24 - restore default. 
-  #           previously prevented addition of stimulus controllers
-  config.assets.digest = false
+  # Apply autocorrection by RuboCop to files generated by `bin/rails generate`.
+  # config.generators.apply_rubocop_autocorrect_after_generate!
 end

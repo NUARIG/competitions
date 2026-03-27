@@ -93,9 +93,9 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
-  # CapybaraSelect2
-  config.include CapybaraSelect2
-  config.include CapybaraSelect2::Helpers # if need specific helpers
+  # 3/27/26 - Select2 is Part of FormBuilder, but not used here
+  # config.include CapybaraSelect2
+  # config.include CapybaraSelect2::Helpers # if need specific helpers
 
   # Pause for AJAX actions to complete
   # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara

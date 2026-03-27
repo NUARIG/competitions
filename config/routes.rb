@@ -35,7 +35,7 @@ Rails.application.routes.draw do
 
     resource  :duplicate,         only: %i[new create],     controller: 'grants/duplicate'
 
-    resource  :state,             only: %i[publish draft],  controller: 'grants/state' do
+    resource  :state, controller: 'grants/state' do
       get 'publish',  on: :member
       get 'draft',    on: :member
     end
@@ -49,7 +49,7 @@ Rails.application.routes.draw do
       patch 'criteria/update',    to: 'grants/criteria#update',  as: :update_criteria
     end
 
-    resources :forms, only: %i[update edit update_fields], controller: 'grant_submissions/forms' do
+    resources :forms, only: %i[update edit], controller: 'grant_submissions/forms' do
       member do
         put :update_fields
       end
