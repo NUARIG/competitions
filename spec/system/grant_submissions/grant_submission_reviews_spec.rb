@@ -256,6 +256,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           end
           find("label[for='overall-#{random_score}']").click
           click_button 'Submit Your Review'
+          pause
           expect(page).to have_text('Review was successfully updated.', wait: 3)
           expect(review.reload.is_complete?).to be true
           expect(review.submitted?).to be true
@@ -267,6 +268,7 @@ RSpec.describe 'GrantSubmission::Submission Reviews', type: :system do
           end
           find("label[for='overall-#{random_score}']").click
           click_button 'Submit Your Review'
+          pause
           expect(page).to have_text('Review was successfully updated.', wait: 2)
           expect(page.current_path).to eql(grant_reviews_path(grant))
         end

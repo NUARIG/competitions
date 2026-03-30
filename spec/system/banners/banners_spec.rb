@@ -131,6 +131,7 @@ RSpec.describe 'Banners', type: :system do
             scenario 'edit a banner' do
               fill_in_trix_editor('banner_body', with: @new_body)
               click_button 'Update'
+              pause
               expect(page).to have_content I18n.t('banners.update.visible_success')
               expect(current_path).to eq('/banners')
               expect(page).to have_content(@truncated_body)
@@ -155,6 +156,7 @@ RSpec.describe 'Banners', type: :system do
               end
             end
             click_button 'Update'
+            pause
             expect(page).to have_content('Please review the following error')
           end
         end
