@@ -14,7 +14,7 @@ FactoryBot.define do
 
     trait :text_val do
       association :question, factory: :long_text_question
-      text_val { Faker::Lorem.paragraphs }
+      text_val { Faker::Lorem.paragraphs.join(' ') }
     end
 
     trait :number do

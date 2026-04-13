@@ -192,7 +192,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           context 'with multiple submissions' do
             before(:each) do
               submitted_review.touch
-              unreviewed_submission.update(user_updated_at: submission.user_updated_at + 1.minute)
+              unreviewed_submission.update(user_updated_at: submission.user_updated_at + 1.hour)
 
               login_user grant_admin
               visit grant_submissions_path(grant)
@@ -206,11 +206,13 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'sorts overall_impact by scored submissions to top' do
               click_link('Overall Impact')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.overall-impact', match: :first)).to have_text submission.average_overall_impact_score
               end
 
               click_link('Overall Impact')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.overall-impact', match: :first)).to have_text submission.average_overall_impact_score
               end
@@ -218,11 +220,13 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
 
             scenario 'sorts composite_score by scored submissions to top' do
               click_link('Composite')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.composite', match: :first)).to have_text submission.composite_score
               end
 
               click_link('Composite')
+              pause
               within('.submission', match: :first) do
                 expect(page.find('.composite', match: :first)).to have_text submission.composite_score
               end
@@ -248,16 +252,19 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               accept_alert do
                 click_link 'Delete', href: grant_submission_path(grant, admin_submission)
               end
+              pause
               expect(page).to have_text 'Submission was deleted'
-              
+
               accept_alert do
                 click_link 'Delete', href: grant_submission_path(grant, editor_submission)
               end
+              pause
               expect(page).to have_text 'Submission was deleted'
-              
+
               accept_alert do
                 click_link 'Delete', href: grant_submission_path(grant, viewer_submission)
               end
+              pause
               expect(page).to have_text 'Submission was deleted'
             end
           end
@@ -265,7 +272,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           context 'export' do
             it 'unfound grant redirects to root' do
               visit '/grants/invalidgrant/submissions/export.xlsx'
-              expect(current_path).to eq('/') 
+              expect(current_path).to eq('/')
               expect(page).to have_text 'Grant not found.'
             end
           end
@@ -331,7 +338,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           before(:each) do
             unreviewed_submission.touch
             visit grant_submissions_path(grant)
-          end 
+          end
 
           scenario 'can open modal to assign review to an unreviewed submission' do
             number_of_reviewers = grant.reviewers.length
@@ -529,7 +536,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
               click_link 'Delete', href: grant_submission_path(grant, submission)
               pause
             end
-            expect(page).to have_text 'Submission was deleted'
+            expect(page).to have_text('Submission was deleted', wait: 2)
           end
 
           context 'administrator submissions' do
@@ -573,7 +580,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             click_link 'Delete', href: grant_submission_path(grant, submission)
             pause
           end
-          expect(page).to have_text 'Submission was deleted'
+          expect(page).to have_text('Submission was deleted', wait: 2)
         end
 
         context 'administrator submissions' do
@@ -710,6 +717,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           find_field('Number Question', with: '').set(Faker::Number.number(digits: 10))
           find_field('Long Text Question', with: '').set(Faker::Lorem.paragraph_by_chars(number: 1000))
           click_button 'Submit'
+          pause
           expect(page).to have_content 'You successfully applied'
         end
 
@@ -720,6 +728,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
           find_field('Number Question', with: '').set(Faker::Number.number(digits: 10))
           find_field('Long Text Question', with: '').set(Faker::Lorem.paragraph_by_chars(number: 1000))
           click_button 'Submit'
+          pause
           expect(page).not_to have_content 'You successfully applied'
         end
 
@@ -751,6 +760,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set(Faker::Lorem.sentence)
             click_button 'Save as Draft'
+            pause
             expect(page).to have_content successfully_updated_draft_submission_message
           end
 
@@ -758,6 +768,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set('')
             click_button 'Save as Draft'
+            pause
             expect(page).to have_content successfully_updated_draft_submission_message
           end
 
@@ -765,6 +776,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set('')
             click_button 'Submit'
+            pause
             expect(page).to have_content 'Your responses have highlighted errors.'
             expect(submission.reload.draft?).to be true
           end
@@ -774,6 +786,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
             visit edit_grant_submission_path(grant, submission)
             find_field('Short Text Question').set(Faker::Lorem.sentence)
             click_button 'Submit'
+            pause
             expect(page).to have_content 'You successfully applied.'
             expect(submission.reload.submitted?).to be true
           end
@@ -895,6 +908,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       expect(page).to have_unchecked_field('grant_submission_submission[awarded]')
       find_field('grant_submission_submission[awarded]').check
     end
+    pause
     expect(page).to have_text 'has been awarded'
     expect(submission.reload.awarded).to be true
   end
@@ -908,6 +922,7 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
       expect(page).to have_checked_field('grant_submission_submission[awarded]')
       find_field('grant_submission_submission[awarded]').uncheck
     end
+    pause
     expect(page).to have_text 'has been unawarded'
     expect(submission.reload.awarded).to be false
   end

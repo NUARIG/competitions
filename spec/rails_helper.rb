@@ -2,9 +2,6 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov'
-SimpleCov.start 'rails'
-
 require_relative '../config/environment'
 
 # Prevent database truncation if the environment is production
@@ -21,7 +18,9 @@ require 'pundit/matchers'
 require 'paper_trail/frameworks/rspec'
 Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }
 Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+  options = Selenium::WebDriver::Chrome::Options.new
+  # options.add_argument('--headless')
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 Capybara.server = :webrick
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -94,9 +93,9 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
-  # CapybaraSelect2
-  config.include CapybaraSelect2
-  config.include CapybaraSelect2::Helpers # if need specific helpers
+  # 3/27/26 - Select2 is Part of FormBuilder, but not used here
+  # config.include CapybaraSelect2
+  # config.include CapybaraSelect2::Helpers # if need specific helpers
 
   # Pause for AJAX actions to complete
   # See: https://thoughtbot.com/blog/automatically-wait-for-ajax-with-capybara
@@ -132,13 +131,13 @@ def scroll_to_half_of_the_page
 end
 
 def tom_select_input(label_dom_id:, value:, select_option: true)
-  find(label_dom_id).click
+  control = find("#{label_dom_id}")
+  control.click
+  sleep 1
 
-  send_keys(value)
-  pause(time: 0.75) # The lowest viable time
+  input_field = find(".ts-dropdown.plugin-dropdown_input input.dropdown-input")
+  input_field.send_keys(value)
+  sleep 1
 
-  if select_option == true
-    send_keys(:tab)
-    pause
-  end
+  send_keys(:tab)
 end

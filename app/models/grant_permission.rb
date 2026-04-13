@@ -13,7 +13,7 @@ class GrantPermission < ApplicationRecord
   ROLES.default = 'none'
   ROLES.freeze
 
-  enum role: ROLES, _prefix: true
+  enum :role, ROLES, prefix: true
 
   before_destroy :prevent_last_admin_destroy, if: -> { role_admin? && last_grant_admin? }
 

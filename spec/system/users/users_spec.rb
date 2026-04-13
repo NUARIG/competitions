@@ -96,9 +96,8 @@ RSpec.describe 'Users', type: :system, js: true  do
           registered_user.update(created_at: 8.days.ago)
           registered_grant_creator.update(created_at: 3.month.ago)
           registered_system_admin.update(created_at: 2.years.ago)
-
           visit users_path
-          click_on('Joined')
+          click_on('Date Joined')
           pause
 
           within 'tr.user:nth-child(7)' do
@@ -152,7 +151,7 @@ RSpec.describe 'Users', type: :system, js: true  do
           scenario 'sort by type' do
             unconfirmed_registered_user.touch
             visit users_path
-            
+
             click_on(I18n.t('activerecord.attributes.user.type'))
             pause
 

@@ -17,6 +17,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
         login_user system_admin
         visit grants_path
         find("td.manage[data-grant-id='#{grant.id}']").hover
+        pause
       end
 
       scenario 'sees the Duplicate link' do
@@ -25,7 +26,6 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
       scenario 'valid duplicate submission creates new grant' do
         click_link('Duplicate', href: new_grant_duplicate_path(grant))
-
         page.fill_in 'Name', with: "Updated #{grant.name}"
         page.fill_in 'Short Name', with: "#{grant.slug}1"
         page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
@@ -33,9 +33,9 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
         page.fill_in 'Submission Close Date', with: (grant.submission_close_date + 1.day).to_fs
         page.fill_in 'Review Open Date', with: (grant.review_open_date + 1.day).to_fs
         page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
-
         expect do
           click_button('Save as Draft')
+          pause(time: 0.5)
         end.to change{ Grant.count }.by(1)
               .and change{ GrantSubmission::Form.count}.by(1)
               .and change{ GrantSubmission::Section.count}.by(grant.form.sections.count)
@@ -65,6 +65,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           admin_user.update(grant_creator: true)
           visit profile_grants_path
           find("td.manage[data-grant-id='#{grant.id}']").hover
+          pause
         end
 
         scenario 'sees the Duplicate link' do
@@ -74,13 +75,14 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
         scenario 'new_grant_duplicate does not create a new grant' do
           expect do
             click_link('Duplicate', href: new_grant_duplicate_path(grant))
-            pause
+            pause(time: 0.5)
             expect(page).to have_content "Information from #{grant.name} has been copied below."
           end.not_to change{Grant.count}
         end
 
         scenario 'clears dates' do
           click_link('Duplicate', href: new_grant_duplicate_path(grant))
+          pause(time: 0.5)
           expect(page.find_field('grant_publish_date').value).to eql(date_mmddyyyy(Date.today))
           expect(page.find_field('grant_submission_open_date').value).to eql ''
           expect(page.find_field('grant_submission_close_date').value).to eql ''
@@ -90,7 +92,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
         scenario 'duplicated grant requires a new title and short name' do
           click_link('Duplicate', href: new_grant_duplicate_path(grant))
-
+          pause(time: 0.5)
           page.fill_in 'Short Name', with: grant.slug
           page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
           page.fill_in 'Submission Open Date', with: (grant.submission_open_date + 1.day).to_fs
@@ -99,6 +101,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
           expect do
             click_button('Save as Draft')
+            pause
           end.not_to change{ Grant.count }
           expect(page).to have_content('Name has already been taken')
           expect(page).to have_content('Short Name has already been taken')
@@ -106,7 +109,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
         scenario 'valid duplicate submission creates new grant' do
           click_link('Duplicate', href: new_grant_duplicate_path(grant))
-          pause
+          pause(time: 0.5)
           page.fill_in 'Name', with: "Updated #{grant.name}"
           page.fill_in 'Short Name', with: "#{grant.slug}1"
           page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
@@ -116,6 +119,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
           expect do
             click_button('Save as Draft')
+            pause(time: 0.5)
           end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(grant.grant_permissions.count)
           expect(page).to have_selector '#grant-state .current', text: 'Draft'
         end
@@ -158,7 +162,7 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
 
         scenario 'valid duplicate submission creates new grant' do
           click_link('Duplicate', href: new_grant_duplicate_path(grant))
-          pause
+          pause(time: 0.5)
           page.fill_in 'Name', with: "Updated #{grant.name}"
           page.fill_in 'Short Name', with: "#{grant.slug}1"
           page.fill_in 'Publish Date', with: (grant.publish_date + 1.day).to_fs
@@ -168,8 +172,8 @@ RSpec.describe 'GrantsDuplicate', type: :system, js: true do
           page.fill_in 'Review Close Date', with: (grant.review_close_date + 1.day).to_fs
           expect do
             click_button('Save as Draft')
-            expect(1).to eql 1
-            end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(grant.grant_permissions.count)
+            pause(time: 0.5)
+          end.to change{ Grant.count }.by(1).and change{ GrantPermission.count}.by(grant.grant_permissions.count)
           expect(page).to have_selector '#grant-state .current', text: 'Draft'
         end
       end

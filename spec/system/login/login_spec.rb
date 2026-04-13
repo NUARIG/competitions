@@ -12,6 +12,7 @@ RSpec.describe 'Login', type: :system do
       visit root_path
       expect(page).to have_button 'Log In'
       click_button 'Log In'
+      pause
       expect(current_path).to eq(login_index_path)
     end
   end
@@ -53,12 +54,14 @@ RSpec.describe 'Login', type: :system do
 
         expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
         click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
+        pause
         expect(current_path).to eq('/registered_users/sign_in')
 
         find(:css, "#registered_user_uid").set(registered_editor.email)
         find(:css, "#registered_user_password").set(registered_editor.password)
 
         find('#registered-user-login-button').click
+        pause
         expect(page).to have_current_path grant_reviews_path(grant)
       end
     end

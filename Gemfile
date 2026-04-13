@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'pg'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 8.1'
 
 # Use SCSS for stylesheets
 gem 'dartsass-sprockets'
@@ -28,8 +28,8 @@ gem 'turbo-rails', '~> 2.0.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.17.0', require: false
 
-gem 'devise',                       '4.9.3'
-gem 'devise_saml_authenticatable',  '~> 1.9.1'
+gem 'devise',                       '~> 5.0.3'
+gem 'devise_saml_authenticatable',  '~> 2.0'
 gem 'pundit',                       '~> 2.3.1'
 gem 'rubyzip',                      '~> 2.3.2'
 
@@ -42,22 +42,21 @@ gem 'haml-rails',                   '~> 2.0'
 gem 'jquery-rails',                 '~> 4.6.0'
 gem 'jquery-ui-rails',              '~> 7.0.0'
 gem 'pagy',                         '~> 6.2.0'
-gem 'ransack',                      '~> 3.2.1'
+gem 'ransack',                      '~> 4.4'
 gem 'sprockets-es6'
 
 # audits
 gem 'discard',                      '~> 1.3'
-gem 'paper_trail',                  '~> 15.1.0'
+gem 'paper_trail',                  '~> 17.0'
 
 gem 'exception_notification'
 
 gem 'american_date',                '~> 1.3'
-gem 'validates_timeliness',         '7.0.0.beta2'
+gem 'validates_timeliness',         '8.0.0'
 
 # form_builder
 gem 'cocoon'
 gem 'nested_form'
-# gem "select2-rails"
 
 # s3
 gem 'aws-sdk-s3', require: false
@@ -65,22 +64,22 @@ gem 'aws-sdk-s3', require: false
 # exports
 gem 'caxlsx', '~> 3.3'
 gem 'caxlsx_rails'
-gem 'wicked_pdf',                   '~> 2.1.0'
+gem 'wicked_pdf',                   '~> 2.8.2'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
-  gem 'puma',         '~> 5.6.8'
+  gem 'puma',         '~> 6.6.1'
   gem 'rspec-rails',  '~> 6.1.3'
-  gem 'webrick',      '1.8.1'
+  gem 'webrick',      '1.8.2'
 end
 
 group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet'
+  gem 'bullet',                 '~> 8.1.0'
   gem 'i18n-debug'
   gem 'listen', '~> 3.5.1'
   gem 'rubocop'
@@ -97,8 +96,8 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '~> 3.39.2'
-  gem 'capybara-select-2'
+  gem 'capybara', '~> 3.40'
+  # gem 'capybara-select-2' # Select2 is Part of FormBuilder, but not used here
   gem 'factory_bot_rails'
   gem 'faker',                    '~> 3.2.2'
   gem 'pundit-matchers',          '~> 3.1.2'

@@ -11,7 +11,7 @@ class Review < ApplicationRecord
                     draft: 'draft',
                     submitted: 'submitted' }.freeze
 
-  enum state: REVIEW_STATES, _default: 'assigned'
+  enum :state, REVIEW_STATES, default: :assigned
 
   after_commit     :update_submission_averages, on: %i[create update destroy]
   after_touch      :update_submission_averages
@@ -101,6 +101,14 @@ class Review < ApplicationRecord
   def review_period_closed?
     # TODO: enforce grant.review_open_date ?
     Time.now > grant.review_close_date.end_of_day
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[created_at grant_submission_submission_id id overall_impact_comment overall_impact_score reminded_at reviewer_id state updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[applicants assigner criteria criteria_reviews grant grant_criteria reviewer submission submitter]
   end
 
   private

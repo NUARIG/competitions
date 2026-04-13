@@ -19,7 +19,8 @@ RSpec.describe 'RegisteredUsers::Confirmations', type: :system, js: true do
         scenario 'resends confirmation' do
           page.fill_in 'Email', with: unconfirmed_user.email
           click_button resend_button_text
-          expect(page).to have_content 'You will receive an email with instructions for how to confirm your email address'
+          pause
+          expect(page).to have_content('You will receive an email with instructions for how to confirm your email address', wait: 2)
         end
       end
 
@@ -27,7 +28,8 @@ RSpec.describe 'RegisteredUsers::Confirmations', type: :system, js: true do
         scenario 'does not resend ' do
           page.fill_in 'Email', with: confirmed_user.email
           click_button resend_button_text
-          expect(page).to have_content 'Email was already confirmed, please try signing in'
+          pause
+          expect(page).to have_content('Email was already confirmed, please try signing in', wait: 2)
         end
       end
     end

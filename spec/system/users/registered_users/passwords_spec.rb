@@ -18,6 +18,7 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
         scenario 'has form' do
           find_field('Email').set(registered_user.email)
           click_button('Reset Password')
+          pause
           expect(page).to have_content 'You will receive an email with instructions on how to reset your password in a few minutes.'
         end
       end
@@ -27,7 +28,8 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
       scenario 'is prompted to create an account' do
         find_field('Email').set(Faker::Internet.email)
         click_button('Reset Password')
-        expect(page).to have_content 'Email not found'
+        pause
+        expect(page).to have_content('Email not found')
       end
     end
   end
@@ -42,7 +44,8 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
           page.fill_in 'New password', with: valid_password
           page.fill_in 'Confirm new password', with: valid_password
           click_button 'Change my password'
-          expect(page).to have_content 'token is invalid'
+          pause
+          expect(page).to have_content('token is invalid', wait: 2)
         end
 
         scenario 'can change using password reset' do
@@ -50,7 +53,8 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
           page.fill_in 'New password', with: valid_password
           page.fill_in 'Confirm new password', with: valid_password
           click_button 'Change my password'
-          expect(page).to have_content 'Your password has been changed successfully.'
+          pause
+          expect(page).to have_content('Your password has been changed successfully.', wait: 2)
         end
       end
 
@@ -62,21 +66,21 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
 
           scenario 'change Your Password link not on SAML user profiles' do
             visit profile_path(saml_user)
-            expect(page).not_to have_content 'Change Your Password'
+            expect(page).not_to have_content('Change Your Password', wait: 2)
           end
 
           scenario 'visiting registration page redirects to root' do
             visit profile_path(saml_user)
             visit edit_registered_user_registration_path
-            expect(page).not_to have_content 'Change Your Password'
-            expect(page).to have_content 'You are already logged in.'
+            expect(page).not_to have_content('Change Your Password', wait: 2)
+            expect(page).to have_content('You are already logged in.')
             expect(current_path).to eq root_path
           end
 
           scenario 'visiting password reset page redirects to root' do
             visit new_registered_user_confirmation_path
+            expect(page).to have_content('You are already logged in.', wait: 2)
             expect(page).to have_current_path(root_path)
-            expect(page).to have_content 'You are already logged in.'
           end
         end
 
@@ -98,6 +102,7 @@ RSpec.describe 'RegisteredUsers::Passwords', type: :system, js: true  do
             find(:css, "#registered_user_password").set(new_password)
             find(:css, "#registered_user_password_confirmation").set(new_password)
             click_button 'Update'
+            pause
             expect(page).to have_content 'Your account has been updated successfully.'
           end
         end

@@ -12,9 +12,8 @@ module GrantSubmissions
         @grant = Grant.kept.with_criteria.friendly.find(params[:grant_id])
         authorize @grant, :grant_viewer_access?
         @submission     = GrantSubmission::Submission.includes(:submitter).find(params[:submission_id])
-        
-        set_ransack_submission_reviews_sort_query_results(@submission)
 
+        set_ransack_submission_reviews_sort_query_results(@submission)
         @pagy, @reviews = pagy(@q.result, i18n_key: 'activerecord.models.review')
         respond_to do |format|
           format.html { render :index }
@@ -61,7 +60,7 @@ module GrantSubmissions
       def update
         authorize @review
         @review.user_submitted_state = params[:review][:state]
-        
+
         respond_to do |format|
           if @review.update(review_params)
             set_redirect_path
@@ -73,7 +72,7 @@ module GrantSubmissions
               merge_criteria_review_errors
               build_criteria_reviews
             end
-            
+
             flash.now[:alert] = minimized_error_messages
 
             format.html { render 'edit', status: :unprocessable_entity }
@@ -135,11 +134,11 @@ module GrantSubmissions
 
       def merge_criteria_review_errors
         # Submitted reviews may contain previously valid entries
-        # (e.g. a draft review had an unscored criteria that is now req'd) 
+        # (e.g. a draft review had an unscored criteria that is now req'd)
         # This caused unexpectedly missing errors.
         @review.criteria_reviews.each do |criteria_review|
           next if criteria_review.errors.none?
-          
+
           criteria_review.errors.each do |error|
             @review.errors.add(error.attribute, error.message)
           end
@@ -147,7 +146,7 @@ module GrantSubmissions
       end
 
       def minimized_error_messages
-        # Remove redundant message in favor of nested attribute errors 
+        # Remove redundant message in favor of nested attribute errors
         @review.errors.delete(:criteria_reviews, :invalid) if @review.errors.include?(:criteria_reviews)
         @review.errors.full_messages
       end

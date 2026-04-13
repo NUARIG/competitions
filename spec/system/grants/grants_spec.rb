@@ -33,7 +33,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
   describe 'Draft Grant' do
     let(:draft_grant) { create(:draft_grant) }
-    
+
     context 'draft banner' do
       before(:each) do
         login_as draft_grant.admins.first
@@ -66,14 +66,17 @@ RSpec.describe 'Grants', type: :system, js: true do
       scenario 'date fields edited with datepicker are properly formatted' do
         tomorrow = (Date.current + 1.day)
         expect(page).to have_field('grant_publish_date', with: I18n.l(grant.publish_date, format: :mmddyyyy))
-        page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{I18n.l(tomorrow)}'))")
+        page.execute_script("$('#grant_publish_date').fdatepicker('setDate', new Date('#{I18n.l(tomorrow)}'))")
+        pause
         click_button 'Update'
+        pause
         expect(grant.reload.publish_date).to eql(tomorrow)
       end
 
       scenario 'changing slug redirects to correct path' do
         page.fill_in 'Short Name', with: 'newslug'
         click_button 'Update'
+        pause
         expect(page).to have_content 'Grant was successfully updated.'
         expect(current_path).to eql '/grants/newslug/edit'
       end
@@ -82,6 +85,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         orig_slug = grant.slug
         find_field('grant_slug').send_keys('newslug!#0')
         click_button 'Update'
+        pause
         expect(page).to have_content 'Grant was successfully updated.'
         expect(current_path).to eql "/grants/#{orig_slug}newslug0/edit"
       end
@@ -90,6 +94,7 @@ RSpec.describe 'Grants', type: :system, js: true do
         expect(PaperTrail).to be_enabled
         fill_in 'grant_name', with: 'New_Name'
         click_button 'Update'
+        pause
         expect(page).to have_content 'Grant was successfully updated.'
         expect(grant.versions.last.whodunnit).to eql(admin_user.id)
       end
@@ -115,7 +120,9 @@ RSpec.describe 'Grants', type: :system, js: true do
 
         expect(page).to have_field('grant_publish_date', with: @grant.publish_date.to_fs)
         page.execute_script("$('#grant_publish_date').fdatepicker('setDate',new Date('#{tomorrow.to_fs}'))")
+        pause
         click_button 'Update'
+        pause
         expect(@grant.reload.publish_date).to eql(tomorrow)
       end
 
@@ -183,6 +190,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     scenario 'default of today for publish date' do
       click_button 'Save as Draft'
+      pause
       grant = Grant.last
       expect(grant.publish_date).to eql(Date.today)
     end
@@ -191,6 +199,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Publish Date', with: @grant.publish_date.to_fs
 
       click_button 'Save as Draft'
+      pause
       grant = Grant.last
       expect(grant.name).to eql(@grant.name)
       expect(page.current_path).to eq(grant_grant_permissions_path(grant))
@@ -208,6 +217,7 @@ RSpec.describe 'Grants', type: :system, js: true do
       page.fill_in 'Publish Date', with: @grant.publish_date.to_fs
       page.fill_in 'Submission Close Date', with: (@grant.submission_open_date - 1.day).to_fs
       click_button 'Save as Draft'
+      pause
       expect(page).to have_content 'Submission Close Date must be after the opening date for submissions.'
       expect(GrantPermission.all.count).to eql(grant_permission_count)
     end
@@ -242,15 +252,19 @@ RSpec.describe 'Grants', type: :system, js: true do
           visit grant_path(grant)
           expect(page).to have_button 'Log In'
           click_button 'Log In'
+          pause
 
           expect(page).to have_button REGISTERED_USER_LOGIN_BUTTON_TEXT
           click_button REGISTERED_USER_LOGIN_BUTTON_TEXT
+          pause
+
           expect(current_path).to eq('/registered_users/sign_in')
 
           fill_in 'Email address', with: registered_submitter.email
           fill_in 'Password', with: registered_submitter.password
 
           find('#registered-user-login-button').click
+          pause
           expect(page).to have_current_path grant_path(grant)
         end
       end

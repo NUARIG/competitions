@@ -28,6 +28,11 @@ class Panel < ApplicationRecord
     DateTime.now.between?(start_datetime, end_datetime)
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[created_at end_datetime grant_id id
+       meeting_location show_review_comments start_datetime updated_at]
+  end
+
   private
 
   def start_is_after_submission_deadline

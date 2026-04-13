@@ -45,6 +45,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
         scenario 'accepts a pick_one response' do
           select("#{multiple_choice_question.multiple_choice_options.first.text}", from: multiple_choice_question.text)
           click_button 'Submit'
+          pause
           expect(page).to have_content successfully_submitted_submission_message
         end
 
@@ -54,6 +55,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
           page.fill_in('Long Text Question', with: Faker::Lorem.paragraph_by_chars(number: 100), currently_with: '' )
           page.attach_file(file_upload_question.text, Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'))
           click_button 'Submit'
+          pause
           expect(page).to have_content successfully_submitted_submission_message
         end
       end
@@ -66,6 +68,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
             click_button 'Submit'
+            pause
             expect(page).not_to have_content successfully_submitted_submission_message
             expect(page).to have_content "Response to '#{short_text_question.text}' is required."
           end
@@ -87,6 +90,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
             click_button 'Submit'
+            pause
             expect(page).not_to have_content successfully_submitted_submission_message
             expect(page).to have_content "A selection for '#{multiple_choice_question.text}' is required."
           end
@@ -97,6 +101,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field('Short Text Question', with:'').set(Faker::Lorem.sentence)
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
               click_button 'Submit'
+              pause
               expect(page).not_to have_content successfully_submitted_submission_message
               expect(page).to have_content "Response to '#{number_question.text}' is required."
             end
@@ -109,14 +114,15 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               end
 
               scenario 'when submitted' do
-
                 click_button 'Submit'
+                pause
                 expect(page).not_to have_content successfully_submitted_submission_message
                 expect(page).to have_content "Response to '#{number_question.text}' must be a number."
               end
 
               scenario 'when saved as draft' do
                 click_button 'Save as Draft'
+                pause
                 expect(page).not_to have_content successfully_submitted_submission_message
                 expect(page).to have_content "Response to '#{number_question.text}' must be a number."
               end
@@ -131,12 +137,14 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
 
               scenario 'when submitted' do
                 click_button 'Submit'
+                pause
                 expect(page).not_to have_content successfully_submitted_submission_message
                 expect(page).to have_content "Response to '#{number_question.text}' must be a number."
               end
 
               scenario 'when saved as draft' do
                 click_button 'Save as Draft'
+                pause
                 expect(page).not_to have_content successfully_submitted_submission_message
                 expect(page).to have_content "Response to '#{number_question.text}' must be a number."
               end
@@ -151,6 +159,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
 
               click_button 'Submit'
+              pause
               expect(page).not_to have_content successfully_submitted_submission_message
             end
           end
@@ -162,6 +171,7 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
                   find_field('Number Question', with:'').set('Number')
                   page.attach_file(file_upload_question.text, Rails.root.join('spec', 'support', 'file_upload', 'text_file.pdf'))
                   click_button 'Submit'
+                  pause
                 end
 
                 scenario 'do not receive success message on field with wrong type of response' do
@@ -180,7 +190,8 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 100))
             click_button 'Save as Draft'
-            expect(page).to have_content successfully_saved_submission_message
+            pause
+            expect(page).to have_content(successfully_saved_submission_message, wait: 2)
             expect(page).to have_content GrantSubmission::Submission.last.title
             expect(page).to have_content 'Edit'
           end
@@ -192,13 +203,13 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
           end
 
           scenario 'throws error when no answer for required short text' do
-            find_field('Number Question', with:'').set(Faker::Number.number(digits: 10))
+            find_field('Number Question', with:'', wait: 2).set(Faker::Number.number(digits: 10))
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
             click_button 'Submit'
-
-            expect(page).to have_content 'Please review the following error'
-            expect(page).to have_content "Response to 'Short Text Question' is required."
-            expect(page).to have_content 'Your responses have highlighted errors.'
+            pause
+            expect(page).to have_content('Please review the following error', wait: 2)
+            expect(page).to have_content("Response to 'Short Text Question' is required.")
+            expect(page).to have_content('Your responses have highlighted errors.')
           end
 
           scenario 'accepts submission with answer for required short text' do
@@ -206,8 +217,8 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             find_field('Long Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 1000))
             find_field('Short Text Question', with:'').set(Faker::Lorem.paragraph_by_chars(number: 200))
             click_button 'Submit'
-
-            expect(page).to have_content successfully_submitted_submission_message
+            pause
+            expect(page).to have_content(successfully_submitted_submission_message, wait: 2)
             expect(page).to have_current_path profile_submissions_path
             expect(page).to have_content GrantSubmission::Submission.last.title
             expect(page).not_to have_content 'Edit'
@@ -225,8 +236,8 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
               find_field('Number Question').set(Faker::Number.number(digits: 10))
               find_field('Long Text Question').set(Faker::Lorem.paragraph_by_chars(number: 100))
               click_button 'Save as Draft'
-
-              expect(page).to have_content successfully_updated_draft_submission_message
+              pause
+              expect(page).to have_content(successfully_updated_draft_submission_message)
               expect(page).to have_current_path profile_submissions_path
               expect(page).to have_content GrantSubmission::Submission.last.title
               expect(page).to have_content 'Edit'
@@ -237,7 +248,8 @@ RSpec.describe 'GrantSubmission::Responses', type: :system do
             scenario 'throws error when no answer for required short text' do
               find_field('Short Text Question').set('')
               click_button 'Submit'
-              expect(page).to have_content 'Please review the following error'
+              pause
+              expect(page).to have_content('Please review the following error')
               expect(page).to have_content 'Your responses have highlighted errors.'
             end
           end

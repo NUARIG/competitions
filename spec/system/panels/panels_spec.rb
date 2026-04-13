@@ -25,7 +25,7 @@ RSpec.describe 'Panels', type: :system, js: true do
   let(:reviewed_submission) { create(:reviewed_submission,
                                         grant: grant,
                                         form: grant.form) }
-  let(:reviewer2) { create(:grant_reviewer, 
+  let(:reviewer2) { create(:grant_reviewer,
                               grant: grant,
                               reviewer: admin) }
   let(:unreviewed_submission) { create(:submission_with_responses_with_applicant,
@@ -120,7 +120,7 @@ RSpec.describe 'Panels', type: :system, js: true do
       scenario 'requires https' do
         page.fill_in 'Link', with: Faker::Internet.url(scheme: 'http')
         click_button button_text
-        expect(page).to have_content 'not a valid secure URL'
+        expect(page).to have_content('Meeting Link is not a valid secure URL', wait: 2)
       end
     end
 
@@ -137,8 +137,9 @@ RSpec.describe 'Panels', type: :system, js: true do
             page.fill_in 'Start Date/Time', with: ''
             page.fill_in 'Start Date/Time', with: invalid_start.strftime('%m/%d/%Y %H:%M%P')
             click_button button_text
+            pause
           end.not_to change { grant.panel.reload.start_datetime }
-          expect(page).to have_content I18n.t('activerecord.errors.models.panel.attributes.start_datetime.before_submission_deadline')
+          expect(page).to have_content(I18n.t('activerecord.errors.models.panel.attributes.start_datetime.before_submission_deadline'), wait: 2)
         end
 
         scenario 'required to be before end_datetime' do
@@ -150,8 +151,9 @@ RSpec.describe 'Panels', type: :system, js: true do
             page.fill_in 'End Date/Time',   with: ''
             page.fill_in 'End Date/Time',   with: invalid_end.strftime('%m/%d/%Y %H:%M%P')
             click_button button_text
+            pause
           end.not_to change { grant.panel.reload.start_datetime }
-          expect(page).to have_content 'must be before End Date/Time'
+          expect(page).to have_content('must be before End Date/Time', wait: 2)
         end
       end
     end
@@ -162,12 +164,14 @@ RSpec.describe 'Panels', type: :system, js: true do
         visit edit_grant_panel_path(grant)
         check 'Show Reviewer Comments'
         click_button button_text
-        expect(page).to have_content 'Panel information successfully updated.'
+        pause
+        expect(page).to have_content('Panel information successfully updated.', wait: 2)
         expect(grant.panel.reload.show_review_comments).to be true
 
         uncheck 'Show Reviewer Comments'
         click_button button_text
-        expect(page).to have_content 'Panel information successfully updated.'
+        pause
+        expect(page).to have_content('Panel information successfully updated.', wait: 2)
         expect(grant.panel.reload.show_review_comments).to be false
       end
     end
@@ -393,6 +397,7 @@ RSpec.describe 'Panels', type: :system, js: true do
         visit grant_panel_path(grant)
         # ascending first
         click_link 'Applicants'
+        pause
         within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
@@ -402,6 +407,7 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # descending
         click_link 'Applicants'
+        pause
         within "##{dom_id(@low_scored_submission)}" do
           expect(page).to have_text @low_scored_submission.title
         end
@@ -417,6 +423,7 @@ RSpec.describe 'Panels', type: :system, js: true do
 
         # ascending first
         click_link 'Submission'
+        pause
         within "##{dom_id(@high_scored_submission)}" do
           expect(page).to have_text @high_scored_submission.title
         end
@@ -453,6 +460,7 @@ RSpec.describe 'Panels', type: :system, js: true do
     new_address = Faker::Address.full_address
     page.fill_in 'Location', with: new_address, fill_options: { clear: :backspace }
     click_button button_text
+    pause
     expect(page).to have_content 'Panel information successfully updated.'
     expect(grant.panel.meeting_location).to eql new_address
   end
