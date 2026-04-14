@@ -6,6 +6,15 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item.is-active{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.22 (March 30, 2006)
+    .accordion-content{"data-tab-content" => ""}
+      %ul
+        %li
+          Update to Rails 8.1
+          #{github_issue_link(issue: 1104)}
+        %li
+          Minor bug fixes and improvements.
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.21.3 (September 13, 2024)
     .accordion-content{"data-tab-content" => ""}
       %ul
