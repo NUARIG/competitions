@@ -6,12 +6,15 @@ include UsersHelper
 RSpec.describe 'Grants', type: :system, js: true do
   describe 'Index' do
     before(:each) do
-      @grant                  = create(:grant_with_users)
-      @inaccessible_grant     = create(:grant_with_users)
+      @grant                  = create(:grant_with_users, name: 'AAA Published Grant',
+                                                          submission_close_date: 20.days.from_now,
+                                                          state: 'published')
+      @inaccessible_grant     = create(:grant_with_users, name: 'ZZZ Grant',
+                                                          submission_close_date: 25.days.from_now,)
       @discarded_grant        = create(:grant_with_users, discarded_at: 1.hour.ago)
       @admin_user             = @grant.admins.first
 
-      @draft_grant            = create(:draft_grant)
+      @draft_grant            = create(:draft_grant, name: 'Draft Grant')
       draft_grant_permission  = create(:admin_grant_permission, user: @admin_user, grant: @draft_grant)
 
       login_user @admin_user
@@ -28,6 +31,33 @@ RSpec.describe 'Grants', type: :system, js: true do
       expect(page).not_to have_link('Delete', href: grant_path(@grant))
       expect("tr[data-grant-id='#{@inaccessible_grant.id}']").not_to have_selector("td.manage[data-grant-id='#{@inaccessible_grant.id}']")
       expect('table#grants').not_to have_selector "tr[data-grant-id='#{@draft_grant.id}']"
+    end
+
+    context 'sorting' do
+      it 'sorts on name' do
+        click_on('Name')
+        within '#grants tbody tr:nth-child(1)' do
+          expect(page).to have_text @grant.name
+        end
+
+        click_on('Name')
+        within '#grants tbody tr:nth-child(1)' do
+          expect(page).to have_text @inaccessible_grant.name
+        end
+      end
+
+      it 'sorts on submission_close_date' do
+        click_on(I18n.t('activerecord.attributes.grant.submission_close_date'))
+        pause(time: 0.25)
+        within '#grants tbody tr:nth-child(1)' do
+          expect(page).to have_text @grant.name
+        end
+
+        click_on(I18n.t('activerecord.attributes.grant.submission_close_date'))
+        within '#grants tbody tr:nth-child(1)' do
+          expect(page).to have_text @inaccessible_grant.name
+        end
+      end
     end
   end
 

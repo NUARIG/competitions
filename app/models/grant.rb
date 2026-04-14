@@ -184,11 +184,11 @@ class Grant < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     # ["applications_per_user", "created_at", "discarded_at", "id", "max_reviewers_per_submission", "max_submissions_per_reviewer", "name", "publish_date", "review_close_date", "review_guidance", "review_open_date", "rfa", "slug", "state", "submission_close_date", "submission_open_date", "updated_at"]
-    %w[name publish_date review_close_date]
+    %w[name publish_date review_close_date state submission_close_date submission_open_date]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["administrators", "applicants", "awarded_submissions", "contacts", "criteria", "document_attachment", "document_blob", "form", "grant_permissions", "grant_reviewers", "panel", "questions", "required_criteria", "reviewer_invitations", "reviewers", "reviews", "sections", "submissions", "submitters", "versions"]
+    %w[administrators applicants awarded_submissions contacts criteria document_attachment document_blob form grant_permissions grant_reviewers panel questions required_criteria reviewer_invitations reviewers reviews sections submissions submitters versions]
   end
 
   private

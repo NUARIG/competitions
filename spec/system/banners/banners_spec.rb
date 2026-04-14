@@ -58,6 +58,76 @@ RSpec.describe 'Banners', type: :system do
           scenario 'banner index page' do
             expect(page).to have_content 'Banners'
           end
+
+          describe 'sorting' do
+            let!(:aaa_banner) { create(:banner, body: 'aaaa, visible, created first', created_at: 10.minutes.ago) }
+            let!(:zzz_banner) { create(:banner, body: 'zzzz, not visible, created last', visible: false, created_at: Time.now) }
+
+            before do
+              @banner.destroy
+              visit banners_path
+            end
+
+            scenario 'default sort created_at descending' do
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{zzz_banner.body}"
+              end
+              within 'tr.banner:nth-child(2)' do
+                expect(page).to have_text "#{aaa_banner.body}"
+              end
+            end
+
+            scenario 'it sorts on body text' do
+              click_on(I18n.t('activerecord.attributes.banner.body'))
+
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{aaa_banner.body}"
+              end
+              within 'tr.banner:nth-child(2)' do
+                expect(page).to have_text "#{zzz_banner.body}"
+              end
+
+              click_on(I18n.t('activerecord.attributes.banner.body'))
+
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{zzz_banner.body}"
+              end
+            end
+
+            scenario 'it sorts on visible' do
+              click_on(I18n.t('activerecord.attributes.banner.visible'))
+
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{zzz_banner.body}"
+              end
+              within 'tr.banner:nth-child(2)' do
+                expect(page).to have_text "#{aaa_banner.body}"
+              end
+
+              click_on(I18n.t('activerecord.attributes.banner.visible'))
+
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{aaa_banner.body}"
+              end
+            end
+
+            scenario 'it sorts on created_at' do
+              click_on(I18n.t('activerecord.attributes.banner.created_at'))
+
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{aaa_banner.body}"
+              end
+              within 'tr.banner:nth-child(2)' do
+                expect(page).to have_text "#{zzz_banner.body}"
+              end
+
+              click_on(I18n.t('activerecord.attributes.banner.created_at'))
+
+              within 'tr.banner:nth-child(1)' do
+                expect(page).to have_text "#{zzz_banner.body}"
+              end
+            end
+          end
         end
 
         context '#create' do
@@ -178,7 +248,7 @@ RSpec.describe 'Banners', type: :system do
     end
 
     describe 'banner displays on other pages' do
-      scenario 'Banner only displays on home page. Grant show page does not include banner text.' do
+      scenario 'banner displays on other pages' do
         @open_grant = create(:published_open_grant)
         visit grant_path(@open_grant)
 
