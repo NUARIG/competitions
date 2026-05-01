@@ -27,6 +27,7 @@ RSpec.describe 'Grants', type: :system, js: true do
 
     scenario 'displays only public grants for grant_admins' do
       find("td.manage[data-grant-id='#{@grant.id}']").hover
+      pause
       expect(page).to have_link('Edit', href: edit_grant_path(@grant))
       expect(page).not_to have_link('Delete', href: grant_path(@grant))
       expect("tr[data-grant-id='#{@inaccessible_grant.id}']").not_to have_selector("td.manage[data-grant-id='#{@inaccessible_grant.id}']")
@@ -36,11 +37,13 @@ RSpec.describe 'Grants', type: :system, js: true do
     context 'sorting' do
       it 'sorts on name' do
         click_on('Name')
+        pause
         within '#grants tbody tr:nth-child(1)' do
           expect(page).to have_text @grant.name
         end
 
         click_on('Name')
+        pause
         within '#grants tbody tr:nth-child(1)' do
           expect(page).to have_text @inaccessible_grant.name
         end
