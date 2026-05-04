@@ -282,7 +282,7 @@ GEM
       prism (~> 1.5)
     msgpack (1.7.2)
     nested_form (0.3.2)
-    net-imap (0.6.3)
+    net-imap (0.6.4)
       date
       net-protocol
     net-pop (0.1.2)
