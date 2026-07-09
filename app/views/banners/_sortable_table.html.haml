@@ -12,7 +12,7 @@
 
   %tbody
     - @banners.each do |banner|
-      %tr
+      %tr.banner
         %td
           = truncate(strip_tags(banner.body), length: 64, separator: ' ')
         %td

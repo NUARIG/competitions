@@ -10,7 +10,7 @@ class Banner < ApplicationRecord
   validates_presence_of   :body
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[created_at updated_at visible]
+    %w[created_at updated_at visible body]
   end
 
   def self.ransackable_associations(auth_object = nil); end
