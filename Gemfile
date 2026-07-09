@@ -28,7 +28,7 @@ gem 'turbo-rails', '~> 2.0.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap',                     '>= 1.17.0', require: false
 
-gem 'devise',                       '~> 5.0.3'
+gem 'devise',                       '~> 5.0.4'
 gem 'devise_saml_authenticatable',  '~> 2.0'
 gem 'pundit',                       '~> 2.3.1'
 gem 'rubyzip',                      '~> 2.3.2'
@@ -36,11 +36,11 @@ gem 'rubyzip',                      '~> 2.3.2'
 # frontend
 gem 'font-awesome-rails'
 gem 'foundation-datepicker-rails'
-gem 'foundation-rails',             '~> 6.5.3.0'
+gem 'foundation-rails',             '~> 6.9.0.0'
 gem 'friendly_id',                  '~> 5.5.0'
 gem 'haml-rails',                   '~> 2.0'
 gem 'jquery-rails',                 '~> 4.6.0'
-gem 'jquery-ui-rails',              '~> 7.0.0'
+gem 'jquery-ui-rails',              '~> 8.0.0'
 gem 'pagy',                         '~> 6.2.0'
 gem 'ransack',                      '~> 4.4'
 gem 'sprockets-es6'
@@ -70,7 +70,7 @@ gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
-  gem 'puma',         '~> 6.6.1'
+  gem 'puma',         '~> 7.2.1'
   gem 'rspec-rails',  '~> 6.1.3'
   gem 'webrick',      '1.8.2'
 end
