@@ -67,6 +67,9 @@ gem 'caxlsx_rails'
 gem 'wicked_pdf',                   '~> 2.8.2'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 
+# deployment
+gem "nokogiri", "~> 1.19.4", force_ruby_platform: true
+
 group :development, :test do
   gem 'awesome_print'
   gem 'byebug',       platforms: %i[mri mingw x64_mingw]
