@@ -24,7 +24,7 @@
     "motion-ui": "2.0.3",
     "select2": "^4.1.0-rc.0",
     "tom-select": "^2.2.2",
-    "trix": "^2.1.9",
+    "trix": "2.1.18",
     "what-input": "^5.2.12"
   },
   "scripts": {
