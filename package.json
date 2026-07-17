@@ -18,14 +18,14 @@
     "@rails/request.js": "^0.0.8",
     "@rails/ujs": "^6.0.0",
     "esbuild": "^0.13.12",
-    "foundation-datepicker": "^1.5.6",
-    "foundation-sites": "6.6.3",
+    "foundation-sites": "6.9.0",
     "jquery": "^3.6.0",
     "jquery_nested_form": "^0.3.3",
-    "motion-ui": "^2.0.3",
+    "motion-ui": "2.0.3",
     "select2": "^4.1.0-rc.0",
     "tom-select": "^2.2.2",
-    "trix": "^2.1.9"
+    "trix": "^2.1.9",
+    "what-input": "^5.2.12"
   },
   "scripts": {
     "build": "esbuild app/javascript/*.* --bundle --outdir=app/assets/builds"

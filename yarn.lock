@@ -205,15 +205,10 @@ esbuild@^0.13.12:
     esbuild-windows-64 "0.13.14"
     esbuild-windows-arm64 "0.13.14"
 
-foundation-datepicker@^1.5.6:
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/foundation-datepicker/-/foundation-datepicker-1.5.6.tgz#6dc891f3f6422028219f74284d1684548a8ca4bf"
-  integrity sha1-bciR8/ZCICghn3QoTRaEVIqMpL8=
-
-foundation-sites@6.6.3:
-  version "6.6.3"
-  resolved "https://registry.yarnpkg.com/foundation-sites/-/foundation-sites-6.6.3.tgz#8ca5f246357db69e6a0e73351ce06aa8acce6540"
-  integrity sha512-8X93wUAmUg1HhVv8uWMWnwoBLSQWSmFImJencneIZDctswn724Bq/MV1cbPZN/GFWGOB/9ngoQHztfzd4+ovCg==
+foundation-sites@6.9.0:
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/foundation-sites/-/foundation-sites-6.9.0.tgz#ef4d51fa1c669cbdf61d080d8a328686ff85992a"
+  integrity sha512-bZpjL6lxuGViy1UU/NuMddyAAJP0YgJYKNh+8ZtDWhQRtiY1yQISxHmgF4V8EFx7DWHDTdZC1fwFysnMAYkdQg==
 
 jquery@^3.3.1, jquery@^3.6.0:
   version "3.6.0"
@@ -225,7 +220,7 @@ jquery_nested_form@^0.3.3:
   resolved "https://registry.yarnpkg.com/jquery_nested_form/-/jquery_nested_form-0.3.3.tgz#f24f79bdf2423e006016277939ff9d86e7aa316e"
   integrity sha512-6y6ngyzD+D2G4RRembajJIXruU09DDGoaeQfaddYNv/jhVzcpMesFk6yM5P2e/+ruXU934gHd/ieyaekVibsoA==
 
-motion-ui@^2.0.3:
+motion-ui@2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/motion-ui/-/motion-ui-2.0.3.tgz#3a87f8fea4512d654c0822a0b346f23dadf0d0b7"
   integrity sha512-f9xzh/hbZTUYjk4M7y1aDcsiPTfqUbuvCv/+If05TSIBEJMu3hGBU+YSe9csQPP7WBBHXxjossEygM/TJo2enw==
@@ -254,3 +249,8 @@ trix@^2.1.9:
   integrity sha512-nkHg7VgIItGVx1CFA645dDlAoCgah+9gv80Yc+97aS8jkZmO5K4MxkSqmU9t/C8upqZB8uhfJs90epoDfYz/6Q==
   dependencies:
     dompurify "^3.2.5"
+
+what-input@^5.2.12:
+  version "5.2.12"
+  resolved "https://registry.yarnpkg.com/what-input/-/what-input-5.2.12.tgz#6eb5b5d39ebff4e2273df8bf69d8d2fc9a6e060a"
+  integrity sha512-3yrSa7nGSXGJS6wZeSkO6VNm95pB1mZ9i3wFzC1hhY7mn4/afue/MvXz04OXNdBC8bfo4AB4RRd3Dem9jXM58Q==
