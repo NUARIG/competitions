@@ -94,6 +94,141 @@ RSpec.describe RegisteredUser, type: :model do
       expect(user).not_to be_valid
       expect(user.errors).to include :era_commons
     end
+
+    describe 'first_name format validation' do
+      it 'accepts valid names with letters and common punctuation' do
+        valid_names = ['John', 'Mary-Jane', "D'Angelo", 'José', 'François', 'Müller', 'J. Thomas']
+        valid_names.each do |name|
+          user.first_name = name
+          expect(user).to be_valid, "Expected '#{name}' to be valid"
+        end
+      end
+
+      it 'rejects names with underscores' do
+        user.first_name = 'bingo_was_name_fmcmfvyl'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :first_name
+        expect(user.errors.messages[:first_name]).to include 'can only contain letters, spaces, hyphens, and apostrophes.'
+      end
+
+      it 'rejects names with special characters and injection patterns' do
+        invalid_names = ['${injection}', 'name<tag>', 'john#smith', 'joe&mary', 'name%symbol', 'test{brace}']
+        invalid_names.each do |name|
+          user.first_name = name
+          expect(user).not_to be_valid, "Expected '#{name}' to be invalid"
+          expect(user.errors).to include :first_name
+        end
+      end
+
+      it 'rejects names with numbers' do
+        user.first_name = 'john123'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :first_name
+      end
+
+      it 'rejects names exceeding 50 characters' do
+        user.first_name = 'A' * 51
+        expect(user).not_to be_valid
+        expect(user.errors).to include :first_name
+      end
+
+      it 'accepts names with exactly 50 characters' do
+        user.first_name = 'A' * 50
+        expect(user).to be_valid
+      end
+
+      it 'rejects single-letter names' do
+        invalid_first_names = ['J.', 'J']
+        invalid_first_names.each do |name|
+          user.first_name = name
+          expect(user).not_to be_valid, "Expected '#{name}' to be invalid"
+          expect(user.errors).to include :first_name
+        end
+      end
+
+      it 'accepts two-letter names' do
+        user.first_name = 'Jo'
+        expect(user).to be_valid
+      end
+
+      it 'rejects names with leading spaces' do
+        user.first_name = ' John'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :first_name
+      end
+
+      it 'rejects names with trailing spaces' do
+        user.first_name = 'John '
+        expect(user).not_to be_valid
+        expect(user.errors).to include :first_name
+      end
+    end
+
+    describe 'last_name format validation' do
+      it 'accepts valid names with letters and common punctuation' do
+        valid_names = ['Smith', 'O\'Brien', 'Müller-Koch', 'García', 'François']
+        valid_names.each do |name|
+          user.last_name = name
+          expect(user).to be_valid, "Expected '#{name}' to be valid"
+        end
+      end
+
+      it 'rejects names with underscores' do
+        user.last_name = '${${env:NaN:-j}ndi${env:NaN:-:}'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :last_name
+        expect(user.errors.messages[:last_name]).to include 'can only contain letters, spaces, hyphens, and apostrophes.'
+      end
+
+      it 'rejects names with special characters and injection patterns' do
+        invalid_names = ['${injection}', 'name<tag>', 'smith#name', 'last&first', 'name%char']
+        invalid_names.each do |name|
+          user.last_name = name
+          expect(user).not_to be_valid, "Expected '#{name}' to be invalid"
+          expect(user.errors).to include :last_name
+        end
+      end
+
+      it 'rejects names with numbers' do
+        user.last_name = 'smith456'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :last_name
+      end
+
+      it 'rejects names exceeding 50 characters' do
+        user.last_name = 'A' * 51
+        expect(user).not_to be_valid
+        expect(user.errors).to include :last_name
+      end
+
+      it 'accepts names with exactly 50 characters' do
+        user.last_name = 'A' * 50
+        expect(user).to be_valid
+      end
+
+      it 'rejects single-letter names' do
+        user.last_name = 'S'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :last_name
+      end
+
+      it 'accepts two-letter names' do
+        user.last_name = 'Li'
+        expect(user).to be_valid
+      end
+
+      it 'rejects names with leading spaces' do
+        user.last_name = ' Smith'
+        expect(user).not_to be_valid
+        expect(user.errors).to include :last_name
+      end
+
+      it 'rejects names with trailing spaces' do
+        user.last_name = 'Smith '
+        expect(user).not_to be_valid
+        expect(user.errors).to include :last_name
+      end
+    end
   end
 
   context 'reviewer invitations' do

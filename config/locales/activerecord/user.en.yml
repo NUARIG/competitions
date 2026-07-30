@@ -22,6 +22,10 @@ en:
           attributes:
             email:
               saml_email_invalid: 'is not valid for this type of account.'
+            first_name:
+              invalid_name_format: 'can only contain letters, spaces, hyphens, and apostrophes.'
+            last_name:
+              invalid_name_format: 'can only contain letters, spaces, hyphens, and apostrophes.'
     models:
       user:
         one: user
