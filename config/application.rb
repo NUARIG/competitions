@@ -61,7 +61,8 @@ module Competitions
 
     # 03/27/26 - Rails 8 upgrade
     #            Addresses missing :index action in Devise controllers
-    config.action_controller.raise_on_missing_callback_actions = false
+    #            Moved to SamlSessionsController to allow logout
+    # config.action_controller.raise_on_missing_callback_actions = false
 
     def secrets
       config.secrets

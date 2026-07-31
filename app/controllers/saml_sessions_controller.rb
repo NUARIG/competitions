@@ -28,4 +28,16 @@ class SamlSessionsController < Devise::SamlSessionsController
   def set_saml_session_index_on_current_user
     current_user.update({ Devise.saml_session_index_key => session[Devise.saml_session_index_key] })
   end
+
+  # 07/31/26 - After Rails 8 upgrade and Devise version bump. Moved here from config/application.rb.
+  #            Addresses missing :index action in Devise controllers
+  def respond_to_on_destroy(non_navigational_status: :no_content)
+    respond_to do |format|
+      format.all { head non_navigational_status }
+      format.any(*navigational_formats) do
+        redirect_to after_sign_out_path_for(resource_name), allow_other_host: true, status: Devise.responder.redirect_status
+      end
+    end
+  end
+
 end
