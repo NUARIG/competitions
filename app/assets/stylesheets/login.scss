@@ -9,6 +9,8 @@ main.sessions {
   grid-template-rows: auto;
   justify-items: center;
   margin: 1em 0em;
+  align-content: start;
+  padding-top: 2rem;
 
   .cell {
     text-align: center;
