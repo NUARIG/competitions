@@ -7,6 +7,9 @@ class RegisteredUser < User
   after_validation :confirm_invited_reviewers, on: :create,
                                                unless: -> { @pending_reviewer_invitations.empty? }
 
+  validates :first_name, format: { with: /\A\p{L}[\p{L}\s'.-]*\p{L}\z/, message: :invalid_name_format }, length: { maximum: 50 }
+  validates :last_name,  format: { with: /\A\p{L}[\p{L}\s'-]*\p{L}\z/, message: :invalid_name_format }, length: { maximum: 50 }
+
   validate  :cannot_use_saml_email,   if: -> { User.is_saml_email_address?(email: email) }
   validate  :cannot_use_spam_domain,  if: -> { User.is_restricted_email_address?(email: email) }
 
