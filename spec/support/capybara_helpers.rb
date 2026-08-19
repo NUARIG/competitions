@@ -4,7 +4,7 @@ RSpec.configure do |config|
   end
 
   def fill_in_trix_editor(id, with:)
-    find(:xpath, "//trix-editor[@input='#{id}']").click.set(with)
+    find(:xpath, "//trix-editor[@input='#{id}']", visible: true, wait: 3).click.set(with)
   end
 
   def find_trix_editor(id)
