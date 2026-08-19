@@ -22,6 +22,10 @@ module GrantServices
     rescue ServiceError::InputInvalid => invalid
       OpenStruct.new(success?: false,
                      messages: invalid.record.errors.full_messages)
+    rescue StandardError => e
+      Rails.logger.error("Unexpected error in GrantServices::New: #{e.message}\n#{e.backtrace.join("\n")}")
+      OpenStruct.new(success?: false,
+                     messages: ['An unexpected error occurred. Please try again.'])
     end
   end
 end
