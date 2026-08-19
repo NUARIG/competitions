@@ -10,4 +10,12 @@
   %td.small
     = time_tag(user.current_sign_in_at, time_ago_in_words(user.current_sign_in_at)) if user.current_sign_in_at.present?
   %td.small
+    - grant_permissions = kept_grant_permissions(user)
+    - if grant_permissions.any?
+      %ul.no-bullet
+        - grant_permissions.each do |grant_permission|
+          %li
+            = link_to grant_permission.grant.name, grant_path(grant_permission.grant)
+            = "(#{grant_permission.role.capitalize})"
+  %td.small
     = link_to 'Edit', edit_user_path(user)

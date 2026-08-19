@@ -214,6 +214,56 @@ RSpec.describe 'Users', type: :system, js: true  do
         end
       end
 
+      context 'Competitions' do
+        let!(:admin_grant)      { create(:published_open_grant) }
+        let!(:editor_grant)     { create(:draft_closed_grant) }
+        let!(:deleted_grant)    { create(:published_closed_grant) }
+
+        let!(:admin_permission)  { create(:grant_permission, grant: admin_grant,   user: saml_user1, role: 'admin') }
+        let!(:editor_permission) { create(:grant_permission, grant: editor_grant,  user: saml_user1, role: 'editor') }
+        let!(:viewer_permission) { create(:grant_permission, grant: admin_grant,   user: saml_user2, role: 'viewer') }
+        let!(:deleted_permission) { create(:grant_permission, grant: deleted_grant, user: saml_user2, role: 'admin') }
+
+        before(:each) do
+          create(:panel, grant: deleted_grant)
+          deleted_grant.discard
+          login_as(saml_system_admin, scope: :saml_user)
+          visit users_path
+        end
+
+        scenario 'lists every competition a user is on and the role held on it' do
+          within "tr#user-#{saml_user1.id}" do
+            expect(page).to have_link(admin_grant.name,  href: grant_path(admin_grant))
+            expect(page).to have_text("#{admin_grant.name} (Admin)")
+            expect(page).to have_link(editor_grant.name, href: grant_path(editor_grant))
+            expect(page).to have_text("#{editor_grant.name} (Editor)")
+          end
+
+          within "tr#user-#{saml_user2.id}" do
+            expect(page).to have_text("#{admin_grant.name} (Viewer)")
+          end
+        end
+
+        scenario 'omits competitions the user is not on' do
+          within "tr#user-#{saml_user1.id}" do
+            expect(page).not_to have_text(deleted_grant.name)
+          end
+        end
+
+        scenario 'omits deleted competitions' do
+          within "tr#user-#{saml_user2.id}" do
+            expect(page).not_to have_text(deleted_grant.name)
+          end
+        end
+
+        scenario 'shows no competitions for a user without grant permissions' do
+          within "tr#user-#{registered_user.id}" do
+            expect(page).not_to have_text(admin_grant.name)
+            expect(page).not_to have_text(editor_grant.name)
+          end
+        end
+      end
+
       describe 'authenticate_user!' do
         context 'user not logged in' do
           scenario 'redirects to log in and displays error message' do
