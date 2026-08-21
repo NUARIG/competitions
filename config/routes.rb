@@ -12,7 +12,9 @@ Rails.application.routes.draw do
 
   devise_for :saml_users, path: 'users', controllers: { saml_sessions: 'saml_sessions' }
 
-  resources :users, only: %i[index edit update]
+  resources :users, only: %i[index edit update] do
+    resources :grant_permissions, only: :index, module: :users
+  end
 
   root to: 'home#index'
 

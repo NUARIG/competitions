@@ -1,0 +1,19 @@
+= render partial: 'shared/pagy_header', locals: { pagy: pagy }
+
+%table
+  %thead
+    %tr
+      %th Grant Name
+      %th Status
+      %th Role
+      %th Publish Date
+  %tbody
+    - grant_permissions.each do |grant_permission|
+      - grant = grant_permission.grant
+      %tr
+        %td= link_to grant.name, grant_path(grant), data: { turbo_frame: '_top' }
+        %td= grant.state.titleize
+        %td= link_to grant_permission.role.titleize, grant_grant_permissions_path(grant), data: { turbo_frame: '_top' }
+        %td= grant.publish_date.present? ? l(grant.publish_date, format: :long) : '-'
+
+!= pagy_foundation_nav(pagy)
