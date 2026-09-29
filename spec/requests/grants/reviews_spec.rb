@@ -34,6 +34,15 @@ RSpec.describe 'grant reviews requests', type: :request do
         get grant_reviews_path(grant).to_s + '.xlsx'
         expect(response.content_type).to include 'openxml'
       end
+
+      it 'produces a valid xlsx zip' do
+        get grant_reviews_path(grant).to_s + '.xlsx'
+
+        zip = Zip::File.open_buffer(response.body)
+        entry_names = zip.entries.map(&:name)
+
+        expect(entry_names).to include('xl/workbook.xml', '[Content_Types].xml')
+      end
     end
   end
 end
