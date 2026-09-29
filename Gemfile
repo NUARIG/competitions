@@ -31,7 +31,7 @@ gem 'bootsnap',                     '>= 1.17.0', require: false
 gem 'devise',                       '~> 5.0.4'
 gem 'devise_saml_authenticatable',  '~> 2.0'
 gem 'pundit',                       '~> 2.3.1'
-gem 'rubyzip',                      '~> 2.3.2'
+gem 'rubyzip',                      '~> 3.7.0'
 
 # frontend
 gem 'font-awesome-rails'
@@ -62,7 +62,7 @@ gem 'nested_form'
 gem 'aws-sdk-s3', require: false
 
 # exports
-gem 'caxlsx', '~> 3.3'
+gem 'caxlsx', '~> 4.5'
 gem 'caxlsx_rails'
 gem 'wicked_pdf',                   '~> 2.8.2'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
@@ -106,7 +106,7 @@ group :test do
   gem 'pundit-matchers',          '~> 3.1.2'
   gem 'rails-controller-testing'
   gem 'rspec',                    '3.13.0'
-  gem 'selenium-webdriver',       '~> 4.16.0'
+  gem 'selenium-webdriver',       '~> 4.35'
   gem 'simplecov',                '~> 0.22', require: false
 end
 
