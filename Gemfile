@@ -26,7 +26,9 @@ gem 'requestjs-rails'
 gem 'turbo-rails', '~> 2.0.2'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap',                     '>= 1.17.0', require: false
+gem 'bootsnap', '>= 1.17.0', require: false
+
+gem 'json', '~> 2.10'
 
 gem 'devise',                       '~> 5.0.4'
 gem 'devise_saml_authenticatable',  '~> 2.0'
@@ -68,7 +70,7 @@ gem 'wicked_pdf',                   '~> 2.8.2'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 
 # deployment
-gem "nokogiri", "~> 1.19.4", force_ruby_platform: true
+gem 'nokogiri', '~> 1.19.4', force_ruby_platform: true
 
 group :development, :test do
   gem 'awesome_print'
@@ -82,7 +84,7 @@ group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet',                 '~> 8.1.0'
+  gem 'bullet', '~> 8.1.0'
   gem 'i18n-debug'
   gem 'listen', '~> 3.5.1'
   gem 'rubocop'
@@ -91,7 +93,7 @@ group :development do
   gem 'web-console',            '>= 3.3.0'
 
   # Use Capistrano for deployment
-  gem 'capistrano',       require: false
+  gem 'capistrano', require: false
   gem 'capistrano-passenger'
   gem 'capistrano-rails', require: false
   gem 'capistrano-rvm'
