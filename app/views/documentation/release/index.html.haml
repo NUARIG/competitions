@@ -6,12 +6,22 @@
 
 %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true", "data-multi-expand" => "false"}
   %li.accordion-item.is-active{"data-accordion-item" => ""}
+    %a.accordion-title{:href => "#"} 1.22.3 (November 3, 2026)
+    .accordion-content{"data-tab-content" => ""}
+      %ul
+        %li
+          Update Rails 8.1.4 and gems
+          #{github_issue_link(issue: 1176)}, #{github_issue_link(issue: 1174)}
+        %li
+          Minor bug fixes and improvements.
+          #{github_issue_link(issue: 1170)}, #{github_issue_link(issue: 1179)}
+  %li.accordion-item{"data-accordion-item" => ""}
     %a.accordion-title{:href => "#"} 1.22.2 (August 4, 2026)
     .accordion-content{"data-tab-content" => ""}
       %ul
         %li
-          Update to Rails, various gems
-          #{github_issue_link(issue: 1146)}
+          Update to Rails 8, various gems
+          #{github_issue_link(issue: 1146)}, #{github_issue_link(issue: 1174)}
         %li
           Minor bug fixes and improvements.
   %li.accordion-item{"data-accordion-item" => ""}
