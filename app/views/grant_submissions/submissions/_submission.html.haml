@@ -14,7 +14,7 @@
         = render 'grant_submissions/submissions/submission_administrator_links', { grant: @grant, submission: submission }
     .cell.small-12.medium-1.reviews
       - if submission.reviews.any?
-        = link_to 'View', grant_submission_reviews_path(@grant, submission)
+        = link_to 'View', grant_submission_reviews_path(@grant, submission), data: {turbo_frame: "_top"}
         %div.count.small.completed-reviews{ title: 'Completed / Assigned', data: { completed: { reviews: submission.id } } }
           #{review_data.completed_review_count} / #{review_data.assigned_review_count}
         = link_to "#{image_tag 'PDF_24.png', class: 'icon', title: 'Save reviews summary as a PDF' }".html_safe, grant_submission_reviews_path(@grant, submission, { format: 'pdf' } )
