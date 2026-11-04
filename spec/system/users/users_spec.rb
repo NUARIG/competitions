@@ -235,4 +235,90 @@ RSpec.describe 'Users', type: :system, js: true  do
       end
     end
   end
+
+  describe '#edit' do
+    let(:system_admin) { create(:system_admin_saml_user) }
+    let(:target_user) { create(:saml_user) }
+
+    before(:each) do
+      login_as(system_admin, scope: :saml_user)
+    end
+
+    context 'grant permissions section' do
+      scenario 'shows grant permissions table with expected columns and values' do
+        grant = create(:grant, :draft, name: 'Alpha Grant', publish_date: 10.days.from_now.to_date)
+        create(:grant_permission, grant: grant, user: target_user, role: 'editor')
+
+        visit edit_user_path(target_user)
+
+        expect(page).to have_content 'Grant Permissions'
+        within 'turbo-frame#user_grant_permissions' do
+          expect(page).to have_table
+          expect(page).to have_content 'Grant Name'
+          expect(page).to have_content 'Status'
+          expect(page).to have_content 'Role'
+          expect(page).to have_content 'Publish Date'
+          expect(page).to have_content 'Alpha Grant'
+          expect(page).to have_content 'Draft'
+          expect(page).to have_content 'Editor'
+        end
+      end
+
+      scenario 'shows empty state when no grant permissions exist' do
+        visit edit_user_path(target_user)
+
+        expect(page).to have_content 'Grant Permissions'
+        within 'turbo-frame#user_grant_permissions' do
+          expect(page).to have_content 'No grant permissions found for this user.'
+        end
+      end
+
+      scenario 'orders permissions by publish date desc then grant name asc' do
+        newest_a = create(:grant, :published, name: 'A Latest', publish_date: 9.days.from_now.to_date)
+        newest_b = create(:grant, :published, name: 'B Latest', publish_date: 9.days.from_now.to_date)
+        older = create(:grant, :published, name: 'Older Grant', publish_date: 8.days.from_now.to_date)
+
+        create(:grant_permission, grant: older, user: target_user, role: 'viewer')
+        create(:grant_permission, grant: newest_b, user: target_user, role: 'admin')
+        create(:grant_permission, grant: newest_a, user: target_user, role: 'editor')
+
+        visit edit_user_path(target_user)
+
+        within 'turbo-frame#user_grant_permissions' do
+          expect(page).to have_content 'A Latest'
+          rows = all('table tbody tr').map(&:text)
+          expect(rows[0]).to include('A Latest')
+          expect(rows[1]).to include('B Latest')
+          expect(rows[2]).to include('Older Grant')
+        end
+      end
+
+      scenario 'shows five grant permissions per page and paginates to additional results' do
+        grants = 6.times.map do |i|
+          create(:grant, :published,
+                 name: "Grant #{i + 1}",
+                 publish_date: (9 - i).days.from_now.to_date)
+        end
+
+        grants.each do |grant|
+          create(:grant_permission, grant: grant, user: target_user, role: 'viewer')
+        end
+
+        visit edit_user_path(target_user)
+
+        within 'turbo-frame#user_grant_permissions' do
+          expect(all('table tbody tr').size).to eq(5)
+          expect(page).to have_content('Grant 1')
+          expect(page).to have_content('Grant 5')
+          expect(page).not_to have_content('Grant 6')
+
+          click_link '2'
+
+          expect(page).to have_content('Grant 6')
+          expect(page).not_to have_content('Grant 1')
+          expect(all('table tbody tr').size).to eq(1)
+        end
+      end
+    end
+  end
 end

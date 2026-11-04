@@ -616,6 +616,18 @@ RSpec.describe 'Grants', type: :system, js: true do
         visit new_grant_duplicate_path(@grant)
         expect(page).to have_content authorization_error_text
       end
+
+      scenario 'cannot access show page for draft grant with no permissions' do
+        draft_grant = create(:draft_grant)
+        visit grant_path(draft_grant)
+        expect(page).to have_content authorization_error_text
+      end
+
+      scenario 'cannot access edit page for grant with no permissions' do
+        other_grant = create(:grant_with_users)
+        visit edit_grant_path(other_grant)
+        expect(page).to have_content authorization_error_text
+      end
     end
 
     context 'grant editor' do

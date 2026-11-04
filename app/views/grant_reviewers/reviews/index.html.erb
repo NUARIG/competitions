@@ -31,7 +31,8 @@
                   </div>
                 <% end %>
                 <div class="cell small-2"><%= link_to display_review_state(review.state),
-                                                      grant_submission_review_path(@grant, submission, review) %></div>
+                                                      grant_submission_review_path(@grant, submission, review),
+                                                      data: {turbo_frame: "_top"} %></div>
                 <div class="cell auto">
                   <div class="submitter-name"><%= full_name(review.submission.submitter) %></div>
                   <div class="submission"><%= truncate(review.submission.title, length: 60) %></div>

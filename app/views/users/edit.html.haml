@@ -1,9 +1,21 @@
-- content_for(:page_title, "Edit #{full_name(@user)}")
+- content_for(:page_title, "Edit User: #{full_name(@user)}")
 
-%h2
-  = yield :page_title
+%h1
+  = yield(:page_title)
+
+%p
+  User profile and permissions
 
 = form_with(model: @user, scope: :user, url: user_path, method: :put, local: true, data: { turbo: false }) do |f|
   = render partial: 'users/form', locals: { f: f }
+
+%hr
+
+%h3
+  Grant Permissions
+
+= turbo_frame_tag 'user_grant_permissions', src: user_grant_permissions_path(@user) do
+  %p
+    Loading grant permissions.
 
 = link_to 'Back to all Users', users_path

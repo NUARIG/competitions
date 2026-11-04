@@ -22,8 +22,7 @@
       .cell.small-12.medium-10
         = f.text_field :era_commons, class: 'small-12 medium-4'
     .grid-x
-      .cell.small-12.medium-2
-      .cell.small-12.medium-10
+      .cell.small-12.medium-10.medium-offset-2
         - if current_user.system_admin?
           = render partial: 'users/admin_checkboxes', locals: { f: f, user: @user }
         - elsif @user.grant_creator_requests.pending.any?

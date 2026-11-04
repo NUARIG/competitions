@@ -1,0 +1,6 @@
+= turbo_frame_tag 'user_grant_permissions' do
+  - if @grant_permissions.blank?
+    %p
+      No grant permissions found for this user.
+  - else
+    = render partial: 'users/grant_permissions_table', locals: { grant_permissions: @grant_permissions, pagy: @pagy }

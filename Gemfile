@@ -26,12 +26,14 @@ gem 'requestjs-rails'
 gem 'turbo-rails', '~> 2.0.2'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap',                     '>= 1.17.0', require: false
+gem 'bootsnap', '>= 1.17.0', require: false
+
+gem 'json', '~> 2.10'
 
 gem 'devise',                       '~> 5.0.4'
 gem 'devise_saml_authenticatable',  '~> 2.0'
 gem 'pundit',                       '~> 2.3.1'
-gem 'rubyzip',                      '~> 2.3.2'
+gem 'rubyzip',                      '~> 3.7.0'
 
 # frontend
 gem 'font-awesome-rails'
@@ -62,13 +64,13 @@ gem 'nested_form'
 gem 'aws-sdk-s3', require: false
 
 # exports
-gem 'caxlsx', '~> 3.3'
+gem 'caxlsx', '~> 4.5'
 gem 'caxlsx_rails'
 gem 'wicked_pdf',                   '~> 2.8.2'
 gem 'wkhtmltopdf-binary',           '~> 0.12.6'
 
 # deployment
-gem "nokogiri", "~> 1.19.4", force_ruby_platform: true
+gem 'nokogiri', '~> 1.19.4', force_ruby_platform: true
 
 group :development, :test do
   gem 'awesome_print'
@@ -82,7 +84,7 @@ group :development do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet',                 '~> 8.1.0'
+  gem 'bullet', '~> 8.1.0'
   gem 'i18n-debug'
   gem 'listen', '~> 3.5.1'
   gem 'rubocop'
@@ -91,7 +93,7 @@ group :development do
   gem 'web-console',            '>= 3.3.0'
 
   # Use Capistrano for deployment
-  gem 'capistrano',       require: false
+  gem 'capistrano', require: false
   gem 'capistrano-passenger'
   gem 'capistrano-rails', require: false
   gem 'capistrano-rvm'
@@ -106,7 +108,7 @@ group :test do
   gem 'pundit-matchers',          '~> 3.1.2'
   gem 'rails-controller-testing'
   gem 'rspec',                    '3.13.0'
-  gem 'selenium-webdriver',       '~> 4.16.0'
+  gem 'selenium-webdriver',       '~> 4.35'
   gem 'simplecov',                '~> 0.22', require: false
 end
 

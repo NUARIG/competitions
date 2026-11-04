@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   after_action :verify_policy_scoped, only: :index
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   protect_from_forgery prepend: true, with: :exception
 
@@ -81,5 +82,9 @@ class ApplicationController < ActionController::Base
     def redirect_logged_in_user_to_root
       flash[:notice] = 'You are already logged in.'
       redirect_back(fallback_location: root_path)
+    end
+
+    def record_not_found
+      render file: "#{Rails.root}/public/404.html", status: :not_found
     end
 end

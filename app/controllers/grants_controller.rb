@@ -17,8 +17,8 @@ class GrantsController < ApplicationController
   def show
     flash.keep
     @grant = Grant.includes(:contacts).kept.friendly.find(params[:id])
-
-    draft_banner if authorize @grant
+    authorize @grant
+    draft_banner
   end
 
   # GET /grants/new
@@ -28,22 +28,23 @@ class GrantsController < ApplicationController
   end
 
   def edit
-    if authorize @grant
-      draft_banner
-      flash.keep
-    end
+    authorize @grant
+    draft_banner
+    flash.keep
   end
 
   def create
     authorize Grant, :create?
     @grant = Grant.new(grant_params)
     result = GrantServices::New.call(grant: @grant, user: current_user)
-    if result.success?
+    if result.success? && @grant.persisted?
       flash[:notice]  = 'Grant saved.'
       flash[:warning] = 'Review the information below then click "Publish this Grant" to finalize.'
       redirect_to grant_grant_permissions_url(@grant)
     else
-      flash.now[:alert] = result.messages
+      # Only show service error messages if @grant has no validation errors
+      flash.now[:alert] = @grant.errors.full_messages if @grant.errors.any?
+      flash.now[:alert] = result.messages if flash.now[:alert].empty?
       render :new
     end
   end

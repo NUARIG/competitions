@@ -1,6 +1,6 @@
 - if submission.draft?
   %div.administer.small{data: { status: submission.id} }
-    = link_to 'Edit', edit_grant_submission_path(grant, submission)
+    = link_to 'Edit', edit_grant_submission_path(grant, submission), data: {turbo_frame: "_top"}
 - elsif current_user.get_role_by_grant(grant: grant) != 'viewer'
   %div.administer.small{data: { status: submission.id} }
     = link_to 'Switch to Draft', unsubmit_grant_submission_path(grant, submission), method: :patch, title: 'Allow for editing'
