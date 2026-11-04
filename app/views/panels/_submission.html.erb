@@ -3,13 +3,13 @@
 <%= turbo_frame_tag dom_id(submission) do %>
   <div class="grid-x grid-padding-x grid-padding-y row">
     <div class="cell small-12 medium-2 applicants">
-      <%= link_to submission.applicants.map { |app| "#{sortable_full_name(app)}"}.join('<br/>').html_safe, grant_panel_submission_path(grant, submission) %>
+      <%= link_to submission.applicants.map { |app| "#{sortable_full_name(app)}"}.join('<br/>').html_safe, grant_panel_submission_path(grant, submission), data: {turbo_frame: "_top"} %>
     </div>
     <div class="cell small-12 medium-4">
-      <%= link_to submission.title, grant_panel_submission_path(grant, submission) %>
+      <%= link_to submission.title, grant_panel_submission_path(grant, submission), data: {turbo_frame: "_top"} %>
     </div>
     <div class="cell small-12 medium-1">
-      <%= link_to 'Review'.pluralize(review_data.completed_review_count), grant_panel_submission_reviews_path(grant, submission) %>
+      <%= link_to 'Review'.pluralize(review_data.completed_review_count), grant_panel_submission_reviews_path(grant, submission), data: {turbo_frame: "_top"} %>
       <span title='Number of Completed Reviews'>
         (<%= review_data.completed_review_count %>)
       </span>
