@@ -5,9 +5,9 @@
     .cell.small-12.medium-2.applicants
       - submission.applicants.each do |applicant|
         .applicant
-          = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission)
+          = link_to sortable_full_name(applicant), grant_submission_path(@grant, submission), data: {turbo_frame: "_top"}
     .cell.small-12.medium-3
-      = link_to submission.title, grant_submission_path(@grant, submission)
+      = link_to submission.title, grant_submission_path(@grant, submission), data: {turbo_frame: "_top"}
     .cell.small-12.medium-1.title
       %div.status{ data: { status: submission.id } }
         = submission.state.titleize

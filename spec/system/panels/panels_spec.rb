@@ -255,6 +255,17 @@ RSpec.describe 'Panels', type: :system, js: true do
       end
 
       context 'submissions' do
+        scenario 'can click to see submission' do
+          submission = submitted_review.submission
+          submission_title = submission.title
+          visit grant_panel_path(grant)
+          within "##{dom_id(submission)}" do
+            click_link("#{submission_title}")
+            expect(page).to have_current_path(grant_panel_submission_path(grant, submission))
+          end
+        end
+
+
         scenario 'does not include draft submission' do
           draft_submission.save
           visit grant_panel_path(grant)

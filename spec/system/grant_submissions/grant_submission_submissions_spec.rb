@@ -97,6 +97,14 @@ RSpec.describe 'GrantSubmission::Submissions', type: :system, js: true do
                 expect(page).not_to have_content not_authorized_text
               end
 
+              scenario 'can visit the submission' do
+                submission_title = submission.title
+                within "##{dom_id(submission)}" do
+                  click_link("#{submission_title}")
+                  expect(page).to have_current_path(grant_submission_path(grant, submission))
+                end
+              end
+
               scenario 'can view the submissions admin links' do
                 within "##{dom_id(submission)}" do
                   expect(page).to have_content submission.title
